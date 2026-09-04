@@ -1,4 +1,4 @@
-import type { FaixaPrioridade, InstituicaoRadar, NivelConfianca } from "./tipos";
+import type { FaixaPrioridade, InstituicaoRadar, NaturezaClasse, NivelConfianca, TipoVinculo } from "./tipos";
 
 export interface FiltrosRadar {
   texto?: string;
@@ -12,6 +12,12 @@ export interface FiltrosRadar {
   faixa?: FaixaPrioridade;
   segmento?: string;
   somenteOportunidadesComerciais?: boolean;
+  organizacao?: string;
+  natureza?: NaturezaClasse;
+  tipoVinculo?: TipoVinculo;
+  confiancaVinculo?: NivelConfianca;
+  revisaoNecessaria?: boolean;
+  somentePrivadasMultiUnidade?: boolean;
 }
 
 function normalizar(texto: string): string {
@@ -34,6 +40,16 @@ export function filtrarInstituicoes(
     .filter((item) => !filtros.qualidadeEvidencia || item.qualidadeEvidencias === filtros.qualidadeEvidencia)
     .filter((item) => !filtros.faixa || item.faixa === filtros.faixa)
     .filter((item) => !filtros.segmento || item.segmentacao?.segmento === filtros.segmento)
+    .filter((item) => !filtros.organizacao || item.organizacao?.nome === filtros.organizacao || item.organizacao?.id === filtros.organizacao)
+    .filter((item) => !filtros.natureza || item.organizacao?.natureza === filtros.natureza)
+    .filter((item) => !filtros.tipoVinculo || item.organizacao?.tipoVinculo === filtros.tipoVinculo)
+    .filter((item) => !filtros.confiancaVinculo || item.organizacao?.confianca === filtros.confiancaVinculo)
+    .filter((item) => !filtros.revisaoNecessaria || item.organizacao?.precisaRevisao === true)
+    .filter(
+      (item) =>
+        !filtros.somentePrivadasMultiUnidade ||
+        ((item.organizacao?.quantidadeUnidades ?? 0) > 1 && item.organizacao?.natureza === "PRIVADO"),
+    )
     .filter(
       (item) =>
         !filtros.somenteOportunidadesComerciais ||

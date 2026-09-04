@@ -4,6 +4,7 @@ import {
   BotMessageSquare,
   Building2,
   Gauge,
+  Network,
   Radar,
   Scale,
 } from "lucide-react";
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
 const navegacao = [
   { href: "/", rotulo: "Visão Geral", icone: Gauge },
   { href: "/radar", rotulo: "Radar de Clientes", icone: Radar },
+  { href: "/organizacoes", rotulo: "Organizações", icone: Network },
   { href: "/assistente", rotulo: "Assistente Comercial", icone: BotMessageSquare },
   { href: "/governanca", rotulo: "Governança", icone: Scale },
 ];

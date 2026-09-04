@@ -15,7 +15,8 @@
     "db:seed": "prisma db seed",
     "db:reset-demo": "prisma db push --force-reset && prisma db seed",
     "ingest:cnes": "tsx scripts/ingest-cnes.ts",
-    "segmentar:comercial": "tsx scripts/segmentar-comercial.ts"
+    "segmentar:comercial": "tsx scripts/segmentar-comercial.ts",
+    "agrupar:organizacoes": "tsx scripts/agrupar-organizacoes.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

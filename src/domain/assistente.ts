@@ -56,6 +56,21 @@ export function responderAssistente(
   if (texto.includes("oportunidades comerciais") || texto.includes("segmentacao")) {
     return listar(ordenadas.filter((item) => item.segmentacao?.segmento === "NUCLEO_HOSPITALAR" || item.segmentacao?.segmento === "SAUDE_CORPORATIVA_EXPANDIDA"), "Priorize primeiro estas instituições pelos segmentos de maior aderência comercial:");
   }
+  if (texto.includes("vinculo oficial")) {
+    return listar(ordenadas.filter((item) => item.organizacao?.tipoVinculo === "OFICIAL"), "Instituições com vínculo oficial confirmado (CNPJ idêntico ou CNPJ mantenedora):");
+  }
+  if (texto.includes("agrupamento provavel") || texto.includes("provaveis")) {
+    return listar(ordenadas.filter((item) => item.organizacao?.tipoVinculo === "PROVAVEL"), "Instituições em agrupamentos prováveis por razão social normalizada (hipótese a revisar):");
+  }
+  if (texto.includes("relacao incerta") || texto.includes("vinculo incerto")) {
+    return listar(ordenadas.filter((item) => item.organizacao?.tipoVinculo === "INCERTO"), "Instituições com relação incerta e revisão de ajuste necessária:");
+  }
+  if (texto.includes("revisao necessaria") || texto.includes("exigem revisao")) {
+    return listar(ordenadas.filter((item) => item.organizacao?.precisaRevisao === true), "Instituições cujos agrupamentos exigem revisão antes de uso comercial:");
+  }
+  if (texto.includes("redes privadas") || texto.includes("privadas multi-unidade") || texto.includes("multi-unidade privadas")) {
+    return listar(ordenadas.filter((item) => (item.organizacao?.quantidadeUnidades ?? 0) > 1 && item.organizacao?.natureza === "PRIVADO"), "Instituições de redes privadas com múltiplas unidades (maior porte de decisão):");
+  }
   if (texto.includes("por que") || texto.includes("resumo comercial") || texto.includes("resumo desta")) {
     if (!selecionada || !possuiEvidenciaSuficiente(selecionada.evidencias)) {
       return { resposta: "Não há evidências suficientes para responder com segurança.", instituicoes: [], intencaoReconhecida: true };

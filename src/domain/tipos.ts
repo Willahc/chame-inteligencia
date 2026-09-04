@@ -8,6 +8,8 @@ export const TIPOS_DADO = [
 
 export type TipoDado = (typeof TIPOS_DADO)[number];
 export type NivelConfianca = "ALTA" | "MEDIA" | "BAIXA";
+export type TipoVinculo = "OFICIAL" | "PROVAVEL" | "ISOLADO" | "INCERTO";
+export type NaturezaClasse = "PUBLICO" | "PRIVADO" | "INDETERMINADO";
 export type StatusRevisao = "APROVADA" | "PENDENTE" | "REJEITADA";
 export type FaixaPrioridade = "MUITO_ALTA" | "ALTA" | "MODERADA" | "BAIXA";
 export type Porte = "PEQUENO" | "MEDIO" | "GRANDE" | "MUITO_GRANDE";
@@ -43,11 +45,30 @@ export interface SegmentacaoRadar {
   precisaRevisao: boolean;
 }
 
+export interface OrganizacaoRadar {
+  id: string;
+  nome: string;
+  nomeNormalizado: string | null;
+  tipoDado: TipoDado;
+  tipoVinculo: TipoVinculo;
+  confianca: NivelConfianca;
+  natureza: NaturezaClasse;
+  quantidadeUnidades: number;
+  statusRevisao: string;
+  regraAgrupamento: string | null;
+  versaoRegra: string | null;
+  tipoEvidencia: string | null;
+  observacao: string | null;
+  dataCalculo?: string;
+  precisaRevisao: boolean;
+}
+
 export interface InstituicaoRadar {
   id: string;
   slug: string;
   nome: string;
   grupo: string | null;
+  organizacao?: OrganizacaoRadar | null;
   municipio: string;
   municipios: string[];
   tipo: string;

@@ -1,4 +1,4 @@
-import type { FaixaPrioridade, NivelConfianca, StatusRevisao, TipoDado } from "@/domain/tipos";
+import type { FaixaPrioridade, NaturezaClasse, NivelConfianca, StatusRevisao, TipoDado, TipoVinculo } from "@/domain/tipos";
 
 export const rotuloFaixa: Record<FaixaPrioridade, string> = {
   MUITO_ALTA: "Prioridade Muito Alta",
@@ -76,4 +76,36 @@ export function MarcadorTipo({ tipo }: { tipo: TipoDado }) {
     DEMONSTRACAO: "border-amber-200 bg-amber-50 text-amber-800",
   }[tipo];
   return <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-bold ${classe}`}>{rotuloTipo[tipo]}</span>;
+}
+
+export const rotuloVinculo: Record<TipoVinculo, string> = {
+  OFICIAL: "Vínculo oficial",
+  PROVAVEL: "Agrupamento provável",
+  ISOLADO: "Instituição isolada",
+  INCERTO: "Relação incerta",
+};
+
+export const rotuloNatureza: Record<NaturezaClasse, string> = {
+  PUBLICO: "Pública",
+  PRIVADO: "Privada",
+  INDETERMINADO: "Indeterminada",
+};
+
+export function ClasseVinculo({ vinculo }: { vinculo: TipoVinculo }) {
+  const classe = {
+    OFICIAL: "border-blue-200 bg-blue-50 text-blue-800",
+    PROVAVEL: "border-orange-200 bg-orange-50 text-orange-800",
+    ISOLADO: "border-slate-200 bg-slate-100 text-slate-700",
+    INCERTO: "border-red-200 bg-red-50 text-red-800",
+  }[vinculo];
+  return <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-bold ${classe}`}>{rotuloVinculo[vinculo]}</span>;
+}
+
+export function ClasseNatureza({ natureza }: { natureza: NaturezaClasse }) {
+  const classe = {
+    PUBLICO: "border-emerald-200 bg-emerald-50 text-emerald-800",
+    PRIVADO: "border-violet-200 bg-violet-50 text-violet-800",
+    INDETERMINADO: "border-slate-200 bg-slate-100 text-slate-700",
+  }[natureza];
+  return <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-bold ${classe}`}>{rotuloNatureza[natureza]}</span>;
 }

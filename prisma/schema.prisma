@@ -67,11 +67,34 @@ enum StatusRevisaoSegmentacao {
   AJUSTE_NECESSARIO
 }
 
+enum TipoVinculo {
+  OFICIAL
+  PROVAVEL
+  ISOLADO
+  INCERTO
+}
+
+enum NaturezaJuridicaClasse {
+  PUBLICO
+  PRIVADO
+  INDETERMINADO
+}
+
 model GrupoEconomico {
-  id           String        @id
-  nome         String
-  tipoDado     TipoDado      @default(DEMONSTRACAO)
-  instituicoes Instituicao[]
+  id               String                  @id
+  nome             String
+  nomeNormalizado  String?
+  tipoDado         TipoDado                @default(DEMONSTRACAO)
+  tipoVinculo      TipoVinculo             @default(ISOLADO)
+  nivelConfianca   NivelConfianca          @default(BAIXA)
+  tipoEvidencia    String?
+  regraAgrupamento String?
+  versaoRegra      String?
+  statusRevisao    StatusRevisaoSegmentacao @default(NAO_REVISADO)
+  dataCalculo      DateTime?
+  observacao       String?
+  natureza         NaturezaJuridicaClasse  @default(INDETERMINADO)
+  instituicoes     Instituicao[]
 }
 
 model TipoEstabelecimento {

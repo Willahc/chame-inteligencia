@@ -7,13 +7,14 @@ import type {
   InstituicaoAssistente,
   InstituicaoRadar,
   NivelConfianca,
+  OrganizacaoRadar,
   StatusRevisao,
   TipoDado,
 } from "@/domain/tipos";
 import { prisma } from "./prisma";
 
 export const incluirInstituicao = {
-  grupoEconomico: true,
+  grupoEconomico: { include: { _count: { select: { instituicoes: true } } } },
   tipoEstabelecimento: true,
   unidades: { include: { endereco: true }, orderBy: { nome: "asc" as const } },
   servicos: { orderBy: { nome: "asc" as const } },
@@ -60,6 +61,14 @@ export function mapearEvidencia(item: InstituicaoCompleta["evidencias"][number])
   };
 }
 
+export function mapearParaAssistente(item: InstituicaoCompleta): InstituicaoAssistente {
+  return {
+    ...mapearParaRadar(item),
+    descricao: item.descricao,
+    evidencias: item.evidencias.map(mapearEvidencia),
+  };
+}
+
 export function mapearParaRadar(item: InstituicaoCompleta): InstituicaoRadar {
   const evidencias = item.evidencias.map(mapearEvidencia);
   const componentePrincipal = item.indice?.componentes
@@ -71,6 +80,7 @@ export function mapearParaRadar(item: InstituicaoCompleta): InstituicaoRadar {
     slug: item.slug,
     nome: item.nome,
     grupo: item.grupoEconomico?.nome ?? null,
+    organizacao: item.grupoEconomico && item.grupoEconomico.tipoDado !== "DEMONSTRACAO" ? mapearOrganizacao(item.grupoEconomico) : null,
     municipio: municipios[0] ?? "Não informado",
     municipios,
     tipo: item.tipoEstabelecimento.nome,
@@ -101,10 +111,50 @@ export function mapearParaRadar(item: InstituicaoCompleta): InstituicaoRadar {
   };
 }
 
-export function mapearParaAssistente(item: InstituicaoCompleta): InstituicaoAssistente {
+type GrupoEconomicoComContagem = Prisma.InstituicaoGetPayload<{ include: typeof incluirInstituicao }>["grupoEconomico"];
+
+export function mapearOrganizacao(grupo: NonNullable<GrupoEconomicoComContagem>): OrganizacaoRadar {
   return {
-    ...mapearParaRadar(item),
-    descricao: item.descricao,
-    evidencias: item.evidencias.map(mapearEvidencia),
+    id: grupo.id,
+    nome: grupo.nome,
+    nomeNormalizado: grupo.nomeNormalizado,
+    tipoDado: grupo.tipoDado as TipoDado,
+    tipoVinculo: grupo.tipoVinculo,
+    confianca: grupo.nivelConfianca,
+    natureza: grupo.natureza,
+    quantidadeUnidades: grupo._count?.instituicoes ?? 0,
+    statusRevisao: grupo.statusRevisao,
+    regraAgrupamento: grupo.regraAgrupamento,
+    versaoRegra: grupo.versaoRegra,
+    tipoEvidencia: grupo.tipoEvidencia,
+    observacao: grupo.observacao,
+    dataCalculo: grupo.dataCalculo?.toISOString(),
+    precisaRevisao: grupo.tipoVinculo === "PROVAVEL" || grupo.tipoVinculo === "INCERTO",
   };
+}
+
+export const incluirOrganizacao = {
+  tipoEstabelecimento: true,
+  unidades: { include: { endereco: true } },
+  segmentacao: true,
+  indice: true,
+} satisfies Prisma.InstituicaoInclude;
+
+export type OrganizacaoCompleta = Prisma.GrupoEconomicoGetPayload<{
+  include: { instituicoes: { include: typeof incluirOrganizacao } };
+}>;
+
+export async function listarOrganizacoes(): Promise<OrganizacaoCompleta[]> {
+  return prisma.grupoEconomico.findMany({
+    where: { NOT: { tipoDado: "DEMONSTRACAO" } },
+    include: { instituicoes: { include: incluirOrganizacao, orderBy: { nome: "asc" as const } } },
+    orderBy: { nome: "asc" as const },
+  });
+}
+
+export async function obterOrganizacao(id: string): Promise<OrganizacaoCompleta | null> {
+  return prisma.grupoEconomico.findUnique({
+    where: { id },
+    include: { instituicoes: { include: incluirOrganizacao, orderBy: { nome: "asc" as const } } },
+  });
 }

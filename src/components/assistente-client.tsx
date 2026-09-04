@@ -9,6 +9,10 @@ import type { RespostaAssistente } from "@/domain/assistente";
 const perguntas = [
   "Quais instituições devo abordar primeiro?",
   "Quais possuem várias unidades?",
+  "Quais pertencem a redes privadas multi-unidade?",
+  "Quais têm vinculo oficial com a organização?",
+  "Quais estão em agrupamentos prováveis?",
+  "Quais agrupamentos exigem revisão necessária?",
   "Quais possuem sinais de expansão?",
   "Quais funcionam 24 horas?",
   "Quais instituições possuem evidências fracas?",
