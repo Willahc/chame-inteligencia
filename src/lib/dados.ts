@@ -141,13 +141,13 @@ export const incluirOrganizacao = {
 } satisfies Prisma.InstituicaoInclude;
 
 export type OrganizacaoCompleta = Prisma.GrupoEconomicoGetPayload<{
-  include: { instituicoes: { include: typeof incluirOrganizacao } };
+  include: { instituicoes: { include: typeof incluirOrganizacao }; contatos: { include: { fonte: true } } };
 }>;
 
 export async function listarOrganizacoes(): Promise<OrganizacaoCompleta[]> {
   return prisma.grupoEconomico.findMany({
     where: { NOT: { tipoDado: "DEMONSTRACAO" } },
-    include: { instituicoes: { include: incluirOrganizacao, orderBy: { nome: "asc" as const } } },
+    include: { instituicoes: { include: incluirOrganizacao, orderBy: { nome: "asc" as const } }, contatos: { include: { fonte: true }, where: { ativo: true }, orderBy: { nome: "asc" as const } } },
     orderBy: { nome: "asc" as const },
   });
 }
@@ -155,6 +155,6 @@ export async function listarOrganizacoes(): Promise<OrganizacaoCompleta[]> {
 export async function obterOrganizacao(id: string): Promise<OrganizacaoCompleta | null> {
   return prisma.grupoEconomico.findUnique({
     where: { id },
-    include: { instituicoes: { include: incluirOrganizacao, orderBy: { nome: "asc" as const } } },
+    include: { instituicoes: { include: incluirOrganizacao, orderBy: { nome: "asc" as const } }, contatos: { include: { fonte: true }, where: { ativo: true }, orderBy: { nome: "asc" as const } } },
   });
 }

@@ -81,20 +81,21 @@ enum NaturezaJuridicaClasse {
 }
 
 model GrupoEconomico {
-  id               String                  @id
+  id               String                   @id
   nome             String
   nomeNormalizado  String?
-  tipoDado         TipoDado                @default(DEMONSTRACAO)
-  tipoVinculo      TipoVinculo             @default(ISOLADO)
-  nivelConfianca   NivelConfianca          @default(BAIXA)
+  tipoDado         TipoDado                 @default(DEMONSTRACAO)
+  tipoVinculo      TipoVinculo              @default(ISOLADO)
+  nivelConfianca   NivelConfianca           @default(BAIXA)
   tipoEvidencia    String?
   regraAgrupamento String?
   versaoRegra      String?
   statusRevisao    StatusRevisaoSegmentacao @default(NAO_REVISADO)
   dataCalculo      DateTime?
   observacao       String?
-  natureza         NaturezaJuridicaClasse  @default(INDETERMINADO)
+  natureza         NaturezaJuridicaClasse   @default(INDETERMINADO)
   instituicoes     Instituicao[]
+  contatos         ContatoProfissional[]
 }
 
 model TipoEstabelecimento {
@@ -214,13 +215,46 @@ model AreaDecisora {
 }
 
 model Fonte {
-  id            String         @id
+  id            String                @id
   nome          String
   url           String?
   identificador String?
   tipoDado      TipoDado
   evidencias    Evidencia[]
   lotes         LoteIngestao[]
+  contatos      ContatoProfissional[]
+}
+
+model ContatoProfissional {
+  id                    String         @id
+  nome                  String
+  cargo                 String?
+  area                  String?
+  empresa               String
+  linkedinUrl           String?
+  paginaProfissionalUrl String?
+  emailCorporativo      String?
+  telefoneProfissional  String?
+  ramal                 String?
+  telefoneDepartamental String?
+  papelComercial        String?
+  tipoPapelComercial    TipoDado       @default(INFERENCIA)
+  tipoDado              TipoDado       @default(FATO_PUBLICO)
+  confianca             NivelConfianca
+  statusRevisao         StatusRevisao  @default(PENDENTE)
+  ativo                 Boolean        @default(true)
+  fonteId               String
+  dataEvidencia         DateTime
+  observacao            String?
+  criadoEm              DateTime       @default(now())
+  atualizadoEm          DateTime       @updatedAt
+  grupoEconomicoId      String
+  grupoEconomico        GrupoEconomico @relation(fields: [grupoEconomicoId], references: [id], onDelete: Cascade)
+  fonte                 Fonte          @relation(fields: [fonteId], references: [id])
+
+  @@index([grupoEconomicoId, ativo])
+  @@index([statusRevisao])
+  @@index([tipoDado, confianca])
 }
 
 model Evidencia {
@@ -333,21 +367,21 @@ model RegistroBrutoCNES {
 }
 
 model SegmentacaoComercial {
-  id                  String                 @id
-  instituicaoId       String                 @unique
-  segmento            SegmentoComercial
-  indiceAderencia     Int
-  faixaAderencia      FaixaAderencia
-  regraAplicada       String
-  versaoRegra         String
-  dataCalculo         DateTime
-  nivelConfianca      NivelConfianca
-  justificativa       String
-  componentesJson     String
-  statusRevisao       StatusRevisaoSegmentacao @default(NAO_REVISADO)
-  criadoEm            DateTime               @default(now())
-  atualizadoEm        DateTime               @default(now())
-  instituicao         Instituicao            @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+  id              String                   @id
+  instituicaoId   String                   @unique
+  segmento        SegmentoComercial
+  indiceAderencia Int
+  faixaAderencia  FaixaAderencia
+  regraAplicada   String
+  versaoRegra     String
+  dataCalculo     DateTime
+  nivelConfianca  NivelConfianca
+  justificativa   String
+  componentesJson String
+  statusRevisao   StatusRevisaoSegmentacao @default(NAO_REVISADO)
+  criadoEm        DateTime                 @default(now())
+  atualizadoEm    DateTime                 @default(now())
+  instituicao     Instituicao              @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
 
   @@index([segmento])
   @@index([faixaAderencia])

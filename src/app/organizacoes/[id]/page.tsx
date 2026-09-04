@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AlertTriangle, ArrowLeft, Building2, CalendarClock, GitBranch, ListChecks, MapPin } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Building2, CalendarClock, GitBranch, ListChecks, MapPin, UserRound } from "lucide-react";
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
 import { ClasseNatureza, ClasseSegmento, ClasseVinculo, MarcadorTipo, rotuloConfianca, rotuloStatusRevisao } from "@/components/rotulos";
 import { obterOrganizacao } from "@/lib/dados";
@@ -55,6 +55,12 @@ export default async function OrganizacaoPage({ params }: PageProps<"/organizaco
           <div className="rounded-xl bg-slate-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-[var(--texto-suave)]">Natureza do agrupamento</dt><dd className="mt-2 text-lg font-bold">{rotuloNatureza(organizacao.natureza)}</dd></div>
         </dl>
         {municipios.length > 0 && <p className="mt-5 flex items-start gap-2 text-sm leading-6 text-[var(--texto-suave)]"><MapPin className="mt-0.5 shrink-0 text-[var(--azul)]" size={17} aria-hidden="true" />{municipios.join(", ")}</p>}
+      </section>
+
+      <section className="painel mt-6 p-6">
+        <div className="flex items-center gap-3"><UserRound className="text-[var(--azul)]" size={21} aria-hidden="true" /><h2 className="text-lg font-bold">Contatos profissionais públicos</h2></div>
+        <p className="mt-2 text-sm leading-6 text-[var(--texto-suave)]">Contatos reproduzidos em fontes públicas para prospecção B2B. O papel comercial é uma inferência e não confirma poder de decisão.</p>
+        {organizacao.contatos.length === 0 ? <p className="mt-5 text-sm text-[var(--texto-suave)]">Nenhum contato público confirmado.</p> : <div className="mt-5 grid gap-4 lg:grid-cols-2">{organizacao.contatos.map((contato) => <article className="rounded-xl border border-[var(--borda)] bg-slate-50 p-5" key={contato.id}><div className="flex items-start justify-between gap-3"><div><h3 className="font-bold">{contato.nome}</h3><p className="mt-1 text-sm text-[var(--texto-suave)]">{contato.cargo ?? "Cargo não informado"}{contato.area ? ` — ${contato.area}` : ""}</p></div><span className="rounded-full border border-teal-200 bg-teal-50 px-2.5 py-1 text-xs font-bold text-teal-800">Fato público</span></div><dl className="mt-4 grid gap-2 text-sm sm:grid-cols-2"><div><dt className="text-xs font-semibold uppercase tracking-wide text-[var(--texto-suave)]">Papel comercial</dt><dd className="mt-1">{contato.papelComercial ?? "Não definido"} <span className="text-xs text-[var(--texto-suave)]">(inferência)</span></dd></div><div><dt className="text-xs font-semibold uppercase tracking-wide text-[var(--texto-suave)]">Confiança</dt><dd className="mt-1">{rotuloConfianca[contato.confianca]}</dd></div></dl><div className="mt-4 flex flex-wrap gap-3 text-sm">{contato.linkedinUrl && <a className="font-bold text-[var(--azul)] hover:underline" href={contato.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn público</a>}{contato.paginaProfissionalUrl && !contato.linkedinUrl && <a className="font-bold text-[var(--azul)] hover:underline" href={contato.paginaProfissionalUrl} target="_blank" rel="noreferrer">Fonte profissional pública</a>}</div><p className="mt-3 text-xs leading-5 text-[var(--texto-suave)]">Fonte: <a className="underline" href={contato.fonte.url ?? "#"} target="_blank" rel="noreferrer">{contato.fonte.nome}</a> · Evidência de {new Date(contato.dataEvidencia).toLocaleDateString("pt-BR")}</p>{contato.observacao && <p className="mt-3 text-xs leading-5 text-[var(--texto-suave)]">{contato.observacao}</p>}</article>)}</div>}
       </section>
 
       <section className="painel mt-6 p-6">
