@@ -10,6 +10,8 @@ export interface FiltrosRadar {
   operacao24h?: boolean;
   qualidadeEvidencia?: NivelConfianca;
   faixa?: FaixaPrioridade;
+  segmento?: string;
+  somenteOportunidadesComerciais?: boolean;
 }
 
 function normalizar(texto: string): string {
@@ -31,5 +33,12 @@ export function filtrarInstituicoes(
     .filter((item) => !filtros.operacao24h || item.operacao24h)
     .filter((item) => !filtros.qualidadeEvidencia || item.qualidadeEvidencias === filtros.qualidadeEvidencia)
     .filter((item) => !filtros.faixa || item.faixa === filtros.faixa)
+    .filter((item) => !filtros.segmento || item.segmentacao?.segmento === filtros.segmento)
+    .filter(
+      (item) =>
+        !filtros.somenteOportunidadesComerciais ||
+        item.segmentacao?.segmento === "NUCLEO_HOSPITALAR" ||
+        item.segmentacao?.segmento === "SAUDE_CORPORATIVA_EXPANDIDA",
+    )
     .sort((a, b) => b.indice - a.indice || a.nome.localeCompare(b.nome, "pt-BR"));
 }

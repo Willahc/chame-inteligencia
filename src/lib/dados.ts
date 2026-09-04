@@ -23,6 +23,7 @@ export const incluirInstituicao = {
   evidencias: { include: { fonte: true }, orderBy: { dataColeta: "desc" as const } },
   indice: { include: { componentes: { include: { evidencias: { include: { fonte: true } } }, orderBy: { peso: "desc" as const } } } },
   acoesComerciais: { orderBy: { prioridade: "asc" as const } },
+  segmentacao: true,
 } satisfies Prisma.InstituicaoInclude;
 
 export type InstituicaoCompleta = Prisma.InstituicaoGetPayload<{ include: typeof incluirInstituicao }>;
@@ -84,6 +85,19 @@ export function mapearParaRadar(item: InstituicaoCompleta): InstituicaoRadar {
     tipoDado: item.tipoDado as TipoDado,
     cnes: item.cnes,
     coberturaDados: item.coberturaDados,
+    segmentacao: item.segmentacao
+      ? {
+          segmento: item.segmentacao.segmento,
+          faixaAderencia: item.segmentacao.faixaAderencia,
+          confianca: item.segmentacao.nivelConfianca as NivelConfianca,
+          indiceAderencia: item.segmentacao.indiceAderencia,
+          versaoRegra: item.segmentacao.versaoRegra,
+          justificativa: item.segmentacao.justificativa,
+          regraAplicada: item.segmentacao.regraAplicada,
+          statusRevisao: item.segmentacao.statusRevisao,
+          precisaRevisao: item.segmentacao.statusRevisao !== "APROVADO",
+        }
+      : null,
   };
 }
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { ArrowRight, Building2, Clock3, FileWarning, FlaskConical, MapPinned, TrendingUp } from "lucide-react";
+import { ArrowRight, Building2, Clock3, FileWarning, FlaskConical, Layers, MapPinned, TrendingUp } from "lucide-react";
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
-import { ClasseFaixa, rotuloFaixa } from "@/components/rotulos";
+import { ClasseFaixa, ClasseSegmento, rotuloFaixa, rotuloSegmento } from "@/components/rotulos";
 import type { FaixaPrioridade } from "@/domain/tipos";
 import { listarInstituicoes, mapearParaRadar } from "@/lib/dados";
 
@@ -20,11 +20,15 @@ export default async function Home() {
     { rotulo: "Operação 24 horas", valor: instituicoes.filter((item) => item.operacao24h).length, detalhe: "demanda contínua provável", icone: Clock3 },
     { rotulo: "Com sinal de expansão", valor: instituicoes.filter((item) => item.possuiExpansao).length, detalhe: "requer validação humana", icone: TrendingUp },
     { rotulo: "Evidências pendentes", valor: pendentes, detalhe: "aguardando revisão", icone: FileWarning },
+    { rotulo: "Segmentadas", valor: instituicoes.filter((item) => item.segmentacao).length, detalhe: "segmentação comercial", icone: Layers },
   ];
   const faixas = (["MUITO_ALTA", "ALTA", "MODERADA", "BAIXA"] as FaixaPrioridade[]).map((faixa) => ({
     faixa,
     quantidade: instituicoes.filter((item) => item.faixa === faixa).length,
   }));
+  const segmentos = Object.entries(Object.groupBy(instituicoes.filter((item) => item.segmentacao), (item) => item.segmentacao?.segmento ?? "Sem segmento"))
+    .map(([segmento, itens]) => ({ segmento, quantidade: itens?.length ?? 0 }))
+    .sort((a, b) => b.quantidade - a.quantidade);
   const tipos = Object.entries(Object.groupBy(instituicoes, (item) => item.tipo)).map(([tipo, itens]) => ({ tipo, quantidade: itens?.length ?? 0 }));
   const motivos = Object.entries(Object.groupBy(instituicoes, (item) => item.principalMotivo))
     .map(([motivo, itens]) => ({ motivo, quantidade: itens?.length ?? 0 }))
@@ -94,6 +98,11 @@ export default async function Home() {
           <article className="painel p-6">
             <h2 className="text-lg font-bold text-[var(--azul-profundo)]">Por tipo de instituição</h2>
             <ul className="mt-4 divide-y divide-[var(--borda)]">{tipos.map(({ tipo, quantidade }) => <li className="flex justify-between gap-4 py-3 text-sm" key={tipo}><span>{tipo}</span><strong>{quantidade}</strong></li>)}</ul>
+          </article>
+          <article className="painel p-6">
+            <h2 className="text-lg font-bold text-[var(--azul-profundo)]">Segmentação comercial</h2>
+            <p className="mt-1 text-sm text-[var(--texto-suave)]">Segmento derivado por tipo e estrutura, como inferência sobre o CNES.</p>
+            <ul className="mt-4 divide-y divide-[var(--borda)]">{segmentos.map(({ segmento, quantidade }) => <li className="flex items-center justify-between gap-4 py-3 text-sm" key={segmento}><span className="font-medium">{rotuloSegmento[segmento] ?? segmento}</span><span className="flex items-center gap-3"><strong>{quantidade}</strong><ClasseSegmento segmento={segmento} /></span></li>)}</ul>
           </article>
         </div>
       </section>

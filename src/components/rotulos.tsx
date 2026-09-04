@@ -27,6 +27,36 @@ export const rotuloTipo: Record<TipoDado, string> = {
   DEMONSTRACAO: "Demonstração",
 };
 
+export const rotuloSegmento: Record<string, string> = {
+  NUCLEO_HOSPITALAR: "Núcleo Hospitalar",
+  SAUDE_CORPORATIVA_EXPANDIDA: "Saúde Corporativa",
+  BAIXA_PRIORIDADE_INICIAL: "Baixa Prioridade",
+  FORA_DO_FOCO_ATUAL: "Fora do Foco",
+};
+
+export const rotuloFaixaAderencia: Record<string, string> = {
+  ALTA: "Alta aderência",
+  MEDIA: "Média aderência",
+  BAIXA: "Baixa aderência",
+  FORA_DO_FOCO: "Fora do foco",
+};
+
+export const rotuloStatusRevisao: Record<string, string> = {
+  NAO_REVISADO: "Não revisado",
+  APROVADO: "Aprovado",
+  AJUSTE_NECESSARIO: "Ajuste necessário",
+};
+
+export function ClasseSegmento({ segmento }: { segmento: string }) {
+  const classe = {
+    NUCLEO_HOSPITALAR: "border-emerald-200 bg-emerald-50 text-emerald-800",
+    SAUDE_CORPORATIVA_EXPANDIDA: "border-cyan-200 bg-cyan-50 text-cyan-800",
+    BAIXA_PRIORIDADE_INICIAL: "border-amber-200 bg-amber-50 text-amber-800",
+    FORA_DO_FOCO_ATUAL: "border-slate-200 bg-slate-100 text-slate-700",
+  }[segmento] ?? "border-slate-200 bg-slate-100 text-slate-700";
+  return <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-bold ${classe}`}>{rotuloSegmento[segmento] ?? segmento}</span>;
+}
+
 export function ClasseFaixa({ faixa }: { faixa: FaixaPrioridade }) {
   const classe = {
     MUITO_ALTA: "bg-emerald-100 text-emerald-800 border-emerald-200",

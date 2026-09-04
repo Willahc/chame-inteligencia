@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AlertTriangle, ArrowLeft, Building2, CheckCircle2, Clock3, ExternalLink, MapPin, UsersRound } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Building2, CheckCircle2, Clock3, ExternalLink, Layers, MapPin, UsersRound } from "lucide-react";
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
-import { ClasseFaixa, MarcadorTipo, rotuloConfianca, rotuloRevisao } from "@/components/rotulos";
-import { mapearEvidencia, obterInstituicaoPorSlug } from "@/lib/dados";
+import { ClasseFaixa, ClasseSegmento, MarcadorTipo, rotuloConfianca, rotuloFaixaAderencia, rotuloRevisao, rotuloStatusRevisao } from "@/components/rotulos";
+import { mapearEvidencia, mapearParaRadar, obterInstituicaoPorSlug } from "@/lib/dados";
 import type { FaixaPrioridade, TipoDado } from "@/domain/tipos";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +16,7 @@ export default async function InstituicaoPage({ params }: PageProps<"/instituico
   const fontes = [...new Map(evidencias.map((item) => [item.fonte.id, item.fonte])).values()];
   const possuiAlerta = evidencias.some((item) => item.confianca === "BAIXA" || item.statusRevisao !== "APROVADA");
   const indice = instituicao.indice;
+  const segmentacaoRadar = mapearParaRadar(instituicao).segmentacao;
 
   return (
     <div className="mx-auto max-w-[1500px] px-4 py-6 sm:px-6 lg:px-10 lg:py-9">
@@ -41,6 +42,13 @@ export default async function InstituicaoPage({ params }: PageProps<"/instituico
           <div className="mt-8 border-t border-white/10 pt-4 text-xs leading-5 text-slate-400">Motor determinístico · versão {indice?.versao ?? "não calculada"}<br />Calculado em {indice?.calculadoEm.toLocaleDateString("pt-BR") ?? "—"}</div>
         </article>
       </section>
+
+      {segmentacaoRadar && <section className="painel mt-6 p-6">
+        <div className="flex flex-wrap items-start justify-between gap-4"><div className="flex items-center gap-3"><Layers className="text-[var(--azul)]" size={21} aria-hidden="true" /><h2 className="text-lg font-bold">Segmentação comercial</h2></div><ClasseSegmento segmento={segmentacaoRadar.segmento} /></div>
+        <p className="mt-1 text-sm text-[var(--texto-suave)]">Classificação de inferência sobre o universo CNES, sem substituir os dados oficiais.</p>
+        <dl className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5"><div className="rounded-xl bg-slate-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-[var(--texto-suave)]">Índice de aderência</dt><dd><span className="mt-1 block text-2xl font-bold text-[var(--azul-profundo)]">{segmentacaoRadar.indiceAderencia}</span><span className="mt-1 inline-block rounded-full bg-white px-2.5 py-1 text-xs font-bold">de 100</span></dd></div><div className="rounded-xl bg-slate-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-[var(--texto-suave)]">Faixa de aderência</dt><dd className="mt-2 text-base font-bold">{rotuloFaixaAderencia[segmentacaoRadar.faixaAderencia] ?? segmentacaoRadar.faixaAderencia}</dd></div><div className="rounded-xl bg-slate-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-[var(--texto-suave)]">Confiança</dt><dd className="mt-2 text-base font-bold">{rotuloConfianca[segmentacaoRadar.confianca]}</dd></div><div className="rounded-xl bg-slate-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-[var(--texto-suave)]">Revisão</dt><dd className="mt-2 text-base font-bold">{rotuloStatusRevisao[segmentacaoRadar.statusRevisao] ?? segmentacaoRadar.statusRevisao}</dd></div><div className="rounded-xl bg-slate-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-[var(--texto-suave)]">Versão da regra</dt><dd className="mt-2 text-base font-bold">{segmentacaoRadar.versaoRegra}</dd></div></dl>
+        <p className="mt-5 rounded-xl border border-[var(--borda)] bg-slate-50 p-4 text-sm leading-6 text-[var(--texto-suave)]"><strong className="text-[var(--texto)]">Justificativa:</strong> {segmentacaoRadar.justificativa}</p>
+      </section>}
 
       <section className="mt-6 grid gap-6 xl:grid-cols-2">
         <article className="painel p-6"><div className="flex items-center gap-3"><MapPin className="text-[var(--azul)]" size={21} aria-hidden="true" /><h2 className="text-lg font-bold">Unidades e localização</h2></div><ul className="mt-4 space-y-3">{instituicao.unidades.map((unidade) => <li className="rounded-xl border border-[var(--borda)] p-4" key={unidade.id}><div className="flex items-center justify-between gap-4"><strong>{unidade.nome}</strong>{unidade.operacao24h && <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700"><Clock3 size={14} aria-hidden="true" />24 horas</span>}</div>{unidade.endereco && <p className="mt-2 text-sm leading-6 text-[var(--texto-suave)]">{unidade.endereco.logradouro}, {unidade.endereco.numero} · {unidade.endereco.bairro}<br />{unidade.endereco.municipio}/{unidade.endereco.uf} · <strong>DEMONSTRAÇÃO</strong></p>}</li>)}</ul></article>

@@ -31,6 +31,18 @@ export interface EvidenciaDominio {
   };
 }
 
+export interface SegmentacaoRadar {
+  segmento: string;
+  faixaAderencia: string;
+  confianca: NivelConfianca;
+  indiceAderencia: number;
+  versaoRegra: string;
+  justificativa: string;
+  regraAplicada: string;
+  statusRevisao: string;
+  precisaRevisao: boolean;
+}
+
 export interface InstituicaoRadar {
   id: string;
   slug: string;
@@ -50,6 +62,7 @@ export interface InstituicaoRadar {
   tipoDado: TipoDado;
   cnes?: string | null;
   coberturaDados?: number;
+  segmentacao?: SegmentacaoRadar | null;
 }
 
 export interface InstituicaoAssistente extends InstituicaoRadar {

@@ -47,6 +47,26 @@ enum StatusRegistroIngestao {
   REVISAO_NECESSARIA
 }
 
+enum SegmentoComercial {
+  NUCLEO_HOSPITALAR
+  SAUDE_CORPORATIVA_EXPANDIDA
+  BAIXA_PRIORIDADE_INICIAL
+  FORA_DO_FOCO_ATUAL
+}
+
+enum FaixaAderencia {
+  ALTA
+  MEDIA
+  BAIXA
+  FORA_DO_FOCO
+}
+
+enum StatusRevisaoSegmentacao {
+  NAO_REVISADO
+  APROVADO
+  AJUSTE_NECESSARIO
+}
+
 model GrupoEconomico {
   id           String        @id
   nome         String
@@ -87,6 +107,7 @@ model Instituicao {
   evidencias             Evidencia[]
   indice                 IndicePrioridade?
   acoesComerciais        AcaoComercial[]
+  segmentacao            SegmentacaoComercial?
 
   @@index([grupoEconomicoId])
   @@index([tipoEstabelecimentoId])
@@ -286,4 +307,25 @@ model RegistroBrutoCNES {
   @@unique([loteId, linha])
   @@index([cnes])
   @@index([status])
+}
+
+model SegmentacaoComercial {
+  id                  String                 @id
+  instituicaoId       String                 @unique
+  segmento            SegmentoComercial
+  indiceAderencia     Int
+  faixaAderencia      FaixaAderencia
+  regraAplicada       String
+  versaoRegra         String
+  dataCalculo         DateTime
+  nivelConfianca      NivelConfianca
+  justificativa       String
+  componentesJson     String
+  statusRevisao       StatusRevisaoSegmentacao @default(NAO_REVISADO)
+  criadoEm            DateTime               @default(now())
+  atualizadoEm        DateTime               @default(now())
+  instituicao         Instituicao            @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+
+  @@index([segmento])
+  @@index([faixaAderencia])
 }

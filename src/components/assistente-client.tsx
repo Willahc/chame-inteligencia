@@ -12,6 +12,8 @@ const perguntas = [
   "Quais possuem sinais de expansão?",
   "Quais funcionam 24 horas?",
   "Quais instituições possuem evidências fracas?",
+  "Quais pertencem ao Núcleo Hospitalar?",
+  "Quais oportunidades comerciais devo priorizar?",
   "Por que esta instituição está priorizada?",
   "Prepare um resumo comercial desta instituição.",
 ];

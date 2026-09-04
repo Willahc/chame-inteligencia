@@ -47,6 +47,15 @@ export function responderAssistente(
   if (texto.includes("evidencias fracas") || texto.includes("evidencia fraca")) {
     return listar(ordenadas.filter((item) => item.qualidadeEvidencias === "BAIXA"), "Instituições que exigem reforço ou revisão das evidências:");
   }
+  if (texto.includes("nucleo hospitalar") || texto.includes("nucleo h")) {
+    return listar(ordenadas.filter((item) => item.segmentacao?.segmento === "NUCLEO_HOSPITALAR"), "Instituições do segmento Núcleo Hospitalar:");
+  }
+  if (texto.includes("saude corporativa") || texto.includes("hospitalar expand")) {
+    return listar(ordenadas.filter((item) => item.segmentacao?.segmento === "SAUDE_CORPORATIVA_EXPANDIDA"), "Instituições do segmento Saúde Corporativa expandida:");
+  }
+  if (texto.includes("oportunidades comerciais") || texto.includes("segmentacao")) {
+    return listar(ordenadas.filter((item) => item.segmentacao?.segmento === "NUCLEO_HOSPITALAR" || item.segmentacao?.segmento === "SAUDE_CORPORATIVA_EXPANDIDA"), "Priorize primeiro estas instituições pelos segmentos de maior aderência comercial:");
+  }
   if (texto.includes("por que") || texto.includes("resumo comercial") || texto.includes("resumo desta")) {
     if (!selecionada || !possuiEvidenciaSuficiente(selecionada.evidencias)) {
       return { resposta: "Não há evidências suficientes para responder com segurança.", instituicoes: [], intencaoReconhecida: true };
