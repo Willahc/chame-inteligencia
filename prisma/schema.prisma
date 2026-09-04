@@ -1,0 +1,219 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum TipoDado {
+  FATO_OFICIAL
+  FATO_PUBLICO
+  INFERENCIA
+  HIPOTESE
+  DEMONSTRACAO
+}
+
+enum NivelConfianca {
+  ALTA
+  MEDIA
+  BAIXA
+}
+
+enum StatusRevisao {
+  APROVADA
+  PENDENTE
+  REJEITADA
+}
+
+enum FaixaPrioridade {
+  MUITO_ALTA
+  ALTA
+  MODERADA
+  BAIXA
+}
+
+model GrupoEconomico {
+  id           String        @id
+  nome         String
+  tipoDado     TipoDado      @default(DEMONSTRACAO)
+  instituicoes Instituicao[]
+}
+
+model TipoEstabelecimento {
+  id           String        @id
+  nome         String        @unique
+  instituicoes Instituicao[]
+}
+
+model Instituicao {
+  id                    String                 @id
+  slug                  String                 @unique
+  nome                  String
+  descricao             String
+  operacao24h            Boolean                @default(false)
+  porte                  String
+  perfilCorporativo     Boolean                @default(false)
+  tipoDado              TipoDado               @default(DEMONSTRACAO)
+  grupoEconomicoId      String?
+  tipoEstabelecimentoId String
+  grupoEconomico        GrupoEconomico?        @relation(fields: [grupoEconomicoId], references: [id])
+  tipoEstabelecimento   TipoEstabelecimento    @relation(fields: [tipoEstabelecimentoId], references: [id])
+  unidades              Unidade[]
+  servicos              ServicoSaude[]
+  sinaisExpansao        SinalExpansao[]
+  necessidades          NecessidadeMobilidade[]
+  areasDecisoras        AreaDecisora[]
+  evidencias            Evidencia[]
+  indice                IndicePrioridade?
+  acoesComerciais       AcaoComercial[]
+
+  @@index([grupoEconomicoId])
+  @@index([tipoEstabelecimentoId])
+  @@index([operacao24h])
+}
+
+model Unidade {
+  id            String      @id
+  nome          String
+  operacao24h   Boolean     @default(false)
+  tipoDado      TipoDado    @default(DEMONSTRACAO)
+  instituicaoId String
+  instituicao   Instituicao @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+  endereco      Endereco?
+
+  @@index([instituicaoId])
+}
+
+model Endereco {
+  id         String   @id
+  logradouro String
+  numero     String
+  bairro     String
+  municipio  String
+  uf         String
+  tipoDado   TipoDado @default(DEMONSTRACAO)
+  unidadeId  String   @unique
+  unidade    Unidade  @relation(fields: [unidadeId], references: [id], onDelete: Cascade)
+
+  @@index([municipio, uf])
+}
+
+model ServicoSaude {
+  id            String      @id
+  nome          String
+  descricao     String?
+  tipoDado      TipoDado    @default(DEMONSTRACAO)
+  instituicaoId String
+  instituicao   Instituicao @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+
+  @@index([instituicaoId])
+}
+
+model SinalExpansao {
+  id            String      @id
+  titulo        String
+  descricao     String
+  dataReferencia DateTime?
+  tipoDado      TipoDado    @default(DEMONSTRACAO)
+  instituicaoId String
+  instituicao   Instituicao @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+  evidencias    Evidencia[]
+
+  @@index([instituicaoId])
+}
+
+model NecessidadeMobilidade {
+  id            String      @id
+  titulo        String
+  descricao     String
+  tipoDado      TipoDado    @default(HIPOTESE)
+  instituicaoId String
+  instituicao   Instituicao @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+
+  @@index([instituicaoId])
+}
+
+model AreaDecisora {
+  id            String      @id
+  nome          String
+  justificativa String
+  tipoDado      TipoDado    @default(HIPOTESE)
+  instituicaoId String
+  instituicao   Instituicao @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+
+  @@index([instituicaoId])
+}
+
+model Fonte {
+  id            String      @id
+  nome          String
+  url           String?
+  identificador String?
+  tipoDado      TipoDado
+  evidencias    Evidencia[]
+}
+
+model Evidencia {
+  id             String          @id
+  titulo         String
+  descricao      String
+  observacao     String?
+  dataColeta     DateTime
+  dataReferencia DateTime?
+  tipo            TipoDado
+  confianca       NivelConfianca
+  statusRevisao   StatusRevisao
+  instituicaoId  String
+  fonteId         String
+  instituicao    Instituicao     @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+  fonte           Fonte           @relation(fields: [fonteId], references: [id])
+  sinaisExpansao  SinalExpansao[]
+  componentes     ComponenteIndice[]
+
+  @@index([instituicaoId])
+  @@index([statusRevisao])
+  @@index([tipo, confianca])
+}
+
+model IndicePrioridade {
+  id            String             @id
+  total         Int
+  faixa         FaixaPrioridade
+  versao        String
+  calculadoEm   DateTime
+  instituicaoId String             @unique
+  instituicao   Instituicao        @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+  componentes   ComponenteIndice[]
+
+  @@index([total])
+  @@index([faixa])
+}
+
+model ComponenteIndice {
+  id                  String            @id
+  criterio            String
+  rotulo              String
+  peso                Int
+  valorObtido         Int
+  justificativa       String
+  indicePrioridadeId  String
+  indicePrioridade    IndicePrioridade  @relation(fields: [indicePrioridadeId], references: [id], onDelete: Cascade)
+  evidencias          Evidencia[]
+
+  @@index([indicePrioridadeId])
+}
+
+model AcaoComercial {
+  id            String      @id
+  titulo        String
+  descricao     String
+  prioridade    Int
+  concluida     Boolean     @default(false)
+  tipoDado      TipoDado    @default(DEMONSTRACAO)
+  instituicaoId String
+  instituicao   Instituicao @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+
+  @@index([instituicaoId, concluida])
+}
