@@ -1,6 +1,7 @@
 import { ehRazaoGenerica, normalizarRazaoSocial, VERSAO_NORMALIZADOR_RAZAO } from "./normalizacao";
 
 export const VERSAO_REGRA_AGRUPAMENTO = "1.0.0";
+const DATA_CALCULO_DETERMINISTICA = "2026-09-04T12:00:00.000Z";
 
 export const REGRA_VINCULO_OFICIAL_CNPJ = "VINCULO_OFICIAL_CNPJ";
 export const REGRA_VINCULO_OFICIAL_MANTENEDORA = "VINCULO_OFICIAL_CNPJ_MANTENEDORA";
@@ -290,7 +291,7 @@ export function agruparInstituicoes(unidades: UnidadeAgrupamento[]): ResultadoAg
       regraAgrupamento,
       versaoRegra: VERSAO_REGRA_AGRUPAMENTO,
       statusRevisao,
-      dataCalculo: new Date().toISOString(),
+      dataCalculo: DATA_CALCULO_DETERMINISTICA,
       natureza,
       observacao,
       precisaRevisao,

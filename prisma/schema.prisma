@@ -132,6 +132,7 @@ model Instituicao {
   indice                 IndicePrioridade?
   acoesComerciais        AcaoComercial[]
   segmentacao            SegmentacaoComercial?
+  contatosProfissionais ContatoProfissional[]
 
   @@index([grupoEconomicoId])
   @@index([tipoEstabelecimentoId])
@@ -237,22 +238,29 @@ model ContatoProfissional {
   telefoneProfissional  String?
   ramal                 String?
   telefoneDepartamental String?
+  senioridade           String?
   papelComercial        String?
+  indiceQualidade       Int            @default(0)
+  justificativaQualidade String?
   tipoPapelComercial    TipoDado       @default(INFERENCIA)
   tipoDado              TipoDado       @default(FATO_PUBLICO)
   confianca             NivelConfianca
   statusRevisao         StatusRevisao  @default(PENDENTE)
   ativo                 Boolean        @default(true)
+  linkedinSimulado      Boolean        @default(false)
   fonteId               String
   dataEvidencia         DateTime
   observacao            String?
   criadoEm              DateTime       @default(now())
   atualizadoEm          DateTime       @updatedAt
-  grupoEconomicoId      String
-  grupoEconomico        GrupoEconomico @relation(fields: [grupoEconomicoId], references: [id], onDelete: Cascade)
+  grupoEconomicoId      String?
+  instituicaoId         String?
+  grupoEconomico        GrupoEconomico? @relation(fields: [grupoEconomicoId], references: [id], onDelete: Cascade)
+  instituicao           Instituicao?   @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
   fonte                 Fonte          @relation(fields: [fonteId], references: [id])
 
   @@index([grupoEconomicoId, ativo])
+  @@index([instituicaoId, ativo])
   @@index([statusRevisao])
   @@index([tipoDado, confianca])
 }

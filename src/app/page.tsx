@@ -63,7 +63,7 @@ export default async function Home() {
       <section className="mt-7 grid gap-6 xl:grid-cols-[1.7fr_1fr]">
         <article className="painel overflow-hidden">
           <div className="flex items-center justify-between gap-4 border-b border-[var(--borda)] px-5 py-4 sm:px-6">
-            <div><h2 className="text-lg font-bold text-[var(--azul-profundo)]">Top 10 oportunidades</h2><p className="mt-1 text-sm text-[var(--texto-suave)]">Ordenadas pelo índice de prioridade hospitalar</p></div>
+            <div><h2 className="text-lg font-bold text-[var(--azul-profundo)]">Top oportunidades</h2><p className="mt-1 text-sm text-[var(--texto-suave)]">MODO DEMONSTRAÇÃO — 5 contas simuladas, ordenadas pelo índice de prioridade</p></div>
             <span className="hidden rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 sm:inline">{instituicoes.filter((item) => item.indice >= 60).length} prioritárias</span>
           </div>
           <div className="overflow-x-auto">

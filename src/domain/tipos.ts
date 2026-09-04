@@ -13,6 +13,7 @@ export type NaturezaClasse = "PUBLICO" | "PRIVADO" | "INDETERMINADO";
 export type StatusRevisao = "APROVADA" | "PENDENTE" | "REJEITADA";
 export type FaixaPrioridade = "MUITO_ALTA" | "ALTA" | "MODERADA" | "BAIXA";
 export type Porte = "PEQUENO" | "MEDIO" | "GRANDE" | "MUITO_GRANDE";
+export type ModoDados = "MODO_DEMONSTRACAO" | "MODO_REAL";
 
 export interface EvidenciaDominio {
   id: string;

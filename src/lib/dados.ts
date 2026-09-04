@@ -12,6 +12,7 @@ import type {
   TipoDado,
 } from "@/domain/tipos";
 import { prisma } from "./prisma";
+import { obterModoDados, tipoDadoDoModo } from "@/domain/modo-dados";
 
 export const incluirInstituicao = {
   grupoEconomico: { include: { _count: { select: { instituicoes: true } } } },
@@ -25,19 +26,21 @@ export const incluirInstituicao = {
   indice: { include: { componentes: { include: { evidencias: { include: { fonte: true } } }, orderBy: { peso: "desc" as const } } } },
   acoesComerciais: { orderBy: { prioridade: "asc" as const } },
   segmentacao: true,
+  contatosProfissionais: { include: { fonte: true }, where: { ativo: true }, orderBy: { nome: "asc" as const } },
 } satisfies Prisma.InstituicaoInclude;
 
 export type InstituicaoCompleta = Prisma.InstituicaoGetPayload<{ include: typeof incluirInstituicao }>;
 
-export async function listarInstituicoes(): Promise<InstituicaoCompleta[]> {
+export async function listarInstituicoes(modo = obterModoDados()): Promise<InstituicaoCompleta[]> {
   return prisma.instituicao.findMany({
+    where: { tipoDado: tipoDadoDoModo(modo) },
     include: incluirInstituicao,
     orderBy: { indice: { total: "desc" } },
   });
 }
 
-export async function obterInstituicaoPorSlug(slug: string): Promise<InstituicaoCompleta | null> {
-  return prisma.instituicao.findUnique({ where: { slug }, include: incluirInstituicao });
+export async function obterInstituicaoPorSlug(slug: string, modo = obterModoDados()): Promise<InstituicaoCompleta | null> {
+  return prisma.instituicao.findFirst({ where: { slug, tipoDado: tipoDadoDoModo(modo) }, include: incluirInstituicao });
 }
 
 export function mapearEvidencia(item: InstituicaoCompleta["evidencias"][number]): EvidenciaDominio {
@@ -144,17 +147,17 @@ export type OrganizacaoCompleta = Prisma.GrupoEconomicoGetPayload<{
   include: { instituicoes: { include: typeof incluirOrganizacao }; contatos: { include: { fonte: true } } };
 }>;
 
-export async function listarOrganizacoes(): Promise<OrganizacaoCompleta[]> {
+export async function listarOrganizacoes(modo = obterModoDados()): Promise<OrganizacaoCompleta[]> {
   return prisma.grupoEconomico.findMany({
-    where: { NOT: { tipoDado: "DEMONSTRACAO" } },
+    where: modo === "MODO_DEMONSTRACAO" ? { tipoDado: "DEMONSTRACAO" } : { NOT: { tipoDado: "DEMONSTRACAO" } },
     include: { instituicoes: { include: incluirOrganizacao, orderBy: { nome: "asc" as const } }, contatos: { include: { fonte: true }, where: { ativo: true }, orderBy: { nome: "asc" as const } } },
     orderBy: { nome: "asc" as const },
   });
 }
 
-export async function obterOrganizacao(id: string): Promise<OrganizacaoCompleta | null> {
-  return prisma.grupoEconomico.findUnique({
-    where: { id },
+export async function obterOrganizacao(id: string, modo = obterModoDados()): Promise<OrganizacaoCompleta | null> {
+  return prisma.grupoEconomico.findFirst({
+    where: { id, ...(modo === "MODO_DEMONSTRACAO" ? { tipoDado: "DEMONSTRACAO" } : { NOT: { tipoDado: "DEMONSTRACAO" } }) },
     include: { instituicoes: { include: incluirOrganizacao, orderBy: { nome: "asc" as const } }, contatos: { include: { fonte: true }, where: { ativo: true }, orderBy: { nome: "asc" as const } } },
   });
 }
