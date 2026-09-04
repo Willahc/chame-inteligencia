@@ -130,9 +130,9 @@ A carga contém somente:
 
 O conjunto cobre instituição única, grupo econômico, múltiplas unidades, operação contínua e diurna, presença e ausência de expansão, prioridades diferentes e evidências fortes, médias, fracas e pendentes.
 
-## Ingestão futura
+## Ingestão CNES
 
-O fluxo obrigatório é **Coleta → Normalização → Resolução de entidade → Validação → Evidência → Índice → Publicação**. Os conectores ainda estão inativos e nenhuma base CNES, CNPJ, ANS ou outra fonte real foi baixada. Veja [docs/INGESTAO.md](docs/INGESTAO.md).
+O fluxo obrigatório é **Coleta → Normalização → Resolução de entidade → Validação → Evidência → Índice → Publicação**. A ingestão CNES está ativa e os dados reais de São Paulo (8.212 instituições) foram carregados via `npm run ingest:cnes`. O seed preserva dados reais; `npm run db:seed` pode ser executado com segurança. Veja [docs/CNES.md](docs/CNES.md) e [docs/INGESTAO.md](docs/INGESTAO.md).
 
 ## Próximos Gates
 

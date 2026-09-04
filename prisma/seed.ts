@@ -4,21 +4,24 @@ import { calcularIndice } from "../src/domain/indice/calcular-indice";
 
 const prisma = new PrismaClient();
 
+const DEMO = "'DEMONSTRACAO'";
+
 async function limpar() {
-  await prisma.componenteIndice.deleteMany();
-  await prisma.indicePrioridade.deleteMany();
-  await prisma.acaoComercial.deleteMany();
-  await prisma.sinalExpansao.deleteMany();
-  await prisma.evidencia.deleteMany();
-  await prisma.fonte.deleteMany();
-  await prisma.areaDecisora.deleteMany();
-  await prisma.necessidadeMobilidade.deleteMany();
-  await prisma.servicoSaude.deleteMany();
-  await prisma.endereco.deleteMany();
-  await prisma.unidade.deleteMany();
-  await prisma.instituicao.deleteMany();
-  await prisma.tipoEstabelecimento.deleteMany();
-  await prisma.grupoEconomico.deleteMany();
+  await prisma.$executeRawUnsafe(`DELETE FROM "ComponenteIndice" WHERE "indicePrioridadeId" IN (SELECT id FROM "IndicePrioridade" WHERE "instituicaoId" IN (SELECT id FROM "Instituicao" WHERE "tipoDado" = ${DEMO}))`);
+  await prisma.$executeRawUnsafe(`DELETE FROM "IndicePrioridade" WHERE "instituicaoId" IN (SELECT id FROM "Instituicao" WHERE "tipoDado" = ${DEMO})`);
+  await prisma.acaoComercial.deleteMany({ where: { tipoDado: "DEMONSTRACAO" } });
+  await prisma.$executeRawUnsafe(`DELETE FROM "SinalExpansao" WHERE "tipoDado" = ${DEMO}`);
+  await prisma.$executeRawUnsafe(`DELETE FROM "NecessidadeMobilidade" WHERE "instituicaoId" IN (SELECT id FROM "Instituicao" WHERE "tipoDado" = ${DEMO})`);
+  await prisma.$executeRawUnsafe(`DELETE FROM "AreaDecisora" WHERE "instituicaoId" IN (SELECT id FROM "Instituicao" WHERE "tipoDado" = ${DEMO})`);
+  await prisma.$executeRawUnsafe(`DELETE FROM "Evidencia" WHERE "tipo" = ${DEMO} OR "instituicaoId" IN (SELECT id FROM "Instituicao" WHERE "tipoDado" = ${DEMO})`);
+  await prisma.$executeRawUnsafe(`DELETE FROM "LoteIngestao" WHERE "fonteId" IN (SELECT id FROM "Fonte" WHERE "tipoDado" = ${DEMO})`);
+  await prisma.fonte.deleteMany({ where: { tipoDado: "DEMONSTRACAO" } });
+  await prisma.servicoSaude.deleteMany({ where: { tipoDado: "DEMONSTRACAO" } });
+  await prisma.endereco.deleteMany({ where: { tipoDado: "DEMONSTRACAO" } });
+  await prisma.unidade.deleteMany({ where: { tipoDado: "DEMONSTRACAO" } });
+  await prisma.instituicao.deleteMany({ where: { tipoDado: "DEMONSTRACAO" } });
+  await prisma.$executeRawUnsafe(`DELETE FROM "TipoEstabelecimento" WHERE id NOT IN (SELECT DISTINCT "tipoEstabelecimentoId" FROM "Instituicao")`);
+  await prisma.grupoEconomico.deleteMany({ where: { tipoDado: "DEMONSTRACAO" } });
 }
 
 async function carregar() {
