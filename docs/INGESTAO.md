@@ -26,3 +26,6 @@ COLETA → NORMALIZAÇÃO → RESOLUÇÃO DE ENTIDADE → VALIDAÇÃO → EVIDÊ
 - proibição de dados pessoais desnecessários;
 - testes de contrato por conector;
 - autorização explícita antes de chamar qualquer serviço externo.
+## Gate 2 — CNES real
+
+Prepare o CSV oficial conforme `docs/CNES.md` e execute `npm run ingest:cnes -- caminho\\cnes_estabelecimentos.csv 2026-09-04`. O importador registra o lote, preserva linhas inválidas, filtra São Paulo/SP e faz upsert por CNES. Não baixar bases CNPJ/ANS neste Gate.

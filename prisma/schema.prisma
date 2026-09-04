@@ -34,6 +34,19 @@ enum FaixaPrioridade {
   BAIXA
 }
 
+enum StatusLote {
+  EM_PROCESSAMENTO
+  CONCLUIDO
+  CONCLUIDO_COM_ALERTAS
+  FALHOU
+}
+
+enum StatusRegistroIngestao {
+  ACEITO
+  REJEITADO
+  REVISAO_NECESSARIA
+}
+
 model GrupoEconomico {
   id           String        @id
   nome         String
@@ -48,26 +61,32 @@ model TipoEstabelecimento {
 }
 
 model Instituicao {
-  id                    String                 @id
-  slug                  String                 @unique
-  nome                  String
-  descricao             String
-  operacao24h            Boolean                @default(false)
+  id                     String                  @id
+  slug                   String                  @unique
+  nome                   String
+  descricao              String
+  operacao24h            Boolean                 @default(false)
   porte                  String
-  perfilCorporativo     Boolean                @default(false)
-  tipoDado              TipoDado               @default(DEMONSTRACAO)
-  grupoEconomicoId      String?
-  tipoEstabelecimentoId String
-  grupoEconomico        GrupoEconomico?        @relation(fields: [grupoEconomicoId], references: [id])
-  tipoEstabelecimento   TipoEstabelecimento    @relation(fields: [tipoEstabelecimentoId], references: [id])
-  unidades              Unidade[]
-  servicos              ServicoSaude[]
-  sinaisExpansao        SinalExpansao[]
-  necessidades          NecessidadeMobilidade[]
-  areasDecisoras        AreaDecisora[]
-  evidencias            Evidencia[]
-  indice                IndicePrioridade?
-  acoesComerciais       AcaoComercial[]
+  perfilCorporativo      Boolean                 @default(false)
+  tipoDado               TipoDado                @default(DEMONSTRACAO)
+  cnes                   String?                 @unique
+  nomeOriginal           String?
+  naturezaGestao         String?
+  situacaoCadastral      String?
+  coberturaDados         Int                     @default(100)
+  coberturaJustificativa String?
+  grupoEconomicoId       String?
+  tipoEstabelecimentoId  String
+  grupoEconomico         GrupoEconomico?         @relation(fields: [grupoEconomicoId], references: [id])
+  tipoEstabelecimento    TipoEstabelecimento     @relation(fields: [tipoEstabelecimentoId], references: [id])
+  unidades               Unidade[]
+  servicos               ServicoSaude[]
+  sinaisExpansao         SinalExpansao[]
+  necessidades           NecessidadeMobilidade[]
+  areasDecisoras         AreaDecisora[]
+  evidencias             Evidencia[]
+  indice                 IndicePrioridade?
+  acoesComerciais        AcaoComercial[]
 
   @@index([grupoEconomicoId])
   @@index([tipoEstabelecimentoId])
@@ -75,13 +94,17 @@ model Instituicao {
 }
 
 model Unidade {
-  id            String      @id
+  id            String        @id
   nome          String
-  operacao24h   Boolean     @default(false)
-  tipoDado      TipoDado    @default(DEMONSTRACAO)
+  operacao24h   Boolean       @default(false)
+  tipoDado      TipoDado      @default(DEMONSTRACAO)
+  cnes          String?       @unique
+  nomeOriginal  String?
+  loteOrigemId  String?
   instituicaoId String
-  instituicao   Instituicao @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+  instituicao   Instituicao   @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
   endereco      Endereco?
+  loteOrigem    LoteIngestao? @relation(fields: [loteOrigemId], references: [id])
 
   @@index([instituicaoId])
 }
@@ -112,14 +135,14 @@ model ServicoSaude {
 }
 
 model SinalExpansao {
-  id            String      @id
-  titulo        String
-  descricao     String
+  id             String      @id
+  titulo         String
+  descricao      String
   dataReferencia DateTime?
-  tipoDado      TipoDado    @default(DEMONSTRACAO)
-  instituicaoId String
-  instituicao   Instituicao @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
-  evidencias    Evidencia[]
+  tipoDado       TipoDado    @default(DEMONSTRACAO)
+  instituicaoId  String
+  instituicao    Instituicao @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+  evidencias     Evidencia[]
 
   @@index([instituicaoId])
 }
@@ -147,30 +170,34 @@ model AreaDecisora {
 }
 
 model Fonte {
-  id            String      @id
+  id            String         @id
   nome          String
   url           String?
   identificador String?
   tipoDado      TipoDado
   evidencias    Evidencia[]
+  lotes         LoteIngestao[]
 }
 
 model Evidencia {
-  id             String          @id
+  id             String             @id
   titulo         String
   descricao      String
   observacao     String?
   dataColeta     DateTime
   dataReferencia DateTime?
-  tipo            TipoDado
-  confianca       NivelConfianca
-  statusRevisao   StatusRevisao
+  tipo           TipoDado
+  confianca      NivelConfianca
+  statusRevisao  StatusRevisao
   instituicaoId  String
-  fonteId         String
-  instituicao    Instituicao     @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
-  fonte           Fonte           @relation(fields: [fonteId], references: [id])
-  sinaisExpansao  SinalExpansao[]
-  componentes     ComponenteIndice[]
+  fonteId        String
+  loteId         String?
+  origemCampo    String?
+  instituicao    Instituicao        @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+  fonte          Fonte              @relation(fields: [fonteId], references: [id])
+  lote           LoteIngestao?      @relation(fields: [loteId], references: [id])
+  sinaisExpansao SinalExpansao[]
+  componentes    ComponenteIndice[]
 
   @@index([instituicaoId])
   @@index([statusRevisao])
@@ -192,15 +219,16 @@ model IndicePrioridade {
 }
 
 model ComponenteIndice {
-  id                  String            @id
-  criterio            String
-  rotulo              String
-  peso                Int
-  valorObtido         Int
-  justificativa       String
-  indicePrioridadeId  String
-  indicePrioridade    IndicePrioridade  @relation(fields: [indicePrioridadeId], references: [id], onDelete: Cascade)
-  evidencias          Evidencia[]
+  id                 String           @id
+  criterio           String
+  rotulo             String
+  peso               Int
+  valorObtido        Int
+  disponivel         Boolean          @default(true)
+  justificativa      String
+  indicePrioridadeId String
+  indicePrioridade   IndicePrioridade @relation(fields: [indicePrioridadeId], references: [id], onDelete: Cascade)
+  evidencias         Evidencia[]
 
   @@index([indicePrioridadeId])
 }
@@ -216,4 +244,46 @@ model AcaoComercial {
   instituicao   Instituicao @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
 
   @@index([instituicaoId, concluida])
+}
+
+model LoteIngestao {
+  id                   String              @id
+  fonteId              String
+  arquivoNome          String
+  fonteUrl             String
+  dataReferencia       DateTime?
+  inicio               DateTime
+  fim                  DateTime?
+  status               StatusLote
+  quantidadeLida       Int                 @default(0)
+  quantidadeAceita     Int                 @default(0)
+  quantidadeRejeitada  Int                 @default(0)
+  quantidadeRevisao    Int                 @default(0)
+  quantidadeAtualizada Int                 @default(0)
+  quantidadePublicada  Int                 @default(0)
+  errosJson            String?
+  hashArquivo          String?
+  versaoImportador     String
+  fonte                Fonte               @relation(fields: [fonteId], references: [id])
+  registrosBrutos      RegistroBrutoCNES[]
+  evidencias           Evidencia[]
+  unidades             Unidade[]
+
+  @@index([fonteId, dataReferencia])
+  @@index([status, inicio])
+}
+
+model RegistroBrutoCNES {
+  id          String                 @id
+  loteId      String
+  linha       Int
+  cnes        String?
+  payloadJson String
+  status      StatusRegistroIngestao
+  errosJson   String?
+  lote        LoteIngestao           @relation(fields: [loteId], references: [id], onDelete: Cascade)
+
+  @@unique([loteId, linha])
+  @@index([cnes])
+  @@index([status])
 }

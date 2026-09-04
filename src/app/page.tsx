@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Building2, Clock3, FileWarning, MapPinned, TrendingUp } from "lucide-react";
+import { ArrowRight, Building2, Clock3, FileWarning, FlaskConical, MapPinned, TrendingUp } from "lucide-react";
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
 import { ClasseFaixa, rotuloFaixa } from "@/components/rotulos";
 import type { FaixaPrioridade } from "@/domain/tipos";
@@ -12,6 +12,8 @@ export default async function Home() {
   const instituicoes = completas.map(mapearParaRadar);
   const pendentes = completas.reduce((total, item) => total + item.evidencias.filter((evidencia) => evidencia.statusRevisao === "PENDENTE").length, 0);
   const indicadores = [
+    { rotulo: "Instituições reais", valor: instituicoes.filter((item) => item.tipoDado === "FATO_OFICIAL").length, detalhe: "CNES / DATASUS", icone: Building2 },
+    { rotulo: "Demonstrações", valor: instituicoes.filter((item) => item.tipoDado === "DEMONSTRACAO").length, detalhe: "dados fictícios", icone: FlaskConical },
     { rotulo: "Instituições mapeadas", valor: instituicoes.length, detalhe: "base demonstrativa", icone: Building2 },
     { rotulo: "Prioridade alta ou superior", valor: instituicoes.filter((item) => item.indice >= 60).length, detalhe: "60 pontos ou mais", icone: TrendingUp },
     { rotulo: "Com várias unidades", valor: instituicoes.filter((item) => item.quantidadeUnidades > 1).length, detalhe: "potencial entre unidades", icone: MapPinned },

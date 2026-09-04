@@ -24,3 +24,5 @@ Estas regras valem para qualquer agente que trabalhe neste repositório:
 - Não chamar serviços externos, bases públicas ou APIs de inteligência artificial sem autorização explícita.
 - Agentes e assistentes nunca são fontes primárias da verdade; dados estruturados e evidências permanecem canônicos.
 - Não integrar sistemas internos da Chame nem substituir ferramentas atuais sem novo escopo aprovado.
+- Dados reais devem entrar apenas pela ingestão documentada; preservar CNES, fonte, lote e evidência.
+- Nunca misturar `FATO_OFICIAL` com `DEMONSTRACAO`, inventar campos ou usar CNPJ/ANS/IA sem autorização de Gate.

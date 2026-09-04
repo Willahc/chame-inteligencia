@@ -48,6 +48,8 @@ export interface InstituicaoRadar {
   qualidadeEvidencias: NivelConfianca;
   acaoRecomendada: string;
   tipoDado: TipoDado;
+  cnes?: string | null;
+  coberturaDados?: number;
 }
 
 export interface InstituicaoAssistente extends InstituicaoRadar {

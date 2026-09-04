@@ -82,6 +82,8 @@ export function mapearParaRadar(item: InstituicaoCompleta): InstituicaoRadar {
     qualidadeEvidencias: qualidadeGeralEvidencias(evidencias),
     acaoRecomendada: item.acoesComerciais[0]?.titulo ?? "Revisar evidências antes de agir",
     tipoDado: item.tipoDado as TipoDado,
+    cnes: item.cnes,
+    coberturaDados: item.coberturaDados,
   };
 }
 

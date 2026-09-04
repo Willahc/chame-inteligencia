@@ -25,11 +25,11 @@ export default async function InstituicaoPage({ params }: PageProps<"/instituico
         <article className="painel p-6">
           <div className="flex flex-wrap items-start justify-between gap-5">
             <div><p className="text-sm font-semibold text-[var(--texto-suave)]">Perfil da instituição</p><h2 className="mt-1 text-xl font-bold text-[var(--azul-profundo)]">{instituicao.tipoEstabelecimento.nome}</h2><p className="mt-2 text-sm text-[var(--texto-suave)]">{instituicao.grupoEconomico?.nome ?? "Instituição sem grupo econômico registrado"}</p></div>
-            <MarcadorTipo tipo={instituicao.tipoDado as TipoDado} />
+            <MarcadorTipo tipo={instituicao.tipoDado as TipoDado} />{instituicao.cnes && <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">CNES {instituicao.cnes}</span>}
           </div>
           <dl className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-xl bg-slate-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-[var(--texto-suave)]">Unidades</dt><dd className="mt-2 text-2xl font-bold">{instituicao.unidades.length}</dd></div>
-            <div className="rounded-xl bg-slate-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-[var(--texto-suave)]">Operação 24h</dt><dd className="mt-2 text-lg font-bold">{instituicao.operacao24h ? "Sim" : "Não"}</dd></div>
+            <div className="rounded-xl bg-slate-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-[var(--texto-suave)]">Cobertura dos dados</dt><dd className="mt-2 text-lg font-bold">{instituicao.coberturaDados}%</dd></div>
             <div className="rounded-xl bg-slate-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-[var(--texto-suave)]">Porte</dt><dd className="mt-2 text-lg font-bold capitalize">{instituicao.porte.toLowerCase().replace("_", " ")}</dd></div>
             <div className="rounded-xl bg-slate-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-[var(--texto-suave)]">Perfil corporativo</dt><dd className="mt-2 text-lg font-bold">{instituicao.perfilCorporativo ? "Sim" : "Não identificado"}</dd></div>
           </dl>

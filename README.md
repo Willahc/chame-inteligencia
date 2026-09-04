@@ -137,3 +137,6 @@ O fluxo obrigatório é **Coleta → Normalização → Resolução de entidade 
 ## Próximos Gates
 
 Possibilidades futuras, sempre mediante novo escopo: conectores públicos controlados, revisão e publicação assistida de evidências, histórico de alterações, comparação territorial e agentes de apoio. Agentes futuros não serão fonte primária da verdade; veja [docs/AGENTES_FUTUROS.md](docs/AGENTES_FUTUROS.md).
+## Gate 2 — ingestão CNES
+
+O radar aceita dados reais somente pelo importador governado do CNES/DATASUS. A fonte, os filtros e o fluxo de proveniência estão em `docs/CNES.md` e `docs/GOVERNANCA_DADOS_REAIS.md`. Registros reais e `DEMONSTRACAO` permanecem separados; não há CNPJ, ANS ou IA nesta etapa.
