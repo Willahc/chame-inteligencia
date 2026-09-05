@@ -80,6 +80,11 @@ enum NaturezaJuridicaClasse {
   INDETERMINADO
 }
 
+enum EscopoContato {
+  ORGANIZACAO
+  INSTITUICAO
+}
+
 model GrupoEconomico {
   id               String                   @id
   nome             String
@@ -255,6 +260,7 @@ model ContatoProfissional {
   atualizadoEm          DateTime       @updatedAt
   grupoEconomicoId      String?
   instituicaoId         String?
+  escopoContato         EscopoContato  @default(ORGANIZACAO)
   grupoEconomico        GrupoEconomico? @relation(fields: [grupoEconomicoId], references: [id], onDelete: Cascade)
   instituicao           Instituicao?   @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
   fonte                 Fonte          @relation(fields: [fonteId], references: [id])

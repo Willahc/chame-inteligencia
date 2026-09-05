@@ -1,114 +1,47 @@
 import { PrismaClient } from "@prisma/client";
+import { CONTATOS_PUBLICOS_LOTE_100, DATA_COLETA_MANIFESTO, VERSAO_MANIFESTO_CONTATOS } from "../src/data/contatos-publicos-lote-100";
 
 const prisma = new PrismaClient();
 
-/**
- * Piloto governado: somente contatos reproduzidos em páginas públicas.
- * Não coleta por login, não envia mensagens e não deriva e-mail/telefone.
- */
-interface ContatoPiloto {
-  id: string;
-  nome: string;
-  cargo: string;
-  area: string;
-  linkedinUrl?: string;
-  paginaProfissionalUrl?: string;
-  papelComercial: string;
-  observacao: string;
-  fonte: { id: string; nome: string; url: string };
-}
-
-const CONTATOS: ContatoPiloto[] = [
-  {
-    id: "contato-fleury-clovis-porto",
-    nome: "Clóvis Porto",
-    cargo: "Gerente sênior",
-    area: "Facilities",
-    linkedinUrl: undefined,
-    paginaProfissionalUrl: "https://pt.linkedin.com/posts/grupo-fleury_fm-entrevista-fm-edmar-cioletti-e-cl%C3%B3vis-activity-6488395072973864960-X2UZ",
-    papelComercial: "Influenciador estratégico",
-    observacao: "A publicação pública do Grupo Fleury identifica o profissional como gerente sênior de Facilities. Diretor, expansão, e-mail e telefone não foram confirmados por fonte pública no piloto.",
-    fonte: {
-      id: "fonte-publica-linkedin-grupo-fleury-clovis-2026",
-      nome: "Publicação pública do Grupo Fleury no LinkedIn",
-      url: "https://pt.linkedin.com/posts/grupo-fleury_fm-entrevista-fm-edmar-cioletti-e-cl%C3%B3vis-activity-6488395072973864960-X2UZ",
-    },
-  },
-  {
-    id: "contato-fleury-andreia-r",
-    nome: "Andréia R.",
-    cargo: "Profissional de Compras",
-    area: "Strategic Sourcing",
-    paginaProfissionalUrl: undefined,
-    linkedinUrl: "https://br.linkedin.com/in/andreiarochadasilva",
-    papelComercial: "Compras",
-    observacao: "O perfil público exibe o nome abreviado Andréia R. e o título Profissional de Compras | Strategic Sourcing. Nenhum nome completo, e-mail ou telefone foi inferido.",
-    fonte: {
-      id: "fonte-publica-linkedin-andreia-r-fleury-2026",
-      nome: "Perfil público de Andréia R. no LinkedIn",
-      url: "https://br.linkedin.com/in/andreiarochadasilva",
-    },
-  },
-];
-
+/** Ingestão governada: perfis públicos conferidos, sem login ou derivação de contatos. */
 async function main() {
-  const organizacao = await prisma.grupoEconomico.findFirst({
-    where: { id: "org-e8caa657", tipoDado: { not: "DEMONSTRACAO" } },
-    select: { id: true, nome: true },
-  });
-  if (!organizacao) throw new Error("Organização Fleury não encontrada no banco canônico.");
+  const contatos = CONTATOS_PUBLICOS_LOTE_100;
+  const ids = contatos.map((contato) => contato.id);
+  const duplicados = ids.filter((id, indice) => ids.indexOf(id) !== indice);
+  if (duplicados.length) throw new Error(`Duplicidade no manifesto: ${[...new Set(duplicados)].join(", ")}`);
+  for (const contato of contatos) {
+    if (![contato.nome, contato.cargo, contato.area, contato.empresa].every((campo) => campo.trim())) throw new Error(`Contato incompleto: ${contato.id}`);
+    if (!/^https:\/\//.test(contato.urlPublica) || contato.urlPublica !== contato.fonte.url) throw new Error(`URL pública/fonte inválida: ${contato.id}`);
+  }
 
-  const dataEvidencia = new Date("2026-09-04T00:00:00.000Z");
-  for (const contato of CONTATOS) {
-    await prisma.fonte.upsert({
-      where: { id: contato.fonte.id },
-      update: { nome: contato.fonte.nome, url: contato.fonte.url, tipoDado: "FATO_PUBLICO" },
-      create: { ...contato.fonte, tipoDado: "FATO_PUBLICO" },
-    });
+  const grupoIds = [...new Set(contatos.map((contato) => contato.grupoEconomicoId))];
+  const grupos = await prisma.grupoEconomico.findMany({
+    where: { id: { in: grupoIds } },
+    select: { id: true, nome: true, tipoDado: true, natureza: true, instituicoes: { where: { tipoDado: "FATO_OFICIAL", segmentacao: { segmento: "NUCLEO_HOSPITALAR" } }, select: { id: true } } },
+  });
+  const porId = new Map(grupos.map((grupo) => [grupo.id, grupo]));
+  for (const contato of contatos) {
+    const grupo = porId.get(contato.grupoEconomicoId);
+    if (!grupo) throw new Error(`Grupo não encontrado: ${contato.grupoEconomicoId}`);
+    if (grupo.tipoDado === "DEMONSTRACAO") throw new Error(`Grupo DEMONSTRACAO rejeitado: ${grupo.id}`);
+    if (grupo.natureza !== "PRIVADO" || grupo.instituicoes.length === 0) throw new Error(`Grupo fora do escopo privado/Núcleo Hospitalar: ${grupo.id}`);
+  }
+  const existentes = await prisma.contatoProfissional.findMany({ where: { id: { in: ids } }, select: { id: true, emailCorporativo: true, telefoneProfissional: true } });
+  const camposNaoComprovados = existentes.filter((contato) => contato.emailCorporativo || contato.telefoneProfissional);
+  if (camposNaoComprovados.length) throw new Error(`E-mail/telefone não comprovado já presente: ${camposNaoComprovados.map((contato) => contato.id).join(", ")}`);
+
+  const dataEvidencia = new Date(DATA_COLETA_MANIFESTO);
+  for (const contato of contatos) {
+    const grupo = porId.get(contato.grupoEconomicoId)!;
+    const individual = contato.urlPublica.includes("linkedin.com/in/");
+    await prisma.fonte.upsert({ where: { id: contato.fonte.id }, update: { nome: contato.fonte.nome, url: contato.fonte.url, tipoDado: "FATO_PUBLICO" }, create: { id: contato.fonte.id, nome: contato.fonte.nome, url: contato.fonte.url, tipoDado: "FATO_PUBLICO" } });
     await prisma.contatoProfissional.upsert({
       where: { id: contato.id },
-      update: {
-        nome: contato.nome,
-        cargo: contato.cargo,
-        area: contato.area,
-        linkedinUrl: contato.linkedinUrl,
-        paginaProfissionalUrl: contato.paginaProfissionalUrl,
-        papelComercial: contato.papelComercial,
-        tipoPapelComercial: "INFERENCIA",
-        tipoDado: "FATO_PUBLICO",
-        confianca: "ALTA",
-        statusRevisao: "APROVADA",
-        ativo: true,
-        fonteId: contato.fonte.id,
-        dataEvidencia,
-        observacao: contato.observacao,
-        grupoEconomicoId: organizacao.id,
-      },
-      create: {
-        id: contato.id,
-        nome: contato.nome,
-        cargo: contato.cargo,
-        area: contato.area,
-        empresa: organizacao.nome,
-        linkedinUrl: contato.linkedinUrl,
-        paginaProfissionalUrl: contato.paginaProfissionalUrl,
-        papelComercial: contato.papelComercial,
-        tipoPapelComercial: "INFERENCIA",
-        tipoDado: "FATO_PUBLICO",
-        confianca: "ALTA",
-        statusRevisao: "APROVADA",
-        ativo: true,
-        fonteId: contato.fonte.id,
-        dataEvidencia,
-        observacao: contato.observacao,
-        grupoEconomicoId: organizacao.id,
-      },
+      update: { nome: contato.nome, cargo: contato.cargo, area: contato.area, empresa: grupo.nome, linkedinUrl: individual ? contato.urlPublica : null, paginaProfissionalUrl: individual ? null : contato.urlPublica, emailCorporativo: null, telefoneProfissional: null, papelComercial: contato.papelComercial, tipoPapelComercial: "INFERENCIA", tipoDado: "FATO_PUBLICO", confianca: "ALTA", statusRevisao: "APROVADA", ativo: true, linkedinSimulado: false, fonteId: contato.fonte.id, dataEvidencia, observacao: contato.observacao, grupoEconomicoId: grupo.id, instituicaoId: null, escopoContato: "ORGANIZACAO" },
+      create: { id: contato.id, nome: contato.nome, cargo: contato.cargo, area: contato.area, empresa: grupo.nome, linkedinUrl: individual ? contato.urlPublica : null, paginaProfissionalUrl: individual ? null : contato.urlPublica, emailCorporativo: null, telefoneProfissional: null, papelComercial: contato.papelComercial, tipoPapelComercial: "INFERENCIA", tipoDado: "FATO_PUBLICO", confianca: "ALTA", statusRevisao: "APROVADA", ativo: true, linkedinSimulado: false, fonteId: contato.fonte.id, dataEvidencia, observacao: contato.observacao, grupoEconomicoId: grupo.id, instituicaoId: null, escopoContato: "ORGANIZACAO" },
     });
   }
-  console.log(`Contatos públicos persistidos: ${CONTATOS.length}. Organização: ${organizacao.nome}.`);
+  console.log(JSON.stringify({ manifesto: VERSAO_MANIFESTO_CONTATOS, encontrados: contatos.length, persistidos: contatos.length, organizacoes: grupoIds.length, rejeitados: [] }, null, 2));
 }
 
-main().catch((erro) => {
-  console.error(erro);
-  process.exitCode = 1;
-}).finally(() => prisma.$disconnect());
+main().catch((erro) => { console.error(erro); process.exitCode = 1; }).finally(() => prisma.$disconnect());
