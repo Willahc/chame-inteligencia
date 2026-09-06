@@ -11,6 +11,7 @@ const categorias: Array<{ tipo: TipoDado; descricao: string }> = [
   { tipo: "INFERENCIA", descricao: "Conclusão derivada de fatos, sempre apresentada com sua justificativa." },
   { tipo: "HIPOTESE", descricao: "Possibilidade que ainda exige validação antes de orientar uma decisão." },
   { tipo: "DEMONSTRACAO", descricao: "Conteúdo fictício criado somente para testar a aplicação." },
+  { tipo: "DADO_TERCEIRO_NAO_CANONICO", descricao: "Dados cadastrais públicos obtidos de fontes auxiliares de terceiros (não canônicos), mantidos segregados das fontes oficiais." },
 ];
 
 export default function GovernancaPage() {

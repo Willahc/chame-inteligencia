@@ -13,6 +13,7 @@ enum TipoDado {
   INFERENCIA
   HIPOTESE
   DEMONSTRACAO
+  DADO_TERCEIRO_NAO_CANONICO
 }
 
 enum NivelConfianca {
@@ -101,6 +102,7 @@ model GrupoEconomico {
   natureza         NaturezaJuridicaClasse   @default(INDETERMINADO)
   instituicoes     Instituicao[]
   contatos         ContatoProfissional[]
+  contaComercial   ContaComercial?
 }
 
 model TipoEstabelecimento {
@@ -138,6 +140,8 @@ model Instituicao {
   acoesComerciais        AcaoComercial[]
   segmentacao            SegmentacaoComercial?
   contatosProfissionais ContatoProfissional[]
+  resolucoesCnpj        ResolucaoCNPJ[]
+  sinaisContratacaoPublica SinalContratacaoPublica[]
 
   @@index([grupoEconomicoId])
   @@index([tipoEstabelecimentoId])
@@ -229,6 +233,8 @@ model Fonte {
   evidencias    Evidencia[]
   lotes         LoteIngestao[]
   contatos      ContatoProfissional[]
+  empresasReceita EmpresaReceita[]
+  sinaisContratacao SinalContratacaoPublica[]
 }
 
 model ContatoProfissional {
@@ -360,6 +366,9 @@ model LoteIngestao {
   registrosBrutos      RegistroBrutoCNES[]
   evidencias           Evidencia[]
   unidades             Unidade[]
+  empresasReceita      EmpresaReceita[]
+  resolucoesCnpj       ResolucaoCNPJ[]
+  sinaisContratacao    SinalContratacaoPublica[]
 
   @@index([fonteId, dataReferencia])
   @@index([status, inicio])
@@ -399,4 +408,267 @@ model SegmentacaoComercial {
 
   @@index([segmento])
   @@index([faixaAderencia])
+}
+
+enum ResultadoAbordagem {
+  NAO_ABORDADA
+  ABORDADA
+  EM_ANALISE
+  REUNIAO
+  PROPOSTA
+  CONTRATO
+  DESCARTADA
+  AGUARDANDO_DADOS
+}
+
+enum AcaoComercialRecomendada {
+  ABORDAR_IMEDIATAMENTE
+  PESQUISAR_MELHOR
+  REVISAR_VINCULO
+  BAIXA_PRIORIDADE
+  AGUARDAR_ENRIQUECIMENTO
+}
+
+model ContaComercial {
+  id                        String                   @id
+  nome                      String
+  tipoDado                  TipoDado                 @default(FATO_OFICIAL)
+  grupoEconomicoId          String?                  @unique
+  natureza                  NaturezaJuridicaClasse   @default(INDETERMINADO)
+  naturezaPublicaOuPrivada  String                   @default("INDETERMINADO")
+  quantidadeUnidades        Int                      @default(0)
+  quantidadeHospitais       Int                      @default(0)
+  quantidadeContatos        Int                      @default(0)
+  cidades                   String                   @default("")
+  cnpjPrincipal             String?
+  situacaoCadastral         String?
+  tipoVinculo               TipoVinculo              @default(ISOLADO)
+  confiancaOrganizacional   NivelConfianca           @default(BAIXA)
+  coberturaDados            Int                      @default(100)
+  statusRevisao             StatusRevisaoSegmentacao @default(NAO_REVISADO)
+  indicePrioridadeComercial Int                      @default(0)
+  faixaPrioridadeComercial  FaixaPrioridade          @default(BAIXA)
+  acaoRecomendada           AcaoComercialRecomendada @default(AGUARDAR_ENRIQUECIMENTO)
+  justificativaAcao         String?
+  componentesIndiceJson     String?
+  resultadoAbordagem        ResultadoAbordagem       @default(NAO_ABORDADA)
+  criadoEm                  DateTime                 @default(now())
+  atualizadoEm              DateTime                 @updatedAt
+  grupoEconomico            GrupoEconomico?          @relation(fields: [grupoEconomicoId], references: [id])
+  historicoAbordagem        RegistroAbordagem[]
+
+  @@index([tipoDado, faixaPrioridadeComercial])
+  @@index([indicePrioridadeComercial])
+  @@index([resultadoAbordagem])
+}
+
+model RegistroAbordagem {
+  id                 String             @id
+  contaComercialId   String
+  data               DateTime           @default(now())
+  resultado          ResultadoAbordagem
+  usuarioResponsavel String?
+  observacao         String
+  proximaAcao        String?
+  fonteOuEvidencia   String?
+  tipoDado           TipoDado           @default(FATO_OFICIAL)
+  criadoEm           DateTime           @default(now())
+  contaComercial     ContaComercial     @relation(fields: [contaComercialId], references: [id], onDelete: Cascade)
+
+  @@index([contaComercialId, data])
+  @@index([resultado])
+}
+
+enum StatusPesquisaContato {
+  COM_CONTATO_VERIFICAVEL
+  SEM_CONTATO_VERIFICAVEL
+  PESQUISA_PENDENTE
+}
+
+enum StatusFilaOrganizacao {
+  PENDENTE
+  EM_PROCESSAMENTO
+  CONCLUIDA
+  SEM_CONTATO
+}
+
+model PesquisaContatoOrganizacao {
+  id                String                @id
+  grupoEconomicoId  String                @unique
+  status            StatusPesquisaContato
+  dataPesquisa      DateTime
+  termosConsulta    String
+  fontesConsultadas String
+  resultado         String
+  confianca         NivelConfianca
+  statusRevisao     StatusRevisao
+  criadoEm          DateTime              @default(now())
+  atualizadoEm      DateTime              @updatedAt
+}
+
+model FilaOrganizacao {
+  grupoEconomicoId String                @id
+  nome             String
+  status           StatusFilaOrganizacao
+  workerId         String?
+  startedAt        DateTime?
+  leaseUntil       DateTime?
+  atualizadoEm     DateTime              @updatedAt
+}
+
+enum TipoResolucaoCNPJ {
+  EXATO_CNPJ
+  MESMO_CNPJ_BASICO
+  MATRIZ_FILIAL
+  NAO_RESOLVIDO
+  CONFLITO
+}
+
+model EmpresaReceita {
+  id                        String             @id
+  cnpj                      String             @unique
+  cnpjBasico                String
+  cnpjOrdem                 String
+  cnpjDv                    String
+  identificadorMatrizFilial Int?               // 1 = MATRIZ, 2 = FILIAL
+  razaoSocial               String
+  nomeFantasia              String?
+  situacaoCadastral         String?            // "01"=NULA, "02"=ATIVA, "03"=SUSPENSA, "04"=INAPTA, "08"=BAIXADA
+  dataSituacaoCadastral     DateTime?
+  motivoSituacaoCadastral   String?
+  dataInicioAtividade       DateTime?
+  cnaeFiscalPrincipal       String?
+  cnaeFiscalSecundaria      String?
+  naturezaJuridica          String?
+  qualificacaoResponsavel   String?
+  capitalSocial             Float?
+  porteEmpresa              String?            // "00"=NAO INFORMADO, "01"=ME, "03"=EPP, "05"=DEMAIS
+  enteFederativoResponsavel String?
+  tipoLogradouro            String?
+  logradouro                String?
+  numero                    String?
+  complemento               String?
+  bairro                    String?
+  cep                       String?
+  uf                        String?
+  municipio                 String?
+  tipoDado                  TipoDado           @default(FATO_OFICIAL)
+  fonteId                   String?
+  loteId                    String?
+  competencia               String?            // ex: "2024-05", "2026-08"
+  dataReferencia            DateTime?
+  hashRegistro              String?            // SHA-256 do registro original
+  confianca                 NivelConfianca     @default(ALTA)
+  statusRevisao             StatusRevisao      @default(APROVADA)
+  criadoEm                  DateTime           @default(now())
+  atualizadoEm              DateTime           @updatedAt
+
+  fonte                     Fonte?             @relation(fields: [fonteId], references: [id])
+  lote                      LoteIngestao?      @relation(fields: [loteId], references: [id])
+  resolucoes                ResolucaoCNPJ[]
+
+  @@index([cnpjBasico])
+  @@index([situacaoCadastral])
+  @@index([uf, municipio])
+  @@index([tipoDado, confianca])
+}
+
+model ResolucaoCNPJ {
+  id               String             @id
+  instituicaoId    String
+  cnes             String?
+  cnpjCnes         String?
+  cnpjBasicoCnes   String?
+  empresaReceitaId String?
+  tipoResolucao    TipoResolucaoCNPJ
+  tipoDado         TipoDado           @default(FATO_OFICIAL)
+  confianca        NivelConfianca     @default(ALTA)
+  statusRevisao    StatusRevisao      @default(APROVADA)
+  metodo           String
+  justificativa    String?
+  divergenciasJson String?
+  loteId           String?
+  criadoEm         DateTime           @default(now())
+  atualizadoEm     DateTime           @updatedAt
+
+  instituicao      Instituicao        @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
+  empresaReceita   EmpresaReceita?    @relation(fields: [empresaReceitaId], references: [id])
+  lote             LoteIngestao?      @relation(fields: [loteId], references: [id])
+
+  @@index([instituicaoId])
+  @@index([empresaReceitaId])
+  @@index([tipoResolucao])
+  @@index([cnpjCnes])
+  @@index([cnpjBasicoCnes])
+}
+
+model SinalContratacaoPublica {
+  id               String         @id
+  identificadorPNCP String        @unique
+  objeto           String
+  modalidade       String
+  dataPublicacao   DateTime
+  valorEstimado    Float?
+  cnpjOrgao        String?
+  razaoSocialOrgao String?
+  municipio        String?
+  uf               String?
+  palavrasChave    String
+  sinalMobilidade  Boolean        @default(false)
+  urlPublica      String?
+  fonteId          String
+  loteId           String?
+  dataReferencia   DateTime?
+  tipoDado         TipoDado       @default(FATO_PUBLICO)
+  confianca        NivelConfianca @default(ALTA)
+  statusRevisao    StatusRevisao  @default(APROVADA)
+  hashRegistro     String
+  instituicaoId    String?
+  metodoVinculo    String?
+  confiancaVinculo NivelConfianca?
+  criadoEm         DateTime       @default(now())
+  atualizadoEm     DateTime       @updatedAt
+
+  fonte            Fonte          @relation(fields: [fonteId], references: [id])
+  lote             LoteIngestao?  @relation(fields: [loteId], references: [id])
+  instituicao      Instituicao?   @relation(fields: [instituicaoId], references: [id])
+
+  @@index([identificadorPNCP])
+  @@index([sinalMobilidade])
+  @@index([cnpjOrgao])
+  @@index([uf, municipio])
+  @@index([tipoDado, confianca])
+  @@index([instituicaoId])
+}
+
+model EnriquecimentoCNPJTerceiro {
+  id                  String         @id @default(cuid())
+  cnpj                String         @unique
+  provedor            String         // "BRASIL_API"
+  razaoSocial         String?
+  nomeFantasia        String?
+  situacaoCadastral   String?
+  dataSituacao        DateTime?
+  dataInicioAtividade DateTime?
+  cnaePrincipal       String?
+  naturezaJuridica    String?
+  porte               String?
+  capitalSocial       Float?
+  municipio           String?
+  uf                  String?
+  matrizFilial        String?        // "MATRIZ" ou "FILIAL"
+  fonteUrl            String
+  dataConsulta        DateTime       @default(now())
+  dataReferencia      DateTime?
+  hashResposta        String
+  tipoDado            TipoDado       @default(DADO_TERCEIRO_NAO_CANONICO)
+  confianca           NivelConfianca @default(MEDIA)
+  statusRevisao       StatusRevisao  @default(PENDENTE)
+  criadoEm            DateTime       @default(now())
+  atualizadoEm        DateTime       @updatedAt
+
+  @@index([cnpj])
+  @@index([provedor])
+  @@index([tipoDado, confianca])
+  @@index([uf, municipio])
 }

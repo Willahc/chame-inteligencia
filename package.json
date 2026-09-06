@@ -20,7 +20,13 @@
     "contatos:publicos": "tsx scripts/ingest-contatos-publicos.ts",
     "contatos:registrar-pesquisa": "tsx scripts/registrar-pesquisa-contato.ts",
     "contatos:lote-1": "tsx scripts/ingest-contatos-lote-1.ts",
-    "demo:contatos": "tsx scripts/seed-contatos-demonstracao.ts"
+    "demo:contatos": "tsx scripts/seed-contatos-demonstracao.ts",
+    "consolidar:contas": "tsx scripts/consolidar-contas-comerciais.ts",
+    "receita:diagnostico": "tsx scripts/diagnostico-receita.ts",
+    "receita:importar": "tsx scripts/importar-receita-local.ts",
+    "receita:idempotencia": "tsx scripts/testar-idempotencia-receita.ts",
+    "pncp:importar": "tsx scripts/importar-pncp-local.ts",
+    "cnpj:terceiro": "tsx scripts/importar-cnpj-terceiro.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

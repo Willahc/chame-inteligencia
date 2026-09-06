@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Building2, Clock3, FileWarning, FlaskConical, Layers, MapPinned, TrendingUp } from "lucide-react";
+import { ArrowRight, Building2, Clock3, FileWarning, FlaskConical, Landmark, Layers, MapPinned, TrendingUp } from "lucide-react";
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
 import { ClasseSegmento, rotuloFaixa, rotuloSegmento } from "@/components/rotulos";
 import { TabelaOportunidadesVisaoGeral } from "@/components/tabela-oportunidades-visao-geral";
@@ -24,6 +24,7 @@ export default async function Home() {
     { rotulo: "Com sinal de expansão", valor: instituicoes.filter((item) => item.possuiExpansao).length, detalhe: "requer validação humana", icone: TrendingUp },
     { rotulo: "Evidências pendentes", valor: pendentes, detalhe: "aguardando revisão", icone: FileWarning },
     { rotulo: "Segmentadas", valor: instituicoes.filter((item) => item.segmentacao).length, detalhe: "segmentação comercial", icone: Layers },
+    { rotulo: "Sinais PNCP vinculados", valor: instituicoes.filter((item) => item.possuiSinalPNCP).length, detalhe: "vínculo oficial por CNPJ", icone: Landmark },
   ];
   const faixas = (["MUITO_ALTA", "ALTA", "MODERADA", "BAIXA"] as FaixaPrioridade[]).map((faixa) => ({
     faixa,

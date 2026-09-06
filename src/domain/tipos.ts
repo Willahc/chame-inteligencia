@@ -4,12 +4,15 @@ export const TIPOS_DADO = [
   "INFERENCIA",
   "HIPOTESE",
   "DEMONSTRACAO",
+  "DADO_TERCEIRO_NAO_CANONICO",
 ] as const;
 
 export type TipoDado = (typeof TIPOS_DADO)[number];
 export type NivelConfianca = "ALTA" | "MEDIA" | "BAIXA";
 export type TipoVinculo = "OFICIAL" | "PROVAVEL" | "ISOLADO" | "INCERTO";
 export type NaturezaClasse = "PUBLICO" | "PRIVADO" | "INDETERMINADO";
+export type NaturezaJuridicaClasse = NaturezaClasse;
+export type StatusRevisaoSegmentacao = "NAO_REVISADO" | "APROVADO" | "AJUSTE_NECESSARIO";
 export type StatusRevisao = "APROVADA" | "PENDENTE" | "REJEITADA";
 export type FaixaPrioridade = "MUITO_ALTA" | "ALTA" | "MODERADA" | "BAIXA";
 export type Porte = "PEQUENO" | "MEDIO" | "GRANDE" | "MUITO_GRANDE";
@@ -85,6 +88,12 @@ export interface InstituicaoRadar {
   cnes?: string | null;
   coberturaDados?: number;
   segmentacao?: SegmentacaoRadar | null;
+  totalSinaisPNCP?: number;
+  possuiSinalPNCP?: boolean;
+  possuiSinalMobilidadePNCP?: boolean;
+  dataSinalPNCPMaisRecente?: string | null;
+  vinculoPNCPExato?: boolean;
+  possuiContratacaoRecente?: boolean;
 }
 
 export interface InstituicaoAssistente extends InstituicaoRadar {

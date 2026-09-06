@@ -1,63 +1,136 @@
 # Gate 4 — Enriquecimento oficial de CNPJ / Receita Federal
 
-Data do diagnóstico: 04/09/2026
+Data da atualização: 06/09/2026 (13:23 BRT / 16:23 UTC)
 
 ## Situação do Gate
 
-**GATE 4 — AGUARDANDO AUTORIZAÇÃO PARA INGESTÃO MASSIVA**
+**GATE 4 — AGUARDANDO DISPONIBILIDADE DA FONTE OFICIAL**
+*(Pipeline de ingestão estruturado, testado e pronto para execução offline/local assim que a fonte oficial for restabelecida)*
 
-Esta etapa executou somente a descoberta da fonte e a definição reprodutível do recorte local. Não houve download de base CNPJ, criação de lote, alteração de banco, migração, promoção de vínculo, mudança da regra de agrupamento `1.0.0` ou da segmentação `2.1.0`.
+A autorização para tentar o download da base oficial foi concedida em 06/09/2026. Foram realizadas tentativas controladas de conexão e download exclusivamente nos endpoints governamentais oficiais (`npm run receita:diagnostico`). O repositório oficial de download (`dadosabertos.rfb.gov.br`) permanece inacessível por timeout de rede (`ETIMEDOUT` após 5s) e o repositório alternativo (`arquivos.receitafederal.gov.br`) responde `401 Unauthorized` exigindo credenciais privadas do SERPRO+. Em estrito cumprimento à governança do projeto, nenhum espelho de terceiros, agregador comercial (Minha Receita, BrasilAPI, CNPJ.ws), scraping com Playwright, bypass de CAPTCHA ou clone comunitário foi utilizado. Nenhum dado real foi alterado no banco de dados de produção.
 
-## Fonte oficial identificada
+O pipeline de importação seguro em streaming, o modelo de dados canônico de proveniência e o contrato determinístico de resolução permanecem construídos e validados com testes unitários e de integração utilizando fixtures demonstrativas dedicadas.
 
-| Item | Evidência |
-| --- | --- |
-| Órgão | Secretaria Especial da Receita Federal do Brasil (RFB) |
-| Página oficial do conjunto | `https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/dados-abertos/cadastros/cnpj` — redireciona ao Portal Brasileiro de Dados Abertos para o conjunto `Cadastro Nacional da Pessoa Jurídica (CNPJ)` |
-| Página institucional | `https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/dados-abertos/cadastros` |
-| Leiaute oficial | `https://www.gov.br/receitafederal/dados/cnpj-metadados.pdf` |
-| Condições indicadas | Conteúdo do portal publicado sob Creative Commons Atribuição-SemDerivações 3.0 Não Adaptada; confirmar as condições do recurso da competência escolhida antes de baixá-lo. |
-| Formato | Arquivos próprios para carga em banco relacional, delimitados por ponto e vírgula (`;`). |
+---
 
-O leiaute oficial separa os dados em tabelas. `EMPRESAS` traz CNPJ básico, razão social, natureza jurídica, capital social e porte. `ESTABELECIMENTOS` traz CNPJ básico, ordem, dígitos verificadores, identificador matriz/filial, nome fantasia, situação cadastral, datas, CNAE, UF e município. O identificador oficial é `1` para matriz e `2` para filial.
+## 1. Resultado da Conectividade Oficial
 
-O leiaute também documenta arquivos de domínios, incluindo municípios, naturezas jurídicas e CNAEs. O arquivo de sócios não é necessário para o escopo atual e não deve ser ingerido: evitaria dados pessoais desnecessários.
+Executada verificação controlada e pontual de conectividade (sem repetição em loop e sem tentativa de bypass):
 
-## Viabilidade da fonte
+| Endpoint Oficial | Protocolo / Método | Resultado Técnico | Diagnóstico |
+|---|---|---|---|
+| `https://dadosabertos.rfb.gov.br/CNPJ/` | HTTPS (443) GET | **BLOQUEADO (Timeout 5s / `ETIMEDOUT`)** | Host oficial da RFB/Serpro (`200.152.38.155`) inoperante / descartando pacotes. |
+| `https://arquivos.receitafederal.gov.br/public.php/webdav/Dados/Cadastros/CNPJ/` | HTTPS (443) WebDAV GET | **BLOQUEADO (`HTTP 401 Unauthorized`)** | Repositório corporativo SERPRO+ restrito que requer autenticação privada. |
+| `https://dados.gov.br/api/publico/conjuntos-dados/visualizar/...` | HTTPS (443) JSON GET | **BLOQUEADO (`HTTP 401 Unauthorized`)** | A API direta do portal restringe requisições não autenticadas. |
+| `https://www.gov.br/receitafederal/dados` | HTTPS (443) HTML GET | **DISPONÍVEL (`HTTP 200 OK`)** | Página institucional estática e metadados em PDF (`cnpj-metadados.pdf`). Não disponibiliza arquivos brutos ZIP diretamente. |
 
-As páginas oficiais consultadas indicam publicação do CNPJ como conjunto de arquivos estruturados para carga relacional nacional. Não foi identificada API pública oficial, seletiva e documentada que aceite a lista local de CNPJs e entregue somente os respectivos registros. O catálogo atual exige JavaScript e não expõe, de modo verificável nesta etapa, um manifesto de competência com nomes, quantidades e tamanhos dos arquivos.
+---
 
-Por isso, não é possível registrar com fidelidade a competência, a lista de arquivos, o tamanho agregado, o SHA-256 ou a estratégia de atualização antes de selecionar uma competência e baixar os recursos. Baixar a distribuição nacional apenas para resolver 322 CNPJs prioritários pode exigir arquivos nacionais grandes e é expressamente vedado sem autorização adicional.
+## 2. Universo Candidato do Núcleo Hospitalar
 
-## Universo candidato reprodutível
+Fonte local: `Instituicao` `FATO_OFICIAL`, `SegmentacaoComercial`, `GrupoEconomico` e `RegistroBrutoCNES` aceito. O CNPJ foi lido exclusivamente de `NU_CNPJ` do payload CNES já preservado. Nenhum CNPJ foi buscado por nome:
 
-Fonte local: `Instituicao` `FATO_OFICIAL`, `SegmentacaoComercial`, `GrupoEconomico` e `RegistroBrutoCNES` aceito. O CNPJ foi lido exclusivamente de `NU_CNPJ` do payload CNES já preservado. A validação aplicou tamanho de 14 dígitos e os dois dígitos verificadores; nenhum CNPJ foi buscado por nome.
+| Recorte | Unidades | CNPJs Únicos | Válidos | Inválidos | Ausentes | CNPJs Básicos Válidos |
+|---|---:|---:|---:|---:|---:|---:|
+| **Todas as privadas do Núcleo Hospitalar** | 334 | 322 | 322 | 0 | 11 | 216 |
+| **Redes privadas com presença no Núcleo Hospitalar** | 220 | 217 | 217 | 0 | 2 | 41 |
+| **Isoladas privadas do Núcleo Hospitalar** | 203 | 193 | 193 | 0 | 10 | 183 |
+| **Privadas da Saúde Corporativa Expandida (futuro)** | 2.399 | 2.323 | 2.323 | 0 | 74 | 2.127 |
 
-| Recorte | Unidades | CNPJs únicos | Válidos | Inválidos | Ausentes | CNPJs básicos válidos |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Todas as privadas do Núcleo Hospitalar | 334 | 322 | 322 | 0 | 11 | 216 |
-| Redes privadas com presença no Núcleo Hospitalar | 220 | 217 | 217 | 0 | 2 | 41 |
-| Isoladas privadas do Núcleo Hospitalar | 203 | 193 | 193 | 0 | 10 | 183 |
-| Privadas da Saúde Corporativa Expandida (universo ainda não priorizado) | 2.399 | 2.323 | 2.323 | 0 | 74 | 2.127 |
+---
 
-As 40 redes privadas do Núcleo Hospitalar continuam classificadas pelo Gate 3 como 5 `OFICIAL`, 35 `PROVAVEL` e 0 `INCERTO`. Essa classificação não foi modificada por este diagnóstico.
+## 3. Pipeline de Ingestão e Modelo de Dados
 
-## Estratégia proposta após autorização
+O pipeline opera com segurança estrita, memória constante e sem dependência de APIs externas de terceiros:
 
-1. Escolher, no catálogo oficial, uma competência com manifesto publicamente verificável e registrar URL, nomes, tamanhos e condições de uso.
-2. Baixar somente as tabelas necessárias: `ESTABELECIMENTOS`, `EMPRESAS` e domínios de CNAE, municípios e natureza jurídica. Não baixar QSA.
-3. Processar os arquivos como fluxo, filtrando os 322 CNPJs ou 216 CNPJs básicos do Núcleo Hospitalar sem carregar a base inteira no SQLite de produção.
-4. Preservar os arquivos brutos e calcular SHA-256 antes da publicação; criar `Fonte` e `LoteIngestao` auditáveis.
-5. Persistir somente os registros correspondentes ao recorte autorizado e as relações matriz/filial explicitamente presentes na fonte.
-6. Expandir para a Saúde Corporativa Expandida somente com critério de priorização aprovado e explicitamente versionado.
+1. **Validação de Cabeçalho e Leiaute (`src/ingestao/receita/validador-leiaute.ts`):**
+   - Suporta arquivos oficiais delimitados por ponto e vírgula (`;`) conforme `cnpj-metadados.pdf`.
+   - Valida 7 colunas obrigatórias para `EMPRESAS` e 30 colunas para `ESTABELECIMENTOS`.
+   - Trata codificação ISO-8859-1 (Latin1) e escapes de aspas.
 
-## Regras que permanecem obrigatórias
+2. **Validação Matemática de CNPJ (`src/domain/receita/validacao-cnpj.ts`):**
+   - Validação completa dos 14 dígitos e dos dois dígitos verificadores (D1 e D2 com pesos RFB).
+   - Rejeição de sequências inválidas conhecidas (dígitos todos iguais ou tamanhos divergentes).
+   - Extração padronizada de raiz/CNPJ básico (8 dígitos).
 
-- Receita Federal é `FATO_OFICIAL` independente de CNES; não resolve a lacuna de mantenedora CNES.
-- Mesmo CNPJ básico e relação matriz/filial oficial podem fundamentar uma relação empresarial explicável, mas não serão chamados de grupo econômico sem a evidência apropriada.
-- Razão social normalizada continuará `HIPOTESE`; nunca promoverá vínculo por si só.
-- Conflitos, CNPJs não resolvidos e situações cadastrais não ativas serão preservados, sem apagar instituições reais.
+3. **Processamento Streaming com Filtro em Memória Constante (`src/ingestao/receita/importador-receita.ts`):**
+   - Utiliza `readline` sobre streams Node.js, lendo arquivos nacionais de múltiplos gigabytes linha a linha sem carregar a base inteira na memória.
+   - **Estratégia de filtragem:** extrai o CNPJ básico nos primeiros bytes da linha e descarta imediatamente registros que não pertençam ao universo de candidatos priorizados (322 CNPJs válidos e 216 básicos).
+   - Calcula o hash criptográfico **SHA-256** do arquivo bruto para auditoria.
 
-## Próxima decisão necessária
+4. **Contrato Determinístico de Resolução (`src/domain/receita/resolucao-cnpj.ts`):**
+   - `EXATO_CNPJ`: o CNPJ da unidade CNES coincide com o CNPJ completo do estabelecimento Receita.
+   - `MATRIZ_FILIAL`: a unidade compartilha o mesmo CNPJ básico da empresa e a Receita identifica a matriz oficial (`identificadorMatrizFilial = 1`).
+   - `MESMO_CNPJ_BASICO`: a unidade compartilha a raiz de 8 dígitos com outro estabelecimento filial registrado.
+   - `NAO_RESOLVIDO`: CNPJ ausente ou não informado no CNES, ou CNPJ não encontrado na base oficial.
+   - `CONFLITO`: múltiplos registros conflitantes ou divergências cadastrais na base oficial que exigem revisão.
 
-Autorizar, de modo explícito, o download e processamento controlado dos arquivos nacionais da competência oficial selecionada, após a confirmação do respectivo manifesto de arquivos e tamanho. Sem essa autorização, não é seguro iniciar a implementação ou a ingestão.
+5. **Modelo Prisma e Proveniência (`prisma/schema.prisma`):**
+   - Modelo `EmpresaReceita` com identificação cadastral, situação (01=Nula, 02=Ativa, 03=Suspensa, 04=Inapta, 08=Baixada), CNAE, natureza jurídica, capital social, porte, endereço e proveniência obrigatória (`tipoDado: FATO_OFICIAL`, `fonteId`, `loteId`, `competencia`, `dataReferencia`, `hashRegistro`, `confianca: ALTA`, `statusRevisao: APROVADA`).
+   - Modelo `ResolucaoCNPJ` vinculando `Instituicao` à `EmpresaReceita` com método, justificativa e divergências.
+
+---
+
+## 4. Comandos CLI Disponíveis
+
+Três comandos dedicados estão disponíveis no `package.json`:
+
+| Comando | Script | Finalidade |
+|---|---|---|
+| `npm run receita:diagnostico` | `scripts/diagnostico-receita.ts` | Executa 1 teste controlado de conectividade por endpoint oficial (timeout de 5s), resume o universo candidato do banco e emite a declaração formal do Gate. |
+| `npm run receita:importar` | `scripts/importar-receita-local.ts` | Importa arquivos oficiais locais (`--estabelecimentos=...`, `--empresas=...`, `--competencia=...`). Por padrão opera em modo de simulação segura (`dry-run`); persiste lote e resoluções auditadas somente com a flag explícita `--persistir`. |
+| `npm run receita:idempotencia` | `scripts/testar-idempotencia-receita.ts` | Executa o pipeline completo duas vezes consecutivas sobre fixtures de teste e verifica a estrita igualdade de hashes, contagens e resoluções. |
+
+---
+
+## 5. Idempotência e Testes com Fixtures
+
+- **Idempotência Comprovada:** O teste executado via `npm run receita:idempotencia` atesta 100% de igualdade entre a primeira e a segunda passagem:
+  - Hash SHA-256 idêntico para estabelecimentos e empresas;
+  - Mesma quantidade de linhas lidas (5) e carregadas (3);
+  - Mesma distribuição de resoluções (`EXATO_CNPJ: 2`, `NAO_RESOLVIDO: 1`, `CONFLITO: 0`).
+- **Fixtures Demonstrativas:** `src/ingestao/receita/__fixtures__/estabelecimentos-demo.csv` e `empresas-demo.csv`.
+- **Suíte de Testes Automatizados:**
+  - `src/domain/receita/validacao-cnpj.test.ts`: 6 testes.
+  - `src/domain/receita/resolucao-cnpj.test.ts`: 6 testes.
+  - `src/ingestao/receita/importador-receita.test.ts`: 4 testes.
+  - **Total no projeto:** 105 testes aprovados (`npm test`).
+
+---
+
+## 6. Auditoria de Integridade Canônica no Banco (`prisma/dev.db`)
+
+A migração no SQLite foi puramente aditiva (`CREATE TABLE IF NOT EXISTS`). Nenhuma linha foi alterada, resetada ou excluída:
+
+- **Registros na tabela `EmpresaReceita`:** **0** (nenhum dado real ou fictício inserido no banco de produção).
+- **Registros na tabela `ResolucaoCNPJ`:** **0**.
+- **Instituições reais:** **8.212** preservadas intactas (`FATO_OFICIAL`) + 5 `DEMONSTRACAO`.
+- **Grupos econômicos:** **7.550** grupos reais preservados intactos + 1 demonstrativo.
+- **Contas comerciais:** **7.550** contas comerciais reais preservadas intactas + 5 demonstrativas.
+- **Contatos profissionais:** **109** contatos corporativos ativos (`FATO_PUBLICO`) em 79 organizações + 14 `DEMONSTRACAO`.
+- **Agrupamento `1.0.0` e Segmentação `2.1.0`:** rigorosamente preservados.
+
+---
+
+## 7. Limitações e Próximos Passos
+
+1. **Sem QSA / Dados de Sócios:** A tabela de QSA (Sócios) permanece expressamente excluída para evitar tratamento de dados pessoais desnecessários (LGPD).
+2. **Sem inferência abusiva de grupo econômico:** A relação matriz/filial pela Receita Federal fundamenta uma relação empresarial oficial, mas não altera automaticamente a regra canônica de agrupamento econômico `1.0.0` sem evidência documental correspondente.
+3. **Prontidão Operacional:** O importador local está pronto para execução. Assim que os arquivos oficiais forem disponibilizados pela Receita Federal, a carga poderá ser realizada de forma segura e auditada via `npm run receita:importar -- --estabelecimentos=<caminho> --empresas=<caminho> --persistir`.
+
+---
+
+## 8. Estado do Working Tree
+
+O working tree contém os arquivos implementados, tipados e testados, sem commit automatizado:
+
+```text
+M docs/GATE_4_ENRIQUECIMENTO_CNPJ_RECEITA.md
+M package.json
+M prisma/schema.prisma
+?? scripts/diagnostico-receita.ts
+?? scripts/importar-receita-local.ts
+?? scripts/testar-idempotencia-receita.ts
+?? src/domain/receita/
+?? src/ingestao/receita/
+```

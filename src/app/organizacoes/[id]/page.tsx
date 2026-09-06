@@ -5,6 +5,7 @@ import { CabecalhoPagina } from "@/components/cabecalho-pagina";
 import { ClasseNatureza, ClasseSegmento, ClasseVinculo, MarcadorTipo, rotuloConfianca, rotuloStatusRevisao } from "@/components/rotulos";
 import { obterOrganizacao } from "@/lib/dados";
 import { ContatosProfissionais } from "@/components/contatos-profissionais";
+import { SecaoContratacoesRelacionadas } from "@/components/secao-contratacoes-relacionadas";
 import type { TipoDado } from "@/domain/tipos";
 
 export const dynamic = "force-dynamic";
@@ -24,6 +25,13 @@ export default async function OrganizacaoPage({ params }: PageProps<"/organizaco
   const instituicoesNucleo = organizacao.instituicoes.filter((instituicao) => instituicao.segmentacao?.segmento === "NUCLEO_HOSPITALAR").length;
   const tipos = new Set(organizacao.instituicoes.map((instituicao) => instituicao.tipoEstabelecimento.nome));
   const ehHipotese = organizacao.tipoVinculo === "PROVAVEL" || organizacao.tipoVinculo === "INCERTO";
+  const sinaisRelacionados = [
+    ...new Map(
+      organizacao.instituicoes
+        .flatMap((instituicao) => instituicao.sinaisContratacaoPublica ?? [])
+        .map((sinal) => [sinal.identificadorPNCP, sinal])
+    ).values(),
+  ];
 
   return (
     <div className="w-full px-3 py-5 sm:px-6 lg:px-8 lg:py-8 2xl:px-10">
@@ -63,6 +71,8 @@ export default async function OrganizacaoPage({ params }: PageProps<"/organizaco
         <p className="mt-2 text-sm leading-6 text-[var(--texto-suave)]">Contatos exibidos com origem, confiança e tipo de dado identificados individualmente.</p>
         <ContatosProfissionais contatos={organizacao.contatos} />
       </section>
+
+      <SecaoContratacoesRelacionadas sinais={sinaisRelacionados} />
 
       <section className="painel mt-6 p-6">
         <div className="flex items-center gap-3"><GitBranch className="text-[var(--azul)]" size={21} aria-hidden="true" /><h2 className="text-lg font-bold">Regra, evidência e revisão</h2></div>

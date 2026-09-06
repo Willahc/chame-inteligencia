@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   BotMessageSquare,
+  Briefcase,
   Building2,
   Gauge,
+  Landmark,
   Network,
   Radar,
   Scale,
@@ -20,8 +22,10 @@ export const dynamic = "force-dynamic";
 
 const navegacao = [
   { href: "/", rotulo: "Visão Geral", icone: Gauge },
+  { href: "/contas", rotulo: "Contas Comerciais", icone: Briefcase },
   { href: "/radar", rotulo: "Radar de Clientes", icone: Radar },
   { href: "/organizacoes", rotulo: "Organizações", icone: Network },
+  { href: "/contratacoes-publicas", rotulo: "Contratações Públicas", icone: Landmark },
   { href: "/assistente", rotulo: "Assistente Comercial", icone: BotMessageSquare },
   { href: "/governanca", rotulo: "Governança", icone: Scale },
 ];

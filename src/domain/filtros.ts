@@ -20,6 +20,10 @@ export interface FiltrosRadar {
   somentePrivadasMultiUnidade?: boolean;
   coberturaMinima?: number;
   organizacaoOuIsolado?: "EM_REDE" | "ISOLADA";
+  possuiSinalPNCP?: boolean;
+  possuiSinalMobilidadePNCP?: boolean;
+  contratacaoPublicaRecente?: boolean;
+  somenteVinculoPNCPExato?: boolean;
 }
 
 function normalizar(texto: string): string {
@@ -69,5 +73,9 @@ export function filtrarInstituicoes(
       }
       return true;
     })
+    .filter((item) => !filtros.possuiSinalPNCP || Boolean(item.possuiSinalPNCP))
+    .filter((item) => !filtros.possuiSinalMobilidadePNCP || Boolean(item.possuiSinalMobilidadePNCP))
+    .filter((item) => !filtros.contratacaoPublicaRecente || Boolean(item.possuiContratacaoRecente))
+    .filter((item) => !filtros.somenteVinculoPNCPExato || Boolean(item.vinculoPNCPExato))
     .sort((a, b) => b.indice - a.indice || a.nome.localeCompare(b.nome, "pt-BR"));
 }

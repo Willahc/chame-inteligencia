@@ -49,4 +49,5 @@ export const rotulosTipoDado: Record<(typeof TIPOS_DADO)[number], string> = {
   INFERENCIA: "Inferência",
   HIPOTESE: "Hipótese",
   DEMONSTRACAO: "Demonstração",
+  DADO_TERCEIRO_NAO_CANONICO: "Dado de terceiro não canônico",
 };

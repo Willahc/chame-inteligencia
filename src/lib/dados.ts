@@ -27,6 +27,7 @@ export const incluirInstituicao = {
   acoesComerciais: { orderBy: { prioridade: "asc" as const } },
   segmentacao: true,
   contatosProfissionais: { include: { fonte: true }, where: { ativo: true }, orderBy: { nome: "asc" as const } },
+  sinaisContratacaoPublica: { include: { fonte: true }, orderBy: { dataPublicacao: "desc" as const } },
 } satisfies Prisma.InstituicaoInclude;
 
 export type InstituicaoCompleta = Prisma.InstituicaoGetPayload<{ include: typeof incluirInstituicao }>;
@@ -38,7 +39,6 @@ export async function listarInstituicoes(modo = obterModoDados()): Promise<Insti
     orderBy: { indice: { total: "desc" } },
   });
 }
-
 export async function obterInstituicaoPorSlug(slug: string, modo = obterModoDados()): Promise<InstituicaoCompleta | null> {
   return prisma.instituicao.findFirst({ where: { slug, tipoDado: tipoDadoDoModo(modo) }, include: incluirInstituicao });
 }
@@ -111,6 +111,17 @@ export function mapearParaRadar(item: InstituicaoCompleta): InstituicaoRadar {
           precisaRevisao: item.segmentacao.statusRevisao !== "APROVADO",
         }
       : null,
+    totalSinaisPNCP: (item.sinaisContratacaoPublica ?? []).length,
+    possuiSinalPNCP: (item.sinaisContratacaoPublica ?? []).length > 0,
+    possuiSinalMobilidadePNCP: (item.sinaisContratacaoPublica ?? []).some((s) => s.sinalMobilidade),
+    dataSinalPNCPMaisRecente: (item.sinaisContratacaoPublica ?? [])[0]?.dataPublicacao?.toISOString() ?? null,
+    vinculoPNCPExato: (item.sinaisContratacaoPublica ?? []).some(
+      (s) => s.metodoVinculo === "CNPJ_ESTABELECIMENTO" || s.metodoVinculo === "CNPJ_MANTENEDORA"
+    ),
+    possuiContratacaoRecente: (item.sinaisContratacaoPublica ?? []).some((s) => {
+      const pub = new Date(s.dataPublicacao);
+      return pub >= new Date("2026-07-01");
+    }),
   };
 }
 
@@ -141,6 +152,7 @@ export const incluirOrganizacao = {
   unidades: { include: { endereco: true } },
   segmentacao: true,
   indice: true,
+  sinaisContratacaoPublica: { include: { fonte: true }, orderBy: { dataPublicacao: "desc" as const } },
 } satisfies Prisma.InstituicaoInclude;
 
 export type OrganizacaoCompleta = Prisma.GrupoEconomicoGetPayload<{
@@ -160,4 +172,89 @@ export async function obterOrganizacao(id: string, modo = obterModoDados()): Pro
     where: { id, ...(modo === "MODO_DEMONSTRACAO" ? { tipoDado: "DEMONSTRACAO" } : { NOT: { tipoDado: "DEMONSTRACAO" } }) },
     include: { instituicoes: { include: incluirOrganizacao, orderBy: { nome: "asc" as const } }, contatos: { include: { fonte: true }, where: { ativo: true }, orderBy: { nome: "asc" as const } } },
   });
+}
+
+export const incluirContaComercial = {
+  grupoEconomico: {
+    include: {
+      instituicoes: {
+        include: {
+          tipoEstabelecimento: true,
+          unidades: { include: { endereco: true } },
+          segmentacao: true,
+          indice: { include: { componentes: true } },
+          evidencias: { include: { fonte: true }, orderBy: { dataColeta: "desc" as const } },
+          sinaisContratacaoPublica: { include: { fonte: true }, orderBy: { dataPublicacao: "desc" as const } },
+        },
+      },
+      contatos: {
+        include: { fonte: true },
+        where: { ativo: true },
+        orderBy: { nome: "asc" as const },
+      },
+    },
+  },
+  historicoAbordagem: {
+    orderBy: { data: "desc" as const },
+  },
+} satisfies Prisma.ContaComercialInclude;
+
+export type ContaComercialCompleta = Prisma.ContaComercialGetPayload<{
+  include: typeof incluirContaComercial;
+}>;
+
+export async function listarContasComerciais(modo = obterModoDados()): Promise<ContaComercialCompleta[]> {
+  return prisma.contaComercial.findMany({
+    where: modo === "MODO_DEMONSTRACAO" ? { tipoDado: "DEMONSTRACAO" } : { NOT: { tipoDado: "DEMONSTRACAO" } },
+    include: incluirContaComercial,
+    orderBy: [
+      { indicePrioridadeComercial: "desc" },
+      { quantidadeUnidades: "desc" },
+    ],
+  });
+}
+
+export async function obterContaComercial(id: string, modo = obterModoDados()): Promise<ContaComercialCompleta | null> {
+  return prisma.contaComercial.findFirst({
+    where: {
+      id,
+      ...(modo === "MODO_DEMONSTRACAO" ? { tipoDado: "DEMONSTRACAO" } : { NOT: { tipoDado: "DEMONSTRACAO" } }),
+    },
+    include: incluirContaComercial,
+  });
+}
+
+export async function registrarResultadoAbordagem(dados: {
+  contaComercialId: string;
+  resultado: "NAO_ABORDADA" | "ABORDADA" | "EM_ANALISE" | "REUNIAO" | "PROPOSTA" | "CONTRATO" | "DESCARTADA" | "AGUARDANDO_DADOS";
+  usuarioResponsavel?: string;
+  observacao: string;
+  proximaAcao?: string;
+  fonteOuEvidencia?: string;
+  tipoDado?: TipoDado;
+}) {
+  const conta = await prisma.contaComercial.findUnique({ where: { id: dados.contaComercialId } });
+  if (!conta) throw new Error("Conta comercial não encontrada.");
+
+  const registro = await prisma.registroAbordagem.create({
+    data: {
+      id: `reg-abordagem-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      contaComercialId: dados.contaComercialId,
+      resultado: dados.resultado,
+      usuarioResponsavel: dados.usuarioResponsavel?.trim() || null,
+      observacao: dados.observacao.trim(),
+      proximaAcao: dados.proximaAcao?.trim() || null,
+      fonteOuEvidencia: dados.fonteOuEvidencia?.trim() || null,
+      tipoDado: dados.tipoDado ?? (conta.tipoDado as TipoDado),
+    },
+  });
+
+  await prisma.contaComercial.update({
+    where: { id: dados.contaComercialId },
+    data: {
+      resultadoAbordagem: dados.resultado,
+    },
+  });
+
+  return registro;
 }

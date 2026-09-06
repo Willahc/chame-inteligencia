@@ -47,4 +47,45 @@ describe("Filtros do radar", () => {
     expect(filtrarInstituicoes(comOrganizacao, { organizacaoOuIsolado: "EM_REDE" }).map((item) => item.id)).toEqual(["1"]);
     expect(filtrarInstituicoes(comOrganizacao, { organizacaoOuIsolado: "ISOLADA" }).map((item) => item.id)).toEqual(["2"]);
   });
+
+  it("garante neutralidade absoluta quando filtros PNCP estão inativos", () => {
+    const todos = filtrarInstituicoes(base, {});
+    expect(todos.length).toBe(base.length);
+    expect(todos.map((i) => i.id)).toEqual(["1", "2", "4", "3"]);
+  });
+
+  it("filtra por sinais PNCP (geral, mobilidade, recente e vínculo exato)", () => {
+    const comPNCP: InstituicaoRadar[] = [
+      {
+        ...base[0],
+        possuiSinalPNCP: true,
+        possuiSinalMobilidadePNCP: true,
+        possuiContratacaoRecente: true,
+        vinculoPNCPExato: true,
+        totalSinaisPNCP: 5,
+      },
+      {
+        ...base[1],
+        possuiSinalPNCP: true,
+        possuiSinalMobilidadePNCP: false,
+        possuiContratacaoRecente: false,
+        vinculoPNCPExato: true,
+        totalSinaisPNCP: 2,
+      },
+      {
+        ...base[2],
+        possuiSinalPNCP: false,
+        possuiSinalMobilidadePNCP: false,
+        possuiContratacaoRecente: false,
+        vinculoPNCPExato: false,
+        totalSinaisPNCP: 0,
+      },
+    ];
+
+    expect(filtrarInstituicoes(comPNCP, { possuiSinalPNCP: true }).map((i) => i.id)).toEqual(["1", "2"]);
+    expect(filtrarInstituicoes(comPNCP, { possuiSinalMobilidadePNCP: true }).map((i) => i.id)).toEqual(["1"]);
+    expect(filtrarInstituicoes(comPNCP, { contratacaoPublicaRecente: true }).map((i) => i.id)).toEqual(["1"]);
+    expect(filtrarInstituicoes(comPNCP, { somenteVinculoPNCPExato: true }).map((i) => i.id)).toEqual(["1", "2"]);
+    expect(filtrarInstituicoes(comPNCP, { possuiSinalMobilidadePNCP: true, contratacaoPublicaRecente: true }).map((i) => i.id)).toEqual(["1"]);
+  });
 });

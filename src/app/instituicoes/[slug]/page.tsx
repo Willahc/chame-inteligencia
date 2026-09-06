@@ -3,8 +3,11 @@ import { notFound } from "next/navigation";
 import { AlertTriangle, ArrowLeft, Building2, CheckCircle2, Clock3, ExternalLink, Layers, MapPin, UsersRound } from "lucide-react";
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
 import { ContatosProfissionais } from "@/components/contatos-profissionais";
+import { SecaoContratacoesRelacionadas } from "@/components/secao-contratacoes-relacionadas";
+import { SecaoDadosCadastraisTerceiros } from "@/components/secao-dados-cadastrais-terceiros";
 import { ClasseFaixa, ClasseSegmento, MarcadorTipo, rotuloConfianca, rotuloFaixaAderencia, rotuloRevisao, rotuloStatusRevisao } from "@/components/rotulos";
 import { mapearEvidencia, mapearParaRadar, obterInstituicaoPorSlug } from "@/lib/dados";
+import { obterEnriquecimentoTerceiroPorCnes } from "@/lib/terceiros";
 import type { FaixaPrioridade, TipoDado } from "@/domain/tipos";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +16,7 @@ export default async function InstituicaoPage({ params }: PageProps<"/instituico
   const { slug } = await params;
   const instituicao = await obterInstituicaoPorSlug(slug);
   if (!instituicao) notFound();
+  const dadosCadastraisTerceiros = await obterEnriquecimentoTerceiroPorCnes(instituicao.cnes);
   const evidencias = instituicao.evidencias.map(mapearEvidencia);
   const fontes = [...new Map(evidencias.map((item) => [item.fonte.id, item.fonte])).values()];
   const possuiAlerta = evidencias.some((item) => item.confianca === "BAIXA" || item.statusRevisao !== "APROVADA");
@@ -75,6 +79,10 @@ export default async function InstituicaoPage({ params }: PageProps<"/instituico
         <p className="mt-1 text-sm text-[var(--texto-suave)]">Fluxo de prospecção com contatos públicos ou simulados, sempre separados por tipo de dado.</p>
         <ContatosProfissionais contatos={instituicao.contatosProfissionais} />
       </section>
+
+      <SecaoContratacoesRelacionadas sinais={instituicao.sinaisContratacaoPublica} />
+
+      <SecaoDadosCadastraisTerceiros dados={dadosCadastraisTerceiros} />
 
       <section className="mt-6 grid gap-6 xl:grid-cols-2">
         <article className="painel p-6"><div className="flex items-center gap-3"><MapPin className="text-[var(--azul)]" size={21} aria-hidden="true" /><h2 className="text-lg font-bold">Unidades e localização</h2></div><ul className="mt-4 space-y-3">{instituicao.unidades.map((unidade) => <li className="rounded-xl border border-[var(--borda)] p-4" key={unidade.id}><div className="flex items-center justify-between gap-4"><strong>{unidade.nome}</strong>{unidade.operacao24h && <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700"><Clock3 size={14} aria-hidden="true" />24 horas</span>}</div>{unidade.endereco && <p className="mt-2 text-sm leading-6 text-[var(--texto-suave)]">{unidade.endereco.logradouro}, {unidade.endereco.numero} · {unidade.endereco.bairro}<br />{unidade.endereco.municipio}/{unidade.endereco.uf} · <strong>{unidade.endereco.tipoDado === "FATO_OFICIAL" ? "FATO OFICIAL" : "DEMONSTRAÇÃO"}</strong></p>}</li>)}</ul></article>
