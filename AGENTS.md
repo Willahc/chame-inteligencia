@@ -20,7 +20,7 @@ Estas regras valem para qualquer agente que trabalhe neste repositório:
 - Executar lint, verificação de tipos, testes e build antes de declarar uma alteração pronta.
 - Preservar o modelo canônico em `prisma/schema.prisma` e a separação entre domínio, acesso a dados, ingestão e interface.
 - Não adicionar dependências sem necessidade concreta e registrada no escopo.
-- Não coletar, armazenar ou exibir dados pessoais.
+- Não coletar, armazenar ou exibir dados pessoais, exceto contatos profissionais públicos B2B estritamente necessários para a prospecção B2B do Chame Inteligência, com finalidade comercial legítima, minimização de dados, rastreabilidade, revisão humana e possibilidade de desativação. Nesta exceção, só podem ser tratados: nome profissional público; cargo; área; empresa; URL pública de LinkedIn ou página profissional; e-mail corporativo publicado; telefone profissional publicado; telefone departamental ou central corporativa; fonte; data da evidência; confiança; papel comercial identificado como `INFERENCIA`; e status de revisão. Permanecem proibidos CPF, endereço residencial, telefone pessoal, e-mail pessoal, dados familiares, dados de saúde, dados obtidos por login, scraping autenticado, CAPTCHA bypass, dados vazados e bases clandestinas.
 - Não chamar serviços externos, bases públicas ou APIs de inteligência artificial sem autorização explícita.
 - Agentes e assistentes nunca são fontes primárias da verdade; dados estruturados e evidências permanecem canônicos.
 - Não integrar sistemas internos da Chame nem substituir ferramentas atuais sem novo escopo aprovado.

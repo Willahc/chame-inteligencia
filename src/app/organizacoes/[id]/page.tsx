@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AlertTriangle, ArrowLeft, Building2, CalendarClock, GitBranch, ListChecks, MapPin } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Building2, CalendarClock, GitBranch, ListChecks, MapPin, ShieldAlert } from "lucide-react";
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
 import { ClasseNatureza, ClasseSegmento, ClasseVinculo, MarcadorTipo, rotuloConfianca, rotuloStatusRevisao } from "@/components/rotulos";
 import { obterOrganizacao } from "@/lib/dados";
@@ -26,7 +26,7 @@ export default async function OrganizacaoPage({ params }: PageProps<"/organizaco
   const ehHipotese = organizacao.tipoVinculo === "PROVAVEL" || organizacao.tipoVinculo === "INCERTO";
 
   return (
-    <div className="mx-auto max-w-[1500px] px-4 py-6 sm:px-6 lg:px-10 lg:py-9">
+    <div className="w-full px-3 py-5 sm:px-6 lg:px-8 lg:py-8 2xl:px-10">
       <CabecalhoPagina
         titulo={organizacao.nome}
         descricao="Agrupamento de instituições do CNES a partir de vínculo oficial ou hipótese de vínculo econômico."
@@ -60,7 +60,7 @@ export default async function OrganizacaoPage({ params }: PageProps<"/organizaco
 
       <section className="painel mt-6 p-6">
         <div className="flex items-center gap-3"><h2 className="text-lg font-bold">Contatos comerciais</h2></div>
-        <p className="mt-2 text-sm leading-6 text-[var(--texto-suave)]">Contatos fictícios do piloto, com qualidade calculada exclusivamente com dados de demonstração.</p>
+        <p className="mt-2 text-sm leading-6 text-[var(--texto-suave)]">Contatos exibidos com origem, confiança e tipo de dado identificados individualmente.</p>
         <ContatosProfissionais contatos={organizacao.contatos} />
       </section>
 
@@ -75,6 +75,15 @@ export default async function OrganizacaoPage({ params }: PageProps<"/organizaco
         </dl>
         {organizacao.dataCalculo && <p className="mt-5 flex items-center gap-2 text-xs text-[var(--texto-suave)]"><CalendarClock size={15} aria-hidden="true" />Calculado em {new Date(organizacao.dataCalculo).toLocaleString("pt-BR")}</p>}
         {organizacao.observacao && <p className="mt-5 rounded-xl border border-[var(--borda)] bg-slate-50 p-4 text-sm leading-6 text-[var(--texto-suave)]"><strong className="text-[var(--texto)]">Observação:</strong> {organizacao.observacao}</p>}
+      </section>
+
+      <section className="painel mt-6 p-6">
+        <div className="flex items-center gap-3"><ShieldAlert className="text-amber-600" size={21} aria-hidden="true" /><h2 className="text-lg font-bold">Riscos e limitações do agrupamento</h2></div>
+        <div className="mt-4 space-y-2 text-sm leading-6 text-[var(--texto-suave)]">
+          <p>• <strong className="text-[var(--texto)]">Base canônica CNES:</strong> este agrupamento foi gerado por regras determinísticas sobre os registros oficiais do CNES (versão {organizacao.versaoRegra ?? "1.0.0"}).</p>
+          <p>• <strong className="text-[var(--texto)]">Vínculo {organizacao.tipoVinculo === "OFICIAL" ? "oficial confirmado" : organizacao.tipoVinculo === "PROVAVEL" ? "provável (hipótese)" : organizacao.tipoVinculo === "ISOLADO" ? "isolado (sem rede identificada)" : "incerto"}:</strong> {organizacao.tipoVinculo === "PROVAVEL" ? "A relação entre as unidades decorre de similaridade de razão social e deve ser confirmada por validação humana ou CNPJ mantenedora antes de abordagens estratégicas." : organizacao.tipoVinculo === "OFICIAL" ? "Vínculo documentado em fontes oficiais de cadastro." : "Instituição tratada individualmente no pipeline comercial."}</p>
+          <p>• <strong className="text-[var(--texto)]">Sem integração externa não autorizada:</strong> não foram consultadas bases da Receita Federal, ANS ou serviços externos de inteligência artificial.</p>
+        </div>
       </section>
 
       <section className="painel mt-6 overflow-hidden">

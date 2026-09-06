@@ -1,20 +1,23 @@
 import Link from "next/link";
 import { ArrowRight, Building2, Clock3, FileWarning, FlaskConical, Layers, MapPinned, TrendingUp } from "lucide-react";
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
-import { ClasseFaixa, ClasseSegmento, rotuloFaixa, rotuloSegmento } from "@/components/rotulos";
+import { ClasseSegmento, rotuloFaixa, rotuloSegmento } from "@/components/rotulos";
+import { TabelaOportunidadesVisaoGeral } from "@/components/tabela-oportunidades-visao-geral";
 import type { FaixaPrioridade } from "@/domain/tipos";
+import { obterModoDados } from "@/domain/modo-dados";
 import { listarInstituicoes, mapearParaRadar } from "@/lib/dados";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const completas = await listarInstituicoes();
+  const modo = obterModoDados();
   const instituicoes = completas.map(mapearParaRadar);
   const pendentes = completas.reduce((total, item) => total + item.evidencias.filter((evidencia) => evidencia.statusRevisao === "PENDENTE").length, 0);
   const indicadores = [
     { rotulo: "Instituições reais", valor: instituicoes.filter((item) => item.tipoDado === "FATO_OFICIAL").length, detalhe: "CNES / DATASUS", icone: Building2 },
     { rotulo: "Demonstrações", valor: instituicoes.filter((item) => item.tipoDado === "DEMONSTRACAO").length, detalhe: "dados fictícios", icone: FlaskConical },
-    { rotulo: "Instituições mapeadas", valor: instituicoes.length, detalhe: "base demonstrativa", icone: Building2 },
+    { rotulo: "Instituições mapeadas", valor: instituicoes.length, detalhe: modo === "MODO_REAL" ? "registros oficiais captados" : "dados de demonstração", icone: Building2 },
     { rotulo: "Prioridade alta ou superior", valor: instituicoes.filter((item) => item.indice >= 60).length, detalhe: "60 pontos ou mais", icone: TrendingUp },
     { rotulo: "Com várias unidades", valor: instituicoes.filter((item) => item.quantidadeUnidades > 1).length, detalhe: "potencial entre unidades", icone: MapPinned },
     { rotulo: "Operação 24 horas", valor: instituicoes.filter((item) => item.operacao24h).length, detalhe: "demanda contínua provável", icone: Clock3 },
@@ -35,7 +38,7 @@ export default async function Home() {
     .sort((a, b) => b.quantidade - a.quantidade);
 
   return (
-    <div className="mx-auto max-w-[1500px] px-4 py-6 sm:px-6 lg:px-10 lg:py-9">
+    <div className="w-full px-3 py-5 sm:px-6 lg:px-8 lg:py-8 2xl:px-10">
       <CabecalhoPagina
         titulo="Visão Geral"
         descricao="Prioridades comerciais explicadas por sinais, evidências e critérios auditáveis."
@@ -61,27 +64,7 @@ export default async function Home() {
       </section>
 
       <section className="mt-7 grid gap-6 xl:grid-cols-[1.7fr_1fr]">
-        <article className="painel overflow-hidden">
-          <div className="flex items-center justify-between gap-4 border-b border-[var(--borda)] px-5 py-4 sm:px-6">
-            <div><h2 className="text-lg font-bold text-[var(--azul-profundo)]">Top oportunidades</h2><p className="mt-1 text-sm text-[var(--texto-suave)]">MODO DEMONSTRAÇÃO — 5 contas simuladas, ordenadas pelo índice de prioridade</p></div>
-            <span className="hidden rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 sm:inline">{instituicoes.filter((item) => item.indice >= 60).length} prioritárias</span>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px] border-collapse text-left">
-              <thead className="bg-slate-50 text-sm text-[var(--texto-suave)]"><tr><th className="px-6 py-3 font-semibold">Instituição</th><th className="px-4 py-3 font-semibold">Índice</th><th className="px-4 py-3 font-semibold">Faixa</th><th className="px-4 py-3 font-semibold">Principal motivo</th></tr></thead>
-              <tbody>
-                {instituicoes.slice(0, 10).map((item) => (
-                  <tr className="border-t border-[var(--borda)] text-sm" key={item.id}>
-                    <td className="px-6 py-4"><Link className="font-bold text-[var(--azul)] hover:underline" href={`/instituicoes/${item.slug}`}>{item.nome}</Link><span className="mt-1 block text-xs font-semibold text-amber-700">DEMONSTRAÇÃO</span></td>
-                    <td className="px-4 py-4"><span className="inline-flex size-11 items-center justify-center rounded-full bg-[var(--azul-profundo)] font-bold text-white">{item.indice}</span></td>
-                    <td className="px-4 py-4"><ClasseFaixa faixa={item.faixa} /></td>
-                    <td className="max-w-xs px-4 py-4 text-[var(--texto-suave)]">{item.principalMotivo}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </article>
+        <TabelaOportunidadesVisaoGeral instituicoes={instituicoes} modo={modo} />
 
         <div className="space-y-6">
           <article className="painel p-6">

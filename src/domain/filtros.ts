@@ -18,6 +18,8 @@ export interface FiltrosRadar {
   confiancaVinculo?: NivelConfianca;
   revisaoNecessaria?: boolean;
   somentePrivadasMultiUnidade?: boolean;
+  coberturaMinima?: number;
+  organizacaoOuIsolado?: "EM_REDE" | "ISOLADA";
 }
 
 function normalizar(texto: string): string {
@@ -56,5 +58,16 @@ export function filtrarInstituicoes(
         item.segmentacao?.segmento === "NUCLEO_HOSPITALAR" ||
         item.segmentacao?.segmento === "SAUDE_CORPORATIVA_EXPANDIDA",
     )
+    .filter((item) => filtros.coberturaMinima === undefined || (item.coberturaDados ?? 0) >= filtros.coberturaMinima)
+    .filter((item) => {
+      if (!filtros.organizacaoOuIsolado) return true;
+      if (filtros.organizacaoOuIsolado === "EM_REDE") {
+        return (Boolean(item.organizacao) && item.organizacao?.tipoVinculo !== "ISOLADO") || item.quantidadeUnidades > 1;
+      }
+      if (filtros.organizacaoOuIsolado === "ISOLADA") {
+        return (!item.organizacao || item.organizacao.tipoVinculo === "ISOLADO") && item.quantidadeUnidades <= 1;
+      }
+      return true;
+    })
     .sort((a, b) => b.indice - a.indice || a.nome.localeCompare(b.nome, "pt-BR"));
 }

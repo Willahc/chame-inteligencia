@@ -18,6 +18,8 @@
     "segmentar:comercial": "tsx scripts/segmentar-comercial.ts",
     "agrupar:organizacoes": "tsx scripts/agrupar-organizacoes.ts",
     "contatos:publicos": "tsx scripts/ingest-contatos-publicos.ts",
+    "contatos:registrar-pesquisa": "tsx scripts/registrar-pesquisa-contato.ts",
+    "contatos:lote-1": "tsx scripts/ingest-contatos-lote-1.ts",
     "demo:contatos": "tsx scripts/seed-contatos-demonstracao.ts"
   },
   "prisma": {

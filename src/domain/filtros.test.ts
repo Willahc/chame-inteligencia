@@ -29,4 +29,22 @@ describe("Filtros do radar", () => {
     expect(filtrarInstituicoes(comSaude, { somenteOportunidadesComerciais: true }).map((item) => item.id)).toEqual(["1"]);
     expect(filtrarInstituicoes(base, { somenteOportunidadesComerciais: true, segmento: "FORA_DO_FOCO_ATUAL" }).map((item) => item.id)).toEqual([]);
   });
+
+  it("filtra por cobertura mínima", () => {
+    const comCobertura: InstituicaoRadar[] = [
+      { ...base[0], coberturaDados: 85 },
+      { ...base[1], coberturaDados: 50 },
+    ];
+    expect(filtrarInstituicoes(comCobertura, { coberturaMinima: 80 }).map((item) => item.id)).toEqual(["1"]);
+    expect(filtrarInstituicoes(comCobertura, { coberturaMinima: 90 })).toEqual([]);
+  });
+
+  it("filtra por estrutura organizacional (rede vs isolada)", () => {
+    const comOrganizacao: InstituicaoRadar[] = [
+      { ...base[0], quantidadeUnidades: 2, organizacao: { id: "org-1", nome: "Org Demo", nomeNormalizado: "org demo", tipoDado: "FATO_OFICIAL", tipoVinculo: "OFICIAL", confianca: "ALTA", natureza: "PRIVADO", quantidadeUnidades: 2, statusRevisao: "APROVADA", regraAgrupamento: "TESTE", versaoRegra: "1.0.0", tipoEvidencia: null, observacao: null, precisaRevisao: false } },
+      { ...base[1], quantidadeUnidades: 1, organizacao: { id: "org-2", nome: "Org Isolada", nomeNormalizado: "org isolada", tipoDado: "FATO_OFICIAL", tipoVinculo: "ISOLADO", confianca: "ALTA", natureza: "PRIVADO", quantidadeUnidades: 1, statusRevisao: "APROVADA", regraAgrupamento: "TESTE", versaoRegra: "1.0.0", tipoEvidencia: null, observacao: null, precisaRevisao: false } },
+    ];
+    expect(filtrarInstituicoes(comOrganizacao, { organizacaoOuIsolado: "EM_REDE" }).map((item) => item.id)).toEqual(["1"]);
+    expect(filtrarInstituicoes(comOrganizacao, { organizacaoOuIsolado: "ISOLADA" }).map((item) => item.id)).toEqual(["2"]);
+  });
 });

@@ -6,5 +6,5 @@ export const dynamic = "force-dynamic";
 
 export default async function AssistentePage() {
   const instituicoes = (await listarInstituicoes()).map(mapearParaAssistente);
-  return <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-10 lg:py-9"><CabecalhoPagina titulo="Assistente Comercial Local" descricao="Consultas predefinidas, sem inteligência artificial externa e sem criação de informações." /><AssistenteClient instituicoes={instituicoes} /></div>;
+  return <div className="w-full px-3 py-5 sm:px-6 lg:px-8 lg:py-8 2xl:px-10"><CabecalhoPagina titulo="Assistente Comercial Local" descricao="Consultas predefinidas, sem inteligência artificial externa e sem criação de informações." /><AssistenteClient instituicoes={instituicoes} /></div>;
 }
