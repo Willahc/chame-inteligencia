@@ -92,7 +92,7 @@ export default async function OrganizacaoPage({ params }: PageProps<"/organizaco
         <div className="mt-4 space-y-2 text-sm leading-6 text-[var(--texto-suave)]">
           <p>• <strong className="text-[var(--texto)]">Base canônica CNES:</strong> este agrupamento foi gerado por regras determinísticas sobre os registros oficiais do CNES (versão {organizacao.versaoRegra ?? "1.0.0"}).</p>
           <p>• <strong className="text-[var(--texto)]">Vínculo {organizacao.tipoVinculo === "OFICIAL" ? "oficial confirmado" : organizacao.tipoVinculo === "PROVAVEL" ? "provável (hipótese)" : organizacao.tipoVinculo === "ISOLADO" ? "isolado (sem rede identificada)" : "incerto"}:</strong> {organizacao.tipoVinculo === "PROVAVEL" ? "A relação entre as unidades decorre de similaridade de razão social e deve ser confirmada por validação humana ou CNPJ mantenedora antes de abordagens estratégicas." : organizacao.tipoVinculo === "OFICIAL" ? "Vínculo documentado em fontes oficiais de cadastro." : "Instituição tratada individualmente no pipeline comercial."}</p>
-          <p>• <strong className="text-[var(--texto)]">Sem integração externa não autorizada:</strong> não foram consultadas bases da Receita Federal, ANS ou serviços externos de inteligência artificial.</p>
+          <p>• <strong className="text-[var(--texto)]">Governança e fontes canônicas:</strong> os dados utilizam exclusivamente fontes públicas autorizadas (CNES, PNCP, ANS e contexto territorial), com a base da Receita Federal mantida explicitamente pendente e sem uso de dados pessoais não autorizados ou modelos de IA como verdade factual.</p>
         </div>
       </section>
 

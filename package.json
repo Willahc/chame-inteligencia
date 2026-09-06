@@ -22,6 +22,7 @@
     "contatos:lote-1": "tsx scripts/ingest-contatos-lote-1.ts",
     "demo:contatos": "tsx scripts/seed-contatos-demonstracao.ts",
     "consolidar:contas": "tsx scripts/consolidar-contas-comerciais.ts",
+    "indices:consolidar": "tsx scripts/consolidar-indices-instituicoes.ts",
     "receita:diagnostico": "tsx scripts/diagnostico-receita.ts",
     "receita:importar": "tsx scripts/importar-receita-local.ts",
     "receita:idempotencia": "tsx scripts/testar-idempotencia-receita.ts",

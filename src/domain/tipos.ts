@@ -97,6 +97,8 @@ export interface InstituicaoRadar {
   possuiContratacaoRecente?: boolean;
   possuiEnriquecimentoTerceiro?: boolean;
   possuiANS?: boolean;
+  quantidadeContatos?: number;
+  riscoOuLimitacao?: string | null;
 }
 
 export interface InstituicaoAssistente extends InstituicaoRadar {

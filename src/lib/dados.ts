@@ -13,9 +13,16 @@ import type {
 } from "@/domain/tipos";
 import { prisma } from "./prisma";
 import { obterModoDados, tipoDadoDoModo } from "@/domain/modo-dados";
+import { ROTULOS_ACOES_COMERCIAIS } from "@/domain/acao-comercial/recomendar-acao";
 
 export const incluirInstituicao = {
-  grupoEconomico: { include: { _count: { select: { instituicoes: true } } } },
+  grupoEconomico: {
+    include: {
+      _count: { select: { instituicoes: true } },
+      contaComercial: true,
+      contatos: { include: { fonte: true }, where: { ativo: true } },
+    },
+  },
   tipoEstabelecimento: true,
   unidades: { include: { endereco: true }, orderBy: { nome: "asc" as const } },
   servicos: { orderBy: { nome: "asc" as const } },
@@ -90,11 +97,15 @@ export function mapearParaRadar(item: InstituicaoCompleta): InstituicaoRadar {
     quantidadeUnidades: item.unidades.length,
     operacao24h: item.operacao24h,
     possuiExpansao: item.sinaisExpansao.length > 0,
-    indice: item.indice?.total ?? 0,
-    faixa: (item.indice?.faixa ?? "BAIXA") as FaixaPrioridade,
-    principalMotivo: componentePrincipal?.rotulo ?? "Sem componente aplicável",
+    indice: item.indice?.total ?? (item.grupoEconomico?.contaComercial?.indicePrioridadeComercial ?? 0),
+    faixa: (item.indice?.faixa ?? (item.grupoEconomico?.contaComercial?.faixaPrioridadeComercial ?? "BAIXA")) as FaixaPrioridade,
+    principalMotivo: componentePrincipal?.rotulo ?? "Estrutura multiunidade",
     qualidadeEvidencias: qualidadeGeralEvidencias(evidencias),
-    acaoRecomendada: item.acoesComerciais[0]?.titulo ?? "Revisar evidências antes de agir",
+    acaoRecomendada:
+      item.acoesComerciais[0]?.titulo ??
+      (item.grupoEconomico?.contaComercial?.acaoRecomendada
+        ? ROTULOS_ACOES_COMERCIAIS[item.grupoEconomico.contaComercial.acaoRecomendada]
+        : "Revisar evidências antes de agir"),
     tipoDado: item.tipoDado as TipoDado,
     cnes: item.cnes,
     situacaoCadastral: item.situacaoCadastral,
@@ -123,6 +134,17 @@ export function mapearParaRadar(item: InstituicaoCompleta): InstituicaoRadar {
       const pub = new Date(s.dataPublicacao);
       return pub >= new Date("2026-07-01");
     }),
+    quantidadeContatos:
+      (item.contatosProfissionais ?? []).length ||
+      (item.grupoEconomico?.contatos ?? []).length ||
+      item.grupoEconomico?.contaComercial?.quantidadeContatos ||
+      0,
+    riscoOuLimitacao:
+      item.grupoEconomico?.tipoVinculo === "INCERTO" || item.grupoEconomico?.tipoVinculo === "PROVAVEL"
+        ? "Vínculo corporativo provável; requer validação cadastral"
+        : (item.coberturaDados ?? 100) < 70
+          ? "Cobertura cadastral parcial (< 70%)"
+          : null,
   };
 }
 

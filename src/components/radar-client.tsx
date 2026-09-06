@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { RotateCcw, Search } from "lucide-react";
+import { RotateCcw, Search, ShieldAlert, UserCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { ClasseFaixa, ClasseSegmento, rotuloConfianca } from "./rotulos";
+import { ClasseFaixa, ClasseSegmento } from "./rotulos";
 import { filtrarInstituicoes, type FiltrosRadar } from "@/domain/filtros";
 import type { InstituicaoRadar } from "@/domain/tipos";
 
@@ -162,7 +162,154 @@ export function RadarClient({ instituicoes }: { instituicoes: InstituicaoRadar[]
       </section>
 
       <section className="painel mt-5 overflow-hidden" aria-label="Resultados do radar">
-        {filtradas.length === 0 ? <div className="px-6 py-16 text-center"><h2 className="text-lg font-bold">Nenhuma instituição encontrada</h2><p className="mt-2 text-sm text-[var(--texto-suave)]">Ajuste ou limpe os filtros para ampliar a consulta.</p></div> : <><div className="overflow-x-auto"><table className="w-full min-w-[1280px] border-collapse text-left text-sm"><thead className="bg-slate-50 text-[var(--texto-suave)]"><tr>{["Instituição", "Organização / Rede", "Município", "Tipo", "Unidades", "24 horas", "Índice", "Faixa", "Segmento", "Principal motivo", "Evidências", "Ação recomendada"].map((titulo) => <th className="px-4 py-3 font-semibold first:pl-6" key={titulo}>{titulo}</th>)}</tr></thead><tbody>{visiveis.map((item) => <tr className="border-t border-[var(--borda)] align-top hover:bg-slate-50/60" key={item.id}><td className="px-4 py-4 pl-6"><Link className="font-bold text-[var(--azul)] hover:underline" href={`/instituicoes/${item.slug}`}>{item.nome}</Link><div className="mt-1 flex flex-wrap items-center gap-1.5"><span className={`text-xs font-bold ${item.tipoDado === "FATO_OFICIAL" ? "text-teal-700" : "text-amber-700"}`}>{item.tipoDado === "FATO_OFICIAL" ? "FATO OFICIAL" : "DEMONSTRAÇÃO"}</span>{item.possuiSinalPNCP && <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-700">PNCP ({item.totalSinaisPNCP})</span>}{item.possuiSinalMobilidadePNCP && <span className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700">Mobilidade</span>}</div></td><td className="px-4 py-4">{item.organizacao ? <div><Link className="font-bold text-[var(--azul)] hover:underline" href={`/organizacoes/${item.organizacao.id}`}>{item.organizacao.nome}</Link>{item.organizacao.quantidadeUnidades > 1 && <span className="mt-1 block text-xs text-[var(--texto-suave)]">{item.organizacao.quantidadeUnidades} unidade(s)</span>}</div> : <span className="text-[var(--texto-suave)]">{item.grupo ?? "Sem grupo"}</span>}</td><td className="px-4 py-4">{item.municipio}{item.municipios.length > 1 && <span className="block text-xs text-[var(--texto-suave)]">+ {item.municipios.length - 1} município(s)</span>}</td><td className="px-4 py-4">{item.tipo}</td><td className="px-4 py-4 font-bold">{item.quantidadeUnidades}</td><td className="px-4 py-4">{item.operacao24h ? "Sim" : "Não"}</td><td className="px-4 py-4"><span className="inline-flex size-10 items-center justify-center rounded-full bg-[var(--azul-profundo)] font-bold text-white">{item.indice}</span></td><td className="px-4 py-4"><ClasseFaixa faixa={item.faixa} /></td><td className="px-4 py-4">{item.segmentacao ? <ClasseSegmento segmento={item.segmentacao.segmento} /> : <span className="text-xs text-[var(--texto-suave)]">Sem segmento</span>}</td><td className="max-w-52 px-4 py-4 text-[var(--texto-suave)]">{item.principalMotivo}</td><td className="px-4 py-4">{rotuloConfianca[item.qualidadeEvidencias]}</td><td className="max-w-56 px-4 py-4 font-medium">{item.acaoRecomendada}</td></tr>)}</tbody></table></div><div className="flex items-center justify-center gap-3 border-t border-[var(--borda)] p-4"><button className="rounded-lg border px-3 py-2 text-sm font-bold disabled:opacity-40" disabled={paginaAtual <= 1} onClick={() => setPagina((valor) => Math.max(1, valor - 1))} type="button">Anterior</button><span className="text-sm text-[var(--texto-suave)]">Página {paginaAtual} de {totalPaginas}</span><button className="rounded-lg border px-3 py-2 text-sm font-bold disabled:opacity-40" disabled={paginaAtual >= totalPaginas} onClick={() => setPagina((valor) => Math.min(totalPaginas, valor + 1))} type="button">Próxima</button></div></>}
+        {filtradas.length === 0 ? (
+          <div className="px-6 py-16 text-center">
+            <h2 className="text-lg font-bold">Nenhuma instituição encontrada</h2>
+            <p className="mt-2 text-sm text-[var(--texto-suave)]">Ajuste ou limpe os filtros para ampliar a consulta.</p>
+          </div>
+        ) : (
+          <>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[1400px] border-collapse text-left text-sm">
+                <thead className="bg-slate-50 text-[var(--texto-suave)]">
+                  <tr>
+                    {[
+                      "Instituição",
+                      "Organização / Rede",
+                      "Município",
+                      "Tipo",
+                      "Unidades",
+                      "24 horas",
+                      "Índice",
+                      "Faixa",
+                      "Segmento",
+                      "Cobertura",
+                      "Contatos",
+                      "Principal motivo",
+                      "Risco / Validação",
+                      "Ação recomendada",
+                    ].map((titulo) => (
+                      <th className="px-4 py-3 font-semibold first:pl-6" key={titulo}>
+                        {titulo}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {visiveis.map((item) => (
+                    <tr className="border-t border-[var(--borda)] align-top hover:bg-slate-50/60" key={item.id}>
+                      <td className="px-4 py-4 pl-6">
+                        <Link className="font-bold text-[var(--azul)] hover:underline" href={`/instituicoes/${item.slug}`}>
+                          {item.nome}
+                        </Link>
+                        <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                          <span className={`text-xs font-bold ${item.tipoDado === "FATO_OFICIAL" ? "text-teal-700" : "text-amber-700"}`}>
+                            {item.tipoDado === "FATO_OFICIAL" ? "FATO OFICIAL" : "DEMONSTRAÇÃO"}
+                          </span>
+                          {item.possuiSinalPNCP && (
+                            <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-700">
+                              PNCP ({item.totalSinaisPNCP})
+                            </span>
+                          )}
+                          {item.possuiSinalMobilidadePNCP && (
+                            <span className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700">
+                              Mobilidade
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        {item.organizacao ? (
+                          <div>
+                            <Link className="font-bold text-[var(--azul)] hover:underline" href={`/organizacoes/${item.organizacao.id}`}>
+                              {item.organizacao.nome}
+                            </Link>
+                            {item.organizacao.quantidadeUnidades > 1 && (
+                              <span className="mt-1 block text-xs text-[var(--texto-suave)]">
+                                {item.organizacao.quantidadeUnidades} unidade(s)
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-[var(--texto-suave)]">{item.grupo ?? "Sem grupo"}</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-4">
+                        {item.municipio}
+                        {item.municipios.length > 1 && (
+                          <span className="block text-xs text-[var(--texto-suave)]">+ {item.municipios.length - 1} município(s)</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-4">{item.tipo}</td>
+                      <td className="px-4 py-4 font-bold">{item.quantidadeUnidades}</td>
+                      <td className="px-4 py-4">{item.operacao24h ? "Sim" : "Não"}</td>
+                      <td className="px-4 py-4">
+                        <span className="inline-flex size-10 items-center justify-center rounded-full bg-[var(--azul-profundo)] font-bold text-white">
+                          {item.indice}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4">
+                        <ClasseFaixa faixa={item.faixa} />
+                      </td>
+                      <td className="px-4 py-4">
+                        {item.segmentacao ? <ClasseSegmento segmento={item.segmentacao.segmento} /> : <span className="text-xs text-[var(--texto-suave)]">Sem segmento</span>}
+                      </td>
+                      <td className="px-4 py-4 font-semibold text-slate-700">
+                        {item.coberturaDados ?? 100}%
+                      </td>
+                      <td className="px-4 py-4">
+                        {item.quantidadeContatos && item.quantidadeContatos > 0 ? (
+                          <span className="inline-flex items-center gap-1 rounded bg-teal-50 px-2 py-0.5 text-xs font-semibold text-teal-700">
+                            <UserCheck size={12} /> {item.quantidadeContatos}
+                          </span>
+                        ) : (
+                          <span className="text-xs text-[var(--texto-suave)]">—</span>
+                        )}
+                      </td>
+                      <td className="max-w-52 px-4 py-4 text-xs text-[var(--texto-suave)] leading-relaxed">
+                        {item.principalMotivo}
+                      </td>
+                      <td className="max-w-44 px-4 py-4">
+                        {item.riscoOuLimitacao ? (
+                          <span className="flex items-start gap-1 text-xs text-amber-700 leading-tight">
+                            <ShieldAlert size={14} className="mt-0.5 shrink-0" />
+                            {item.riscoOuLimitacao}
+                          </span>
+                        ) : (
+                          <span className="text-xs text-slate-400">Nenhum</span>
+                        )}
+                      </td>
+                      <td className="max-w-56 px-4 py-4 text-xs font-medium leading-relaxed">
+                        {item.acaoRecomendada}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="flex items-center justify-center gap-3 border-t border-[var(--borda)] p-4">
+              <button
+                className="rounded-lg border px-3 py-2 text-sm font-bold disabled:opacity-40"
+                disabled={paginaAtual <= 1}
+                onClick={() => setPagina((valor) => Math.max(1, valor - 1))}
+                type="button"
+              >
+                Anterior
+              </button>
+              <span className="text-sm text-[var(--texto-suave)]">
+                Página {paginaAtual} de {totalPaginas}
+              </span>
+              <button
+                className="rounded-lg border px-3 py-2 text-sm font-bold disabled:opacity-40"
+                disabled={paginaAtual >= totalPaginas}
+                onClick={() => setPagina((valor) => Math.min(totalPaginas, valor + 1))}
+                type="button"
+              >
+                Próxima
+              </button>
+            </div>
+          </>
+        )}
       </section>
     </div>
   );
