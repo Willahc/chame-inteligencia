@@ -235,6 +235,9 @@ model Fonte {
   contatos      ContatoProfissional[]
   empresasReceita EmpresaReceita[]
   sinaisContratacao SinalContratacaoPublica[]
+  operadorasANS OperadoraANS[]
+  municipiosIBGE MunicipioIBGE[]
+  indicadoresMTE IndicadorMTE[]
 }
 
 model ContatoProfissional {
@@ -369,6 +372,7 @@ model LoteIngestao {
   empresasReceita      EmpresaReceita[]
   resolucoesCnpj       ResolucaoCNPJ[]
   sinaisContratacao    SinalContratacaoPublica[]
+  operadorasANS        OperadoraANS[]
 
   @@index([fonteId, dataReferencia])
   @@index([status, inicio])
@@ -615,6 +619,10 @@ model SinalContratacaoPublica {
   uf               String?
   palavrasChave    String
   sinalMobilidade  Boolean        @default(false)
+  categoriaPNCP    String         @default("SINAL_CONTRATACAO") // "SINAL_CONTRATACAO" ou "CONTRATO_CONFIRMADO"
+  tipoContrato     String?
+  fornecedorCNPJ   String?
+  fornecedorNome   String?
   urlPublica      String?
   fonteId          String
   loteId           String?
@@ -635,6 +643,7 @@ model SinalContratacaoPublica {
 
   @@index([identificadorPNCP])
   @@index([sinalMobilidade])
+  @@index([categoriaPNCP])
   @@index([cnpjOrgao])
   @@index([uf, municipio])
   @@index([tipoDado, confianca])
@@ -671,4 +680,88 @@ model EnriquecimentoCNPJTerceiro {
   @@index([provedor])
   @@index([tipoDado, confianca])
   @@index([uf, municipio])
+}
+
+model OperadoraANS {
+  id                    String         @id
+  registroAns           String         @unique
+  cnpj                  String
+  razaoSocial           String
+  nomeFantasia          String?
+  modalidade            String
+  situacao              String         @default("Ativa")
+  logradouro            String?
+  numero                String?
+  complemento           String?
+  bairro                String?
+  cidade                String
+  uf                    String
+  cep                   String?
+  regiaoComercializacao Int?
+  dataRegistroAns       DateTime?
+  fonteId               String
+  loteId                String?
+  tipoDado              TipoDado       @default(FATO_OFICIAL)
+  confianca             NivelConfianca @default(ALTA)
+  statusRevisao         StatusRevisao  @default(APROVADA)
+  criadoEm              DateTime       @default(now())
+  atualizadoEm          DateTime       @updatedAt
+
+  fonte                 Fonte          @relation(fields: [fonteId], references: [id])
+  lote                  LoteIngestao?  @relation(fields: [loteId], references: [id])
+
+  @@index([cnpj])
+  @@index([registroAns])
+  @@index([uf, cidade])
+  @@index([modalidade])
+}
+
+model MunicipioIBGE {
+  id                  String         @id
+  codigoIbge6         String
+  nome                String
+  ufSigla             String
+  ufNome              String
+  regiaoNome          String
+  microrregiao        String?
+  mesorregiao         String?
+  regiaoImediata      String?
+  regiaoIntermediaria String?
+  populacao           Int?
+  fonteId             String
+  tipoDado            TipoDado       @default(FATO_OFICIAL)
+  confianca           NivelConfianca @default(ALTA)
+  criadoEm            DateTime       @default(now())
+  atualizadoEm        DateTime       @updatedAt
+
+  fonte               Fonte          @relation(fields: [fonteId], references: [id])
+
+  @@index([codigoIbge6])
+  @@index([ufSigla])
+  @@index([nome])
+}
+
+model IndicadorMTE {
+  id                    String         @id @default(cuid())
+  municipio             String
+  uf                    String
+  codigoIbge6           String?
+  setorCnae             String
+  descricaoSetor        String
+  periodo               String
+  indicador             String
+  quantidadeAgregada    String
+  detalhesAgregadosJson String?
+  fonteId               String
+  tipoDado              TipoDado       @default(FATO_PUBLICO)
+  confianca             NivelConfianca @default(ALTA)
+  statusRevisao         StatusRevisao  @default(APROVADA)
+  criadoEm              DateTime       @default(now())
+  atualizadoEm          DateTime       @updatedAt
+
+  fonte                 Fonte          @relation(fields: [fonteId], references: [id])
+
+  @@index([uf, municipio])
+  @@index([setorCnae])
+  @@index([codigoIbge6])
 }

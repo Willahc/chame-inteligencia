@@ -34,8 +34,9 @@ describe("PNCP — Testes Obrigatórios de Ingestão e Governança", () => {
       orderBy: { inicio: "desc" },
     });
     expect(lotesPNCP.length).toBeGreaterThan(0);
-    expect(lotesPNCP[0].hashArquivo).toBe("FB63CFB0D2508A496AFE0227267AE4B9D865E13A36C6792783EFD905E8F8BE26");
-    expect(lotesPNCP[0].status).toBe("CONCLUIDO");
+    const loteSinais = lotesPNCP.find((l) => l.hashArquivo === "FB63CFB0D2508A496AFE0227267AE4B9D865E13A36C6792783EFD905E8F8BE26");
+    expect(loteSinais).toBeDefined();
+    expect(loteSinais?.status).toBe("CONCLUIDO");
   });
 
   it("detecta sinal de mobilidade e trata valor ausente como null", () => {
@@ -66,11 +67,14 @@ describe("PNCP — Testes Obrigatórios de Ingestão e Governança", () => {
   });
 
   it("comprova idempotência estrita (todos os 544 registros já ingeridos permanecem inalterados)", async () => {
-    const totalSinais = await prisma.sinalContratacaoPublica.count();
+    const totalSinais = await prisma.sinalContratacaoPublica.count({
+      where: { categoriaPNCP: "SINAL_CONTRATACAO" },
+    });
     expect(totalSinais).toBe(544);
 
     const unicos = await prisma.sinalContratacaoPublica.groupBy({
       by: ["identificadorPNCP"],
+      where: { categoriaPNCP: "SINAL_CONTRATACAO" },
     });
     expect(unicos.length).toBe(544);
   });
@@ -81,7 +85,7 @@ describe("PNCP — Testes Obrigatórios de Ingestão e Governança", () => {
 
     // Um órgão municipal sem CNPJ mapeado no CNES deve permanecer estritamente SEM_VINCULO
     const sinaisSemVinculo = await prisma.sinalContratacaoPublica.findMany({
-      where: { metodoVinculo: "SEM_VINCULO" },
+      where: { categoriaPNCP: "SINAL_CONTRATACAO", metodoVinculo: "SEM_VINCULO" },
     });
     expect(sinaisSemVinculo.length).toBe(540);
     for (const s of sinaisSemVinculo) {
@@ -90,7 +94,7 @@ describe("PNCP — Testes Obrigatórios de Ingestão e Governança", () => {
 
     // Apenas sinais com CNPJ oficial mantenedora/estabelecimento são vinculados
     const sinaisVinculados = await prisma.sinalContratacaoPublica.findMany({
-      where: { instituicaoId: { not: null } },
+      where: { categoriaPNCP: "SINAL_CONTRATACAO", instituicaoId: { not: null } },
     });
     expect(sinaisVinculados.length).toBe(4);
     for (const s of sinaisVinculados) {

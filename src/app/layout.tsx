@@ -4,6 +4,7 @@ import {
   BotMessageSquare,
   Briefcase,
   Building2,
+  Database,
   Gauge,
   Landmark,
   Network,
@@ -26,6 +27,7 @@ const navegacao = [
   { href: "/radar", rotulo: "Radar de Clientes", icone: Radar },
   { href: "/organizacoes", rotulo: "Organizações", icone: Network },
   { href: "/contratacoes-publicas", rotulo: "Contratações Públicas", icone: Landmark },
+  { href: "/cobertura", rotulo: "Cobertura de Dados", icone: Database },
   { href: "/assistente", rotulo: "Assistente Comercial", icone: BotMessageSquare },
   { href: "/governanca", rotulo: "Governança", icone: Scale },
 ];

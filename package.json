@@ -26,7 +26,11 @@
     "receita:importar": "tsx scripts/importar-receita-local.ts",
     "receita:idempotencia": "tsx scripts/testar-idempotencia-receita.ts",
     "pncp:importar": "tsx scripts/importar-pncp-local.ts",
-    "cnpj:terceiro": "tsx scripts/importar-cnpj-terceiro.ts"
+    "pncp:contratos": "tsx scripts/importar-contratos-pncp-local.ts",
+    "cnpj:terceiro": "tsx scripts/importar-cnpj-terceiro.ts",
+    "ans:importar": "tsx scripts/importar-ans-local.ts",
+    "ibge:importar": "tsx scripts/importar-ibge-local.ts",
+    "mte:importar": "tsx scripts/importar-mte-local.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

@@ -33,12 +33,17 @@ export function SecaoDadosCadastraisTerceiros({ dados }: SecaoDadosCadastraisTer
       </div>
 
       <div className="mt-4 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
-        <Info className="mt-0.5 shrink-0" size={18} aria-hidden="true" />
-        <p>
-          <strong>Aviso de Governança:</strong> Fonte auxiliar de terceiros — não substitui a Receita Federal.
-          Estes dados cadastrais foram obtidos via {dados.provedor} como suporte transitório e não alteram o cadastro
-          oficial do CNES nem o Índice de Prioridade Comercial.
-        </p>
+        <Info className="mt-0.5 shrink-0 text-amber-700" size={18} aria-hidden="true" />
+        <div>
+          <p>
+            <strong>Aviso de Governança:</strong> Fonte auxiliar de terceiros — não substitui a Receita Federal.
+            Estes dados cadastrais foram obtidos via {dados.provedor} como suporte transitório e não alteram o cadastro
+            oficial do CNES nem o Índice de Prioridade Comercial.
+          </p>
+          <p className="mt-2 text-xs font-semibold text-amber-800/90">
+            Status da Receita Federal Oficial: <span className="underline">Fonte oficial pendente</span> (aguardando disponibilização de arquivos públicos de CNPJ em lote pelos servidores federais; base oficial preservada sem registros fictícios).
+          </p>
+        </div>
       </div>
 
       <dl className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

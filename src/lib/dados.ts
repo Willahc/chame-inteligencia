@@ -97,6 +97,7 @@ export function mapearParaRadar(item: InstituicaoCompleta): InstituicaoRadar {
     acaoRecomendada: item.acoesComerciais[0]?.titulo ?? "Revisar evidências antes de agir",
     tipoDado: item.tipoDado as TipoDado,
     cnes: item.cnes,
+    situacaoCadastral: item.situacaoCadastral,
     coberturaDados: item.coberturaDados,
     segmentacao: item.segmentacao
       ? {

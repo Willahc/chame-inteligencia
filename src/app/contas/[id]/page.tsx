@@ -33,12 +33,18 @@ import {
 import { FormularioRegistroAbordagem } from "@/components/formulario-registro-abordagem";
 import { ContatosProfissionais } from "@/components/contatos-profissionais";
 import { SecaoDadosCadastraisTerceiros } from "@/components/secao-dados-cadastrais-terceiros";
+import { SecaoDadosCadastraisANS } from "@/components/secao-dados-cadastrais-ans";
+import { SecaoContextoIBGE } from "@/components/secao-contexto-ibge";
+import { SecaoIndicadoresMTE } from "@/components/secao-indicadores-mte";
 import type { TipoDado } from "@/domain/tipos";
 import type { ResultadoAbordagem } from "@/domain/contas";
 import { obterContaComercial } from "@/lib/dados";
 import { prisma } from "@/lib/prisma";
 import { obterModoDados } from "@/domain/modo-dados";
 import { obterEnriquecimentoTerceiroPorCnes } from "@/lib/terceiros";
+import { obterOperadoraANSPorCnpj, obterOperadoraANSPorCnes } from "@/lib/ans";
+import { obterContextoGeograficoIBGE } from "@/lib/ibge";
+import { obterIndicadoresMTEMunicipio } from "@/lib/mte";
 import type { DetalheIndiceComercial } from "@/domain/contas";
 
 export const dynamic = "force-dynamic";
@@ -98,7 +104,21 @@ export default async function DetalheContaPage({
   }
 
   const todasEvidencias = instituicoes.flatMap((inst) => inst.evidencias);
-  const dadosCadastraisTerceiros = await obterEnriquecimentoTerceiroPorCnes(instituicoes[0]?.cnes);
+  const munConta = cidadesArray[0] || "São Paulo";
+
+  const [
+    dadosCadastraisTerceiros,
+    operadoraANS,
+    contextoIBGE,
+    indicadoresMTE,
+  ] = await Promise.all([
+    obterEnriquecimentoTerceiroPorCnes(instituicoes[0]?.cnes),
+    conta.cnpjPrincipal
+      ? obterOperadoraANSPorCnpj(conta.cnpjPrincipal)
+      : obterOperadoraANSPorCnes(instituicoes[0]?.cnes ?? ""),
+    obterContextoGeograficoIBGE(munConta),
+    obterIndicadoresMTEMunicipio(munConta, "SP"),
+  ]);
 
   // Sinais de contratação pública PNCP vinculados estritamente por CNPJ exato
   const sinaisPNCP = [
@@ -440,6 +460,13 @@ export default async function DetalheContaPage({
       </section>
 
       <SecaoDadosCadastraisTerceiros dados={dadosCadastraisTerceiros} />
+
+      <SecaoDadosCadastraisANS operadora={operadoraANS} />
+
+      <div className="mt-6 grid gap-6 xl:grid-cols-2">
+        <SecaoContextoIBGE ibge={contextoIBGE} />
+        <SecaoIndicadoresMTE indicadores={indicadoresMTE} />
+      </div>
 
       {/* Seção de Estabelecimentos e Unidades */}
       <section aria-label="Unidades pertencentes à conta" className="painel mt-6 p-6">

@@ -1,4 +1,4 @@
-import type { FaixaPrioridade, InstituicaoRadar, NaturezaClasse, NivelConfianca, TipoVinculo } from "./tipos";
+import type { FaixaPrioridade, InstituicaoRadar, NaturezaClasse, NivelConfianca, TipoDado, TipoVinculo } from "./tipos";
 
 export interface FiltrosRadar {
   texto?: string;
@@ -24,6 +24,10 @@ export interface FiltrosRadar {
   possuiSinalMobilidadePNCP?: boolean;
   contratacaoPublicaRecente?: boolean;
   somenteVinculoPNCPExato?: boolean;
+  tipoDado?: TipoDado;
+  situacaoCadastral?: string;
+  possuiEnriquecimentoTerceiro?: boolean;
+  possuiANS?: boolean;
 }
 
 function normalizar(texto: string): string {
@@ -77,5 +81,9 @@ export function filtrarInstituicoes(
     .filter((item) => !filtros.possuiSinalMobilidadePNCP || Boolean(item.possuiSinalMobilidadePNCP))
     .filter((item) => !filtros.contratacaoPublicaRecente || Boolean(item.possuiContratacaoRecente))
     .filter((item) => !filtros.somenteVinculoPNCPExato || Boolean(item.vinculoPNCPExato))
+    .filter((item) => !filtros.tipoDado || item.tipoDado === filtros.tipoDado)
+    .filter((item) => !filtros.situacaoCadastral || item.situacaoCadastral === filtros.situacaoCadastral)
+    .filter((item) => filtros.possuiEnriquecimentoTerceiro === undefined || Boolean(item.possuiEnriquecimentoTerceiro) === filtros.possuiEnriquecimentoTerceiro)
+    .filter((item) => filtros.possuiANS === undefined || Boolean(item.possuiANS) === filtros.possuiANS)
     .sort((a, b) => b.indice - a.indice || a.nome.localeCompare(b.nome, "pt-BR"));
 }

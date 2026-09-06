@@ -36,7 +36,7 @@ describe("PNCP — Integração com Telas Comerciais e Governança", () => {
 
   it("proíbe estritamente vinculação por similaridade de nome (540 sinais sem vínculo unívoco permanecem nulos)", async () => {
     const sinaisSemVinculo = await prisma.sinalContratacaoPublica.findMany({
-      where: { metodoVinculo: "SEM_VINCULO" },
+      where: { categoriaPNCP: "SINAL_CONTRATACAO", metodoVinculo: "SEM_VINCULO" },
     });
     expect(sinaisSemVinculo.length).toBe(540);
     for (const s of sinaisSemVinculo) {
@@ -138,11 +138,13 @@ describe("PNCP — Integração com Telas Comerciais e Governança", () => {
   });
 
   it("confirma a idempotência dos 544 sinais do PNCP persistidos", async () => {
-    const totalSinais = await prisma.sinalContratacaoPublica.count();
+    const totalSinais = await prisma.sinalContratacaoPublica.count({
+      where: { categoriaPNCP: "SINAL_CONTRATACAO" },
+    });
     expect(totalSinais).toBe(544);
 
     const totalMobilidade = await prisma.sinalContratacaoPublica.count({
-      where: { sinalMobilidade: true },
+      where: { categoriaPNCP: "SINAL_CONTRATACAO", sinalMobilidade: true },
     });
     expect(totalMobilidade).toBe(175);
   });

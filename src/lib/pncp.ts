@@ -14,6 +14,10 @@ export interface SinalContratacaoItem {
   uf: string | null;
   palavrasChave: string[];
   sinalMobilidade: boolean;
+  categoriaPNCP: string;
+  tipoContrato: string | null;
+  fornecedorCNPJ: string | null;
+  fornecedorNome: string | null;
   urlPublica: string | null;
   metodoVinculo: string | null;
   confiancaVinculo: string | null;
@@ -60,9 +64,11 @@ export async function listarSinaisContratacao(): Promise<SinalContratacaoItem[]>
   return itens.map((item) => {
     let palavrasChave: string[] = [];
     try {
-      palavrasChave = JSON.parse(item.palavrasChave);
+      palavrasChave = Array.isArray(JSON.parse(item.palavrasChave))
+        ? JSON.parse(item.palavrasChave)
+        : item.palavrasChave.split(",").map((s: string) => s.trim()).filter(Boolean);
     } catch {
-      palavrasChave = [];
+      palavrasChave = item.palavrasChave ? item.palavrasChave.split(",").map((s) => s.trim()).filter(Boolean) : [];
     }
 
     return {
@@ -78,6 +84,10 @@ export async function listarSinaisContratacao(): Promise<SinalContratacaoItem[]>
       uf: item.uf,
       palavrasChave,
       sinalMobilidade: item.sinalMobilidade,
+      categoriaPNCP: item.categoriaPNCP || "SINAL_CONTRATACAO",
+      tipoContrato: item.tipoContrato,
+      fornecedorCNPJ: item.fornecedorCNPJ,
+      fornecedorNome: item.fornecedorNome,
       urlPublica: item.urlPublica,
       metodoVinculo: item.metodoVinculo,
       confiancaVinculo: item.confiancaVinculo,

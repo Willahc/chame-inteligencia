@@ -86,6 +86,7 @@ export interface InstituicaoRadar {
   acaoRecomendada: string;
   tipoDado: TipoDado;
   cnes?: string | null;
+  situacaoCadastral?: string | null;
   coberturaDados?: number;
   segmentacao?: SegmentacaoRadar | null;
   totalSinaisPNCP?: number;
@@ -94,6 +95,8 @@ export interface InstituicaoRadar {
   dataSinalPNCPMaisRecente?: string | null;
   vinculoPNCPExato?: boolean;
   possuiContratacaoRecente?: boolean;
+  possuiEnriquecimentoTerceiro?: boolean;
+  possuiANS?: boolean;
 }
 
 export interface InstituicaoAssistente extends InstituicaoRadar {
