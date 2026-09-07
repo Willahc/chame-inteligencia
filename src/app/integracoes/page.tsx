@@ -5,6 +5,7 @@ import {
   obterOuInicializarIntegracoes,
   obterResumoContadoresIntegracoes,
   listarEventosIntegracao,
+  obterStatusHomologacao,
 } from "@/domain/integracoes/servico-integracoes";
 import {
   IntegracoesClient,
@@ -121,6 +122,8 @@ export default async function IntegracoesPage() {
     criadoEm: ev.criadoEm.toISOString(),
   }));
 
+  const statusHomologacaoInicial = obterStatusHomologacao();
+
   return (
     <IntegracoesClient
       integracoesIniciais={integracoes}
@@ -129,6 +132,7 @@ export default async function IntegracoesPage() {
       contas={contas}
       contatos={contatos}
       acoes={acoes}
+      statusHomologacaoInicial={statusHomologacaoInicial}
     />
   );
 }

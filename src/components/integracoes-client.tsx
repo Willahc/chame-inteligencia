@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   AlertTriangle,
   Ban,
@@ -16,6 +16,7 @@ import {
   MessageSquare,
   PhoneCall,
   Play,
+  Power,
   RefreshCw,
   Search,
   ShieldAlert,
@@ -41,6 +42,9 @@ import {
   gerarPreviaSimulacaoAction,
   executarSimulacaoAction,
   atualizarEventosAction,
+  obterStatusHomologacaoAction,
+  alternarKillSwitchAction,
+  resetarCircuitBreakerAction,
 } from "@/app/integracoes/actions";
 
 export interface ContaDropdown {
@@ -108,6 +112,25 @@ export interface EventoLinha {
   } | null;
 }
 
+export interface StatusHomologacaoData {
+  provedorHomologado: string;
+  canal: string;
+  ambienteAutorizado: string;
+  circuitBreaker: {
+    aberto: boolean;
+    falhasConsecutivas: number;
+    tempoRestanteMs: number;
+  };
+  rateLimiter: {
+    requisicoesUltimoMinuto: number;
+    limitePorMinuto: number;
+  };
+  killSwitch: {
+    ativo: boolean;
+  };
+  aviso: string;
+}
+
 interface IntegracoesClientProps {
   integracoesIniciais: IntegracaoExterna[];
   resumoInicial: ResumoContadoresIntegracoes;
@@ -115,6 +138,7 @@ interface IntegracoesClientProps {
   contas: ContaDropdown[];
   contatos: ContatoDropdown[];
   acoes: AcaoDropdown[];
+  statusHomologacaoInicial?: StatusHomologacaoData | null;
 }
 
 export function IntegracoesClient({
@@ -124,6 +148,7 @@ export function IntegracoesClient({
   contas,
   contatos,
   acoes,
+  statusHomologacaoInicial,
 }: IntegracoesClientProps) {
   const [integracoes] = useState<IntegracaoExterna[]>(integracoesIniciais);
   const [resumo, setResumo] = useState<ResumoContadoresIntegracoes>(resumoInicial);
@@ -239,10 +264,73 @@ export function IntegracoesClient({
     });
   }, [eventos, filtroTipo, filtroStatus, termoBusca]);
 
+  // Estados do Gate 10: Homologação Controlada de Provedor
+  const [killSwitchAtivo, setKillSwitchAtivo] = useState(
+    statusHomologacaoInicial?.killSwitch.ativo ?? false
+  );
+  const [circuitBreakerAberto, setCircuitBreakerAberto] = useState(
+    statusHomologacaoInicial?.circuitBreaker.aberto ?? false
+  );
+  const [falhasCircuitBreaker, setFalhasCircuitBreaker] = useState(
+    statusHomologacaoInicial?.circuitBreaker.falhasConsecutivas ?? 0
+  );
+  const [rateLimitInfo, setRateLimitInfo] = useState({
+    requisicoesUltimoMinuto:
+      statusHomologacaoInicial?.rateLimiter.requisicoesUltimoMinuto ?? 0,
+    limitePorMinuto:
+      statusHomologacaoInicial?.rateLimiter.limitePorMinuto ?? 5,
+  });
+  const [feedbackHomologacao, setFeedbackHomologacao] = useState<string | null>(null);
+
+  const carregarStatusHomologacao = useCallback(async () => {
+    const res = await obterStatusHomologacaoAction();
+    if (res.sucesso && res.status) {
+      setKillSwitchAtivo(res.status.killSwitch.ativo);
+      setCircuitBreakerAberto(res.status.circuitBreaker.aberto);
+      setFalhasCircuitBreaker(res.status.circuitBreaker.falhasConsecutivas);
+      setRateLimitInfo(res.status.rateLimiter);
+    }
+  }, []);
+
+  async function handleToggleKillSwitch() {
+    setCarregandoAcao(true);
+    setFeedbackHomologacao(null);
+    const novoEstado = !killSwitchAtivo;
+    const res = await alternarKillSwitchAction(novoEstado);
+    setCarregandoAcao(false);
+    if (res.sucesso) {
+      setKillSwitchAtivo(res.killSwitchAtivo);
+      setFeedbackHomologacao(
+        res.killSwitchAtivo
+          ? "Kill-Switch ativado com sucesso. Todas as operações de homologação estão bloqueadas emergencialmente."
+          : "Kill-Switch desativado. Operações de homologação liberadas para o sandbox."
+      );
+    } else {
+      setFeedbackHomologacao(res.erro || "Falha ao alternar kill-switch.");
+    }
+  }
+
+  async function handleResetCircuitBreaker() {
+    setCarregandoAcao(true);
+    setFeedbackHomologacao(null);
+    const res = await resetarCircuitBreakerAction();
+    setCarregandoAcao(false);
+    if (res.sucesso) {
+      setCircuitBreakerAberto(false);
+      setFalhasCircuitBreaker(0);
+      setFeedbackHomologacao("Circuit Breaker rearmado com sucesso. Circuito fechado.");
+    } else {
+      setFeedbackHomologacao(res.erro || "Falha ao resetar circuit breaker.");
+    }
+  }
+
   // Ação para recarregar eventos
   async function recarregarEventos() {
     setCarregandoAcao(true);
-    const res = await atualizarEventosAction();
+    const [res] = await Promise.all([
+      atualizarEventosAction(),
+      carregarStatusHomologacao(),
+    ]);
     if (res.sucesso) {
       setEventos(res.eventos);
       if (res.contadores) setResumo(res.contadores);
@@ -479,6 +567,147 @@ export function IntegracoesClient({
           <p className="mt-0.5 text-xs text-slate-400">
             {resumo.timeoutsSimulados} timeouts / {resumo.cancelados} canc.
           </p>
+        </div>
+      </div>
+
+      {/* Painel de Controle de Homologação (Gate 10 — Mailtrap Sandbox) */}
+      <div className="rounded-2xl border border-sky-400/25 bg-gradient-to-br from-sky-950/30 to-[var(--azul-profundo)] p-5 shadow-lg space-y-4 backdrop-blur-sm">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-white/10 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-sky-500/20 text-sky-400 border border-sky-400/30">
+              <Mail size={22} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="text-base font-bold text-white tracking-tight">
+                  Gate 10 — Homologação Controlada de Provedor
+                </h2>
+                <span className="inline-flex items-center rounded-lg bg-sky-500/20 px-2.5 py-0.5 text-xs font-bold text-sky-300 border border-sky-400/30">
+                  HOMOLOGAÇÃO SANDBOX
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 mt-0.5">
+                Provedor Homologado: <strong className="text-white">Mailtrap Email Sandbox API</strong> (Virtual Sink com isolamento absoluto de dados reais).
+              </p>
+            </div>
+          </div>
+
+          {/* Ações de Controle Operacional */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={handleToggleKillSwitch}
+              disabled={carregandoAcao}
+              className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition shadow-sm ${
+                killSwitchAtivo
+                  ? "bg-rose-600 text-white hover:bg-rose-500 ring-2 ring-rose-400/40"
+                  : "bg-white/10 text-slate-300 hover:bg-rose-500/20 hover:text-rose-300 border border-white/10"
+              }`}
+              title="Interrompe emergencialmente qualquer operação de homologação"
+            >
+              <Power size={14} />
+              {killSwitchAtivo ? "Kill-Switch ATIVO (Travado)" : "Ativar Kill-Switch"}
+            </button>
+
+            <button
+              onClick={handleResetCircuitBreaker}
+              disabled={carregandoAcao || (!circuitBreakerAberto && falhasCircuitBreaker === 0)}
+              className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 px-3 py-2 text-xs font-semibold text-slate-300 transition disabled:opacity-40"
+              title="Rearmar disjuntor de falhas consecutivas"
+            >
+              <RefreshCw size={13} />
+              Resetar Disjuntor
+            </button>
+          </div>
+        </div>
+
+        {/* Notificação de Feedback */}
+        {feedbackHomologacao && (
+          <div className="rounded-xl border border-sky-400/30 bg-sky-500/10 p-3 text-xs text-sky-200 flex items-center justify-between">
+            <span>{feedbackHomologacao}</span>
+            <button
+              onClick={() => setFeedbackHomologacao(null)}
+              className="text-slate-400 hover:text-white"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        )}
+
+        {/* Indicadores de Segurança e Operação */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              Kill-Switch de Emergência
+            </div>
+            <div className="mt-1 flex items-center gap-2">
+              <span
+                className={`size-2.5 rounded-full ${
+                  killSwitchAtivo ? "bg-rose-500 animate-pulse" : "bg-emerald-400"
+                }`}
+              />
+              <span
+                className={`text-sm font-bold ${
+                  killSwitchAtivo ? "text-rose-400" : "text-emerald-400"
+                }`}
+              >
+                {killSwitchAtivo ? "Ativo (Bloqueio Total)" : "Pronto (Desativado)"}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1">
+              Bloqueia disparos a nível de processo
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              Disjuntor (Circuit Breaker)
+            </div>
+            <div className="mt-1 flex items-center gap-2">
+              <span
+                className={`size-2.5 rounded-full ${
+                  circuitBreakerAberto ? "bg-rose-500" : "bg-emerald-400"
+                }`}
+              />
+              <span
+                className={`text-sm font-bold ${
+                  circuitBreakerAberto ? "text-rose-400" : "text-emerald-400"
+                }`}
+              >
+                {circuitBreakerAberto ? "Aberto (Proteção)" : "Fechado (Operacional)"}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1">
+              {falhasCircuitBreaker} falhas consecutivas (limiar: 3)
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              Limite de Taxa (Rate Limit)
+            </div>
+            <div className="mt-1 flex items-center gap-2">
+              <span className="text-sm font-bold text-white">
+                {rateLimitInfo.requisicoesUltimoMinuto} / {rateLimitInfo.limitePorMinuto}
+              </span>
+              <span className="text-xs text-slate-400">req/min</span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1">
+              Janela deslizante de 60s
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              Isolamento de Dados
+            </div>
+            <div className="mt-1 flex items-center gap-1.5">
+              <Lock size={14} className="text-amber-400" />
+              <span className="text-sm font-bold text-amber-300">DEMONSTRAÇÃO</span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1">
+              Contas e contatos reais são bloqueados
+            </p>
+          </div>
         </div>
       </div>
 
@@ -768,6 +997,31 @@ export function IntegracoesClient({
               {/* STEP 1: FORMULÁRIO */}
               {stepSimulacao === "FORM" && (
                 <div className="space-y-4">
+                  {/* Banner Exclusivo de Homologação Sandbox Gate 10 */}
+                  {integracaoAtual?.ambiente === "HOMOLOGACAO" && (
+                    <div className="rounded-xl border border-sky-400/30 bg-sky-500/10 p-3.5 text-xs text-sky-200 flex items-start gap-2.5">
+                      <ShieldCheck size={18} className="shrink-0 text-sky-400 mt-0.5" />
+                      <div className="space-y-0.5">
+                        <p className="font-bold text-sky-300">
+                          Homologação de teste. Nenhum destinatário real será contatado.
+                        </p>
+                        <p className="text-slate-300">
+                          Conector operando no <strong>Mailtrap Email Sandbox API</strong> com sink virtual imutável. Contas e contatos reais são terminantemente bloqueados.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {integracaoAtual?.ambiente === "HOMOLOGACAO" &&
+                    contas.find((c) => c.id === contaIdSel)?.tipoDado !== "DEMONSTRACAO" && (
+                      <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-300 flex items-center gap-2">
+                        <AlertTriangle size={16} className="shrink-0 text-rose-400" />
+                        <span>
+                          Atenção: O ambiente de homologação autoriza estritamente contas de demonstração (DEMO). Selecione uma conta com identificador (DEMO).
+                        </span>
+                      </div>
+                    )}
+
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
                       Conector / Adaptador
@@ -1223,7 +1477,11 @@ export function IntegracoesClient({
                     className="flex items-center gap-1.5 rounded-xl bg-emerald-400 px-4 py-2 text-xs font-bold text-[var(--azul-profundo)] hover:brightness-110 transition disabled:opacity-50"
                   >
                     <Check size={14} />
-                    {carregandoAcao ? "Executando..." : "Confirmar Simulação Sandbox"}
+                    {carregandoAcao
+                      ? "Executando..."
+                      : integracaoAtual?.ambiente === "HOMOLOGACAO"
+                      ? "Confirmar Homologação Sandbox"
+                      : "Confirmar Simulação Sandbox"}
                   </button>
                 </>
               )}

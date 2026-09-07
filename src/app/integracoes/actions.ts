@@ -65,3 +65,76 @@ export async function atualizarEventosAction(filtros: FiltrosEventosIntegracao =
     };
   }
 }
+
+export async function obterStatusHomologacaoAction() {
+  try {
+    const { obterStatusHomologacao } = await import(
+      "@/domain/integracoes/servico-integracoes"
+    );
+    const status = obterStatusHomologacao();
+    return { sucesso: true, status, erro: null };
+  } catch (err) {
+    return {
+      sucesso: false,
+      status: null,
+      erro: err instanceof Error ? err.message : "Erro ao obter status de homologação.",
+    };
+  }
+}
+
+export async function alternarKillSwitchAction(ativar: boolean) {
+  try {
+    const { ativarKillSwitch, desativarKillSwitch } = await import(
+      "@/domain/integracoes/servico-integracoes"
+    );
+    if (ativar) {
+      ativarKillSwitch();
+    } else {
+      desativarKillSwitch();
+    }
+    revalidatePath("/integracoes");
+    return { sucesso: true, killSwitchAtivo: ativar, erro: null };
+  } catch (err) {
+    return {
+      sucesso: false,
+      killSwitchAtivo: !ativar,
+      erro: err instanceof Error ? err.message : "Erro ao alternar kill-switch.",
+    };
+  }
+}
+
+export async function resetarCircuitBreakerAction() {
+  try {
+    const { circuitBreakerHomologacao } = await import(
+      "@/domain/integracoes/servico-integracoes"
+    );
+    circuitBreakerHomologacao.resetar();
+    revalidatePath("/integracoes");
+    return { sucesso: true, erro: null };
+  } catch (err) {
+    return {
+      sucesso: false,
+      erro: err instanceof Error ? err.message : "Erro ao resetar circuit breaker.",
+    };
+  }
+}
+
+export async function configurarAmbienteIntegracaoAction(
+  integracaoId: string,
+  novoAmbiente: import("@prisma/client").AmbienteIntegracao
+) {
+  try {
+    const { atualizarAmbienteIntegracao } = await import(
+      "@/domain/integracoes/servico-integracoes"
+    );
+    const atualizada = await atualizarAmbienteIntegracao(integracaoId, novoAmbiente);
+    revalidatePath("/integracoes");
+    return { sucesso: true, integracao: atualizada, erro: null };
+  } catch (err) {
+    return {
+      sucesso: false,
+      integracao: null,
+      erro: err instanceof Error ? err.message : "Erro ao configurar ambiente da integração.",
+    };
+  }
+}

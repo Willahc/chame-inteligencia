@@ -32,7 +32,7 @@ export const ROTULOS_TIPO_INTEGRACAO: Record<TipoIntegracaoExterna, string> = {
 export const ROTULOS_AMBIENTE_INTEGRACAO: Record<AmbienteIntegracao, string> = {
   DESABILITADA: "Desabilitada",
   SIMULACAO: "Simulação Controlada",
-  HOMOLOGACAO: "Homologação (Bloqueada)",
+  HOMOLOGACAO: "Homologação Controlada (Sandbox)",
   PRODUCAO: "Produção (Bloqueada)",
 };
 

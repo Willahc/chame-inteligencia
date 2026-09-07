@@ -132,7 +132,7 @@ describe("Gate 9 — Arquitetura de Integrações Externas", () => {
 
     const integracoes = await prisma.integracaoExterna.findMany();
     for (const i of integracoes) {
-      expect(i.ambiente).toBe("SIMULACAO");
+      expect(["SIMULACAO", "HOMOLOGACAO"]).toContain(i.ambiente);
     }
 
     // Criar tentativa fictícia de integração em ambiente PRODUCAO
@@ -313,7 +313,7 @@ describe("Gate 9 — Arquitetura de Integrações Externas", () => {
     expect(previa.payloadSanitizado.senhaInsegura).toBeUndefined();
     expect(previa.payloadSanitizado.bearerToken).toBeUndefined();
     expect(previa.payloadSanitizado.modoSimulacao).toBe(true);
-    expect(previa.payloadSanitizado.ambiente).toBe("SIMULACAO");
+    expect(["SIMULACAO", "HOMOLOGACAO"]).toContain(previa.payloadSanitizado.ambiente);
   });
 
   // 8. Resposta simulada para CRM, E-mail, WhatsApp e Discador
@@ -358,7 +358,7 @@ describe("Gate 9 — Arquitetura de Integrações Externas", () => {
     expect(emailRes.resposta.sucesso).toBe(true);
     expect(emailRes.resposta.statusEvento).toBe("SUCESSO_SIMULADO");
     expect(emailRes.resposta.tipoIntegracao).toBe("EMAIL");
-    expect(emailRes.resposta.transacaoId).toMatch(/^SIM-EML-/);
+    expect(emailRes.resposta.transacaoId).toMatch(/^(SIM-EML-|HOM-MLT-)/);
 
     // 8.3 WhatsApp
     const wppRes = await executarSimulacaoControlada({

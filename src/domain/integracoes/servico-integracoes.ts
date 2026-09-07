@@ -28,9 +28,22 @@ import { AdaptadorCRMSimulador } from "./adaptadores/crm";
 import { AdaptadorEmailSimulador } from "./adaptadores/email";
 import { AdaptadorWhatsAppSimulador } from "./adaptadores/whatsapp";
 import { AdaptadorDiscadorSimulador } from "./adaptadores/discador";
+import {
+  AdaptadorEmailHomologacao,
+  circuitBreakerHomologacao,
+  rateLimiterHomologacao,
+  isKillSwitchAtivo,
+  ativarKillSwitch,
+  desativarKillSwitch,
+  resetarEstadoHomologacao,
+  AVISO_HOMOLOGACAO_SANDBOX,
+  TIMEOUT_HOMOLOGACAO_MS,
+  LIMITE_TAXA_HOMOLOGACAO_POR_MINUTO,
+} from "./adaptadores/email-homologacao";
 
 const adaptadorCRM = new AdaptadorCRMSimulador();
 const adaptadorEmail = new AdaptadorEmailSimulador();
+const adaptadorEmailHomologacao = new AdaptadorEmailHomologacao();
 const adaptadorWhatsApp = new AdaptadorWhatsAppSimulador();
 const adaptadorDiscador = new AdaptadorDiscadorSimulador();
 
@@ -68,6 +81,31 @@ export async function obterOuInicializarIntegracoes(): Promise<IntegracaoExterna
   });
 
   if (existentes.length > 0) {
+    // Migração transparente de configuração legada do conector de e-mail para o Gate 10 (Mailtrap Sandbox)
+    const emailLegado = existentes.find(
+      (i) => i.tipo === "EMAIL" && i.nome === "Servidor de E-mail Corporativo B2B"
+    );
+    if (emailLegado) {
+      await prisma.integracaoExterna.update({
+        where: { id: emailLegado.id },
+        data: {
+          nome: "Servidor de E-mail Corporativo (Mailtrap Sandbox)",
+          ambiente: "HOMOLOGACAO",
+          configuracaoJson: JSON.stringify({
+            provedor: "Mailtrap Email Sandbox API",
+            sandbox: true,
+            endpoint: "https://sandbox.api.mailtrap.io/api/send",
+            timeoutMs: 3000,
+            limiteTaxaPorMinuto: 5,
+          }),
+          descricao:
+            "Adaptador de envio de e-mails corporativos homologado no Gate 10 via sandbox do Mailtrap.",
+        },
+      });
+      return prisma.integracaoExterna.findMany({
+        orderBy: { criadoEm: "asc" },
+      });
+    }
     return existentes;
   }
 
@@ -91,16 +129,17 @@ export async function obterOuInicializarIntegracoes(): Promise<IntegracaoExterna
       descricao: "Conector desacoplado para sincronização de contas, contatos corporativos e oportunidades em sandbox.",
     },
     {
-      nome: "Servidor de E-mail Corporativo B2B",
+      nome: "Servidor de E-mail Corporativo (Mailtrap Sandbox)",
       tipo: "EMAIL",
-      ambiente: "SIMULACAO",
+      ambiente: "HOMOLOGACAO",
       configuracaoJson: JSON.stringify({
-        provedor: "Simulador SMTP B2B",
+        provedor: "Mailtrap Email Sandbox API",
         sandbox: true,
-        portaSimulada: 587,
-        tls: true,
+        endpoint: "https://sandbox.api.mailtrap.io/api/send",
+        timeoutMs: 3000,
+        limiteTaxaPorMinuto: 5,
       }),
-      descricao: "Adaptador de envio de e-mails corporativos isolado em sandbox de testes.",
+      descricao: "Adaptador de envio de e-mails corporativos homologado no Gate 10 via sandbox do Mailtrap.",
     },
     {
       nome: "WhatsApp Oficial Corporativo (B2B)",
@@ -205,11 +244,35 @@ export async function validarElegibilidadeIntegracao(
     );
   }
 
-  // Trava de segurança: Modo de produção terminantemente bloqueado no Gate 9
-  if (integracao.ambiente !== "SIMULACAO") {
+  // Trava de segurança: Modo de produção terminantemente bloqueado
+  if (integracao.ambiente === "PRODUCAO") {
     erros.push(
-      `${AVISO_BLOQUEIO_PRODUCAO} Ambiente configurado: '${integracao.ambiente}'. Somente 'SIMULACAO' é permitido.`
+      `${AVISO_BLOQUEIO_PRODUCAO} Ambiente configurado: 'PRODUCAO'. O acesso ao ambiente de produção permanece terminantemente proibido.`
     );
+  } else if (integracao.ambiente === "HOMOLOGACAO") {
+    if (integracao.tipo !== "EMAIL") {
+      erros.push(
+        `Apenas o conector de E-mail Corporativo (Mailtrap Sandbox) está homologado no Gate 10. Conectores do tipo '${integracao.tipo}' operam exclusivamente em SIMULACAO.`
+      );
+    }
+    if (isKillSwitchAtivo()) {
+      erros.push(
+        "Operação de homologação bloqueada pelo Kill-Switch de segurança (INTEGRACOES_KILL_SWITCH ativo)."
+      );
+    }
+    if (circuitBreakerHomologacao.isAberto()) {
+      erros.push(
+        `Conexão de homologação bloqueada pelo Circuit Breaker após ${circuitBreakerHomologacao.getFalhasConsecutivas()} falhas consecutivas. Aguarde o período de esfriamento.`
+      );
+    }
+    if (!rateLimiterHomologacao.podeExecutar()) {
+      erros.push(
+        `Limite de taxa de homologação excedido (máximo de ${LIMITE_TAXA_HOMOLOGACAO_POR_MINUTO} requisições por minuto).`
+      );
+    }
+    avisos.push(AVISO_HOMOLOGACAO_SANDBOX);
+  } else if (integracao.ambiente === "DESABILITADA") {
+    erros.push(`Integração '${integracao.nome}' está desabilitada.`);
   }
 
   // 3. Validar conta comercial
@@ -241,6 +304,12 @@ export async function validarElegibilidadeIntegracao(
   if (instituicoes.length === 0) {
     erros.push(
       `Conta comercial '${conta.nome}' não possui instituição de saúde vinculada ou agrupamento econômico válido.`
+    );
+  }
+
+  if (integracao.ambiente === "HOMOLOGACAO" && conta.tipoDado !== "DEMONSTRACAO") {
+    erros.push(
+      "O ambiente de homologação autoriza exclusivamente contas de demonstração (DEMONSTRACAO). Contas reais são estritamente bloqueadas."
     );
   }
 
@@ -287,6 +356,12 @@ export async function validarElegibilidadeIntegracao(
       if (conta.tipoDado !== "DEMONSTRACAO" && contato.tipoDado === "DEMONSTRACAO") {
         erros.push(
           "Violação de isolamento canônico: Conta real não pode ser vinculada a contato DEMONSTRACAO."
+        );
+      }
+
+      if (integracao.ambiente === "HOMOLOGACAO" && contato.tipoDado !== "DEMONSTRACAO") {
+        erros.push(
+          "O ambiente de homologação autoriza exclusivamente contatos de demonstração (DEMONSTRACAO). Contatos reais são estritamente bloqueados."
         );
       }
 
@@ -405,7 +480,10 @@ export async function gerarPreviaSimulacao(
           assunto: typeof input.dadosEspecificos?.assunto === "string" ? input.dadosEspecificos.assunto : "Apresentação Corporativa - Chame Táxi B2B",
           corpoMensagem: typeof input.dadosEspecificos?.corpoMensagem === "string" ? input.dadosEspecificos.corpoMensagem : (acao?.mensagemRascunho || "Mensagem de apresentação institucional."),
         };
-        payloadSanitizado = adaptadorEmail.sanitizarPayload(payload);
+        payloadSanitizado =
+          integracao.ambiente === "HOMOLOGACAO"
+            ? adaptadorEmailHomologacao.sanitizarPayload(payload)
+            : adaptadorEmail.sanitizarPayload(payload);
         break;
       }
       case "WHATSAPP": {
@@ -603,8 +681,13 @@ export async function executarSimulacaoControlada(
         assunto: typeof input.dadosEspecificos?.assunto === "string" ? input.dadosEspecificos.assunto : "Apresentação Corporativa - Chame Táxi B2B",
         corpoMensagem: typeof input.dadosEspecificos?.corpoMensagem === "string" ? input.dadosEspecificos.corpoMensagem : (acao?.mensagemRascunho || "Mensagem institucional simulada."),
       };
-      payloadSanitizado = adaptadorEmail.sanitizarPayload(payload);
-      resposta = await adaptadorEmail.executarSimulacao(payload, opcoes);
+      if (integracao.ambiente === "HOMOLOGACAO") {
+        payloadSanitizado = adaptadorEmailHomologacao.sanitizarPayload(payload);
+        resposta = await adaptadorEmailHomologacao.executarSimulacao(payload, opcoes);
+      } else {
+        payloadSanitizado = adaptadorEmail.sanitizarPayload(payload);
+        resposta = await adaptadorEmail.executarSimulacao(payload, opcoes);
+      }
       break;
     }
     case "WHATSAPP": {
@@ -647,14 +730,17 @@ export async function executarSimulacaoControlada(
         contaComercialId: conta.id,
         contatoProfissionalId: contato?.id ?? null,
         acaoComercialId: acao?.id ?? null,
-        tipoEvento: `SIMULACAO_${integracao.tipo}`,
+        tipoEvento:
+          integracao.ambiente === "HOMOLOGACAO"
+            ? `HOMOLOGACAO_${integracao.tipo}`
+            : `SIMULACAO_${integracao.tipo}`,
         status: resposta.statusEvento,
         payloadResumo: JSON.stringify(payloadSanitizado),
         resultadoResumo: JSON.stringify({
           transacaoId: resposta.transacaoId,
           mensagem: resposta.mensagem,
           detalhes: resposta.detalhesSimulacao,
-          chamadaExternaRealizada: false,
+          chamadaExternaRealizada: resposta.chamadaExternaRealizada,
           tempoRespostaMs: resposta.tempoRespostaMs,
         }),
         erro: resposta.sucesso ? null : resposta.mensagem,
@@ -765,3 +851,78 @@ export async function obterResumoContadoresIntegracoes(): Promise<ResumoContador
     timeoutsSimulados,
   };
 }
+
+export async function atualizarAmbienteIntegracao(
+  integracaoId: string,
+  novoAmbiente: AmbienteIntegracao
+): Promise<IntegracaoExterna> {
+  if (novoAmbiente === "PRODUCAO") {
+    throw new Error(
+      `${AVISO_BLOQUEIO_PRODUCAO} O ambiente de produção permanece terminantemente proibido.`
+    );
+  }
+
+  const integracao = await prisma.integracaoExterna.findUnique({
+    where: { id: integracaoId },
+  });
+
+  if (!integracao) {
+    throw new Error(`Integração com ID '${integracaoId}' não encontrada.`);
+  }
+
+  if (novoAmbiente === "HOMOLOGACAO" && integracao.tipo !== "EMAIL") {
+    throw new Error(
+      `Apenas o conector de E-mail Corporativo (Mailtrap Sandbox) está homologado no Gate 10. Conectores do tipo '${integracao.tipo}' operam exclusivamente em SIMULACAO.`
+    );
+  }
+
+  return prisma.integracaoExterna.update({
+    where: { id: integracaoId },
+    data: {
+      ambiente: novoAmbiente,
+      configuracaoJson:
+        novoAmbiente === "HOMOLOGACAO"
+          ? JSON.stringify({
+              provedor: "Mailtrap Email Sandbox API",
+              sandbox: true,
+              endpoint: "https://sandbox.api.mailtrap.io/api/send",
+              timeoutMs: 3000,
+              limiteTaxaPorMinuto: 5,
+            })
+          : integracao.configuracaoJson,
+    },
+  });
+}
+
+export function obterStatusHomologacao() {
+  return {
+    provedorHomologado: "Mailtrap Email Sandbox API",
+    canal: "EMAIL",
+    ambienteAutorizado: "HOMOLOGACAO",
+    circuitBreaker: {
+      aberto: circuitBreakerHomologacao.isAberto(),
+      falhasConsecutivas: circuitBreakerHomologacao.getFalhasConsecutivas(),
+      tempoRestanteMs: circuitBreakerHomologacao.getTempoRestanteAbertoMs(),
+    },
+    rateLimiter: {
+      requisicoesUltimoMinuto: rateLimiterHomologacao.getRequisicoesAtuais(),
+      limitePorMinuto: LIMITE_TAXA_HOMOLOGACAO_POR_MINUTO,
+    },
+    killSwitch: {
+      ativo: isKillSwitchAtivo(),
+    },
+    aviso: AVISO_HOMOLOGACAO_SANDBOX,
+  };
+}
+
+export {
+  circuitBreakerHomologacao,
+  rateLimiterHomologacao,
+  isKillSwitchAtivo,
+  ativarKillSwitch,
+  desativarKillSwitch,
+  resetarEstadoHomologacao,
+  AVISO_HOMOLOGACAO_SANDBOX,
+  TIMEOUT_HOMOLOGACAO_MS,
+  LIMITE_TAXA_HOMOLOGACAO_POR_MINUTO,
+};

@@ -1,209 +1,157 @@
-# Especificação Técnica do Gate 10 — Homologação de Provedores Externos
+# Relatório de Execução do Gate 10 — Homologação Controlada de um Provedor
 
-> **Status:** DOCUMENTO DE ESPECIFICAÇÃO TÉCNICA E GOVERNANÇA PREPARATÓRIA  
-> **Fase:** PLANEJAMENTO TÉCNICO (Sem contratações, sem tráfego externo ativo e sem credenciais reais)  
-> **Data de Referência:** 07 de setembro de 2026  
+> **Status:** GATE 10 — APROVADO SOMENTE COM MOCK LOCAL<br />
+> **Data de Homologação:** 07 de setembro de 2026<br />
+> **Provedor Homologado:** Mailtrap Email Sandbox API (E-mail Corporativo B2B)<br />
+> **Ambiente Autorizado:** `HOMOLOGACAO` (Sandbox Controlado)<br />
 > **Repositório:** `chame-inteligencia`
 
 ---
 
-## 1. Objetivo e Contexto Estratégico
+## 1. Sumário Executivo e Escopo Estrito
 
-O **Gate 9** estabeleceu com sucesso a arquitetura determinística e desacoplada de integrações externas, operando exclusivamente com simuladores locais (*sandboxes* em memória) para quatro canais comerciais B2B: **CRM**, **E-mail**, **WhatsApp** e **Discador/Telefonia**.
+O **Gate 10 — Homologação Controlada de um Provedor** foi executado e validado com sucesso seguindo rigorosamente as diretrizes canônicas do projeto `Chame Inteligência` e as regras estabelecidas em `AGENTS.md`.
 
-Este documento define os **critérios técnicos, normativos, de segurança da informação e de governança humana** indispensáveis para a futura execução do **Gate 10 — Homologação de Provedores Externos**.
-
-### 1.1. Limite Operacional Desta Fase
-- **Nenhum serviço externo foi contratado ou ativado.**
-- **Nenhuma chave de API ou credencial real foi adicionada ao sistema.**
-- **Nenhum dado, mensagem ou chamada é transmitida.**
-- O sistema permanece integralmente no ambiente controlado `SIMULACAO`.
-
----
-
-## 2. Princípios Canônicos e Conformidade LGPD
-
-Qualquer homologação com provedores externos terceirizados deverá obedecer estritamente aos princípios de privacidade e proteção de dados definidos em `AGENTS.md` e na Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018):
-
-```
-+-----------------------------------------------------------------------------+
-|                      PRINCÍPIOS DA HOMOLOGAÇÃO GATE 10                      |
-+-----------------------------------------------------------------------------+
-| 1. MINIMIZAÇÃO       | Apenas contatos profissionais B2B estritamente       |
-|                      | necessários à comunicação corporativa institucional. |
-+----------------------+------------------------------------------------------+
-| 2. DADOS PROIBIDOS   | CPF, dados de saúde, residenciais, bancários e       |
-|                      | pessoais permanecem terminantemente proibidos.       |
-+----------------------+------------------------------------------------------+
-| 3. ISOLAMENTO TOTAL  | Homologações utilizam exclusivamente registros       |
-|                      | DEMONSTRACAO (fictícios). Registros reais bloqueados.|
-+----------------------+------------------------------------------------------+
-| 4. INTERVENÇÃO       | Nenhuma mensagem é disparada sem prévia sanitizada,  |
-|    HUMANA            | justificativa formal e dupla aprovação de operador.  |
-+----------------------+------------------------------------------------------+
-| 5. DIREITO DE OPOSIÇÃO| Mecanismo de desativação imediata (opt-out) ativo em |
-|                      | todos os canais de contato corporativo.              |
-+-----------------------------------------------------------------------------+
-```
+### Delimitação Absoluta de Escopo:
+1. **Ambiente Exclusivo de Sandbox:** O sistema opera exclusivamente em ambiente `HOMOLOGACAO` ou `SIMULACAO`. O ambiente `PRODUCAO` permanece terminantemente bloqueado por código e testes automatizados. Não existem botões ou fluxos de produção.
+2. **Homologação de Exatamente Um Provedor:** Apenas o conector de **E-mail Corporativo B2B (Mailtrap Email Sandbox API)** foi elevado para o ambiente de homologação controlada. Os demais conectores (CRM, WhatsApp e Discador/Telefonia) permanecem 100% restritos ao ambiente `SIMULACAO`.
+3. **Isolamento Total de Dados Reais:** Nenhuma instituição real (`FATO_OFICIAL`) e nenhum contato profissional real (`FATO_PUBLICO`) pode ser submetido à homologação. O adaptador autoriza estritamente as **5 instituições de demonstração** e os **14 contatos de demonstração** (`DEMONSTRACAO`).
+4. **Ausência de Disparos Reais:** O Mailtrap Email Sandbox API atua como um *Virtual Sink* (ralo virtual seguro) projetado para interceptar mensagens em ambiente de teste sem disparar e-mails para caixas postais de produção.
+5. **Execução em Mock Local de Homologação:** Como nenhuma credencial externa de sandbox foi fornecida no ambiente local, o adaptador executou em modo determinístico de **Mock Local de Sandbox**, com `chamadaExternaRealizada: false`.
+6. **Receita Federal:** A base da Receita Federal oficial permanece fora de escopo, intocada (0 registros canônicos) e pendente de autorização formal.
 
 ---
 
-## 3. Critérios de Avaliação e Seleção de Provedores
+## 2. Decisão Técnica do Provedor Selecionado
 
-A escolha de parceiros tecnológicos para homologação no Gate 10 deverá atender aos seguintes requisitos por categoria de conector:
+A avaliação técnica comparativa entre as quatro categorias (CRM, E-mail, WhatsApp e Discador) foi documentada formalmente em [`docs/GATE_10_DECISAO_PROVEDOR.md`](./GATE_10_DECISAO_PROVEDOR.md).
 
-### 3.1. CRM Comercial B2B
-- **Isolamento de Dados:** Arquitetura *multi-tenant* com isolamento lógico estrito ou instância dedicada em território brasileiro ou país com nível adequado de proteção de dados.
-- **Autenticação:** Suporte a OAuth 2.0 com *refresh tokens* ou API Keys com escopo restrito de leitura e gravação em ambiente de *staging*.
-- **Ambiente de Teste:** Disponibilização de *Sandbox* ou *Developer Account* isolada da base de produção do cliente.
-- **Auditoria de Eventos:** Suporte a Webhooks com assinatura criptográfica HMAC (SHA-256) para confirmação de recebimento de leads/oportunidades.
-- **Criptografia:** TLS 1.3 em trânsito e criptografia AES-256 para dados em repouso.
-
-### 3.2. Provedor de E-mail Corporativo B2B
-- **Segurança de Domínio:** Suporte obrigatório a registros DNS institucionais: SPF (*Sender Policy Framework*), DKIM (*DomainKeys Identified Mail*) e DMARC (*Domain-based Message Authentication, Reporting and Conformance*).
-- **Ambiente Sandbox Dedicado:** Roteamento restrito com *Mail Trap* ou domínio sintético (ex: `@sandbox.chame.com.br`), garantindo que nenhum e-mail seja entregue a caixas de entrada externas durante a homologação.
-- **Gestão de Reputação:** Tratamento automático de eventos de *Bounce* (devolução) e *Spam Complaint* com enriquecimento imediato na tabela `EventoIntegracao`.
-- **Restrição de Provedor Pessoal:** Bloqueio rígido no adaptador para provedores pessoais gratuitos (`@gmail.com`, `@hotmail.com`, `@yahoo.com`, etc.).
-
-### 3.3. Provedor Oficial de WhatsApp Business
-- **Canal Oficial:** Homologação restrita a Provedores de Solução de Negócios (BSPs — *Business Solution Providers*) oficiais ou WhatsApp Cloud API direta da Meta.
-- **Número Corporativo Dedicado:** Utilização exclusiva de número telefônico institucional de teste cadastrado no *Meta Business Manager* da Chame Táxi.
-- **Modelos de Mensagem (Templates):** Utilização estrita de *Message Templates* categorizados como "Utilidade" ou "Marketing B2B", pré-aprovados pela Meta, contendo opção clara de encerramento da conversa.
-- **Opt-in e Opt-out Automáticos:** O conector deve processar respostas do destinatário com comandos de desativação (`SAIR`, `PARAR`, `CANCELAR`) e registrar automaticamente no banco a desativação do contato.
-- **Isolamento em Homologação:** Mensagens de teste restritas a números internos autorizados da equipe de homologação.
-
-### 3.4. Telefonia e Central de Atendimento B2B (Discador)
-- **Protocolo Seguro:** Conexão via SIP Trunking com criptografia TLS para sinalização e SRTP (*Secure Real-Time Transport Protocol*) para áudio.
-- **Operação de SDR Humano:** O sistema **não implementará robocall** nem discadores preditivos de chamadas em massa. A integração servirá exclusivamente para enriquecer a tela do operador humano (SDR) e registrar início/fim de chamadas institucionais de sondagem.
-- **Gravação e Consentimento:** Quando houver gravação da chamada para controle de qualidade, aviso sonoro obrigatório no início da ligação conforme regulamentação da Anatel e LGPD.
-- **Número de Teste:** Homologação realizada apenas com ramais internos de PBX de laboratório.
+O **E-mail Corporativo B2B via Mailtrap Email Sandbox API** foi o único provedor selecionado pelos seguintes fundamentos:
+- **Sink Virtual Nativo:** O Mailtrap Sandbox não possui capacidade técnica de encaminhar mensagens para servidores SMTP de destinatários finais, garantindo risco zero de vazamento externo.
+- **Autenticação Segura via Token:** Suporte a Bearer Token com escopo restrito a caixas de teste (*Inboxes* de laboratório).
+- **Isolamento Lógico:** Mensagens enviadas ficam restritas a um inbox virtual inspecionável por API ou interface web.
+- **Conformidade LGPD:** Permite validar formatação corporativa, cabeçalhos RFC 5322 e dados de remetente sem tratar dados de titulares reais.
 
 ---
 
-## 4. Requisitos de Ambiente de Homologação (Staging/Sandbox)
+## 3. Arquitetura e Componentes Implementados
 
 ```mermaid
-flowchart LR
-    subgraph App["Chame Inteligência (Staging)"]
-        UI["Interface /integracoes"]
+flowchart TD
+    subgraph UI["Interface do Usuário (/integracoes)"]
+        Painel["Painel de Controle Gate 10"]
+        Modal["Modal com Trava e Prévia Sanitizada"]
+        Banner["Aviso de Sandbox Obrigatório"]
+    end
+
+    subgraph Core["Domínio de Integrações"]
         Servico["servico-integracoes.ts"]
-        Adaptador["Adaptador Homologado"]
+        CB["CircuitBreakerHomologacao (3 falhas / 5 min)"]
+        RL["RateLimiterHomologacao (5 req/min)"]
+        KS["Kill-Switch de Emergência"]
     end
 
-    subgraph Guard["Camada de Isolamento de Homologação"]
-        Filtro{"Filtro Canônico"}
-        SecCheck{"Verificação de Destinatário"}
+    subgraph Adaptador["Adaptador de Homologação"]
+        EmailHomolog["AdaptadorEmailHomologacao"]
+        Sanitizer["Sanitização e Validação Anti-CPF/Token"]
     end
 
-    subgraph Provider["Provedor Externo (Sandbox Oficial)"]
-        API["Endpoint de Staging do Provedor"]
-        Sink[("Recepção Controlada / Sem Envio Externo")]
+    subgraph Sink["Destino Controlado"]
+        MockLocal["Simulador Local Mock Sandbox"]
+        SandboxAPI["Mailtrap API (quando configurada)"]
     end
 
     UI --> Servico
-    Servico --> Adaptador
-    Adaptador --> Filtro
-    Filtro -- "Apenas DEMONSTRACAO" --> SecCheck
-    Filtro -- "Rejeita FATO_PUBLICO" --> Bloq["Bloqueio Imediato"]
-    SecCheck -- "Lista Branca de Teste" --> API
-    SecCheck -- "Destinatário Desconhecido" --> Bloq
-    API --> Sink
+    Servico --> KS
+    KS --> CB
+    CB --> RL
+    RL --> EmailHomolog
+    EmailHomolog --> Sanitizer
+    Sanitizer --> MockLocal
 ```
 
-### 4.1. Regras de Isolamento de Dados em Homologação
-1. **Dados Permitidos:** Durante todo o Gate 10, apenas as **5 instituições de demonstração** e os **14 contatos fictícios de demonstração** cadastrados no banco podem ser submetidos à homologação.
-2. **Dados Reais Bloqueados:** Os 109 contatos profissionais públicos reais (`FATO_PUBLICO`) e as 8.212 instituições reais (`FATO_OFICIAL`) permanecem 100% bloqueados para qualquer conector com tráfego de rede ativo.
-3. **Lista Branca de Destinatários:** Para testes de e-mail e telefonia, apenas caixas postais e ramais explicitamente listados em variável de configuração de homologação (`HOMOLOGACAO_WHITELIST_DESTINATARIOS`) são autorizados.
+### 3.1. Arquivos Criados e Modificados
+1. [`docs/GATE_10_DECISAO_PROVEDOR.md`](./GATE_10_DECISAO_PROVEDOR.md): Documento de decisão arquitetural e matriz comparativa de viabilidade técnica.
+2. [`src/domain/integracoes/adaptadores/email-homologacao.ts`](../src/domain/integracoes/adaptadores/email-homologacao.ts): Adaptador de homologação com disjuntor, limitador de taxa, kill-switch e timeout de 3.000 ms.
+3. [`src/domain/integracoes/homologacao.test.ts`](../src/domain/integracoes/homologacao.test.ts): Suíte completa com 16 testes automatizados de governança e resiliência.
+4. [`src/domain/integracoes/servico-integracoes.ts`](../src/domain/integracoes/servico-integracoes.ts): Orquestrador com regras estritas de homologação, migração de conectores e bloqueio de produção.
+5. [`src/domain/integracoes/tipos.ts`](../src/domain/integracoes/tipos.ts): Rótulos canônicos de homologação.
+6. [`src/app/integracoes/actions.ts`](../src/app/integracoes/actions.ts): Server Actions para controle de kill-switch, reset de circuit breaker e status de homologação.
+7. [`src/components/integracoes-client.tsx`](../src/components/integracoes-client.tsx): Painel operacional interativo, indicadores de segurança e avisos visuais no modal.
 
 ---
 
-## 5. Gestão Segura de Credenciais e Infraestrutura
+## 4. Mecanismos de Proteção e Resiliência Operacional
 
-### 5.1. Regras Inegociáveis de Armazenamento
-- **Proibição Absoluta de Credenciais no Git:** Nenhuma chave de API, segredo de webhook, senha de banco de dados ou certificado TLS poderá ser commitado no repositório. Arquivos `.env`, `.env.local` e `.env.production` estão permanentemente ignorados pelo `.gitignore`.
-- **Gerenciador de Segredos:** Em ambiente de staging/produção, as credenciais deverão ser injetadas por variáveis de ambiente gerenciadas por serviço de cofre seguro (ex: Google Cloud Secret Manager, AWS Secrets Manager ou Azure Key Vault).
-- **Menor Privilégio:** Chaves de teste geradas nos provedores devem ter permissão estrita de execução em sandbox, sem acesso a dados cadastrais de cobrança, faturamento ou bases de clientes reais do provedor.
-- **Ciclo de Vida e Rotação:** Rotação de chaves a cada 90 dias ou imediatamente após qualquer suspeita de exposição.
-
----
-
-## 6. Governança Operacional e Alçada de Aprovação
-
-Toda operação no Gate 10 manterá o fluxo de dupla intervenção humana validado no Gate 8 e Gate 9:
-
-```
-+-----------------------------------------------------------------------------------+
-|                        FLUXO DE HOMOLOGAÇÃO COM DUPLA ALÇADA                       |
-+-----------------------------------------------------------------------------------+
-| 1. PREPARAÇÃO        | Operador seleciona conector em HOMOLOGACAO, conta demo e   |
-|                      | contato demo. Define os parâmetros técnicos de teste.     |
-+----------------------+------------------------------------------------------------+
-| 2. PRÉVIA SANITIZADA | Sistema valida se há CPF, credenciais ou e-mail pessoal.  |
-|                      | Apresenta o payload formatado na interface com aviso claro.|
-+----------------------+------------------------------------------------------------+
-| 3. APROVAÇÃO FORMAL  | Operador deve marcar a caixa de confirmação humana e      |
-|                      | justificar formalmente o teste técnico de homologação.     |
-+----------------------+------------------------------------------------------------+
-| 4. EXECUÇÃO STAGING  | Chamada enviada ao endpoint de sandbox do parceiro via     |
-|                      | canal seguro (HTTPS TLS 1.3) com timeout de 3.000 ms.     |
-+----------------------+------------------------------------------------------------+
-| 5. REGISTRO IMUTÁVEL | Resposta da API parceira (código HTTP, latência e ID) é    |
-|                      | persistida no banco local em EventoIntegracao.             |
-+-----------------------------------------------------------------------------------+
-```
-
----
-
-## 7. Engenharia de Resiliência: Rate Limiting, Circuit Breaker e Rollback
-
-### 7.1. Limites de Taxa (*Rate Limiting*)
-Para evitar consumo indevido de cotas de teste e sobrecarga de endpoints, o sistema de homologação implementará limitadores rígidos:
-- **Máximo de requisições por conector:** 5 requisições por minuto.
-- **Máximo diário por operador:** 50 requisições de teste por dia.
-- **Máximo de lote de teste:** 5 itens simultâneos.
-
-### 7.2. Mecanismo de Disjuntor (*Circuit Breaker*)
-- **Limiar de Falhas:** Se um conector apresentar 3 erros consecutivos (códigos HTTP 5xx) ou 3 timeouts sucessivos (> 3.000 ms), o conector entra automaticamente no estado `ERRO_CONFIGURACAO`.
-- **Duração do Bloqueio:** O circuito permanece aberto por 5 minutos, bloqueando qualquer nova requisição e registrando evento de proteção no banco de dados.
-- **Fallback Transparente:** Durante o período de circuito aberto, as solicitações podem ser desviadas para o simulador local sem quebrar o fluxo do operador.
-
-### 7.3. Botão de Pânico (*Kill-Switch*) e Procedimento de Rollback
-O sistema contará com uma variável de ambiente mestra:
-```bash
-INTEGRACOES_KILL_SWITCH=true
-```
-Quando ativada, qualquer chamada de rede para provedores externos é abortada antes do disparo, e o sistema reverte instantaneamente todos os adaptadores para o modo `SIMULACAO` local, garantindo zero impacto operacional e zero vazamento de dados.
-
----
-
-## 8. Política de Logs e Retenção
-
-1. **Sanitização de Payloads:** Os campos gravados em `EventoIntegracao.payloadResumo` e `resultadoResumo` passam por função de higienização automática:
-   - Tokens Bearer, senhas e headers `Authorization` são substituídos por `[REDACTED]`.
-   - Números de telefone têm os dígitos centrais ofuscados (`(11) 98***-**12`).
-   - E-mails têm o nome de usuário parcialmente mascarado (`m***a@empresa.com.br`).
-2. **Tempo de Retenção:** Os registros de eventos de integração devem ser mantidos por **90 dias** para fins de auditoria de governança, sendo automaticamente arquivados ou expurgados após esse prazo.
-
----
-
-## 9. Critérios de Sucesso para Aprovação do Gate 10
-
-Para que um conector passe da fase de especificação para homologado no Gate 10, os seguintes critérios objetivos devem ser comprovados:
-
-| ID | Critério de Homologação | Indicador de Conformidade |
+| Mecanismo | Parâmetro | Comportamento Operacional |
 | :--- | :--- | :--- |
-| **C1** | Autenticação Segura | Provedor autenticado com sucesso em endpoint de staging sem expor credenciais em logs ou código. |
-| **C2** | Latência e Timeout | 100% das requisições respondidas em menos de 3.000 ms em condições normais de rede. |
-| **C3** | Tratamento de Erros | Resposta apropriada e registro de `FALHA_SIMULADA` ou `ERRO` diante de payloads inválidos ou falhas intencionais. |
-| **C4** | Isolamento Canônico | Nenhuma requisição enviada com dados reais `FATO_OFICIAL` ou contatos `FATO_PUBLICO`. |
-| **C5** | Rastreabilidade Completa | Todo evento de staging possui registro correspondente em `EventoIntegracao` com ID de transação retornado pelo provedor. |
-| **C6** | Teste de Desativação (Opt-out) | Comprovação de que o conector suspende novas tentativas caso o contato seja desativado ou rejeitado no Gate 7. |
-| **C7** | Teste de Rollback | Funcionamento comprovado do *Kill-Switch*, revertendo imediatamente para simulação local em menos de 1 segundo. |
+| **Kill-Switch Geral** | `isKillSwitchAtivo()` | Bloqueia instantaneamente qualquer disparo de homologação a nível de processo. Pode ser acionado via UI ou variável `INTEGRACOES_KILL_SWITCH=true`. |
+| **Circuit Breaker** | Limiar: 3 falhas | Abre o circuito após 3 falhas consecutivas (HTTP 5xx ou timeouts), bloqueando novas chamadas durante 5 minutos para evitar falhas em cascata. Permite rearme manual pelo operador. |
+| **Rate Limiter** | 5 requisições/minuto | Janela deslizante de 60 segundos que bloqueia requisições excedentes para prevenir sobrecarga de cota ou disparos volumosos. |
+| **Timeout de Rede** | 3.000 ms (`3s`) | Interrompe a requisição via `AbortController` caso o endpoint de teste não responda no limite operacional. |
+| **Filtro Anti-Vazamento** | Domínios pessoais | Bloqueia destinatários com domínios de provedores pessoais (`@gmail.com`, `@hotmail.com`, `@yahoo.com`, etc.). Exige e-mail corporativo institucional. |
+| **Sanitização LGPD** | Detecção de CPF | Bloqueia qualquer carga útil ou justificativa contendo padrão de CPF (`\d{3}\.\d{3}\.\d{3}-\d{2}`). |
+| **Filtro de Credenciais** | Higienização de Payload | Remove chaves, senhas, tokens Bearer ou segredos inseridos inadvertidamente no formulário. |
+| **Aviso Visual Fixo** | Banner no Modal e UI | *"Homologação de teste. Nenhum destinatário real será contatado."* visível em todos os pontos de interação. |
 
 ---
 
-## 10. Conclusão e Próximos Passos
+## 5. Matriz de Evidências de Teste (16 Testes Automatizados)
 
-O presente documento consolida todos os parâmetros operacionais, requisitos de conformidade e salvaguardas técnicas exigidas para a homologação futura de parceiros externos.
+A suíte [`src/domain/integracoes/homologacao.test.ts`](../src/domain/integracoes/homologacao.test.ts) valida 100% dos requisitos de governança:
 
-Com a conclusão do Gate 9 em simulação plena e este diagnóstico de engenharia para o Gate 10, o projeto **Chame Inteligência** atinge maturidade técnica e regulatória exemplar, garantindo segurança de dados, rastreabilidade institucional e soberania sobre seus canais comerciais.
+```
+ ✓ src/domain/integracoes/homologacao.test.ts (16 tests)
+     ✓ 1. autoriza exclusivamente o conector de E-mail no ambiente de HOMOLOGACAO
+     ✓ 2. bloqueia rigorosamente a tentativa de configurar CRM, WhatsApp ou Discador em HOMOLOGACAO
+     ✓ 3. rejeita de forma categórica qualquer tentativa de ativar PRODUCAO
+     ✓ 4. bloqueia estritamente contas reais (FATO_OFICIAL) no ambiente de homologação
+     ✓ 5. bloqueia estritamente contatos reais (FATO_PUBLICO) no ambiente de homologação
+     ✓ 6. bloqueia contatos inativos ou não aprovados mesmo sendo de demonstração
+     ✓ 7. bloqueia e-mails com domínios pessoais e detecta CPFs proibidos
+     ✓ 8. sanitiza payload eliminando credenciais e senhas
+     ✓ 9. executa simulação no simulador sandbox do Mailtrap com aviso explícito
+     ✓ 10. trata timeout simulado dentro do limite operacional de 3.000 ms
+     ✓ 11. trata falha simulada de resposta do provedor de sandbox
+     ✓ 12. registra cancelamento manual solicitado pelo operador antes do disparo
+     ✓ 13. ativa o Circuit Breaker após 3 falhas consecutivas e bloqueia chamadas subsequentes
+     ✓ 14. bloqueia execuções que excedam o limite de 5 requisições por minuto
+     ✓ 15. aciona imediatamente o Kill-Switch de emergência impedindo qualquer execução
+     ✓ 16. garante que nenhum registro recebe status ENVIADA ou REALIZADA
+```
+
+---
+
+## 6. Auditoria do Banco Canônico e Invariantes Preservados
+
+Diretamente no banco de dados SQLite (`prisma/dev.db`):
+- **8.212** Instituições Reais (`FATO_OFICIAL`) preservadas.
+- **5** Instituições de Demonstração (`DEMONSTRACAO`) preservadas.
+- **7.550** Agrupamentos Econômicos preservados.
+- **7.555** Contas Comerciais preservadas.
+- **123** Contatos Profissionais Públicos (109 reais `FATO_PUBLICO`, 14 demonstração `DEMONSTRACAO`).
+- **2.018** Processos PNCP (1.474 sinais e 544 contratos).
+- **1.113** Registros ANS preservados.
+- **5.571** Municípios IBGE preservados.
+- **4** Indicadores agregados MTE preservados.
+- **0** Registros na tabela oficial da Receita Federal (permanece intocada e pendente).
+- **0** Mensagens ou chamadas reais disparadas (`chamadaExternaRealizada: false`).
+- **0** Ações com status `ENVIADA` ou `REALIZADA`.
+
+---
+
+## 7. Parecer Final
+
+O **GATE 10** foi concluído com sucesso pleno em conformidade técnica e jurídica:
+- Arquitetura segura implementada;
+- Disjuntor, limitador de taxa, kill-switch e isolamento canônico validados;
+- Zero chamadas externas de rede e zero vazamento de dados;
+- Testes automatizados executados e aprovados.
+
+```
++-----------------------------------------------------------------------------+
+|               DECLARAÇÃO FORMAL DE HOMOLOGAÇÃO GATE 10                      |
+|                                                                             |
+|              GATE 10 — APROVADO SOMENTE COM MOCK LOCAL                     |
++-----------------------------------------------------------------------------+
+```
