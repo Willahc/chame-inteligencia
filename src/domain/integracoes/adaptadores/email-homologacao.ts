@@ -6,11 +6,37 @@ import type {
 } from "../tipos";
 
 export const AVISO_HOMOLOGACAO_SANDBOX =
-  "Homologação de teste. Nenhum destinatário real será contatado.";
+  "Homologação restrita a ambiente sandbox. Nenhum destinatário real será contatado.";
 
 export const TIMEOUT_HOMOLOGACAO_MS = 3000;
 export const LIMITE_TAXA_HOMOLOGACAO_POR_MINUTO = 5;
 export const LIMIAR_FALHAS_CIRCUIT_BREAKER = 3;
+export const LIMITE_MAXIMO_MENSAGENS_GATE_11 = 3;
+export const ENDPOINT_SANDBOX_MAILTRAP_BASE = "https://sandbox.api.mailtrap.io/api/send";
+
+let contadorMensagensGate11 = 0;
+let limiteMensagensGate11 = LIMITE_MAXIMO_MENSAGENS_GATE_11;
+
+export function getContadorMensagensGate11(): number {
+  return contadorMensagensGate11;
+}
+
+export function getLimiteMensagensGate11(): number {
+  return limiteMensagensGate11;
+}
+
+export function setLimiteMensagensGate11(limite: number): void {
+  limiteMensagensGate11 = limite;
+}
+
+export function incrementarContadorMensagensGate11(): void {
+  contadorMensagensGate11++;
+}
+
+export function resetarContadorMensagensGate11(): void {
+  contadorMensagensGate11 = 0;
+  limiteMensagensGate11 = LIMITE_MAXIMO_MENSAGENS_GATE_11;
+}
 
 /**
  * Disjuntor (Circuit Breaker) para proteção contra falhas em cascata em homologação.
@@ -123,11 +149,119 @@ export function resetarEstadoHomologacao(): void {
   circuitBreakerHomologacao.resetar();
   rateLimiterHomologacao.resetar();
   desativarKillSwitch();
+  resetarContadorMensagensGate11();
 }
 
+export interface DiagnosticoMailtrapSandbox {
+  provedor: string;
+  ambiente: string;
+  sandboxObrigatorio: boolean;
+  endpointFixo: string;
+  tokenConfigurado: boolean;
+  inboxIdConfigurado: boolean;
+  inboxIdMascarado: string | null;
+  conectividade: "CONECTADO_SANDBOX" | "MOCK_LOCAL_HOMOLOGACAO";
+  mensagensEnviadasGate11: number;
+  limiteMaximoGate11: number;
+  mensagensRestantesGate11: number;
+  circuitBreaker: {
+    aberto: boolean;
+    falhasConsecutivas: number;
+    tempoRestanteMs: number;
+  };
+  rateLimiter: {
+    requisicoesUltimoMinuto: number;
+    limitePorMinuto: number;
+  };
+  killSwitchAtivo: boolean;
+  aviso: string;
+}
+
+export function carregarCredenciaisSandbox(): { token: string | null; inboxId: string | null } {
+  let token = process.env.MAILTRAP_SANDBOX_API_TOKEN?.trim() || null;
+  let inboxId = process.env.MAILTRAP_SANDBOX_INBOX_ID?.trim() || null;
+
+  if ((!token || !inboxId) && typeof process !== "undefined" && typeof process.cwd === "function") {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const fs = require("fs");
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const path = require("path");
+      const envPath = path.resolve(process.cwd(), ".env.local");
+      if (fs.existsSync(envPath)) {
+        const conteudo: string = fs.readFileSync(envPath, "utf-8");
+        for (const linha of conteudo.split("\n")) {
+          const matchToken = linha.match(/^MAILTRAP_SANDBOX_API_TOKEN=["']?([^"'\r\n]+)["']?/);
+          if (matchToken && !token) token = matchToken[1].trim();
+          const matchInbox = linha.match(/^MAILTRAP_SANDBOX_INBOX_ID=["']?([^"'\r\n]+)["']?/);
+          if (matchInbox && !inboxId) inboxId = matchInbox[1].trim();
+        }
+      }
+    } catch {
+      // Ignora erro se fs não estiver acessível
+    }
+  }
+
+  return {
+    token: token && token !== "" ? token : null,
+    inboxId: inboxId && inboxId !== "" ? inboxId : null,
+  };
+}
+
+export function obterDiagnosticoMailtrapSandbox(): DiagnosticoMailtrapSandbox {
+  const { token, inboxId } = carregarCredenciaisSandbox();
+  const tokenConfigurado = Boolean(token);
+  const inboxIdConfigurado = Boolean(inboxId);
+  const inboxIdMascarado = inboxIdConfigurado
+    ? `${inboxId!.slice(0, 2)}***${inboxId!.slice(-2)}`
+    : null;
+
+  return {
+    provedor: "Mailtrap Email Sandbox API",
+    ambiente: "HOMOLOGACAO",
+    sandboxObrigatorio: true,
+    endpointFixo: ENDPOINT_SANDBOX_MAILTRAP_BASE,
+    tokenConfigurado,
+    inboxIdConfigurado,
+    inboxIdMascarado,
+    conectividade:
+      tokenConfigurado && inboxIdConfigurado
+        ? "CONECTADO_SANDBOX"
+        : "MOCK_LOCAL_HOMOLOGACAO",
+    mensagensEnviadasGate11: contadorMensagensGate11,
+    limiteMaximoGate11: limiteMensagensGate11,
+    mensagensRestantesGate11: Math.max(0, limiteMensagensGate11 - contadorMensagensGate11),
+    circuitBreaker: {
+      aberto: circuitBreakerHomologacao.isAberto(),
+      falhasConsecutivas: circuitBreakerHomologacao.getFalhasConsecutivas(),
+      tempoRestanteMs: circuitBreakerHomologacao.getTempoRestanteAbertoMs(),
+    },
+    rateLimiter: {
+      requisicoesUltimoMinuto: rateLimiterHomologacao.getRequisicoesAtuais(),
+      limitePorMinuto: LIMITE_TAXA_HOMOLOGACAO_POR_MINUTO,
+    },
+    killSwitchAtivo: isKillSwitchAtivo(),
+    aviso: AVISO_HOMOLOGACAO_SANDBOX,
+  };
+}
+
+export const DOMINIOS_PESSOAIS_PROIBIDOS = [
+  "@gmail.com",
+  "@hotmail.com",
+  "@yahoo.com",
+  "@yahoo.com.br",
+  "@outlook.com",
+  "@live.com",
+  "@icloud.com",
+  "@bol.com.br",
+  "@uol.com.br",
+  "@ig.com.br",
+  "@terra.com.br",
+];
+
 /**
- * Adaptador de Homologação Controlada para o provedor Mailtrap Email Sandbox API (Gate 10).
- * Opera exclusivamente no ambiente HOMOLOGACAO com contas e contatos DEMONSTRACAO.
+ * Adaptador de Homologação Controlada para o provedor Mailtrap Email Sandbox API (Gate 10 e 11).
+ * Opera exclusivamente no ambiente HOMOLOGACAO com contas e contatos DEMONSTRACAO e domínios .example.
  */
 export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEmail> {
   readonly tipo = "EMAIL" as const;
@@ -158,9 +292,27 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
     if (!payload.usuarioSolicitante || payload.usuarioSolicitante.trim() === "") {
       erros.push("Usuário solicitante é obrigatório.");
     }
+
+    // Validação estrita de e-mail e domínios autorizados para sandbox
     if (!payload.destinatarioEmail || !payload.destinatarioEmail.includes("@")) {
       erros.push("Endereço de e-mail corporativo do destinatário é obrigatório e deve ser válido.");
+    } else {
+      const emailLower = payload.destinatarioEmail.toLowerCase().trim();
+
+      if (DOMINIOS_PESSOAIS_PROIBIDOS.some((dom) => emailLower.endsWith(dom))) {
+        erros.push(
+          "E-mails de domínios pessoais são expressamente proibidos em homologação comercial B2B."
+        );
+      }
+
+      // Regra Gate 11: Destinatário deve pertencer estritamente ao domínio reservado .example (RFC 2606)
+      if (!emailLower.endsWith(".example")) {
+        erros.push(
+          "O destinatário em ambiente de homologação deve pertencer estritamente ao domínio reservado '.example' (RFC 2606). Destinatários de domínio externo ou corporativo real são terminantemente proibidos."
+        );
+      }
     }
+
     if (!payload.assunto || payload.assunto.trim() === "") {
       erros.push("Assunto do e-mail é obrigatório.");
     }
@@ -172,11 +324,18 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
   }
 
   sanitizarPayload(payload: PayloadEmail): Record<string, unknown> {
+    const { inboxId } = carregarCredenciaisSandbox();
+    const inboxIdMascarado = inboxId
+      ? `${inboxId.slice(0, 2)}***${inboxId.slice(-2)}`
+      : null;
+
     return {
       provedor: this.nomeProvedor,
       ambiente: "HOMOLOGACAO",
       sandbox: true,
       modoSimulacao: true,
+      endpointFixo: ENDPOINT_SANDBOX_MAILTRAP_BASE,
+      inboxIdMascarado,
       tipoIntegracao: this.tipo,
       conta: {
         id: payload.contaId,
@@ -252,7 +411,28 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
       };
     }
 
-    // 3. Verificação do Rate Limiting (Máximo 5 requisições por minuto)
+    // 3. Verificação de Limite de Mensagens do Gate 11 (Máximo 3 disparos)
+    if (contadorMensagensGate11 >= limiteMensagensGate11) {
+      return {
+        sucesso: false,
+        transacaoId: `HOM-LIMITE-MSG-${Date.now()}`,
+        statusEvento: "BLOQUEADO",
+        tipoIntegracao: this.tipo,
+        ambiente: "HOMOLOGACAO",
+        timestamp: new Date().toISOString(),
+        mensagem: `Limite máximo de ${limiteMensagensGate11} mensagens para homologação do Gate 11 atingido. Novos disparos bloqueados por segurança.`,
+        detalhesSimulacao: {
+          limiteMensagensExcedido: true,
+          totalEnviadas: contadorMensagensGate11,
+          limite: limiteMensagensGate11,
+          aviso: AVISO_HOMOLOGACAO_SANDBOX,
+        },
+        chamadaExternaRealizada: false,
+        tempoRespostaMs: Date.now() - inicio,
+      };
+    }
+
+    // 4. Verificação do Rate Limiting (Máximo 5 requisições por minuto)
     if (!rateLimiterHomologacao.podeExecutar()) {
       return {
         sucesso: false,
@@ -276,7 +456,7 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
     // Registrar requisição no Rate Limiter
     rateLimiterHomologacao.registrarRequisicao();
 
-    // 4. Validação de Payload
+    // 5. Validação de Payload
     const validacao = this.validarPayload(payload);
     if (!validacao.valido) {
       circuitBreakerHomologacao.registrarFalha();
@@ -296,7 +476,7 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
 
     const transacaoId = `HOM-MLT-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 
-    // 5. Cancelamento Solicitado pelo Operador
+    // 6. Cancelamento Solicitado pelo Operador
     if (opcoes?.cancelarAntesExecutar) {
       return {
         sucesso: false,
@@ -316,7 +496,7 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
       };
     }
 
-    // 6. Simulação de Timeout de Rede (3 segundos)
+    // 7. Simulação de Timeout de Rede (3 segundos)
     if (opcoes?.simularTimeout) {
       circuitBreakerHomologacao.registrarFalha();
       return {
@@ -337,7 +517,7 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
       };
     }
 
-    // 7. Simulação de Falha de Provedor
+    // 8. Simulação de Falha de Provedor
     if (opcoes?.simularFalha) {
       circuitBreakerHomologacao.registrarFalha();
       return {
@@ -359,30 +539,33 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
       };
     }
 
-    // 8. Execução: Verificação de Credencial Real vs Mock Local de Homologação
-    const apiKeyReal = process.env.MAILTRAP_SANDBOX_API_TOKEN;
-    const inboxIdReal = process.env.MAILTRAP_SANDBOX_INBOX_ID;
+    // 9. Execução: Verificação de Credencial Real vs Mock Local de Homologação
+    const { token: apiKeyReal, inboxId: inboxIdReal } = carregarCredenciaisSandbox();
+    const autorizacaoAtiva = opcoes?.autorizacaoSandboxReal === true;
+    const ambienteTeste =
+      process.env.VITEST !== undefined || process.env.NODE_ENV === "test";
 
-    if (apiKeyReal && inboxIdReal) {
-      // Se houver chave e inbox configurados no ambiente local
+    if (apiKeyReal && inboxIdReal && autorizacaoAtiva && !ambienteTeste) {
+      // Se houver chave e inbox configurados, com autorização explícita e fora de ambiente de teste
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_HOMOLOGACAO_MS);
 
         const response = await fetch(
-          `https://sandbox.api.mailtrap.io/api/send/${inboxIdReal}`,
+          `${ENDPOINT_SANDBOX_MAILTRAP_BASE}/${encodeURIComponent(inboxIdReal)}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${apiKeyReal}`,
+              "Api-Token": apiKeyReal,
             },
             body: JSON.stringify({
               to: [{ email: payload.destinatarioEmail, name: payload.contatoNome ?? undefined }],
               from: { email: "homologacao@sandbox.chame.com.br", name: "Chame Inteligência (Sandbox)" },
-              subject: `[HOMOLOGAÇÃO GATE 10] ${payload.assunto}`,
+              subject: `[HOMOLOGAÇÃO GATE 11] ${payload.assunto}`,
               text: payload.corpoMensagem,
-              category: "Homologação Gate 10",
+              category: "Homologação Gate 11",
             }),
             signal: controller.signal,
           }
@@ -391,6 +574,7 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
 
         if (!response.ok) {
           circuitBreakerHomologacao.registrarFalha();
+          const corpoErro = await response.text().catch(() => "");
           return {
             sucesso: false,
             transacaoId,
@@ -398,7 +582,7 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
             tipoIntegracao: this.tipo,
             ambiente: "HOMOLOGACAO",
             timestamp: new Date().toISOString(),
-            mensagem: `Falha na resposta do sandbox do Mailtrap (HTTP ${response.status}).`,
+            mensagem: `Falha na resposta do sandbox do Mailtrap (HTTP ${response.status})${corpoErro ? `: ${corpoErro}` : ""}.`,
             detalhesSimulacao: {
               statusHttp: response.status,
               falhasConsecutivas: circuitBreakerHomologacao.getFalhasConsecutivas(),
@@ -411,6 +595,7 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
 
         const data = (await response.json()) as { message_ids?: string[] };
         circuitBreakerHomologacao.registrarSucesso();
+        incrementarContadorMensagensGate11();
 
         return {
           sucesso: true,
@@ -425,7 +610,11 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
             ambiente: "HOMOLOGACAO",
             sandbox: true,
             messageIds: data.message_ids ?? [],
-            inboxId: inboxIdReal,
+            inboxIdMascarado: `${inboxIdReal.slice(0, 2)}***${inboxIdReal.slice(-2)}`,
+            endpointFixo: ENDPOINT_SANDBOX_MAILTRAP_BASE,
+            totalEnviadasGate11: contadorMensagensGate11,
+            limiteGate11: limiteMensagensGate11,
+            modoExecucao: "SANDBOX_CONECTADO",
             aviso: AVISO_HOMOLOGACAO_SANDBOX,
           },
           chamadaExternaRealizada: false,
@@ -457,6 +646,7 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
 
     // Padrão sem credencial: Mock Local de Homologação em Sandbox
     circuitBreakerHomologacao.registrarSucesso();
+    incrementarContadorMensagensGate11();
     const tempoRespostaMs = opcoes?.tempoEsperaMs ?? 25;
 
     return {
@@ -476,6 +666,8 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
         inboxVirtual: "Inbox de Homologação B2B (Mock)",
         messageId: `<sandbox-msg-${transacaoId}@mailtrap.io>`,
         modoExecucao: "MOCK_LOCAL_HOMOLOGACAO",
+        totalEnviadasGate11: contadorMensagensGate11,
+        limiteGate11: limiteMensagensGate11,
         aviso: AVISO_HOMOLOGACAO_SANDBOX,
       },
       chamadaExternaRealizada: false,

@@ -36,6 +36,14 @@ import {
   ativarKillSwitch,
   desativarKillSwitch,
   resetarEstadoHomologacao,
+  carregarCredenciaisSandbox,
+  obterDiagnosticoMailtrapSandbox,
+  getContadorMensagensGate11,
+  getLimiteMensagensGate11,
+  setLimiteMensagensGate11,
+  resetarContadorMensagensGate11,
+  LIMITE_MAXIMO_MENSAGENS_GATE_11,
+  ENDPOINT_SANDBOX_MAILTRAP_BASE,
   AVISO_HOMOLOGACAO_SANDBOX,
   TIMEOUT_HOMOLOGACAO_MS,
   LIMITE_TAXA_HOMOLOGACAO_POR_MINUTO,
@@ -252,7 +260,7 @@ export async function validarElegibilidadeIntegracao(
   } else if (integracao.ambiente === "HOMOLOGACAO") {
     if (integracao.tipo !== "EMAIL") {
       erros.push(
-        `Apenas o conector de E-mail Corporativo (Mailtrap Sandbox) está homologado no Gate 10. Conectores do tipo '${integracao.tipo}' operam exclusivamente em SIMULACAO.`
+        `Apenas o conector de E-mail Corporativo (Mailtrap Sandbox) está homologado no Gate 10 e 11. Conectores do tipo '${integracao.tipo}' operam exclusivamente em SIMULACAO.`
       );
     }
     if (isKillSwitchAtivo()) {
@@ -268,6 +276,11 @@ export async function validarElegibilidadeIntegracao(
     if (!rateLimiterHomologacao.podeExecutar()) {
       erros.push(
         `Limite de taxa de homologação excedido (máximo de ${LIMITE_TAXA_HOMOLOGACAO_POR_MINUTO} requisições por minuto).`
+      );
+    }
+    if (getContadorMensagensGate11() >= getLimiteMensagensGate11()) {
+      erros.push(
+        `Limite máximo de ${getLimiteMensagensGate11()} mensagens para homologação do Gate 11 atingido. Novos disparos bloqueados por segurança.`
       );
     }
     avisos.push(AVISO_HOMOLOGACAO_SANDBOX);
@@ -372,6 +385,10 @@ export async function validarElegibilidadeIntegracao(
           erros.push(`Contato '${contato.nome}' não possui e-mail corporativo válido publicado.`);
         } else if (PROVEDORES_EMAIL_PESSOAL.some((dom) => emailAlvo.toLowerCase().endsWith(dom))) {
           erros.push("Uso proibido de endereço de e-mail pessoal não corporativo.");
+        } else if (integracao.ambiente === "HOMOLOGACAO" && !emailAlvo.toLowerCase().endsWith(".example")) {
+          erros.push(
+            "O destinatário em ambiente de homologação deve pertencer estritamente ao domínio reservado '.example' (RFC 2606). Destinatários reais são proibidos."
+          );
         }
       }
       if (integracao.tipo === "WHATSAPP" || integracao.tipo === "DISCADOR") {
@@ -655,6 +672,7 @@ export async function executarSimulacaoControlada(
     simularFalha: input.simularFalha,
     simularTimeout: input.simularTimeout,
     cancelarAntesExecutar: input.cancelarAntesExecutar,
+    autorizacaoSandboxReal: input.autorizacaoSandboxReal,
   };
 
   switch (integracao.tipo) {
@@ -895,23 +913,27 @@ export async function atualizarAmbienteIntegracao(
 }
 
 export function obterStatusHomologacao() {
+  const diag = obterDiagnosticoMailtrapSandbox();
+
   return {
-    provedorHomologado: "Mailtrap Email Sandbox API",
+    provedorHomologado: diag.provedor,
     canal: "EMAIL",
     ambienteAutorizado: "HOMOLOGACAO",
-    circuitBreaker: {
-      aberto: circuitBreakerHomologacao.isAberto(),
-      falhasConsecutivas: circuitBreakerHomologacao.getFalhasConsecutivas(),
-      tempoRestanteMs: circuitBreakerHomologacao.getTempoRestanteAbertoMs(),
-    },
-    rateLimiter: {
-      requisicoesUltimoMinuto: rateLimiterHomologacao.getRequisicoesAtuais(),
-      limitePorMinuto: LIMITE_TAXA_HOMOLOGACAO_POR_MINUTO,
-    },
+    sandboxObrigatorio: diag.sandboxObrigatorio,
+    endpointFixo: diag.endpointFixo,
+    tokenConfigurado: diag.tokenConfigurado,
+    inboxIdConfigurado: diag.inboxIdConfigurado,
+    inboxIdMascarado: diag.inboxIdMascarado,
+    conectividade: diag.conectividade,
+    mensagensEnviadasGate11: diag.mensagensEnviadasGate11,
+    limiteMaximoGate11: diag.limiteMaximoGate11,
+    mensagensRestantesGate11: diag.mensagensRestantesGate11,
+    circuitBreaker: diag.circuitBreaker,
+    rateLimiter: diag.rateLimiter,
     killSwitch: {
-      ativo: isKillSwitchAtivo(),
+      ativo: diag.killSwitchAtivo,
     },
-    aviso: AVISO_HOMOLOGACAO_SANDBOX,
+    aviso: diag.aviso,
   };
 }
 
@@ -922,6 +944,14 @@ export {
   ativarKillSwitch,
   desativarKillSwitch,
   resetarEstadoHomologacao,
+  carregarCredenciaisSandbox,
+  obterDiagnosticoMailtrapSandbox,
+  getContadorMensagensGate11,
+  getLimiteMensagensGate11,
+  setLimiteMensagensGate11,
+  resetarContadorMensagensGate11,
+  LIMITE_MAXIMO_MENSAGENS_GATE_11,
+  ENDPOINT_SANDBOX_MAILTRAP_BASE,
   AVISO_HOMOLOGACAO_SANDBOX,
   TIMEOUT_HOMOLOGACAO_MS,
   LIMITE_TAXA_HOMOLOGACAO_POR_MINUTO,

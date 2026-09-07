@@ -14,6 +14,7 @@ import {
   AVISO_HOMOLOGACAO_SANDBOX,
   TIMEOUT_HOMOLOGACAO_MS,
   LIMITE_TAXA_HOMOLOGACAO_POR_MINUTO,
+  setLimiteMensagensGate11,
 } from "./servico-integracoes";
 import { AVISO_BLOQUEIO_PRODUCAO } from "./tipos";
 
@@ -451,6 +452,7 @@ describe("Gate 10 — Homologação Controlada de Provedor (Mailtrap Email Sandb
     const { contaDemo, contatoDemo } = await obterContaEContatoDemo();
 
     rateLimiterHomologacao.resetar();
+    setLimiteMensagensGate11(10);
 
     // Executa 5 requisições permitidas
     for (let i = 0; i < LIMITE_TAXA_HOMOLOGACAO_POR_MINUTO; i++) {

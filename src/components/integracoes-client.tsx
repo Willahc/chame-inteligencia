@@ -116,6 +116,15 @@ export interface StatusHomologacaoData {
   provedorHomologado: string;
   canal: string;
   ambienteAutorizado: string;
+  sandboxObrigatorio: boolean;
+  endpointFixo: string;
+  tokenConfigurado: boolean;
+  inboxIdConfigurado: boolean;
+  inboxIdMascarado: string | null;
+  conectividade: "CONECTADO_SANDBOX" | "MOCK_LOCAL_HOMOLOGACAO";
+  mensagensEnviadasGate11: number;
+  limiteMaximoGate11: number;
+  mensagensRestantesGate11: number;
   circuitBreaker: {
     aberto: boolean;
     falhasConsecutivas: number;
@@ -264,7 +273,10 @@ export function IntegracoesClient({
     });
   }, [eventos, filtroTipo, filtroStatus, termoBusca]);
 
-  // Estados do Gate 10: Homologação Controlada de Provedor
+  // Estados do Gate 10 e 11: Homologação Real Mailtrap Sandbox
+  const [statusHomologacao, setStatusHomologacao] = useState<StatusHomologacaoData | null>(
+    statusHomologacaoInicial ?? null
+  );
   const [killSwitchAtivo, setKillSwitchAtivo] = useState(
     statusHomologacaoInicial?.killSwitch.ativo ?? false
   );
@@ -285,6 +297,7 @@ export function IntegracoesClient({
   const carregarStatusHomologacao = useCallback(async () => {
     const res = await obterStatusHomologacaoAction();
     if (res.sucesso && res.status) {
+      setStatusHomologacao(res.status as StatusHomologacaoData);
       setKillSwitchAtivo(res.status.killSwitch.ativo);
       setCircuitBreakerAberto(res.status.circuitBreaker.aberto);
       setFalhasCircuitBreaker(res.status.circuitBreaker.falhasConsecutivas);
@@ -570,7 +583,7 @@ export function IntegracoesClient({
         </div>
       </div>
 
-      {/* Painel de Controle de Homologação (Gate 10 — Mailtrap Sandbox) */}
+      {/* Painel de Controle de Homologação (Gate 10 & 11 — Mailtrap Sandbox) */}
       <div className="rounded-2xl border border-sky-400/25 bg-gradient-to-br from-sky-950/30 to-[var(--azul-profundo)] p-5 shadow-lg space-y-4 backdrop-blur-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-white/10 pb-4">
           <div className="flex items-center gap-3">
@@ -580,10 +593,21 @@ export function IntegracoesClient({
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-base font-bold text-white tracking-tight">
-                  Gate 10 — Homologação Controlada de Provedor
+                  Gate 10 & 11 — Homologação Real do Mailtrap Sandbox
                 </h2>
                 <span className="inline-flex items-center rounded-lg bg-sky-500/20 px-2.5 py-0.5 text-xs font-bold text-sky-300 border border-sky-400/30">
                   HOMOLOGAÇÃO SANDBOX
+                </span>
+                <span
+                  className={`inline-flex items-center rounded-lg px-2.5 py-0.5 text-xs font-bold border ${
+                    statusHomologacao?.conectividade === "CONECTADO_SANDBOX"
+                      ? "bg-emerald-500/20 text-emerald-300 border-emerald-400/30"
+                      : "bg-amber-500/20 text-amber-300 border-amber-400/30"
+                  }`}
+                >
+                  {statusHomologacao?.conectividade === "CONECTADO_SANDBOX"
+                    ? "SANDBOX CONECTADO"
+                    : "MOCK LOCAL (AGUARDANDO CREDENCIAL)"}
                 </span>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
@@ -620,6 +644,14 @@ export function IntegracoesClient({
           </div>
         </div>
 
+        {/* Banner Permanente Obrigatório */}
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-xs text-amber-200 flex items-center gap-2">
+          <ShieldAlert size={16} className="text-amber-400 shrink-0" />
+          <span>
+            <strong>Homologação restrita a ambiente sandbox.</strong> Nenhum destinatário real será contatado. Destinatários permitidos estritamente sob o domínio reservado <code>.example</code> (RFC 2606).
+          </span>
+        </div>
+
         {/* Notificação de Feedback */}
         {feedbackHomologacao && (
           <div className="rounded-xl border border-sky-400/30 bg-sky-500/10 p-3 text-xs text-sky-200 flex items-center justify-between">
@@ -633,11 +665,92 @@ export function IntegracoesClient({
           </div>
         )}
 
-        {/* Indicadores de Segurança e Operação */}
+        {/* Indicadores de Segurança e Operação do Gate 11 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {/* Card 1: Diagnóstico de Conexão e Credenciais */}
           <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
             <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Kill-Switch de Emergência
+              Diagnóstico de Sandbox
+            </div>
+            <div className="mt-1 flex items-center gap-2">
+              <span
+                className={`size-2.5 rounded-full ${
+                  statusHomologacao?.conectividade === "CONECTADO_SANDBOX"
+                    ? "bg-emerald-400"
+                    : "bg-amber-400"
+                }`}
+              />
+              <span className="text-sm font-bold text-white">
+                {statusHomologacao?.conectividade === "CONECTADO_SANDBOX"
+                  ? "Sandbox Conectado"
+                  : "Mock Local Ativo"}
+              </span>
+            </div>
+            <div className="mt-2 space-y-0.5 text-[11px] text-slate-400">
+              <div>
+                Token:{" "}
+                <strong className={statusHomologacao?.tokenConfigurado ? "text-emerald-400" : "text-amber-400"}>
+                  {statusHomologacao?.tokenConfigurado ? "Sim (Configurado)" : "Não (Ausente)"}
+                </strong>
+              </div>
+              <div>
+                Inbox ID:{" "}
+                <strong className={statusHomologacao?.inboxIdConfigurado ? "text-emerald-400" : "text-amber-400"}>
+                  {statusHomologacao?.inboxIdConfigurado
+                    ? `Sim (${statusHomologacao.inboxIdMascarado})`
+                    : "Não (Ausente)"}
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2: Cota de Mensagens Gate 11 */}
+          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              Cota de Mensagens (Gate 11)
+            </div>
+            <div className="mt-1 flex items-center gap-2">
+              <span className="text-sm font-bold text-white">
+                {statusHomologacao?.mensagensEnviadasGate11 ?? 0} / {statusHomologacao?.limiteMaximoGate11 ?? 3}
+              </span>
+              <span className="text-xs text-slate-400">disparos</span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-2">
+              Restantes:{" "}
+              <strong className="text-sky-300">
+                {statusHomologacao?.mensagensRestantesGate11 ?? 3} disparos permitidos
+              </strong>
+            </p>
+          </div>
+
+          {/* Card 3: Disjuntor & Taxa */}
+          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              Disjuntor & Taxa
+            </div>
+            <div className="mt-1 flex items-center gap-2">
+              <span
+                className={`size-2.5 rounded-full ${
+                  circuitBreakerAberto ? "bg-rose-500" : "bg-emerald-400"
+                }`}
+              />
+              <span
+                className={`text-sm font-bold ${
+                  circuitBreakerAberto ? "text-rose-400" : "text-emerald-400"
+                }`}
+              >
+                {circuitBreakerAberto ? "Aberto (Bloqueio)" : "Fechado (Operacional)"}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-2">
+              {rateLimitInfo.requisicoesUltimoMinuto} / {rateLimitInfo.limitePorMinuto} req/min | Falhas: {falhasCircuitBreaker}/3
+            </p>
+          </div>
+
+          {/* Card 4: Kill-Switch & Isolamento */}
+          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              Kill-Switch & Isolamento
             </div>
             <div className="mt-1 flex items-center gap-2">
               <span
@@ -653,59 +766,8 @@ export function IntegracoesClient({
                 {killSwitchAtivo ? "Ativo (Bloqueio Total)" : "Pronto (Desativado)"}
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 mt-1">
-              Bloqueia disparos a nível de processo
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
-            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Disjuntor (Circuit Breaker)
-            </div>
-            <div className="mt-1 flex items-center gap-2">
-              <span
-                className={`size-2.5 rounded-full ${
-                  circuitBreakerAberto ? "bg-rose-500" : "bg-emerald-400"
-                }`}
-              />
-              <span
-                className={`text-sm font-bold ${
-                  circuitBreakerAberto ? "text-rose-400" : "text-emerald-400"
-                }`}
-              >
-                {circuitBreakerAberto ? "Aberto (Proteção)" : "Fechado (Operacional)"}
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400 mt-1">
-              {falhasCircuitBreaker} falhas consecutivas (limiar: 3)
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
-            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Limite de Taxa (Rate Limit)
-            </div>
-            <div className="mt-1 flex items-center gap-2">
-              <span className="text-sm font-bold text-white">
-                {rateLimitInfo.requisicoesUltimoMinuto} / {rateLimitInfo.limitePorMinuto}
-              </span>
-              <span className="text-xs text-slate-400">req/min</span>
-            </div>
-            <p className="text-[11px] text-slate-400 mt-1">
-              Janela deslizante de 60s
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
-            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Isolamento de Dados
-            </div>
-            <div className="mt-1 flex items-center gap-1.5">
-              <Lock size={14} className="text-amber-400" />
-              <span className="text-sm font-bold text-amber-300">DEMONSTRAÇÃO</span>
-            </div>
-            <p className="text-[11px] text-slate-400 mt-1">
-              Contas e contatos reais são bloqueados
+            <p className="text-[11px] text-amber-300 mt-2 flex items-center gap-1">
+              <Lock size={12} /> Somente DEMONSTRAÇÃO (.example)
             </p>
           </div>
         </div>
