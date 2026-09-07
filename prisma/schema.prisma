@@ -273,6 +273,7 @@ model ContatoProfissional {
   statusDecisao         StatusDecisaoContato @default(APROVADO)
   historicoDecisoes     HistoricoDecisaoContato[]
   acoesPlanejadas       AcaoComercialPlanejada[]
+  eventosIntegracao     EventoIntegracao[]
   grupoEconomico        GrupoEconomico? @relation(fields: [grupoEconomicoId], references: [id], onDelete: Cascade)
   instituicao           Instituicao?   @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
   fonte                 Fonte          @relation(fields: [fonteId], references: [id])
@@ -496,6 +497,7 @@ model ContaComercial {
   historicoAbordagem        RegistroAbordagem[]
   solicitacoesBusca         SolicitacaoBuscaResponsaveis[]
   acoesPlanejadas           AcaoComercialPlanejada[]
+  eventosIntegracao         EventoIntegracao[]
 
   @@index([tipoDado, faixaPrioridadeComercial])
   @@index([indicePrioridadeComercial])
@@ -540,6 +542,7 @@ model AcaoComercialPlanejada {
   contaComercial        ContaComercial         @relation(fields: [contaComercialId], references: [id], onDelete: Cascade)
   contatoProfissional   ContatoProfissional?   @relation(fields: [contatoProfissionalId], references: [id], onDelete: SetNull)
   historico             HistoricoAcaoComercial[]
+  eventosIntegracao     EventoIntegracao[]
 
   @@index([contaComercialId, status])
   @@index([contatoProfissionalId])
@@ -897,4 +900,79 @@ model IndicadorMTE {
   @@index([uf, municipio])
   @@index([setorCnae])
   @@index([codigoIbge6])
+}
+
+enum TipoIntegracaoExterna {
+  CRM
+  EMAIL
+  WHATSAPP
+  DISCADOR
+  OUTRO
+}
+
+enum AmbienteIntegracao {
+  DESABILITADA
+  SIMULACAO
+  HOMOLOGACAO
+  PRODUCAO
+}
+
+enum StatusIntegracao {
+  ATIVA
+  INATIVA
+  ERRO_CONFIGURACAO
+  PENDENTE_AUTORIZACAO
+}
+
+enum StatusEventoIntegracao {
+  SIMULADO
+  SUCESSO_SIMULADO
+  FALHA_SIMULADA
+  TIMEOUT_SIMULADO
+  BLOQUEADO
+  CANCELADO
+}
+
+model IntegracaoExterna {
+  id               String                 @id @default(cuid())
+  nome             String
+  tipo             TipoIntegracaoExterna
+  ambiente         AmbienteIntegracao     @default(SIMULACAO)
+  status           StatusIntegracao       @default(ATIVA)
+  configuracaoJson String                 @default("{}")
+  descricao        String?
+  criadoEm         DateTime               @default(now())
+  atualizadoEm     DateTime               @updatedAt
+
+  eventos          EventoIntegracao[]
+
+  @@index([tipo, status])
+  @@index([ambiente])
+}
+
+model EventoIntegracao {
+  id                    String                 @id @default(cuid())
+  integracaoId          String
+  acaoComercialId       String?
+  contaComercialId      String?
+  contatoProfissionalId String?
+  tipoEvento            String
+  status                StatusEventoIntegracao @default(SIMULADO)
+  payloadResumo         String                 @default("{}")
+  resultadoResumo       String                 @default("{}")
+  erro                  String?
+  usuarioSolicitante    String
+  justificativa         String
+  criadoEm              DateTime               @default(now())
+
+  integracao            IntegracaoExterna      @relation(fields: [integracaoId], references: [id], onDelete: Cascade)
+  acaoComercial         AcaoComercialPlanejada? @relation(fields: [acaoComercialId], references: [id], onDelete: SetNull)
+  contaComercial        ContaComercial?        @relation(fields: [contaComercialId], references: [id], onDelete: SetNull)
+  contatoProfissional   ContatoProfissional?   @relation(fields: [contatoProfissionalId], references: [id], onDelete: SetNull)
+
+  @@index([integracaoId, criadoEm])
+  @@index([status])
+  @@index([contaComercialId])
+  @@index([contatoProfissionalId])
+  @@index([acaoComercialId])
 }
