@@ -545,4 +545,86 @@ describe("Gate 9 — Arquitetura de Integrações Externas", () => {
       `Limite máximo de simulação em lote excedido. O limite permitido é de ${LIMITE_MAXIMO_LOTE_SIMULACAO}`
     );
   });
+
+  // 14. Bloqueio de credenciais, senhas, tokens ou api keys no payload
+  it("14. bloqueia payload contendo credenciais, senhas, tokens ou api keys", async () => {
+    const { contaDemo, contatoDemo } = await obterContaEContatoDemo();
+
+    const res = await executarSimulacaoControlada({
+      integracaoId: integracaoCRMId,
+      contaComercialId: contaDemo.id,
+      contatoProfissionalId: contatoDemo.id,
+      usuarioSolicitante: "operador.teste",
+      justificativa: "Tentativa com chave de autenticação indevida",
+      finalidadeComercial: "Prospecção",
+      confirmacaoHumana: true,
+      dadosEspecificos: {
+        apiKeySegredo: "token-secreto-123456",
+      },
+    });
+
+    eventosCriadosIds.push(res.evento.id);
+    expect(res.evento.status).toBe("BLOQUEADO");
+    expect(res.resposta.sucesso).toBe(false);
+    expect(res.resposta.mensagem).toContain("credencial, senha ou token");
+  });
+
+  // 15. Bloqueio de dados pessoais sensíveis (CPF) em payload ou justificativa
+  it("15. bloqueia payload ou justificativa contendo CPF (regras de privacidade)", async () => {
+    const { contaDemo, contatoDemo } = await obterContaEContatoDemo();
+
+    // 15.1 CPF na justificativa
+    const resCpfJustificativa = await executarSimulacaoControlada({
+      integracaoId: integracaoCRMId,
+      contaComercialId: contaDemo.id,
+      contatoProfissionalId: contatoDemo.id,
+      usuarioSolicitante: "operador.teste",
+      justificativa: "Simulação para responsável CPF 123.456.789-00",
+      finalidadeComercial: "Prospecção",
+      confirmacaoHumana: true,
+    });
+    eventosCriadosIds.push(resCpfJustificativa.evento.id);
+    expect(resCpfJustificativa.evento.status).toBe("BLOQUEADO");
+    expect(resCpfJustificativa.resposta.mensagem).toContain("CPF");
+
+    // 15.2 CPF nos dados específicos (sem pontuação)
+    const resCpfPayload = await executarSimulacaoControlada({
+      integracaoId: integracaoCRMId,
+      contaComercialId: contaDemo.id,
+      contatoProfissionalId: contatoDemo.id,
+      usuarioSolicitante: "operador.teste",
+      justificativa: "Simulação de teste",
+      finalidadeComercial: "Prospecção",
+      confirmacaoHumana: true,
+      dadosEspecificos: {
+        documentoResponsavel: "12345678901",
+      },
+    });
+    eventosCriadosIds.push(resCpfPayload.evento.id);
+    expect(resCpfPayload.evento.status).toBe("BLOQUEADO");
+    expect(resCpfPayload.resposta.mensagem).toContain("CPF");
+  });
+
+  // 16. Bloqueio de domínio de e-mail pessoal não corporativo
+  it("16. bloqueia destinatário com domínio de e-mail pessoal não corporativo", async () => {
+    const { contaDemo, contatoDemo } = await obterContaEContatoDemo();
+
+    const res = await executarSimulacaoControlada({
+      integracaoId: integracaoEmailId,
+      contaComercialId: contaDemo.id,
+      contatoProfissionalId: contatoDemo.id,
+      usuarioSolicitante: "operador.teste",
+      justificativa: "Tentativa de envio para provedor pessoal",
+      finalidadeComercial: "Prospecção",
+      confirmacaoHumana: true,
+      dadosEspecificos: {
+        destinatarioEmail: "gestor.saude@gmail.com",
+      },
+    });
+
+    eventosCriadosIds.push(res.evento.id);
+    expect(res.evento.status).toBe("BLOQUEADO");
+    expect(res.resposta.sucesso).toBe(false);
+    expect(res.resposta.mensagem).toContain("e-mail pessoal");
+  });
 });

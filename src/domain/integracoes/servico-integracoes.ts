@@ -34,6 +34,21 @@ const adaptadorEmail = new AdaptadorEmailSimulador();
 const adaptadorWhatsApp = new AdaptadorWhatsAppSimulador();
 const adaptadorDiscador = new AdaptadorDiscadorSimulador();
 
+const REGEX_CPF = /\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/;
+const PROVEDORES_EMAIL_PESSOAL = [
+  "@gmail.com",
+  "@hotmail.com",
+  "@yahoo.com",
+  "@yahoo.com.br",
+  "@outlook.com",
+  "@live.com",
+  "@icloud.com",
+  "@bol.com.br",
+  "@uol.com.br",
+  "@ig.com.br",
+  "@terra.com.br",
+];
+
 export function resolverInstituicoesConta(conta: {
   id: string;
   tipoDado: string;
@@ -255,6 +270,14 @@ export async function validarElegibilidadeIntegracao(
         erros.push(`Contato '${contato.nome}' foi rejeitado na revisão humana de dados.`);
       }
 
+      // Fonte pública e evidência documental
+      if (!contato.fonteId || contato.fonteId.trim() === "" || !contato.fonte) {
+        erros.push(`Contato '${contato.nome}' não possui fonte pública verificável vinculada.`);
+      }
+      if (!contato.dataEvidencia) {
+        erros.push(`Contato '${contato.nome}' não possui data de evidência documental.`);
+      }
+
       // Isolamento estrito entre DEMONSTRACAO e FATO_OFICIAL / FATO_PUBLICO
       if (conta.tipoDado === "DEMONSTRACAO" && contato.tipoDado !== "DEMONSTRACAO") {
         erros.push(
@@ -268,10 +291,13 @@ export async function validarElegibilidadeIntegracao(
       }
 
       // Validar presença de canal correspondente ao tipo de integração
-      if (integracao.tipo === "EMAIL" && (!contato.emailCorporativo || !contato.emailCorporativo.includes("@"))) {
-        erros.push(
-          `Contato '${contato.nome}' não possui e-mail corporativo válido publicado.`
-        );
+      if (integracao.tipo === "EMAIL") {
+        const emailAlvo = (input.dadosEspecificos?.destinatarioEmail as string) || contato.emailCorporativo;
+        if (!emailAlvo || !emailAlvo.includes("@")) {
+          erros.push(`Contato '${contato.nome}' não possui e-mail corporativo válido publicado.`);
+        } else if (PROVEDORES_EMAIL_PESSOAL.some((dom) => emailAlvo.toLowerCase().endsWith(dom))) {
+          erros.push("Uso proibido de endereço de e-mail pessoal não corporativo.");
+        }
       }
       if (integracao.tipo === "WHATSAPP" || integracao.tipo === "DISCADOR") {
         const tel = contato.telefoneProfissional || contato.telefoneDepartamental;
@@ -300,6 +326,26 @@ export async function validarElegibilidadeIntegracao(
         );
       }
     }
+  }
+
+  // 6. Validar dados específicos, credenciais proibidas e dados pessoais restritos (CPF)
+  if (input.dadosEspecificos) {
+    const chaves = Object.keys(input.dadosEspecificos).map((k) => k.toLowerCase());
+    const chavesProibidas = ["senha", "password", "token", "secret", "apikey", "bearer", "authorization"];
+    if (chaves.some((k) => chavesProibidas.some((p) => k.includes(p)))) {
+      erros.push("Payload contém credencial, senha ou token de acesso proibido.");
+    }
+
+    const valoresTexto = Object.values(input.dadosEspecificos).filter(
+      (v): v is string => typeof v === "string"
+    );
+    if (valoresTexto.some((v) => REGEX_CPF.test(v))) {
+      erros.push("Payload contém CPF ou dado pessoal proibido por regras de privacidade.");
+    }
+  }
+
+  if (REGEX_CPF.test(input.justificativa) || REGEX_CPF.test(input.finalidadeComercial)) {
+    erros.push("A justificativa ou finalidade contém CPF proibido.");
   }
 
   return {

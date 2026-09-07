@@ -353,7 +353,7 @@ export function IntegracoesClient({
   }
 
   return (
-    <div className="space-y-8 p-6 lg:p-10 max-w-7xl mx-auto">
+    <div className="w-full px-3 py-5 sm:px-6 lg:px-8 lg:py-8 2xl:px-10 space-y-6">
       {/* Alerta Permanente de Simulação Controlada */}
       <div className="rounded-2xl border border-amber-400/30 bg-amber-500/10 p-5 shadow-lg backdrop-blur-sm">
         <div className="flex items-start gap-4">
