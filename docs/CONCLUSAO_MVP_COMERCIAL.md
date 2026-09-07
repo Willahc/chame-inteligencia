@@ -34,8 +34,8 @@ A base oficial de dados em lote da **Receita Federal** permanece **estritamente 
 | **Componentes de Índices Decompostos** | **90.382** | `FATO_OFICIAL` / `DEMONSTRACAO` | 11 critérios auditáveis por instituição (pesos somando 100) |
 | **Ações Comerciais Recomendadas** | **8.217** | `FATO_OFICIAL` / `DEMONSTRACAO` | Ação tática específica associada a cada instituição |
 | **Contatos Profissionais B2B Públicos** | **123** | `FATO_PUBLICO` / `DEMONSTRACAO` | Estritamente institucionais, sem CPFs ou dados pessoais |
-| **Registros PNCP Preservados** | **2.018** | `FATO_PUBLICO` | 544 sinais de contratação + 1.474 contratos confirmados |
-| **Hospitais Vinculados por CNPJ PNCP** | **156** | `FATO_PUBLICO` | Vínculos estritos por CNPJ exato (sem match por nome) |
+| **Instituições com Vínculo Exato por CNPJ PNCP** | **1** (4 processos) | `FATO_PUBLICO` | Vínculos estritos por CNPJ unívoco de 14 dígitos (sem match por nome ou órgão central ambíguo) |
+| **Registros PNCP sem Vínculo Institucional** | **2.014** | `FATO_PUBLICO` | Órgãos centrais e processos gerais preservados sem vínculo forçado |
 | **Enriquecimento Auxiliar BrasilAPI** | **2.996** | `DADO_TERCEIRO_NAO_CANONICO` | 100% do universo prioritário com CNPJ válido |
 | **Operadoras ANS (CADOP)** | **1.113** | `FATO_OFICIAL` | Dados institucionais das operadoras ativas na ANS |
 | **Municípios IBGE Integrados** | **5.571** | `FATO_OFICIAL` | Malha territorial e demográfica oficial do Brasil |
@@ -111,8 +111,9 @@ Abaixo constam as principais instituições ranqueadas no topo do pipeline comer
 
 2. **PNCP — Portal Nacional de Contratações Públicas (`FATO_PUBLICO`)**:
    - 2.018 registros preservados (544 sinais de contratação e 1.474 contratos formalizados).
-   - 156 hospitais vinculados por correspondência estrita de CNPJ de 14 dígitos (estabelecimento ou mantenedora).
-   - Registros sem correspondência permanecem strictly classificados como `SEM_VINCULO`.
+   - 1 instituição vinculada por correspondência estrita de CNPJ unívoco de 14 dígitos (IAMSPE / Hospital do Servidor Público Estadual, com 4 processos de compra).
+   - 2.014 registros sem vínculo institucional forçado por pertencerem a órgãos centrais de saúde (Secretaria de Estado da Saúde, Secretarias Municipais e Fazenda).
+   - Registros sem correspondência direta permanecem strictly classificados como `SEM_VINCULO`.
 
 3. **BrasilAPI (`DADO_TERCEIRO_NAO_CANONICO`)**:
    - Camada auxiliar transparente para consulta e enriquecimento cadastral de 2.996 CNPJs do universo prioritário.

@@ -101,10 +101,10 @@ export function CoberturaClient({ dados }: CoberturaClientProps) {
             <Landmark size={18} className="text-teal-600" />
           </div>
           <p className="mt-2 text-3xl font-extrabold text-[var(--azul-profundo)]">
-            {dados.fontes.find((f) => f.nome.includes("PNCP"))?.totalRegistros.toLocaleString("pt-BR")}
+            {(dados.totalProcessosPNCP ?? dados.fontes.find((f) => f.nome.includes("PNCP"))?.totalRegistros ?? 2018).toLocaleString("pt-BR")}
           </p>
           <p className="mt-1 text-xs text-slate-500">
-            {dados.coberturaPNCP} vínculos exatos com o setor hospitalar
+            {dados.totalInstituicoesVinculoExatoPNCP ?? dados.coberturaPNCP} instituição com vínculo exato ({dados.totalPNCPRegistrosVinculados ?? 4} processos)
           </p>
         </div>
       </div>
@@ -175,12 +175,23 @@ export function CoberturaClient({ dados }: CoberturaClientProps) {
           <div>
             <div className="flex justify-between text-xs font-semibold mb-1">
               <span className="flex items-center gap-1.5 text-slate-800">
-                <Landmark size={14} className="text-teal-600" /> PNCP (Vínculo com Processos e Contratos de Compras Públicas)
+                <Landmark size={14} className="text-teal-600" /> PNCP (Processos e Contratos de Compras Públicas)
               </span>
-              <span className="text-teal-700">156 hospitais vinculados por CNPJ exato</span>
+              <span className="text-teal-700">
+                {dados.totalInstituicoesVinculoExatoPNCP ?? dados.coberturaPNCP} instituição com vínculo exato ({dados.totalPNCPRegistrosVinculados ?? 4} processos) · {(dados.totalPNCPRegistrosSemVinculo ?? 2014).toLocaleString("pt-BR")} registros sem vínculo
+              </span>
             </div>
             <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
-              <div className="h-full bg-teal-500" style={{ width: "2%" }} />
+              <div className="h-full bg-teal-500" style={{ width: "1%" }} />
+            </div>
+            <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
+              <span>Quantidade de sinais: <strong className="text-slate-700">{(dados.totalSinaisPNCP ?? 544).toLocaleString("pt-BR")}</strong></span>
+              <span>·</span>
+              <span>Quantidade de contratos: <strong className="text-slate-700">{(dados.totalContratosPNCP ?? 1474).toLocaleString("pt-BR")}</strong></span>
+              <span>·</span>
+              <span>Registros sem vínculo: <strong className="text-slate-700">{(dados.totalPNCPRegistrosSemVinculo ?? 2014).toLocaleString("pt-BR")}</strong></span>
+              <span>·</span>
+              <span className="text-amber-800 bg-amber-50 rounded px-1.5 py-0.5 border border-amber-200 font-medium">Registros ambíguos: órgãos centrais (SES/SMS) preservados sem vínculo forçado</span>
             </div>
           </div>
 

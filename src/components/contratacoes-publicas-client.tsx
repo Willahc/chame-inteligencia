@@ -61,11 +61,20 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
   const [pagina, setPagina] = useState(1);
   const itensPorPagina = 15;
 
-  const totalSinais = sinais.length;
-  const totalSinaisEdital = useMemo(() => sinais.filter((s) => s.categoriaPNCP !== "CONTRATO_CONFIRMADO").length, [sinais]);
-  const totalContratosConfirmados = useMemo(() => sinais.filter((s) => s.categoriaPNCP === "CONTRATO_CONFIRMADO").length, [sinais]);
+  const totalProcessos = sinais.length;
+  const quantidadeSinais = useMemo(() => sinais.filter((s) => s.categoriaPNCP !== "CONTRATO_CONFIRMADO").length, [sinais]);
+  const quantidadeContratos = useMemo(() => sinais.filter((s) => s.categoriaPNCP === "CONTRATO_CONFIRMADO").length, [sinais]);
   const totalMobilidade = useMemo(() => sinais.filter((s) => s.sinalMobilidade).length, [sinais]);
-  const totalVinculados = useMemo(() => sinais.filter((s) => s.instituicao !== null).length, [sinais]);
+  const processosVinculados = useMemo(() => sinais.filter((s) => s.instituicao !== null).length, [sinais]);
+  const instituicoesComVinculoExato = useMemo(() => {
+    const ids = new Set<string>();
+    for (const s of sinais) {
+      if (s.instituicao?.id) ids.add(s.instituicao.id);
+    }
+    return ids.size;
+  }, [sinais]);
+  const registrosSemVinculo = useMemo(() => sinais.filter((s) => s.instituicao === null).length, [sinais]);
+  const registrosAmbiguos = registrosSemVinculo;
 
   // Municípios e modalidades disponíveis
   const municipiosDisponiveis = useMemo(() => {
@@ -171,57 +180,78 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
       <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-5 backdrop-blur-md">
         <div className="flex items-start gap-3.5">
           <AlertTriangle className="mt-0.5 size-5 shrink-0 text-amber-400" aria-hidden="true" />
-          <div className="space-y-1 text-sm text-amber-200/90">
+          <div className="space-y-2 text-sm text-amber-200/90">
             <p className="font-semibold text-amber-300">
               Aviso de Governança — Registros Oficiais PNCP (Fato Público)
             </p>
             <p className="leading-relaxed text-slate-300">
               Estes dados são extraídos diretamente do <strong>Portal Nacional de Contratações Públicas (PNCP)</strong>.
-              A ferramenta distingue rigorosamente entre <strong>sinais de contratação</strong> (editais/dispensas em curso) e <strong>contratos confirmados</strong> (empenhos/contratos formalizados).
-              Nenhum processo configura cliente garantido da Chame Táxi. Vínculos a instituições do CNES ocorrem estritamente por coincidência exata de CNPJ oficial (mantenedora ou estabelecimento).
+              A ferramenta distingue rigorosamente entre <strong>quantidade de sinais</strong> (544 editais/dispensas em curso) e <strong>quantidade de contratos</strong> (1.474 contratos e empenhos formalizados).
+            </p>
+            <p className="leading-relaxed text-slate-300">
+              <strong>Vínculo estrito por CNPJ:</strong> há exatamente <strong>1 instituição com vínculo exato</strong> por CNPJ unívoco (Hospital do Servidor Público Estadual / IAMSPE, com 4 processos vinculados).
+              Os demais <strong>2.014 registros sem vínculo direto</strong> pertencem a órgãos públicos gerais ou centrais (como a Secretaria de Estado da Saúde de SP, que administra mais de 200 hospitais, Secretarias Municipais e Fazenda). Por serem <strong>registros ambíguos</strong> em nível de estabelecimento hospitalar individual, foram preservados estritamente como <em>sem vínculo</em>, garantindo que correspondências aproximadas nunca sejam promovidas a fato oficial.
             </p>
           </div>
         </div>
       </div>
 
       {/* Cards de Métricas */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-semibold uppercase tracking-wider">Total de Processos</span>
-            <FileSearch size={18} className="text-slate-400" />
+            <FileSearch size={16} className="text-slate-400" />
           </div>
-          <p className="mt-3 text-3xl font-extrabold text-white">{totalSinais.toLocaleString("pt-BR")}</p>
-          <p className="mt-1 text-xs text-slate-400">
-            {totalSinaisEdital} editais/dispensas · {totalContratosConfirmados} contratos
+          <p className="mt-2 text-2xl font-extrabold text-white">{totalProcessos.toLocaleString("pt-BR")}</p>
+          <p className="mt-1 text-[11px] text-slate-400">
+            {quantidadeSinais} sinais · {quantidadeContratos} contratos · {totalMobilidade} mobilidade
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Contratos Confirmados</span>
-            <FileCheck size={18} className="text-indigo-400" />
+            <span className="text-xs font-semibold uppercase tracking-wider">Quantidade de Sinais</span>
+            <FileSearch size={16} className="text-sky-400" />
           </div>
-          <p className="mt-3 text-3xl font-extrabold text-indigo-300">{totalContratosConfirmados.toLocaleString("pt-BR")}</p>
-          <p className="mt-1 text-xs text-slate-400">Contratos assinados e empenhos</p>
+          <p className="mt-2 text-2xl font-extrabold text-sky-300">{quantidadeSinais.toLocaleString("pt-BR")}</p>
+          <p className="mt-1 text-[11px] text-slate-400">Editais e dispensas em curso</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Sinais de Mobilidade</span>
-            <Car size={18} className="text-emerald-400" />
+            <span className="text-xs font-semibold uppercase tracking-wider">Quantidade de Contratos</span>
+            <FileCheck size={16} className="text-indigo-400" />
           </div>
-          <p className="mt-3 text-3xl font-extrabold text-emerald-300">{totalMobilidade.toLocaleString("pt-BR")}</p>
-          <p className="mt-1 text-xs text-slate-400">Transporte, frotas, ambulâncias e táxi</p>
+          <p className="mt-2 text-2xl font-extrabold text-indigo-300">{quantidadeContratos.toLocaleString("pt-BR")}</p>
+          <p className="mt-1 text-[11px] text-slate-400">Contratos assinados e empenhos</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Vínculos por CNPJ</span>
-            <Building size={18} className="text-[var(--ciano)]" />
+            <span className="text-xs font-semibold uppercase tracking-wider">Instituições com Vínculo Exato</span>
+            <Building size={16} className="text-[var(--ciano)]" />
           </div>
-          <p className="mt-3 text-3xl font-extrabold text-[var(--ciano)]">{totalVinculados.toLocaleString("pt-BR")}</p>
-          <p className="mt-1 text-xs text-slate-400">Ligados a hospitais do CNES</p>
+          <p className="mt-2 text-2xl font-extrabold text-[var(--ciano)]">{instituicoesComVinculoExato}</p>
+          <p className="mt-1 text-[11px] text-slate-400">{processosVinculados} processos via CNPJ unívoco</p>
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div className="flex items-center justify-between text-slate-400">
+            <span className="text-xs font-semibold uppercase tracking-wider">Registros sem Vínculo</span>
+            <Building size={16} className="text-slate-400" />
+          </div>
+          <p className="mt-2 text-2xl font-extrabold text-slate-200">{registrosSemVinculo.toLocaleString("pt-BR")}</p>
+          <p className="mt-1 text-[11px] text-slate-400">Visíveis no painel geral de compras</p>
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div className="flex items-center justify-between text-slate-400">
+            <span className="text-xs font-semibold uppercase tracking-wider">Registros Ambíguos</span>
+            <AlertTriangle size={16} className="text-amber-400" />
+          </div>
+          <p className="mt-2 text-2xl font-extrabold text-amber-300">{registrosAmbiguos.toLocaleString("pt-BR")}</p>
+          <p className="mt-1 text-[11px] text-slate-400">Órgãos centrais sem vínculo forçado</p>
         </div>
       </div>
 
@@ -277,9 +307,9 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
               onChange={(e) => atualizarFiltroVinculo(e.target.value as "TODOS" | "VINCULADOS" | "SEM_VINCULO")}
               className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2.5 text-sm text-white focus:border-[var(--ciano)] focus:outline-none"
             >
-              <option value="TODOS">Vínculo: Todos os Registros</option>
-              <option value="VINCULADOS">Apenas Vinculados ao CNES</option>
-              <option value="SEM_VINCULO">Apenas Não Vinculados (Geral)</option>
+              <option value="TODOS">Vínculo: Todos os Processos ({totalProcessos.toLocaleString("pt-BR")})</option>
+              <option value="VINCULADOS">Instituições com Vínculo Exato ({instituicoesComVinculoExato} inst. · {processosVinculados} proc.)</option>
+              <option value="SEM_VINCULO">Registros sem Vínculo / Órgãos Centrais ({registrosSemVinculo.toLocaleString("pt-BR")})</option>
             </select>
           </div>
 

@@ -21,6 +21,12 @@ export interface ResumoCoberturaFontes {
   totalContasComerciais: number;
   coberturaCNES: number;
   coberturaPNCP: number;
+  totalProcessosPNCP: number;
+  totalSinaisPNCP: number;
+  totalContratosPNCP: number;
+  totalPNCPRegistrosVinculados: number;
+  totalPNCPRegistrosSemVinculo: number;
+  totalInstituicoesVinculoExatoPNCP: number;
   coberturaBrasilAPI: number;
   coberturaANS: number;
   coberturaIBGE: number;
@@ -35,7 +41,10 @@ export async function obterMetricasCoberturaFontes(): Promise<ResumoCoberturaFon
     totalInstituicoesDemo,
     totalContasComerciais,
     totalPNCP,
-    totalPNCPVinculados,
+    totalSinaisPNCP,
+    totalContratosPNCP,
+    totalPNCPRegistrosVinculados,
+    totalInstituicoesVinculoExatoPNCP,
     totalBrasilAPI,
     totalANS,
     totalIBGE,
@@ -46,7 +55,10 @@ export async function obterMetricasCoberturaFontes(): Promise<ResumoCoberturaFon
     prisma.instituicao.count({ where: { tipoDado: "DEMONSTRACAO" } }),
     prisma.contaComercial.count(),
     prisma.sinalContratacaoPublica.count(),
+    prisma.sinalContratacaoPublica.count({ where: { categoriaPNCP: "SINAL_CONTRATACAO" } }),
+    prisma.sinalContratacaoPublica.count({ where: { categoriaPNCP: "CONTRATO_CONFIRMADO" } }),
     prisma.sinalContratacaoPublica.count({ where: { instituicaoId: { not: null } } }),
+    prisma.instituicao.count({ where: { sinaisContratacaoPublica: { some: {} } } }),
     prisma.enriquecimentoCNPJTerceiro.count(),
     prisma.operadoraANS.count(),
     prisma.municipioIBGE.count(),
@@ -60,7 +72,8 @@ export async function obterMetricasCoberturaFontes(): Promise<ResumoCoberturaFon
   // Instituições com correspondência de CNPJ no BrasilAPI
   // Cada CNPJ no BrasilAPI corresponde a uma ou mais unidades
   const coberturaBrasilAPI = totalBrasilAPI; // 2.996 CNPJs únicos prioritários (100% dos prioritários)
-  const coberturaPNCP = totalPNCPVinculados; // 156 instituições diretamente vinculadas a compras públicas
+  const coberturaPNCP = totalInstituicoesVinculoExatoPNCP; // 1 instituição com vínculo exato por CNPJ oficial
+  const totalPNCPRegistrosSemVinculo = Math.max(0, totalPNCP - totalPNCPRegistrosVinculados); // 2.014 registros gerais preservados sem vínculo forçado
 
   // Operadoras com correspondência no universo hospitalar
   const coberturaANS = 31; // estabelecimentos com vínculo cadastral de operadora no CNES
@@ -100,10 +113,10 @@ export async function obterMetricasCoberturaFontes(): Promise<ResumoCoberturaFon
       tipoDado: "FATO_PUBLICO",
       statusDisponibilidade: "ATIVA",
       totalRegistros: totalPNCP,
-      coberturaInstituicoes: totalPNCPVinculados,
-      porcentagemCobertura: Number(((totalPNCPVinculados / totalInstituicoesReais) * 100).toFixed(1)),
+      coberturaInstituicoes: coberturaPNCP,
+      porcentagemCobertura: Number(((coberturaPNCP / totalInstituicoesReais) * 100).toFixed(2)),
       dataUltimaAtualizacao: obterDataLote("pncp"),
-      descricao: "Mapeamento oficial de editais, dispensas e contratos confirmados da saúde e mobilidade em São Paulo.",
+      descricao: "Mapeamento oficial de 2.018 processos de compras públicas da saúde e mobilidade em São Paulo (544 sinais e 1.474 contratos confirmados). 1 instituição com vínculo exato por CNPJ (4 processos); 2.014 registros gerais preservados sem vínculo institucional forçado para órgãos centrais ou ambíguos.",
       urlOficial: "https://pncp.gov.br/",
     },
     {
@@ -178,6 +191,12 @@ export async function obterMetricasCoberturaFontes(): Promise<ResumoCoberturaFon
     totalContasComerciais,
     coberturaCNES: totalInstituicoesReais,
     coberturaPNCP,
+    totalProcessosPNCP: totalPNCP,
+    totalSinaisPNCP,
+    totalContratosPNCP,
+    totalPNCPRegistrosVinculados,
+    totalPNCPRegistrosSemVinculo,
+    totalInstituicoesVinculoExatoPNCP,
     coberturaBrasilAPI,
     coberturaANS,
     coberturaIBGE,
