@@ -4,12 +4,14 @@ import {
   BotMessageSquare,
   Briefcase,
   Building2,
+  CalendarClock,
   Database,
   Gauge,
   Landmark,
   Network,
   Radar,
   Scale,
+  UserCheck,
 } from "lucide-react";
 import "./globals.css";
 import { obterModoDados } from "@/domain/modo-dados";
@@ -24,8 +26,10 @@ export const dynamic = "force-dynamic";
 const navegacao = [
   { href: "/", rotulo: "Visão Geral", icone: Gauge },
   { href: "/contas", rotulo: "Contas Comerciais", icone: Briefcase },
+  { href: "/planejamento-comercial", rotulo: "Planejamento Comercial", icone: CalendarClock },
   { href: "/radar", rotulo: "Radar de Clientes", icone: Radar },
   { href: "/organizacoes", rotulo: "Organizações", icone: Network },
+  { href: "/revisao-contatos", rotulo: "Revisão de Contatos", icone: UserCheck },
   { href: "/contratacoes-publicas", rotulo: "Contratações Públicas", icone: Landmark },
   { href: "/cobertura", rotulo: "Cobertura de Dados", icone: Database },
   { href: "/assistente", rotulo: "Assistente Comercial", icone: BotMessageSquare },

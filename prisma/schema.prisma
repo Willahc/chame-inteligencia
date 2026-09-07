@@ -270,6 +270,9 @@ model ContatoProfissional {
   grupoEconomicoId      String?
   instituicaoId         String?
   escopoContato         EscopoContato  @default(ORGANIZACAO)
+  statusDecisao         StatusDecisaoContato @default(APROVADO)
+  historicoDecisoes     HistoricoDecisaoContato[]
+  acoesPlanejadas       AcaoComercialPlanejada[]
   grupoEconomico        GrupoEconomico? @relation(fields: [grupoEconomicoId], references: [id], onDelete: Cascade)
   instituicao           Instituicao?   @relation(fields: [instituicaoId], references: [id], onDelete: Cascade)
   fonte                 Fonte          @relation(fields: [fonteId], references: [id])
@@ -277,7 +280,38 @@ model ContatoProfissional {
   @@index([grupoEconomicoId, ativo])
   @@index([instituicaoId, ativo])
   @@index([statusRevisao])
+  @@index([statusDecisao])
   @@index([tipoDado, confianca])
+}
+
+enum StatusDecisaoContato {
+  PENDENTE
+  APROVADO
+  REJEITADO
+  DESATIVADO
+  REVISAR_NOVAMENTE
+}
+
+model HistoricoDecisaoContato {
+  id                 String               @id @default(cuid())
+  contatoId          String
+  usuario            String
+  dataHora           DateTime             @default(now())
+  acao               String               // APROVAR, REJEITAR, DESATIVAR, REVISAR_NOVAMENTE, CORRIGIR_CLASSIFICACAO
+  statusAnterior     StatusDecisaoContato?
+  statusNovo         StatusDecisaoContato
+  motivo             String?
+  valorAnterior      String?              // JSON
+  valorNovo          String?              // JSON
+  observacao         String?
+  evidenciaUtilizada String?
+  criadoEm           DateTime             @default(now())
+
+  contato            ContatoProfissional  @relation(fields: [contatoId], references: [id], onDelete: Cascade)
+
+  @@index([contatoId, dataHora])
+  @@index([usuario])
+  @@index([statusNovo])
 }
 
 model Evidencia {
@@ -460,10 +494,109 @@ model ContaComercial {
   atualizadoEm              DateTime                 @updatedAt
   grupoEconomico            GrupoEconomico?          @relation(fields: [grupoEconomicoId], references: [id])
   historicoAbordagem        RegistroAbordagem[]
+  solicitacoesBusca         SolicitacaoBuscaResponsaveis[]
+  acoesPlanejadas           AcaoComercialPlanejada[]
 
   @@index([tipoDado, faixaPrioridadeComercial])
   @@index([indicePrioridadeComercial])
   @@index([resultadoAbordagem])
+}
+
+enum StatusAcaoComercial {
+  RASCUNHO
+  AGUARDANDO_REVISAO
+  APROVADA_PARA_SIMULACAO
+  SIMULADA
+  CANCELADA
+  BLOQUEADA
+}
+
+enum CanalAcaoComercial {
+  EMAIL
+  TELEFONE
+  WHATSAPP
+  LINKEDIN
+  OUTRO
+}
+
+model AcaoComercialPlanejada {
+  id                    String                 @id @default(cuid())
+  contaComercialId      String
+  contatoProfissionalId String?
+  tipoAcao              String
+  canal                 CanalAcaoComercial
+  objetivo              String
+  mensagemRascunho      String
+  status                StatusAcaoComercial    @default(RASCUNHO)
+  criadoPor             String
+  criadoEm              DateTime               @default(now())
+  atualizadoEm          DateTime               @updatedAt
+  aprovadoPor           String?
+  aprovadoEm            DateTime?
+  justificativa         String?
+  tipoDado              TipoDado               @default(DEMONSTRACAO)
+  statusRevisao         StatusRevisao          @default(PENDENTE)
+
+  contaComercial        ContaComercial         @relation(fields: [contaComercialId], references: [id], onDelete: Cascade)
+  contatoProfissional   ContatoProfissional?   @relation(fields: [contatoProfissionalId], references: [id], onDelete: SetNull)
+  historico             HistoricoAcaoComercial[]
+
+  @@index([contaComercialId, status])
+  @@index([contatoProfissionalId])
+  @@index([status])
+  @@index([tipoDado, canal])
+}
+
+model HistoricoAcaoComercial {
+  id               String               @id @default(cuid())
+  acaoComercialId  String
+  acao             String
+  usuario          String
+  dataHora         DateTime             @default(now())
+  statusAnterior   StatusAcaoComercial?
+  novoStatus       StatusAcaoComercial
+  justificativa    String
+  observacao       String?
+  evidencias       String?
+  conta            String
+  contato          String?
+  canal            CanalAcaoComercial
+  criadoEm         DateTime             @default(now())
+
+  acaoComercial    AcaoComercialPlanejada @relation(fields: [acaoComercialId], references: [id], onDelete: Cascade)
+
+  @@index([acaoComercialId, dataHora])
+  @@index([novoStatus])
+}
+
+enum StatusSolicitacaoBusca {
+  PENDENTE
+  EM_PESQUISA
+  AGUARDANDO_REVISAO
+  CONCLUIDA
+  SEM_CONTATO_VERIFICAVEL
+  ERRO
+}
+
+model SolicitacaoBuscaResponsaveis {
+  id                      String                 @id
+  contaComercialId        String
+  usuarioSolicitante      String                 @default("analista-comercial")
+  status                  StatusSolicitacaoBusca @default(PENDENTE)
+  dataSolicitacao         DateTime               @default(now())
+  fontesConsultadas       String                 @default("[]")
+  termosBusca             String                 @default("[]")
+  resultado               String?
+  confianca               NivelConfianca         @default(MEDIA)
+  limitacoes              String?
+  contatosEncontradosJson String?
+  criadoEm                DateTime               @default(now())
+  atualizadoEm            DateTime               @updatedAt
+
+  contaComercial          ContaComercial         @relation(fields: [contaComercialId], references: [id], onDelete: Cascade)
+
+  @@index([contaComercialId, dataSolicitacao])
+  @@index([status])
 }
 
 model RegistroAbordagem {

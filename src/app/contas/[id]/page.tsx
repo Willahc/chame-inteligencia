@@ -3,9 +3,9 @@ import { notFound } from "next/navigation";
 import {
   AlertCircle,
   ArrowLeft,
-  Bot,
   Building2,
   Calendar,
+  CalendarClock,
   Car,
   Clock3,
   ExternalLink,
@@ -14,8 +14,6 @@ import {
   Info,
   Landmark,
   MapPin,
-  ShieldCheck,
-  Sparkles,
   UserCheck,
   Users,
 } from "lucide-react";
@@ -36,6 +34,8 @@ import { SecaoDadosCadastraisTerceiros } from "@/components/secao-dados-cadastra
 import { SecaoDadosCadastraisANS } from "@/components/secao-dados-cadastrais-ans";
 import { SecaoContextoIBGE } from "@/components/secao-contexto-ibge";
 import { SecaoIndicadoresMTE } from "@/components/secao-indicadores-mte";
+import { SecaoBuscaResponsaveis } from "@/components/secao-busca-responsaveis";
+import { obterUltimaPesquisaConta, listarPesquisasConta } from "@/domain/busca-responsaveis/servico-busca";
 import type { TipoDado } from "@/domain/tipos";
 import type { ResultadoAbordagem } from "@/domain/contas";
 import { obterContaComercial } from "@/lib/dados";
@@ -103,6 +103,18 @@ export default async function DetalheContaPage({
     }
   }
 
+  // Filtragem estrita de governança (Gate 7): apenas contatos ativos, aprovados e com fonte válida
+  const contatosAprovadosExibicao = contatos.filter((c) => {
+    const ehAtivo = c.ativo;
+    const ehAprovado = c.statusRevisao === "APROVADA" || (c as unknown as { statusDecisao?: string }).statusDecisao === "APROVADO";
+    const temFonte = Boolean(c.fonte && c.fonte.nome);
+    const modoCompativel =
+      modo === "MODO_DEMONSTRACAO"
+        ? c.tipoDado === "DEMONSTRACAO"
+        : c.tipoDado !== "DEMONSTRACAO";
+    return ehAtivo && ehAprovado && temFonte && modoCompativel;
+  });
+
   const todasEvidencias = instituicoes.flatMap((inst) => inst.evidencias);
   const munConta = cidadesArray[0] || "São Paulo";
 
@@ -111,6 +123,8 @@ export default async function DetalheContaPage({
     operadoraANS,
     contextoIBGE,
     indicadoresMTE,
+    ultimaPesquisa,
+    historicoPesquisas,
   ] = await Promise.all([
     obterEnriquecimentoTerceiroPorCnes(instituicoes[0]?.cnes),
     conta.cnpjPrincipal
@@ -118,6 +132,8 @@ export default async function DetalheContaPage({
       : obterOperadoraANSPorCnes(instituicoes[0]?.cnes ?? ""),
     obterContextoGeograficoIBGE(munConta),
     obterIndicadoresMTEMunicipio(munConta, "SP"),
+    obterUltimaPesquisaConta(conta.id),
+    listarPesquisasConta(conta.id),
   ]);
 
   // Sinais de contratação pública PNCP vinculados estritamente por CNPJ exato
@@ -538,20 +554,28 @@ export default async function DetalheContaPage({
 
       {/* Seção de Contatos Profissionais */}
       <section aria-label="Contatos profissionais auditados" className="painel mt-6 p-6">
-        <div className="flex items-center justify-between border-b border-[var(--borda)] pb-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--borda)] pb-3">
           <div className="flex items-center gap-2">
             <Users size={20} className="text-[var(--azul)]" />
             <h2 className="text-base font-bold text-[var(--azul-profundo)]">
-              Contatos Profissionais Públicos Auditados ({contatos.length})
+              Contatos Profissionais Públicos Auditados ({contatosAprovadosExibicao.length})
             </h2>
           </div>
-          <span className="text-xs text-[var(--texto-suave)]">
-            Apenas dados corporativos públicos com proveniência e revisão
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-[var(--texto-suave)]">
+              Apenas contatos aprovados por revisão humana com proveniência válida
+            </span>
+            <Link
+              href="/planejamento-comercial"
+              className="inline-flex items-center gap-1 rounded bg-[var(--ciano)]/10 px-2.5 py-1 text-xs font-semibold text-[var(--azul-profundo)] hover:bg-[var(--ciano)]/20 transition"
+            >
+              <CalendarClock size={13} /> Planejar Ação &rarr;
+            </Link>
+          </div>
         </div>
 
         <div className="mt-4">
-          <ContatosProfissionais contatos={contatos} />
+          <ContatosProfissionais contatos={contatosAprovadosExibicao} />
         </div>
       </section>
 
@@ -632,58 +656,13 @@ export default async function DetalheContaPage({
         </section>
       </div>
 
-      {/* Seção de Preparação Futura - Gate "Buscar Responsáveis" (Etapa 8) */}
-      <section aria-label="Preparação futura" className="painel mt-6 p-6 border-dashed border-2">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--borda)] pb-3">
-          <div className="flex items-center gap-2">
-            <Bot size={20} className="text-violet-600" />
-            <div>
-              <h2 className="text-base font-bold text-[var(--azul-profundo)]">
-                Prospecção Ativa de Decisores (Planejado — Gate Futuro)
-              </h2>
-              <p className="text-xs text-[var(--texto-suave)]">
-                Fluxo de enriquecimento humano supervisionado para identificação de lideranças em
-                compras e facilities.
-              </p>
-            </div>
-          </div>
-          <button
-            type="button"
-            disabled
-            className="inline-flex cursor-not-allowed items-center gap-2 rounded-xl bg-slate-200 px-4 py-2 text-xs font-bold text-slate-500 shadow-none"
-          >
-            <Sparkles size={15} />
-            <span>Buscar responsáveis (Desativado)</span>
-          </button>
-        </div>
-
-        <div className="mt-4 grid gap-4 lg:grid-cols-2">
-          <div className="rounded-xl bg-slate-50 p-4 text-xs space-y-2">
-            <p className="font-bold text-[var(--azul-profundo)]">
-              Fluxo Arquitetural Planejado:
-            </p>
-            <p className="font-mono text-[11px] text-violet-800 bg-white p-2 rounded border border-[var(--borda)]">
-              SOLICITADO → PESQUISANDO → CANDIDATOS_ENCONTRADOS → REVISAO_HUMANA → PERSISTIDO
-            </p>
-            <p className="text-[var(--texto-suave)]">
-              O futuro assistente só apresentará candidatos para validação humana prévia. Nenhuma
-              informação será gravada sem verificação e aprovação de um analista.
-            </p>
-          </div>
-
-          <div className="rounded-xl bg-amber-50/70 p-4 text-xs space-y-1.5 border border-amber-200/60 text-amber-950">
-            <p className="font-bold flex items-center gap-1.5 text-amber-900">
-              <ShieldCheck size={16} /> Salvaguardas Éticas Obrigatórias:
-            </p>
-            <ul className="list-disc pl-4 space-y-1 text-[var(--texto-suave)]">
-              <li>Proibição estrita de automação de WhatsApp, discadores ou disparos de campanhas.</li>
-              <li>Não coleta e não trata dados pessoais (telefones móveis pessoais ou e-mails privados).</li>
-              <li>Apenas dados corporativos públicos com URL de evidência auditável.</li>
-              <li>Necessária revisão humana antes de qualquer abordagem.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <SecaoBuscaResponsaveis
+        contaId={conta.id}
+        contaNome={conta.nome}
+        tipoDadoConta={conta.tipoDado}
+        ultimaPesquisa={ultimaPesquisa}
+        historicoPesquisas={historicoPesquisas}
+      />
 
       {/* Evidências Rastreáveis */}
       {todasEvidencias.length > 0 && (

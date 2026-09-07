@@ -28,3 +28,67 @@ export async function salvarResultadoAbordagem(formData: FormData) {
   revalidatePath("/contas");
   revalidatePath(`/contas/${contaComercialId}`);
 }
+
+export async function executarBuscaResponsaveis(formData: FormData) {
+  const { solicitarBuscaResponsaveis } = await import("@/domain/busca-responsaveis/servico-busca");
+  const contaComercialId = formData.get("contaComercialId") as string;
+  const usuarioSolicitante = (formData.get("usuarioSolicitante") as string) || "analista-comercial";
+  const confirmacao = formData.get("confirmacao") === "true" || formData.get("confirmacao") === "on";
+
+  if (!contaComercialId) {
+    throw new Error("Identificador da conta comercial é obrigatório.");
+  }
+
+  await solicitarBuscaResponsaveis({
+    contaComercialId,
+    usuarioSolicitante,
+    confirmacaoUsuario: confirmacao,
+  });
+
+  revalidatePath("/contas");
+  revalidatePath(`/contas/${contaComercialId}`);
+}
+
+export async function aprovarContatoAcao(formData: FormData) {
+  const { ativarContatoSupervisionado } = await import("@/domain/busca-responsaveis/servico-busca");
+  const contatoId = formData.get("contatoId") as string;
+  const contaComercialId = formData.get("contaComercialId") as string;
+  const usuarioAprovador = (formData.get("usuarioAprovador") as string) || "analista-comercial";
+
+  if (!contatoId) {
+    throw new Error("Identificador do contato é obrigatório.");
+  }
+
+  await ativarContatoSupervisionado({
+    contatoId,
+    usuarioAprovador,
+  });
+
+  revalidatePath("/contas");
+  if (contaComercialId) {
+    revalidatePath(`/contas/${contaComercialId}`);
+  }
+}
+
+export async function desativarContatoAcao(formData: FormData) {
+  const { desativarContatoSupervisionado } = await import("@/domain/busca-responsaveis/servico-busca");
+  const contatoId = formData.get("contatoId") as string;
+  const contaComercialId = formData.get("contaComercialId") as string;
+  const motivo = (formData.get("motivo") as string) || "Removido por revisão humana.";
+  const usuario = (formData.get("usuario") as string) || "analista-comercial";
+
+  if (!contatoId) {
+    throw new Error("Identificador do contato é obrigatório.");
+  }
+
+  await desativarContatoSupervisionado({
+    contatoId,
+    motivo,
+    usuario,
+  });
+
+  revalidatePath("/contas");
+  if (contaComercialId) {
+    revalidatePath(`/contas/${contaComercialId}`);
+  }
+}
