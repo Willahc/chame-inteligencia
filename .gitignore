@@ -37,6 +37,13 @@ yarn-error.log*
 # banco local de desenvolvimento
 /prisma/dev.db
 /prisma/dev.db-journal
+
+# banco descartavel de testes
+/prisma/.test/
+/prisma/*.test.db*
+*.test.db
+*.test.db-*
+
 /data/raw/
 /data/processed/
 

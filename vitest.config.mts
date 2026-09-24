@@ -11,9 +11,15 @@ export default defineConfig({
   test: {
     environment: "node",
     fileParallelism: false,
+    globalSetup: [fileURLToPath(new URL("./src/test/global-setup.ts", import.meta.url))],
+    setupFiles: [fileURLToPath(new URL("./src/test/setup-test-db.ts", import.meta.url))],
+    env: {
+      DATABASE_URL: "file:./.test/test.db",
+    },
     include: ["src/**/*.test.ts"],
     coverage: {
       reporter: ["text", "html"],
     },
   },
 });
+
