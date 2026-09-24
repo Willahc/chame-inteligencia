@@ -406,37 +406,37 @@ export function PlanejamentoComercialClient({
     switch (status) {
       case "RASCUNHO":
         return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-slate-500/10 px-2 py-0.5 text-xs font-semibold text-slate-300 border border-slate-500/20">
+          <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700">
             <Clock size={11} /> {ROTULOS_STATUS_ACAO.RASCUNHO}
           </span>
         );
       case "AGUARDANDO_REVISAO":
         return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-semibold text-amber-300 border border-amber-500/20">
+          <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-800">
             <Clock size={11} /> {ROTULOS_STATUS_ACAO.AGUARDANDO_REVISAO}
           </span>
         );
       case "APROVADA_PARA_SIMULACAO":
         return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-cyan-500/10 px-2 py-0.5 text-xs font-semibold text-cyan-300 border border-cyan-500/20">
+          <span className="inline-flex items-center gap-1 rounded-full border border-sky-200 bg-sky-50 px-2 py-0.5 text-xs font-semibold text-sky-800">
             <CheckCircle2 size={11} /> {ROTULOS_STATUS_ACAO.APROVADA_PARA_SIMULACAO}
           </span>
         );
       case "SIMULADA":
         return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-semibold text-emerald-300 border border-emerald-500/20">
+          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-800">
             <Play size={11} /> {ROTULOS_STATUS_ACAO.SIMULADA}
           </span>
         );
       case "CANCELADA":
         return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-red-500/10 px-2 py-0.5 text-xs font-semibold text-red-300 border border-red-500/20">
+          <span className="inline-flex items-center gap-1 rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-800">
             <X size={11} /> {ROTULOS_STATUS_ACAO.CANCELADA}
           </span>
         );
       case "BLOQUEADA":
         return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/10 px-2 py-0.5 text-xs font-semibold text-rose-300 border border-rose-500/20">
+          <span className="inline-flex items-center gap-1 rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-800">
             <Ban size={11} /> {ROTULOS_STATUS_ACAO.BLOQUEADA}
           </span>
         );
@@ -446,16 +446,16 @@ export function PlanejamentoComercialClient({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="planejamento-claro space-y-6">
       {/* Banner de Governança Gate 8 */}
-      <div className="rounded-xl border border-amber-500/30 bg-amber-950/20 p-4 text-sm text-amber-200 shadow-sm backdrop-blur-sm">
+      <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 shadow-sm">
         <div className="flex items-start gap-3">
-          <ShieldAlert className="mt-0.5 size-5 shrink-0 text-amber-400" />
+          <ShieldAlert className="mt-0.5 size-5 shrink-0 text-amber-600" />
           <div className="space-y-1">
-            <p className="font-semibold text-amber-300">
+            <p className="font-semibold text-amber-900">
               GATE 8 — Automação Comercial Controlada (Modo Preparação e Simulação)
             </p>
-            <p className="text-xs text-amber-200/90 leading-relaxed">
+            <p className="text-xs text-amber-800 leading-relaxed">
               Este ambiente é restrito ao <strong>planejamento, simulação sandbox e aprovação humana</strong>.
               Nenhuma mensagem real, disparo de e-mail, chamada telefônica, mensagem de WhatsApp ou requisição a
               CRMs ou APIs de redes sociais é transmitida. O estado canônico do sistema e o banco de dados
@@ -470,21 +470,21 @@ export function PlanejamentoComercialClient({
         <div
           className={`flex items-center justify-between rounded-xl border p-4 text-sm ${
             feedback.tipo === "sucesso"
-              ? "border-emerald-500/30 bg-emerald-950/20 text-emerald-200"
-              : "border-red-500/30 bg-red-950/20 text-red-200"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-900"
+              : "border-red-200 bg-red-50 text-red-900"
           }`}
         >
           <div className="flex items-center gap-2">
             {feedback.tipo === "sucesso" ? (
-              <CheckCircle2 className="size-4 shrink-0 text-emerald-400" />
+              <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
             ) : (
-              <AlertCircle className="size-4 shrink-0 text-red-400" />
+              <AlertCircle className="size-4 shrink-0 text-red-600" />
             )}
             <span>{feedback.texto}</span>
           </div>
           <button
             onClick={() => setFeedback(null)}
-            className="text-slate-400 hover:text-white"
+            className="text-slate-400 hover:text-slate-700"
             title="Fechar"
           >
             <X size={16} />
@@ -495,14 +495,14 @@ export function PlanejamentoComercialClient({
       {/* Cabeçalho da Página e Botão de Novo Planejamento */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <CalendarClock className="size-6 text-[var(--ciano)]" />
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--azul-profundo)] flex items-center gap-2.5">
+            <CalendarClock className="size-6 text-[var(--azul)]" />
             Planejamento Comercial
           </h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-[var(--texto-suave)]">
             Estruturação de abordagens B2B com prévia auditada e simulação assistida
             {modoDados === "MODO_DEMONSTRACAO" && (
-              <span className="ml-2 inline-flex items-center rounded bg-amber-500/20 px-2 py-0.5 text-xs font-semibold text-amber-300">
+              <span className="rotulo-demo ml-2">
                 MODO DEMONSTRAÇÃO
               </span>
             )}
@@ -514,7 +514,7 @@ export function PlanejamentoComercialClient({
             setNovaContaId(contasDropdown[0]?.id || "");
             setModalNovoAberto(true);
           }}
-          className="inline-flex items-center gap-2 rounded-lg bg-[var(--ciano)] px-4 py-2.5 text-sm font-semibold text-[var(--azul-profundo)] shadow-sm hover:brightness-110 transition"
+          className="inline-flex items-center gap-2 rounded-lg bg-[var(--azul-profundo)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[var(--azul)] transition"
         >
           <Plus size={16} />
           Novo Planejamento de Ação
@@ -524,33 +524,33 @@ export function PlanejamentoComercialClient({
       {/* KPI Cards */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <div className="rounded-xl border border-[var(--borda)] bg-[var(--superficie)] p-4 shadow-sm">
-          <p className="text-xs font-medium text-slate-400">Total de Ações</p>
-          <p className="mt-1 text-2xl font-bold text-white">{resumo.total}</p>
+          <p className="text-xs font-medium text-[var(--texto-suave)]">Total de Ações</p>
+          <p className="mt-1 text-2xl font-bold text-[var(--azul-profundo)]">{resumo.total}</p>
         </div>
 
         <div className="rounded-xl border border-[var(--borda)] bg-[var(--superficie)] p-4 shadow-sm">
-          <p className="text-xs font-medium text-slate-400">Rascunhos</p>
-          <p className="mt-1 text-2xl font-bold text-slate-300">{resumo.rascunhos}</p>
+          <p className="text-xs font-medium text-[var(--texto-suave)]">Rascunhos</p>
+          <p className="mt-1 text-2xl font-bold text-slate-700">{resumo.rascunhos}</p>
         </div>
 
         <div className="rounded-xl border border-[var(--borda)] bg-[var(--superficie)] p-4 shadow-sm">
-          <p className="text-xs font-medium text-slate-400">Aguardando Revisão</p>
-          <p className="mt-1 text-2xl font-bold text-amber-400">{resumo.aguardandoRevisao}</p>
+          <p className="text-xs font-medium text-[var(--texto-suave)]">Aguardando Revisão</p>
+          <p className="mt-1 text-2xl font-bold text-amber-700">{resumo.aguardandoRevisao}</p>
         </div>
 
         <div className="rounded-xl border border-[var(--borda)] bg-[var(--superficie)] p-4 shadow-sm">
-          <p className="text-xs font-medium text-slate-400">Aprovadas p/ Simulação</p>
-          <p className="mt-1 text-2xl font-bold text-cyan-400">{resumo.aprovadasParaSimulacao}</p>
+          <p className="text-xs font-medium text-[var(--texto-suave)]">Aprovadas p/ Simulação</p>
+          <p className="mt-1 text-2xl font-bold text-[var(--azul)]">{resumo.aprovadasParaSimulacao}</p>
         </div>
 
         <div className="rounded-xl border border-[var(--borda)] bg-[var(--superficie)] p-4 shadow-sm">
-          <p className="text-xs font-medium text-slate-400">Simuladas (Sandbox)</p>
-          <p className="mt-1 text-2xl font-bold text-emerald-400">{resumo.simuladas}</p>
+          <p className="text-xs font-medium text-[var(--texto-suave)]">Simuladas (Sandbox)</p>
+          <p className="mt-1 text-2xl font-bold text-emerald-700">{resumo.simuladas}</p>
         </div>
 
         <div className="rounded-xl border border-[var(--borda)] bg-[var(--superficie)] p-4 shadow-sm">
-          <p className="text-xs font-medium text-slate-400">Canceladas / Bloqueadas</p>
-          <p className="mt-1 text-2xl font-bold text-rose-400">
+          <p className="text-xs font-medium text-[var(--texto-suave)]">Canceladas / Bloqueadas</p>
+          <p className="mt-1 text-2xl font-bold text-rose-700">
             {resumo.canceladas + resumo.bloqueadas}
           </p>
         </div>
@@ -565,7 +565,7 @@ export function PlanejamentoComercialClient({
             placeholder="Buscar por conta comercial, contato ou objetivo..."
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
-            className="w-full rounded-lg border border-[var(--borda)] bg-black/20 pl-9 pr-4 py-2 text-sm text-white placeholder-slate-500 focus:border-[var(--ciano)] focus:outline-none"
+            className="w-full rounded-lg border border-[var(--borda)] bg-white pl-9 pr-4 py-2 text-sm text-[var(--texto)] placeholder:text-slate-400 focus:border-[var(--ciano)] focus:outline-none"
           />
         </div>
 
@@ -573,7 +573,7 @@ export function PlanejamentoComercialClient({
           <select
             value={statusFiltro}
             onChange={(e) => setStatusFiltro(e.target.value as StatusAcaoComercial | "TODOS")}
-            className="rounded-lg border border-[var(--borda)] bg-black/20 px-3 py-2 text-sm text-white focus:border-[var(--ciano)] focus:outline-none"
+            className="rounded-lg border border-[var(--borda)] bg-white px-3 py-2 text-sm text-[var(--texto)] focus:border-[var(--ciano)] focus:outline-none"
           >
             <option value="TODOS">Todos os Status</option>
             <option value="RASCUNHO">Rascunho</option>
@@ -587,7 +587,7 @@ export function PlanejamentoComercialClient({
           <select
             value={canalFiltro}
             onChange={(e) => setCanalFiltro(e.target.value as CanalAcaoComercial | "TODOS")}
-            className="rounded-lg border border-[var(--borda)] bg-black/20 px-3 py-2 text-sm text-white focus:border-[var(--ciano)] focus:outline-none"
+            className="rounded-lg border border-[var(--borda)] bg-white px-3 py-2 text-sm text-[var(--texto)] focus:border-[var(--ciano)] focus:outline-none"
           >
             <option value="TODOS">Todos os Canais</option>
             <option value="EMAIL">E-mail Corporativo</option>
@@ -600,7 +600,7 @@ export function PlanejamentoComercialClient({
           <select
             value={prioridadeFiltro}
             onChange={(e) => setPrioridadeFiltro(e.target.value)}
-            className="rounded-lg border border-[var(--borda)] bg-black/20 px-3 py-2 text-sm text-white focus:border-[var(--ciano)] focus:outline-none"
+            className="rounded-lg border border-[var(--borda)] bg-white px-3 py-2 text-sm text-[var(--texto)] focus:border-[var(--ciano)] focus:outline-none"
           >
             <option value="TODAS">Todas as Prioridades</option>
             <option value="ALTA">Prioridade Alta</option>
@@ -613,8 +613,8 @@ export function PlanejamentoComercialClient({
       {/* Tabela de Ações Comerciais Planejadas */}
       <div className="rounded-xl border border-[var(--borda)] bg-[var(--superficie)] overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="border-b border-[var(--borda)] bg-black/20 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          <table className="w-full text-left text-sm text-[var(--texto)]">
+            <thead className="border-b border-[var(--borda)] bg-slate-50 text-xs font-semibold text-[var(--texto-suave)] uppercase tracking-wider">
               <tr>
                 <th className="px-4 py-3">Conta Comercial</th>
                 <th className="px-4 py-3">Contato Alvo</th>
@@ -628,19 +628,19 @@ export function PlanejamentoComercialClient({
             <tbody className="divide-y divide-[var(--borda)]">
               {acoesFiltradas.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="p-8 text-center text-slate-500">
+                  <td colSpan={7} className="p-8 text-center text-[var(--texto-suave)]">
                     Nenhuma ação comercial planejada encontrada para os filtros selecionados.
                   </td>
                 </tr>
               ) : (
                 acoesFiltradas.map((acao) => (
-                  <tr key={acao.id} className="hover:bg-white/[0.02] transition">
+                  <tr key={acao.id} className="hover:bg-slate-50/50 transition">
                     {/* Conta Comercial */}
                     <td className="px-4 py-3">
                       <div>
                         <Link
                           href={`/contas/${acao.contaComercial.id}`}
-                          className="font-medium text-white hover:text-[var(--ciano)] transition"
+                          className="font-semibold text-[var(--azul)] hover:underline transition"
                         >
                           {acao.contaComercial.nome}
                         </Link>
@@ -648,15 +648,15 @@ export function PlanejamentoComercialClient({
                           <span
                             className={`rounded px-1.5 py-0.2 text-[10px] font-semibold ${
                               acao.contaComercial.faixaPrioridadeComercial === "ALTA"
-                                ? "bg-red-500/20 text-red-300"
+                                ? "bg-red-50 text-red-700 border border-red-200"
                                 : acao.contaComercial.faixaPrioridadeComercial === "MEDIA"
-                                ? "bg-amber-500/20 text-amber-300"
-                                : "bg-blue-500/20 text-blue-300"
+                                ? "bg-amber-50 text-amber-800 border border-amber-200"
+                                : "bg-blue-50 text-blue-700 border border-blue-200"
                             }`}
                           >
                             Prioridade {acao.contaComercial.faixaPrioridadeComercial} ({acao.contaComercial.indicePrioridadeComercial})
                           </span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs text-[var(--texto-suave)]">
                             {acao.contaComercial.cidades}
                           </span>
                         </div>
@@ -667,20 +667,20 @@ export function PlanejamentoComercialClient({
                     <td className="px-4 py-3">
                       {acao.contatoProfissional ? (
                         <div>
-                          <p className="font-medium text-slate-200">
+                          <p className="font-medium text-[var(--texto)]">
                             {acao.contatoProfissional.nome}
                           </p>
-                          <p className="text-xs text-slate-400">
+                          <p className="text-xs text-[var(--texto-suave)]">
                             {acao.contatoProfissional.cargo || "Cargo não informado"}
                           </p>
                           <div className="flex items-center gap-1 mt-0.5">
-                            <span className="text-[10px] text-slate-500">
+                            <span className="text-[10px] text-[var(--texto-suave)]">
                               Inferência: {acao.contatoProfissional.papelComercial || "Contato Corporativo"}
                             </span>
                           </div>
                         </div>
                       ) : (
-                        <span className="text-xs text-slate-500 italic">
+                        <span className="text-xs text-[var(--texto-suave)] italic">
                           Abordagem direta na conta
                         </span>
                       )}
@@ -690,16 +690,16 @@ export function PlanejamentoComercialClient({
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1.5">
                         {getCanalIcon(acao.canal)}
-                        <span className="text-xs font-medium text-slate-200">
+                        <span className="text-xs font-medium text-[var(--texto)]">
                           {ROTULOS_CANAIS_ACAO[acao.canal]}
                         </span>
                       </div>
-                      <p className="text-[10px] text-amber-400/80 mt-0.5">Sem envio externo</p>
+                      <p className="text-[10px] text-amber-700 mt-0.5">Sem envio externo</p>
                     </td>
 
                     {/* Objetivo */}
                     <td className="px-4 py-3 max-w-xs">
-                      <p className="truncate text-xs text-slate-300" title={acao.objetivo}>
+                      <p className="truncate text-xs text-[var(--texto)]" title={acao.objetivo}>
                         {acao.objetivo}
                       </p>
                     </td>
@@ -708,7 +708,7 @@ export function PlanejamentoComercialClient({
                     <td className="px-4 py-3">{getStatusBadge(acao.status)}</td>
 
                     {/* Criação / Responsável */}
-                    <td className="px-4 py-3 text-xs text-slate-400">
+                    <td className="px-4 py-3 text-xs text-[var(--texto-suave)]">
                       <div>
                         <span>{new Date(acao.criadoEm).toLocaleDateString("pt-BR")}</span>
                         <p className="text-slate-500 text-[11px]">{acao.criadoPor}</p>
@@ -721,7 +721,7 @@ export function PlanejamentoComercialClient({
                         <button
                           onClick={() => abrirPrevia(acao)}
                           title="Ver Prévia Completa"
-                          className="rounded p-1.5 text-slate-400 hover:bg-white/10 hover:text-white transition"
+                          className="rounded p-1.5 text-slate-500 hover:bg-slate-100 hover:text-[var(--azul)] transition"
                         >
                           <Eye size={15} />
                         </button>
@@ -729,7 +729,7 @@ export function PlanejamentoComercialClient({
                         <button
                           onClick={() => abrirHistorico(acao)}
                           title="Ver Histórico Auditável"
-                          className="rounded p-1.5 text-slate-400 hover:bg-white/10 hover:text-white transition"
+                          className="rounded p-1.5 text-slate-500 hover:bg-slate-100 hover:text-[var(--azul)] transition"
                         >
                           <History size={15} />
                         </button>
@@ -747,7 +747,7 @@ export function PlanejamentoComercialClient({
                               type="submit"
                               disabled={submetendo}
                               title="Submeter para Revisão"
-                              className="rounded bg-amber-500/20 px-2 py-1 text-xs font-semibold text-amber-300 hover:bg-amber-500/30 transition disabled:opacity-50"
+                              className="rounded border border-amber-300 bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-800 hover:bg-amber-100 transition disabled:opacity-50"
                             >
                               Submeter
                             </button>
@@ -762,7 +762,7 @@ export function PlanejamentoComercialClient({
                               setModalAprovacaoAberto(true);
                             }}
                             title="Aprovar para Simulação"
-                            className="rounded bg-cyan-500/20 px-2 py-1 text-xs font-semibold text-cyan-300 hover:bg-cyan-500/30 transition"
+                            className="rounded border border-cyan-300 bg-cyan-50 px-2 py-1 text-xs font-semibold text-cyan-800 hover:bg-cyan-100 transition"
                           >
                             Aprovar
                           </button>
@@ -777,7 +777,7 @@ export function PlanejamentoComercialClient({
                               setModalSimulacaoAberto(true);
                             }}
                             title="Executar Simulação Controlada"
-                            className="rounded bg-emerald-500/20 px-2 py-1 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/30 transition flex items-center gap-1"
+                            className="rounded border border-emerald-300 bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-800 hover:bg-emerald-100 transition flex items-center gap-1"
                           >
                             <Play size={12} /> Simular
                           </button>
@@ -792,7 +792,7 @@ export function PlanejamentoComercialClient({
                                 setModalCancelamentoAberto(true);
                               }}
                               title="Cancelar Ação"
-                              className="rounded p-1.5 text-slate-500 hover:bg-red-500/10 hover:text-red-400 transition"
+                              className="rounded p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 transition"
                             >
                               <X size={15} />
                             </button>
@@ -804,7 +804,7 @@ export function PlanejamentoComercialClient({
                                 setModalBloqueioAberto(true);
                               }}
                               title="Bloquear Ação por Governança"
-                              className="rounded p-1.5 text-slate-500 hover:bg-rose-500/10 hover:text-rose-400 transition"
+                              className="rounded p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition"
                             >
                               <Ban size={15} />
                             </button>
@@ -823,7 +823,7 @@ export function PlanejamentoComercialClient({
       {/* MODAL 1: Novo Planejamento de Ação Comercial */}
       {modalNovoAberto && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-2xl rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+          <div className="superficie-escura relative w-full max-w-2xl rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-[var(--borda)] pb-3">
               <div className="flex items-center gap-2">
                 <CalendarClock className="size-5 text-[var(--ciano)]" />
@@ -1031,7 +1031,7 @@ export function PlanejamentoComercialClient({
       {/* MODAL 2: Prévia Completa da Ação */}
       {modalPreviaAberto && previaCarregada && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-2xl rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+          <div className="superficie-escura relative w-full max-w-2xl rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-[var(--borda)] pb-3">
               <div className="flex items-center gap-2">
                 <Eye className="size-5 text-[var(--ciano)]" />
@@ -1144,7 +1144,7 @@ export function PlanejamentoComercialClient({
       {/* MODAL 3: Aprovação Humana Formal */}
       {modalAprovacaoAberto && acaoFoco && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-4">
+          <div className="superficie-escura relative w-full max-w-md rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-[var(--borda)] pb-3">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="size-5 text-cyan-400" />
@@ -1225,7 +1225,7 @@ export function PlanejamentoComercialClient({
       {/* MODAL 4: Execução de Simulação Controlada */}
       {modalSimulacaoAberto && acaoFoco && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-lg rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-4">
+          <div className="superficie-escura relative w-full max-w-lg rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-[var(--borda)] pb-3">
               <div className="flex items-center gap-2">
                 <Play className="size-5 text-emerald-400" />
@@ -1337,7 +1337,7 @@ export function PlanejamentoComercialClient({
       {/* MODAL 5: Cancelamento de Ação */}
       {modalCancelamentoAberto && acaoFoco && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-4">
+          <div className="superficie-escura relative w-full max-w-md rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-[var(--borda)] pb-3">
               <div className="flex items-center gap-2">
                 <X className="size-5 text-red-400" />
@@ -1417,7 +1417,7 @@ export function PlanejamentoComercialClient({
       {/* MODAL 6: Bloqueio de Ação por Governança */}
       {modalBloqueioAberto && acaoFoco && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-4">
+          <div className="superficie-escura relative w-full max-w-md rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-[var(--borda)] pb-3">
               <div className="flex items-center gap-2">
                 <Ban className="size-5 text-rose-400" />
@@ -1496,7 +1496,7 @@ export function PlanejamentoComercialClient({
       {/* MODAL 7: Histórico Auditável Imutável */}
       {modalHistoricoAberto && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-2xl rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+          <div className="superficie-escura relative w-full max-w-2xl rounded-2xl border border-[var(--borda)] bg-[var(--azul-profundo)] p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-[var(--borda)] pb-3">
               <div className="flex items-center gap-2">
                 <History className="size-5 text-[var(--ciano)]" />

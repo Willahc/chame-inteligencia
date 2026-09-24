@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { exigirPermissaoOperador } from "@/lib/operador-local";
 import {
   criarRascunhoAcao,
   editarRascunhoAcao,
@@ -21,7 +22,7 @@ export async function criarRascunhoAction(formData: FormData) {
   const canal = formData.get("canal") as CanalAcaoComercial;
   const objetivo = formData.get("objetivo") as string;
   const mensagemRascunho = formData.get("mensagemRascunho") as string;
-  const criadoPor = (formData.get("criadoPor") as string) || "analista-comercial";
+  const criadoPor = exigirPermissaoOperador("PLANEJAR_ACOES");
   const justificativaInicial = (formData.get("justificativaInicial") as string) || undefined;
 
   if (!contaComercialId || !tipoAcao || !canal || !objetivo || !mensagemRascunho) {
@@ -53,7 +54,7 @@ export async function editarRascunhoAction(formData: FormData) {
   const contatoProfissionalIdRaw = formData.get("contatoProfissionalId");
   const contatoProfissionalId =
     contatoProfissionalIdRaw === "" ? null : (contatoProfissionalIdRaw as string | undefined);
-  const usuario = (formData.get("usuario") as string) || "analista-comercial";
+  const usuario = exigirPermissaoOperador("PLANEJAR_ACOES");
   const justificativa = (formData.get("justificativa") as string) || "Edição de rascunho de planejamento.";
 
   if (!id) {
@@ -76,7 +77,7 @@ export async function editarRascunhoAction(formData: FormData) {
 
 export async function submeterRevisaoAction(formData: FormData) {
   const id = formData.get("id") as string;
-  const usuario = (formData.get("usuario") as string) || "analista-comercial";
+  const usuario = exigirPermissaoOperador("PLANEJAR_ACOES");
   const justificativa = (formData.get("justificativa") as string) || "Submissão para revisão humana formal.";
 
   if (!id) {
@@ -94,7 +95,7 @@ export async function submeterRevisaoAction(formData: FormData) {
 
 export async function aprovarSimulacaoAction(formData: FormData) {
   const id = formData.get("id") as string;
-  const usuarioAprovador = (formData.get("usuarioAprovador") as string) || "gestor-comercial";
+  const usuarioAprovador = exigirPermissaoOperador("APROVAR_ACOES");
   const justificativa = (formData.get("justificativa") as string) || "Aprovação humana para ambiente de simulação.";
   const observacao = (formData.get("observacao") as string) || undefined;
 
@@ -114,7 +115,7 @@ export async function aprovarSimulacaoAction(formData: FormData) {
 
 export async function executarSimulacaoAction(formData: FormData) {
   const id = formData.get("id") as string;
-  const usuario = (formData.get("usuario") as string) || "operador-sandbox";
+  const usuario = exigirPermissaoOperador("SIMULAR_INTEGRACOES");
   const justificativa = (formData.get("justificativa") as string) || "Execução de teste funcional controlado.";
   const observacao = (formData.get("observacao") as string) || undefined;
 
@@ -134,7 +135,7 @@ export async function executarSimulacaoAction(formData: FormData) {
 
 export async function cancelarAcaoAction(formData: FormData) {
   const id = formData.get("id") as string;
-  const usuario = (formData.get("usuario") as string) || "analista-comercial";
+  const usuario = exigirPermissaoOperador("PLANEJAR_ACOES");
   const justificativa = (formData.get("justificativa") as string) || "Cancelamento de planejamento comercial.";
   const observacao = (formData.get("observacao") as string) || undefined;
 
@@ -154,7 +155,7 @@ export async function cancelarAcaoAction(formData: FormData) {
 
 export async function bloquearAcaoAction(formData: FormData) {
   const id = formData.get("id") as string;
-  const usuario = (formData.get("usuario") as string) || "auditor-compliance";
+  const usuario = exigirPermissaoOperador("REVISAR_CONTATOS");
   const justificativa = (formData.get("justificativa") as string) || "Bloqueio preventivo de conformidade.";
   const observacao = (formData.get("observacao") as string) || undefined;
 

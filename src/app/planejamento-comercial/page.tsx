@@ -156,7 +156,7 @@ export default async function PlanejamentoComercialPage() {
   }));
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full px-3 py-5 sm:px-6 lg:px-8 lg:py-8 2xl:px-10">
       <PlanejamentoComercialClient
         acoesIniciais={acoesIniciais}
         resumo={resumo}

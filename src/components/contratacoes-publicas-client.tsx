@@ -158,7 +158,7 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
   const registrosRestantes = Math.max(0, sinaisFiltrados.length - (inicio + paginados.length));
 
   return (
-    <div className="space-y-8">
+    <div className="pncp-claro space-y-8">
       {/* Header */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-3">
@@ -166,10 +166,10 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
             <Landmark size={24} aria-hidden="true" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white lg:text-3xl">
+            <h1 className="text-2xl font-bold tracking-tight text-[var(--azul-profundo)] lg:text-3xl">
               Portal Nacional de Contratações Públicas (PNCP)
             </h1>
-            <p className="text-sm text-slate-300">
+            <p className="text-sm text-[var(--texto-suave)]">
               Editais, dispensas de licitação e contratos formalizados da saúde e mobilidade no estado de SP
             </p>
           </div>
@@ -177,18 +177,18 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
       </div>
 
       {/* Aviso de Governança */}
-      <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-5 backdrop-blur-md">
+      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
         <div className="flex items-start gap-3.5">
-          <AlertTriangle className="mt-0.5 size-5 shrink-0 text-amber-400" aria-hidden="true" />
-          <div className="space-y-2 text-sm text-amber-200/90">
-            <p className="font-semibold text-amber-300">
+          <AlertTriangle className="mt-0.5 size-5 shrink-0 text-amber-600" aria-hidden="true" />
+          <div className="space-y-2 text-sm text-amber-900">
+            <p className="font-semibold text-amber-900">
               Aviso de Governança — Registros Oficiais PNCP (Fato Público)
             </p>
-            <p className="leading-relaxed text-slate-300">
+            <p className="leading-relaxed text-amber-950">
               Estes dados são extraídos diretamente do <strong>Portal Nacional de Contratações Públicas (PNCP)</strong>.
               A ferramenta distingue rigorosamente entre <strong>quantidade de sinais</strong> (544 editais/dispensas em curso) e <strong>quantidade de contratos</strong> (1.474 contratos e empenhos formalizados).
             </p>
-            <p className="leading-relaxed text-slate-300">
+            <p className="leading-relaxed text-amber-950">
               <strong>Vínculo estrito por CNPJ:</strong> há exatamente <strong>1 instituição com vínculo exato</strong> por CNPJ unívoco (Hospital do Servidor Público Estadual / IAMSPE, com 4 processos vinculados).
               Os demais <strong>2.014 registros sem vínculo direto</strong> pertencem a órgãos públicos gerais ou centrais (como a Secretaria de Estado da Saúde de SP, que administra mais de 200 hospitais, Secretarias Municipais e Fazenda). Por serem <strong>registros ambíguos</strong> em nível de estabelecimento hospitalar individual, foram preservados estritamente como <em>sem vínculo</em>, garantindo que correspondências aproximadas nunca sejam promovidas a fato oficial.
             </p>
@@ -198,66 +198,66 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
 
       {/* Cards de Métricas */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="rounded-2xl border border-[var(--borda)] bg-white p-4 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500">
             <span className="text-xs font-semibold uppercase tracking-wider">Total de Processos</span>
             <FileSearch size={16} className="text-slate-400" />
           </div>
-          <p className="mt-2 text-2xl font-extrabold text-white">{totalProcessos.toLocaleString("pt-BR")}</p>
-          <p className="mt-1 text-[11px] text-slate-400">
+          <p className="mt-2 text-2xl font-extrabold text-[var(--azul-profundo)]">{totalProcessos.toLocaleString("pt-BR")}</p>
+          <p className="mt-1 text-[11px] text-[var(--texto-suave)]">
             {quantidadeSinais} sinais · {quantidadeContratos} contratos · {totalMobilidade} mobilidade
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="rounded-2xl border border-[var(--borda)] bg-white p-4 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500">
             <span className="text-xs font-semibold uppercase tracking-wider">Quantidade de Sinais</span>
-            <FileSearch size={16} className="text-sky-400" />
+            <FileSearch size={16} className="text-sky-600" />
           </div>
-          <p className="mt-2 text-2xl font-extrabold text-sky-300">{quantidadeSinais.toLocaleString("pt-BR")}</p>
-          <p className="mt-1 text-[11px] text-slate-400">Editais e dispensas em curso</p>
+          <p className="mt-2 text-2xl font-extrabold text-sky-800">{quantidadeSinais.toLocaleString("pt-BR")}</p>
+          <p className="mt-1 text-[11px] text-[var(--texto-suave)]">Editais e dispensas em curso</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="rounded-2xl border border-[var(--borda)] bg-white p-4 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500">
             <span className="text-xs font-semibold uppercase tracking-wider">Quantidade de Contratos</span>
-            <FileCheck size={16} className="text-indigo-400" />
+            <FileCheck size={16} className="text-indigo-600" />
           </div>
-          <p className="mt-2 text-2xl font-extrabold text-indigo-300">{quantidadeContratos.toLocaleString("pt-BR")}</p>
-          <p className="mt-1 text-[11px] text-slate-400">Contratos assinados e empenhos</p>
+          <p className="mt-2 text-2xl font-extrabold text-indigo-800">{quantidadeContratos.toLocaleString("pt-BR")}</p>
+          <p className="mt-1 text-[11px] text-[var(--texto-suave)]">Contratos assinados e empenhos</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="rounded-2xl border border-[var(--borda)] bg-white p-4 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500">
             <span className="text-xs font-semibold uppercase tracking-wider">Instituições com Vínculo Exato</span>
-            <Building size={16} className="text-[var(--ciano)]" />
+            <Building size={16} className="text-[var(--azul)]" />
           </div>
-          <p className="mt-2 text-2xl font-extrabold text-[var(--ciano)]">{instituicoesComVinculoExato}</p>
-          <p className="mt-1 text-[11px] text-slate-400">{processosVinculados} processos via CNPJ unívoco</p>
+          <p className="mt-2 text-2xl font-extrabold text-[var(--azul)]">{instituicoesComVinculoExato}</p>
+          <p className="mt-1 text-[11px] text-[var(--texto-suave)]">{processosVinculados} processos via CNPJ unívoco</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="rounded-2xl border border-[var(--borda)] bg-white p-4 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500">
             <span className="text-xs font-semibold uppercase tracking-wider">Registros sem Vínculo</span>
             <Building size={16} className="text-slate-400" />
           </div>
-          <p className="mt-2 text-2xl font-extrabold text-slate-200">{registrosSemVinculo.toLocaleString("pt-BR")}</p>
-          <p className="mt-1 text-[11px] text-slate-400">Visíveis no painel geral de compras</p>
+          <p className="mt-2 text-2xl font-extrabold text-slate-800">{registrosSemVinculo.toLocaleString("pt-BR")}</p>
+          <p className="mt-1 text-[11px] text-[var(--texto-suave)]">Visíveis no painel geral de compras</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="rounded-2xl border border-[var(--borda)] bg-white p-4 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500">
             <span className="text-xs font-semibold uppercase tracking-wider">Registros Ambíguos</span>
-            <AlertTriangle size={16} className="text-amber-400" />
+            <AlertTriangle size={16} className="text-amber-600" />
           </div>
-          <p className="mt-2 text-2xl font-extrabold text-amber-300">{registrosAmbiguos.toLocaleString("pt-BR")}</p>
-          <p className="mt-1 text-[11px] text-slate-400">Órgãos centrais sem vínculo forçado</p>
+          <p className="mt-2 text-2xl font-extrabold text-amber-800">{registrosAmbiguos.toLocaleString("pt-BR")}</p>
+          <p className="mt-1 text-[11px] text-[var(--texto-suave)]">Órgãos centrais sem vínculo forçado</p>
         </div>
       </div>
 
       {/* Painel de Filtros */}
-      <div className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-5">
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+      <div className="space-y-4 rounded-2xl border border-[var(--borda)] bg-white p-5 shadow-sm">
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--texto-suave)]">
           <SlidersHorizontal size={14} /> Filtros de Pesquisa e Segmentação
         </div>
 
@@ -270,7 +270,7 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
               placeholder="Buscar por objeto, órgão, fornecedor, CNPJ ou ID..."
               value={busca}
               onChange={(e) => atualizarBusca(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-400 focus:border-[var(--ciano)] focus:outline-none"
+              className="w-full rounded-xl border border-[var(--borda)] bg-white pl-10 pr-4 py-2.5 text-sm text-[var(--texto)] placeholder:text-slate-400 focus:border-[var(--ciano)] focus:outline-none"
             />
           </div>
 
@@ -279,7 +279,7 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
             <select
               value={filtroCategoria}
               onChange={(e) => atualizarFiltroCategoria(e.target.value as "TODAS" | "SINAIS" | "CONTRATOS")}
-              className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2.5 text-sm text-white focus:border-[var(--ciano)] focus:outline-none"
+              className="w-full rounded-xl border border-[var(--borda)] bg-white px-3 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--ciano)] focus:outline-none"
             >
               <option value="TODAS">Todas as Categorias</option>
               <option value="SINAIS">Apenas Sinais de Compra (Editais/Dispensas)</option>
@@ -292,7 +292,7 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
             <select
               value={filtroMobilidade}
               onChange={(e) => atualizarFiltroMobilidade(e.target.value as "TODOS" | "MOBILIDADE" | "SEM_MOBILIDADE")}
-              className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2.5 text-sm text-white focus:border-[var(--ciano)] focus:outline-none"
+              className="w-full rounded-xl border border-[var(--borda)] bg-white px-3 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--ciano)] focus:outline-none"
             >
               <option value="TODOS">Mobilidade: Todos</option>
               <option value="MOBILIDADE">Apenas com Sinal de Mobilidade</option>
@@ -305,7 +305,7 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
             <select
               value={filtroVinculo}
               onChange={(e) => atualizarFiltroVinculo(e.target.value as "TODOS" | "VINCULADOS" | "SEM_VINCULO")}
-              className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2.5 text-sm text-white focus:border-[var(--ciano)] focus:outline-none"
+              className="w-full rounded-xl border border-[var(--borda)] bg-white px-3 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--ciano)] focus:outline-none"
             >
               <option value="TODOS">Vínculo: Todos os Processos ({totalProcessos.toLocaleString("pt-BR")})</option>
               <option value="VINCULADOS">Instituições com Vínculo Exato ({instituicoesComVinculoExato} inst. · {processosVinculados} proc.)</option>
@@ -318,7 +318,7 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
             <select
               value={filtroMunicipio}
               onChange={(e) => atualizarFiltroMunicipio(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2.5 text-sm text-white focus:border-[var(--ciano)] focus:outline-none"
+              className="w-full rounded-xl border border-[var(--borda)] bg-white px-3 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--ciano)] focus:outline-none"
             >
               <option value="TODOS">Todos os Municípios</option>
               {municipiosDisponiveis.map((m) => (
@@ -334,7 +334,7 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
             <select
               value={filtroModalidade}
               onChange={(e) => atualizarFiltroModalidade(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2.5 text-sm text-white focus:border-[var(--ciano)] focus:outline-none"
+              className="w-full rounded-xl border border-[var(--borda)] bg-white px-3 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--ciano)] focus:outline-none"
             >
               <option value="TODOS">Todas as Modalidades / Tipos</option>
               {modalidadesDisponiveis.map((m) => (
@@ -347,7 +347,7 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
         </div>
 
         {/* Resumo da filtragem */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-3 text-xs text-slate-400">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--borda)] pt-3 text-xs text-[var(--texto-suave)]">
           <span>
             Mostrando <strong>{sinaisFiltrados.length > 0 ? inicio + 1 : 0}</strong> a{" "}
             <strong>{Math.min(inicio + itensPorPagina, sinaisFiltrados.length)}</strong> de{" "}
@@ -362,10 +362,10 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
       {/* Lista de Registros */}
       <div className="space-y-4">
         {paginados.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-white/15 p-12 text-center">
-            <Filter className="mx-auto size-8 text-slate-500" />
-            <p className="mt-3 text-base font-medium text-white">Nenhum processo encontrado para os filtros selecionados</p>
-            <p className="mt-1 text-xs text-slate-400">Tente ajustar os critérios de busca ou redefinir os filtros</p>
+          <div className="rounded-2xl border border-dashed border-[var(--borda)] bg-white p-12 text-center shadow-sm">
+            <Filter className="mx-auto size-8 text-slate-400" />
+            <p className="mt-3 text-base font-medium text-[var(--azul-profundo)]">Nenhum processo encontrado para os filtros selecionados</p>
+            <p className="mt-1 text-xs text-[var(--texto-suave)]">Tente ajustar os critérios de busca ou redefinir os filtros</p>
           </div>
         ) : (
           paginados.map((sinal) => {
@@ -374,12 +374,12 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
             return (
               <div
                 key={sinal.id}
-                className={`rounded-2xl border p-5 transition hover:border-white/20 ${
+                className={`rounded-2xl border p-5 transition shadow-sm ${
                   isContrato
-                    ? "border-indigo-500/30 bg-indigo-950/15"
+                    ? "border-indigo-200 bg-indigo-50/40"
                     : sinal.sinalMobilidade
-                    ? "border-emerald-500/30 bg-emerald-950/15"
-                    : "border-white/10 bg-white/5"
+                    ? "border-emerald-200 bg-emerald-50/40"
+                    : "border-[var(--borda)] bg-white"
                 }`}
               >
                 <div className="space-y-4">
@@ -389,19 +389,19 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
                       <span
                         className={`rounded-lg px-2.5 py-1 text-xs font-bold ${
                           isContrato
-                            ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
-                            : "bg-white/10 text-white"
+                            ? "bg-indigo-100 text-indigo-800 border border-indigo-200"
+                            : "bg-slate-100 text-slate-800 border border-slate-200"
                         }`}
                       >
                         {isContrato ? `Contrato Confirmado · ${sinal.modalidade}` : `Sinal PNCP · ${sinal.modalidade}`}
                       </span>
 
-                      <span className="text-xs text-slate-400">
+                      <span className="text-xs text-[var(--texto-suave)]">
                         Publicado em {formatarData(sinal.dataPublicacao)}
                       </span>
 
                       {sinal.sinalMobilidade && (
-                        <span className="flex items-center gap-1.5 rounded-lg bg-emerald-500/20 px-2.5 py-1 text-xs font-bold text-emerald-300 border border-emerald-500/30">
+                        <span className="flex items-center gap-1.5 rounded-lg bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-800 border border-emerald-200">
                           <Car size={13} aria-hidden="true" />
                           Mobilidade / Transporte
                         </span>
@@ -409,10 +409,10 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="rounded-md border border-blue-400/30 px-2 py-0.5 text-[11px] font-medium text-blue-300">
+                      <span className="rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-800">
                         {sinal.tipoDado}
                       </span>
-                      <span className="rounded-md border border-emerald-400/30 px-2 py-0.5 text-[11px] font-medium text-emerald-300">
+                      <span className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-800">
                         Confiança: {sinal.confianca}
                       </span>
                     </div>
@@ -420,70 +420,70 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
 
                   {/* Objeto */}
                   <div>
-                    <h2 className="text-base font-semibold leading-snug text-white">
+                    <h2 className="text-base font-semibold leading-snug text-[var(--azul-profundo)]">
                       {sinal.objeto}
                     </h2>
                   </div>
 
                   {/* Detalhes do Órgão e Localização */}
-                  <div className="grid grid-cols-1 gap-3 text-xs text-slate-300 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="grid grid-cols-1 gap-3 text-xs text-[var(--texto)] sm:grid-cols-2 lg:grid-cols-3">
                     <div className="flex items-center gap-2">
                       <Building className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
                       <div>
-                        <p className="font-medium text-white">{sinal.razaoSocialOrgao || "Órgão público não nomeado"}</p>
-                        <p className="text-slate-400">CNPJ: {formatarCNPJ(sinal.cnpjOrgao)}</p>
+                        <p className="font-medium text-[var(--azul-profundo)]">{sinal.razaoSocialOrgao || "Órgão público não nomeado"}</p>
+                        <p className="text-[var(--texto-suave)]">CNPJ: {formatarCNPJ(sinal.cnpjOrgao)}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <MapPin className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
                       <div>
-                        <p className="font-medium text-white">
+                        <p className="font-medium text-[var(--azul-profundo)]">
                           {sinal.municipio ? `${sinal.municipio}, ${sinal.uf || "SP"}` : "Localização sob consulta"}
                         </p>
-                        <p className="text-slate-400">ID PNCP: {sinal.identificadorPNCP}</p>
+                        <p className="text-[var(--texto-suave)]">ID PNCP: {sinal.identificadorPNCP}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between sm:justify-start lg:justify-end gap-2">
                       <div className="text-right sm:text-left lg:text-right">
-                        <p className="text-[11px] uppercase tracking-wider text-slate-400">
+                        <p className="text-[11px] uppercase tracking-wider text-[var(--texto-suave)]">
                           {isContrato ? "Valor do Contrato" : "Valor Estimado"}
                         </p>
-                        <p className="text-sm font-bold text-white">{formatarMoeda(sinal.valorEstimado)}</p>
+                        <p className="text-sm font-bold text-[var(--azul-profundo)]">{formatarMoeda(sinal.valorEstimado)}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Detalhe de Fornecedor (quando contrato confirmado) */}
                   {sinal.fornecedorNome && (
-                    <div className="rounded-xl bg-white/5 p-3 text-xs text-slate-300 border border-white/5">
-                      <span className="font-semibold text-slate-200">Fornecedor Contratado: </span>
-                      <span className="text-white font-medium">{sinal.fornecedorNome}</span>
+                    <div className="rounded-xl bg-slate-50 p-3 text-xs text-slate-700 border border-slate-200">
+                      <span className="font-semibold text-slate-800">Fornecedor Contratado: </span>
+                      <span className="text-[var(--azul-profundo)] font-medium">{sinal.fornecedorNome}</span>
                       {sinal.fornecedorCNPJ && (
-                        <span className="text-slate-400"> · CNPJ: {formatarCNPJ(sinal.fornecedorCNPJ)}</span>
+                        <span className="text-[var(--texto-suave)]"> · CNPJ: {formatarCNPJ(sinal.fornecedorCNPJ)}</span>
                       )}
                     </div>
                   )}
 
                   {/* Vínculo Institucional e Botão PNCP */}
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/5 pt-3">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--borda)] pt-3">
                     <div>
                       {sinal.instituicao ? (
                         <div className="flex items-center gap-2 text-xs">
-                          <span className="text-slate-400">Vínculo Oficial por CNPJ:</span>
+                          <span className="text-[var(--texto-suave)]">Vínculo Oficial por CNPJ:</span>
                           <Link
                             href={`/instituicoes/${sinal.instituicao.slug}`}
-                            className="font-semibold text-[var(--ciano)] hover:underline"
+                            className="font-semibold text-[var(--azul)] hover:underline"
                           >
                             {sinal.instituicao.nome}
                           </Link>
-                          <span className="rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-medium text-emerald-300">
+                          <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-medium text-emerald-800 border border-emerald-200">
                             {sinal.metodoVinculo}
                           </span>
                         </div>
                       ) : (
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-[var(--texto-suave)]">
                           Sem correspondência direta no cadastro do CNES (Licitação Municipal / Órgão Público Geral)
                         </span>
                       )}
@@ -494,7 +494,7 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
                         href={sinal.urlPublica}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:bg-white/10 hover:text-white"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--borda)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--texto)] transition hover:bg-slate-50 hover:text-[var(--azul)]"
                       >
                         Ver no Portal PNCP
                         <ExternalLink size={13} aria-hidden="true" />
@@ -510,13 +510,13 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
 
       {/* Controles de Paginação */}
       {totalPaginas > 1 && (
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-xs">
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[var(--borda)] bg-white p-4 text-xs shadow-sm">
           <div className="flex items-center gap-2">
             <button
               type="button"
               disabled={pagina <= 1}
               onClick={() => setPagina(1)}
-              className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 font-semibold text-slate-300 hover:bg-white/10 disabled:opacity-30"
+              className="rounded-lg border border-[var(--borda)] bg-white px-3 py-1.5 font-semibold text-[var(--texto)] hover:bg-slate-50 disabled:opacity-30"
             >
               Primeira
             </button>
@@ -524,13 +524,13 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
               type="button"
               disabled={pagina <= 1}
               onClick={() => setPagina((p) => Math.max(1, p - 1))}
-              className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 font-semibold text-slate-300 hover:bg-white/10 disabled:opacity-30"
+              className="inline-flex items-center gap-1 rounded-lg border border-[var(--borda)] bg-white px-3 py-1.5 font-semibold text-[var(--texto)] hover:bg-slate-50 disabled:opacity-30"
             >
               <ChevronLeft size={14} /> Anterior
             </button>
           </div>
 
-          <span className="text-slate-300">
+          <span className="text-[var(--texto-suave)]">
             Página <strong>{pagina}</strong> de <strong>{totalPaginas}</strong> ({sinaisFiltrados.length} processos)
           </span>
 
@@ -539,7 +539,7 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
               type="button"
               disabled={pagina >= totalPaginas}
               onClick={() => setPagina((p) => Math.min(totalPaginas, p + 1))}
-              className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 font-semibold text-slate-300 hover:bg-white/10 disabled:opacity-30"
+              className="inline-flex items-center gap-1 rounded-lg border border-[var(--borda)] bg-white px-3 py-1.5 font-semibold text-[var(--texto)] hover:bg-slate-50 disabled:opacity-30"
             >
               Próxima <ChevronRight size={14} />
             </button>
@@ -547,7 +547,7 @@ export function ContratacoesPublicasClient({ sinais }: ContratacoesPublicasClien
               type="button"
               disabled={pagina >= totalPaginas}
               onClick={() => setPagina(totalPaginas)}
-              className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 font-semibold text-slate-300 hover:bg-white/10 disabled:opacity-30"
+              className="rounded-lg border border-[var(--borda)] bg-white px-3 py-1.5 font-semibold text-[var(--texto)] hover:bg-slate-50 disabled:opacity-30"
             >
               Última
             </button>

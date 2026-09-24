@@ -14,7 +14,7 @@ export default async function CoberturaPage() {
   const dados = await obterMetricasCoberturaFontes();
 
   return (
-    <main className="container mx-auto max-w-7xl px-4 py-8 lg:px-8">
+    <div className="w-full px-3 py-5 sm:px-6 lg:px-8 lg:py-8 2xl:px-10">
       <CabecalhoPagina
         titulo="Cobertura de Dados e Painel de Fontes"
         descricao="Auditoria completa da abrangência, proveniência e rastreabilidade dos conjuntos de dados públicos e oficiais integrados."
@@ -23,6 +23,6 @@ export default async function CoberturaPage() {
       <div className="mt-7">
         <CoberturaClient dados={dados} />
       </div>
-    </main>
+    </div>
   );
 }

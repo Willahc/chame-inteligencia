@@ -80,7 +80,7 @@ export default async function InstituicaoPage({ params }: PageProps<"/instituico
           <div className="mt-6"><h3 className="text-sm font-bold">Serviços registrados</h3><div className="mt-3 flex flex-wrap gap-2">{instituicao.servicos.map((servico) => <span className="rounded-lg bg-[var(--ciano-claro)] px-3 py-1.5 text-sm font-medium text-[var(--azul)]" key={servico.id}>{servico.nome}</span>)}</div></div>
         </article>
 
-        <article className="painel flex flex-col justify-between bg-[var(--azul-profundo)] p-6 text-white">
+        <article className="painel superficie-escura flex flex-col justify-between bg-[var(--azul-profundo)] p-6 text-white">
           <div><p className="text-sm font-semibold text-slate-300">Índice de Prioridade Hospitalar</p><div className="mt-5 flex items-end gap-3"><span className="text-6xl font-bold tracking-[-0.06em]">{indice?.total ?? 0}</span><span className="pb-2 text-sm text-slate-400">de 100</span></div><div className="mt-4"><ClasseFaixa faixa={(indice?.faixa ?? "BAIXA") as FaixaPrioridade} /></div></div>
           <div className="mt-8 border-t border-white/10 pt-4 text-xs leading-5 text-slate-400">Motor determinístico · versão {indice?.versao ?? "não calculada"}<br />Calculado em {indice?.calculadoEm.toLocaleDateString("pt-BR") ?? "—"}</div>
         </article>

@@ -18,9 +18,9 @@ import {
   rotuloConfianca,
   rotuloStatusRevisao,
 } from "./rotulos";
-import type { ContaComercialCompleta } from "@/lib/dados";
+import type { ContaComercialResumo } from "@/lib/dados";
 
-export function ContasClient({ contas }: { contas: ContaComercialCompleta[] }) {
+export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
   const [texto, setTexto] = useState("");
   const [faixa, setFaixa] = useState("");
   const [natureza, setNatureza] = useState("");

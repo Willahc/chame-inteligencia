@@ -46,6 +46,18 @@ export async function listarInstituicoes(modo = obterModoDados()): Promise<Insti
     orderBy: { indice: { total: "desc" } },
   });
 }
+
+/**
+ * Limite de dados do assistente: o resultado nunca inclui contatos
+ * profissionais, embora a consulta canônica seja reutilizada para preservar
+ * a compatibilidade com Prisma 6.12 + SQLite.
+ */
+export async function listarInstituicoesParaAssistente(
+  modo = obterModoDados(),
+): Promise<InstituicaoAssistente[]> {
+  return (await listarInstituicoes(modo)).map(mapearParaAssistente);
+}
+
 export async function obterInstituicaoPorSlug(slug: string, modo = obterModoDados()): Promise<InstituicaoCompleta | null> {
   return prisma.instituicao.findFirst({ where: { slug, tipoDado: tipoDadoDoModo(modo) }, include: incluirInstituicao });
 }
@@ -226,10 +238,50 @@ export type ContaComercialCompleta = Prisma.ContaComercialGetPayload<{
   include: typeof incluirContaComercial;
 }>;
 
-export async function listarContasComerciais(modo = obterModoDados()): Promise<ContaComercialCompleta[]> {
+/**
+ * Projeção enxuta usada pela listagem. A página de contas só precisa dos
+ * campos de resumo; carregar evidências, unidades e contatos completos para
+ * 7.550 contas tornava cada navegação uma transferência e renderização muito
+ * maior do que o necessário. O detalhe continua usando obterContaComercial.
+ */
+const selecionarResumoConta = {
+  id: true,
+  nome: true,
+  tipoDado: true,
+  grupoEconomicoId: true,
+  natureza: true,
+  quantidadeUnidades: true,
+  quantidadeHospitais: true,
+  quantidadeContatos: true,
+  cidades: true,
+  tipoVinculo: true,
+  confiancaOrganizacional: true,
+  coberturaDados: true,
+  statusRevisao: true,
+  indicePrioridadeComercial: true,
+  faixaPrioridadeComercial: true,
+  acaoRecomendada: true,
+  justificativaAcao: true,
+  resultadoAbordagem: true,
+  grupoEconomico: {
+    select: {
+      instituicoes: {
+        select: {
+          segmentacao: { select: { segmento: true } },
+        },
+      },
+    },
+  },
+} satisfies Prisma.ContaComercialSelect;
+
+export type ContaComercialResumo = Prisma.ContaComercialGetPayload<{
+  select: typeof selecionarResumoConta;
+}>;
+
+export async function listarContasComerciais(modo = obterModoDados()): Promise<ContaComercialResumo[]> {
   return prisma.contaComercial.findMany({
     where: modo === "MODO_DEMONSTRACAO" ? { tipoDado: "DEMONSTRACAO" } : { NOT: { tipoDado: "DEMONSTRACAO" } },
-    include: incluirContaComercial,
+    select: selecionarResumoConta,
     orderBy: [
       { indicePrioridadeComercial: "desc" },
       { quantidadeUnidades: "desc" },

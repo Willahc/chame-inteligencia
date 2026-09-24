@@ -454,7 +454,7 @@ export function IntegracoesClient({
   }
 
   return (
-    <div className="w-full px-3 py-5 sm:px-6 lg:px-8 lg:py-8 2xl:px-10 space-y-6">
+    <div className="integracoes-claro w-full px-3 py-5 sm:px-6 lg:px-8 lg:py-8 2xl:px-10 space-y-6">
       {/* Alerta Permanente de Simulação Controlada */}
       <div className="rounded-2xl border border-amber-400/30 bg-amber-500/10 p-5 shadow-lg backdrop-blur-sm">
         <div className="flex items-start gap-4">
@@ -482,7 +482,7 @@ export function IntegracoesClient({
             <div className="flex size-10 items-center justify-center rounded-xl bg-[var(--ciano)] text-[var(--azul-profundo)]">
               <Cpu size={22} />
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">
+            <h1 className="text-2xl font-bold text-[var(--azul-profundo)] tracking-tight">
               Governança de Integrações Externas
             </h1>
           </div>
@@ -584,7 +584,7 @@ export function IntegracoesClient({
       </div>
 
       {/* Painel de Controle de Homologação (Gate 10 & 11 — Mailtrap Sandbox) */}
-      <div className="rounded-2xl border border-sky-400/25 bg-gradient-to-br from-sky-950/30 to-[var(--azul-profundo)] p-5 shadow-lg space-y-4 backdrop-blur-sm">
+      <div className="superficie-escura rounded-2xl border border-sky-400/25 bg-gradient-to-br from-sky-950/30 to-[var(--azul-profundo)] p-5 shadow-lg space-y-4 backdrop-blur-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-white/10 pb-4">
           <div className="flex items-center gap-3">
             <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-sky-500/20 text-sky-400 border border-sky-400/30">
@@ -776,7 +776,7 @@ export function IntegracoesClient({
       {/* Tabela de Conectores Cadastrados */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+          <h2 className="text-lg font-bold text-[var(--azul-profundo)] tracking-tight flex items-center gap-2">
             <Cpu size={18} className="text-[var(--ciano)]" />
             Conectores e Adaptadores de Integração
           </h2>
@@ -851,7 +851,7 @@ export function IntegracoesClient({
                       <td className="px-6 py-4 text-right">
                         <button
                           onClick={() => abrirModalParaIntegracao(integ.id)}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 hover:bg-[var(--ciano)] hover:text-[var(--azul-profundo)] px-3 py-1.5 text-xs font-semibold text-white transition"
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--azul-profundo)] hover:bg-[var(--azul)] px-3 py-1.5 text-xs font-semibold text-white transition"
                         >
                           <Play size={13} />
                           Simular
@@ -870,11 +870,11 @@ export function IntegracoesClient({
       <div className="space-y-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+            <h2 className="text-lg font-bold text-[var(--azul-profundo)] tracking-tight flex items-center gap-2">
               <FileText size={18} className="text-[var(--ciano)]" />
               Histórico de Eventos de Integração
             </h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-[var(--texto-suave)]">
               Registro imutável de todas as chamadas simuladas e bloqueios de governança.
             </p>
           </div>
@@ -888,33 +888,33 @@ export function IntegracoesClient({
                 value={termoBusca}
                 onChange={(e) => setTermoBusca(e.target.value)}
                 placeholder="Buscar conta, usuário, justificativa..."
-                className="rounded-xl border border-white/10 bg-white/5 pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-400 focus:border-[var(--ciano)] focus:outline-none"
+                className="rounded-xl border border-[var(--borda)] bg-white pl-9 pr-3 py-1.5 text-xs text-[var(--texto)] placeholder-slate-400 focus:border-[var(--azul)] focus:outline-none"
               />
             </div>
 
             <select
               value={filtroTipo}
               onChange={(e) => setFiltroTipo(e.target.value)}
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white focus:border-[var(--ciano)] focus:outline-none"
+              className="rounded-xl border border-[var(--borda)] bg-white px-3 py-1.5 text-xs text-[var(--texto)] focus:border-[var(--azul)] focus:outline-none"
             >
-              <option value="TODOS" className="bg-[var(--azul-profundo)]">Todos os Conectores</option>
-              <option value="CRM" className="bg-[var(--azul-profundo)]">CRM</option>
-              <option value="EMAIL" className="bg-[var(--azul-profundo)]">E-mail</option>
-              <option value="WHATSAPP" className="bg-[var(--azul-profundo)]">WhatsApp</option>
-              <option value="DISCADOR" className="bg-[var(--azul-profundo)]">Discador</option>
+              <option value="TODOS">Todos os Conectores</option>
+              <option value="CRM">CRM</option>
+              <option value="EMAIL">E-mail</option>
+              <option value="WHATSAPP">WhatsApp</option>
+              <option value="DISCADOR">Discador</option>
             </select>
 
             <select
               value={filtroStatus}
               onChange={(e) => setFiltroStatus(e.target.value)}
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white focus:border-[var(--ciano)] focus:outline-none"
+              className="rounded-xl border border-[var(--borda)] bg-white px-3 py-1.5 text-xs text-[var(--texto)] focus:border-[var(--azul)] focus:outline-none"
             >
-              <option value="TODOS" className="bg-[var(--azul-profundo)]">Todos os Status</option>
-              <option value="SUCESSO_SIMULADO" className="bg-[var(--azul-profundo)]">Sucesso Simulado</option>
-              <option value="BLOQUEADO" className="bg-[var(--azul-profundo)]">Bloqueado</option>
-              <option value="FALHA_SIMULADA" className="bg-[var(--azul-profundo)]">Falha Simulada</option>
-              <option value="TIMEOUT_SIMULADO" className="bg-[var(--azul-profundo)]">Timeout Simulado</option>
-              <option value="CANCELADO" className="bg-[var(--azul-profundo)]">Cancelado</option>
+              <option value="TODOS">Todos os Status</option>
+              <option value="SUCESSO_SIMULADO">Sucesso Simulado</option>
+              <option value="BLOQUEADO">Bloqueado</option>
+              <option value="FALHA_SIMULADA">Falha Simulada</option>
+              <option value="TIMEOUT_SIMULADO">Timeout Simulado</option>
+              <option value="CANCELADO">Cancelado</option>
             </select>
           </div>
         </div>
@@ -1028,7 +1028,7 @@ export function IntegracoesClient({
       {/* Modal de Simulação Individual */}
       {modalSimulacaoAberto && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-[var(--azul-profundo)] shadow-2xl">
+          <div className="superficie-escura w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-[var(--azul-profundo)] shadow-2xl">
             {/* Cabeçalho do Modal */}
             <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
               <div className="flex items-center gap-2">
@@ -1566,7 +1566,7 @@ export function IntegracoesClient({
       {/* Modal de Detalhes do Evento do Histórico */}
       {eventoSelecionado && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-[var(--azul-profundo)] shadow-2xl">
+          <div className="superficie-escura w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-[var(--azul-profundo)] shadow-2xl">
             <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
               <div className="flex items-center gap-2">
                 <FileText size={18} className="text-[var(--ciano)]" />

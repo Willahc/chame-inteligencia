@@ -672,7 +672,6 @@ export async function executarSimulacaoControlada(
     simularFalha: input.simularFalha,
     simularTimeout: input.simularTimeout,
     cancelarAntesExecutar: input.cancelarAntesExecutar,
-    autorizacaoSandboxReal: input.autorizacaoSandboxReal,
   };
 
   switch (integracao.tipo) {

@@ -1,13 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { exigirPermissaoOperador } from "@/lib/operador-local";
 import { registrarResultadoAbordagem } from "@/lib/dados";
 import type { ResultadoAbordagem } from "@/domain/contas";
 
 export async function salvarResultadoAbordagem(formData: FormData) {
   const contaComercialId = formData.get("contaComercialId") as string;
   const resultado = formData.get("resultado") as ResultadoAbordagem;
-  const usuarioResponsavel = (formData.get("usuarioResponsavel") as string) || undefined;
+  const usuarioResponsavel = exigirPermissaoOperador("PLANEJAR_ACOES");
   const observacao = formData.get("observacao") as string;
   const proximaAcao = (formData.get("proximaAcao") as string) || undefined;
   const fonteOuEvidencia = (formData.get("fonteOuEvidencia") as string) || undefined;
@@ -32,7 +33,7 @@ export async function salvarResultadoAbordagem(formData: FormData) {
 export async function executarBuscaResponsaveis(formData: FormData) {
   const { solicitarBuscaResponsaveis } = await import("@/domain/busca-responsaveis/servico-busca");
   const contaComercialId = formData.get("contaComercialId") as string;
-  const usuarioSolicitante = (formData.get("usuarioSolicitante") as string) || "analista-comercial";
+  const usuarioSolicitante = exigirPermissaoOperador("REVISAR_CONTATOS");
   const confirmacao = formData.get("confirmacao") === "true" || formData.get("confirmacao") === "on";
 
   if (!contaComercialId) {
@@ -53,7 +54,7 @@ export async function aprovarContatoAcao(formData: FormData) {
   const { ativarContatoSupervisionado } = await import("@/domain/busca-responsaveis/servico-busca");
   const contatoId = formData.get("contatoId") as string;
   const contaComercialId = formData.get("contaComercialId") as string;
-  const usuarioAprovador = (formData.get("usuarioAprovador") as string) || "analista-comercial";
+  const usuarioAprovador = exigirPermissaoOperador("APROVAR_ACOES");
 
   if (!contatoId) {
     throw new Error("Identificador do contato é obrigatório.");
@@ -75,7 +76,7 @@ export async function desativarContatoAcao(formData: FormData) {
   const contatoId = formData.get("contatoId") as string;
   const contaComercialId = formData.get("contaComercialId") as string;
   const motivo = (formData.get("motivo") as string) || "Removido por revisão humana.";
-  const usuario = (formData.get("usuario") as string) || "analista-comercial";
+  const usuario = exigirPermissaoOperador("REVISAR_CONTATOS");
 
   if (!contatoId) {
     throw new Error("Identificador do contato é obrigatório.");

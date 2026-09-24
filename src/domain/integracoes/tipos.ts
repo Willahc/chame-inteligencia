@@ -118,7 +118,6 @@ export interface OpcoesExecucaoSimulada {
   simularTimeout?: boolean;
   cancelarAntesExecutar?: boolean;
   tempoEsperaMs?: number;
-  autorizacaoSandboxReal?: boolean;
 }
 
 export interface AdaptadorIntegracao<TPayload extends PayloadBaseIntegracao> {
@@ -144,7 +143,6 @@ export interface SolicitacaoSimulacaoInput {
   simularFalha?: boolean;
   simularTimeout?: boolean;
   cancelarAntesExecutar?: boolean;
-  autorizacaoSandboxReal?: boolean;
 }
 
 export interface PreviaSimulacao {

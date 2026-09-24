@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { exigirPermissaoOperador } from "@/lib/operador-local";
 import {
   gerarPreviaSimulacao,
   executarSimulacaoControlada,
@@ -14,7 +15,7 @@ import type {
 
 export async function gerarPreviaSimulacaoAction(input: SolicitacaoSimulacaoInput) {
   try {
-    const previa = await gerarPreviaSimulacao(input);
+    const previa = await gerarPreviaSimulacao({ ...input, usuarioSolicitante: exigirPermissaoOperador("CONSULTAR") });
     return { sucesso: true, previa, erro: null };
   } catch (err) {
     return {
@@ -27,7 +28,7 @@ export async function gerarPreviaSimulacaoAction(input: SolicitacaoSimulacaoInpu
 
 export async function executarSimulacaoAction(input: SolicitacaoSimulacaoInput) {
   try {
-    const resultado = await executarSimulacaoControlada(input);
+    const resultado = await executarSimulacaoControlada({ ...input, usuarioSolicitante: exigirPermissaoOperador("SIMULAR_INTEGRACOES") });
     revalidatePath("/integracoes");
     revalidatePath("/planejamento-comercial");
     if (input.contaComercialId) {
@@ -84,6 +85,7 @@ export async function obterStatusHomologacaoAction() {
 
 export async function alternarKillSwitchAction(ativar: boolean) {
   try {
+    exigirPermissaoOperador("ADMINISTRAR_INTEGRACOES");
     const { ativarKillSwitch, desativarKillSwitch } = await import(
       "@/domain/integracoes/servico-integracoes"
     );
@@ -105,6 +107,7 @@ export async function alternarKillSwitchAction(ativar: boolean) {
 
 export async function resetarCircuitBreakerAction() {
   try {
+    exigirPermissaoOperador("ADMINISTRAR_INTEGRACOES");
     const { circuitBreakerHomologacao } = await import(
       "@/domain/integracoes/servico-integracoes"
     );
@@ -124,6 +127,7 @@ export async function configurarAmbienteIntegracaoAction(
   novoAmbiente: import("@prisma/client").AmbienteIntegracao
 ) {
   try {
+    exigirPermissaoOperador("ADMINISTRAR_INTEGRACOES");
     const { atualizarAmbienteIntegracao } = await import(
       "@/domain/integracoes/servico-integracoes"
     );

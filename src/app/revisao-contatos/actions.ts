@@ -1,12 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { exigirPermissaoOperador } from "@/lib/operador-local";
 import { decidirRevisaoContato } from "@/domain/revisao-contatos/servico-revisao";
 import type { AcaoRevisaoContato } from "@/domain/revisao-contatos/tipos";
 
 export async function processarDecisaoRevisao(formData: FormData) {
   const contatoId = formData.get("contatoId") as string;
-  const usuario = (formData.get("usuario") as string) || "analista-qualidade";
+  const usuario = exigirPermissaoOperador("REVISAR_CONTATOS");
   const acao = formData.get("acao") as AcaoRevisaoContato;
   const motivo = (formData.get("motivo") as string) || undefined;
   const observacao = (formData.get("observacao") as string) || undefined;

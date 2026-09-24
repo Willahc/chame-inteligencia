@@ -224,10 +224,7 @@ export function obterDiagnosticoMailtrapSandbox(): DiagnosticoMailtrapSandbox {
     tokenConfigurado,
     inboxIdConfigurado,
     inboxIdMascarado,
-    conectividade:
-      tokenConfigurado && inboxIdConfigurado
-        ? "CONECTADO_SANDBOX"
-        : "MOCK_LOCAL_HOMOLOGACAO",
+    conectividade: "MOCK_LOCAL_HOMOLOGACAO",
     mensagensEnviadasGate11: contadorMensagensGate11,
     limiteMaximoGate11: limiteMensagensGate11,
     mensagensRestantesGate11: Math.max(0, limiteMensagensGate11 - contadorMensagensGate11),
@@ -539,112 +536,7 @@ export class AdaptadorEmailHomologacao implements AdaptadorIntegracao<PayloadEma
       };
     }
 
-    // 9. Execução: Verificação de Credencial Real vs Mock Local de Homologação
-    const { token: apiKeyReal, inboxId: inboxIdReal } = carregarCredenciaisSandbox();
-    const autorizacaoAtiva = opcoes?.autorizacaoSandboxReal === true;
-    const ambienteTeste =
-      process.env.VITEST !== undefined || process.env.NODE_ENV === "test";
-
-    if (apiKeyReal && inboxIdReal && autorizacaoAtiva && !ambienteTeste) {
-      // Se houver chave e inbox configurados, com autorização explícita e fora de ambiente de teste
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_HOMOLOGACAO_MS);
-
-        const response = await fetch(
-          `${ENDPOINT_SANDBOX_MAILTRAP_BASE}/${encodeURIComponent(inboxIdReal)}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${apiKeyReal}`,
-              "Api-Token": apiKeyReal,
-            },
-            body: JSON.stringify({
-              to: [{ email: payload.destinatarioEmail, name: payload.contatoNome ?? undefined }],
-              from: { email: "homologacao@sandbox.chame.com.br", name: "Chame Inteligência (Sandbox)" },
-              subject: `[HOMOLOGAÇÃO GATE 11] ${payload.assunto}`,
-              text: payload.corpoMensagem,
-              category: "Homologação Gate 11",
-            }),
-            signal: controller.signal,
-          }
-        );
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          circuitBreakerHomologacao.registrarFalha();
-          const corpoErro = await response.text().catch(() => "");
-          return {
-            sucesso: false,
-            transacaoId,
-            statusEvento: "FALHA_SIMULADA",
-            tipoIntegracao: this.tipo,
-            ambiente: "HOMOLOGACAO",
-            timestamp: new Date().toISOString(),
-            mensagem: `Falha na resposta do sandbox do Mailtrap (HTTP ${response.status})${corpoErro ? `: ${corpoErro}` : ""}.`,
-            detalhesSimulacao: {
-              statusHttp: response.status,
-              falhasConsecutivas: circuitBreakerHomologacao.getFalhasConsecutivas(),
-              aviso: AVISO_HOMOLOGACAO_SANDBOX,
-            },
-            chamadaExternaRealizada: false,
-            tempoRespostaMs: Date.now() - inicio,
-          };
-        }
-
-        const data = (await response.json()) as { message_ids?: string[] };
-        circuitBreakerHomologacao.registrarSucesso();
-        incrementarContadorMensagensGate11();
-
-        return {
-          sucesso: true,
-          transacaoId,
-          statusEvento: "SUCESSO_SIMULADO",
-          tipoIntegracao: this.tipo,
-          ambiente: "HOMOLOGACAO",
-          timestamp: new Date().toISOString(),
-          mensagem: `E-mail de homologação recebido com sucesso pelo sandbox do Mailtrap. ${AVISO_HOMOLOGACAO_SANDBOX}`,
-          detalhesSimulacao: {
-            provedor: this.nomeProvedor,
-            ambiente: "HOMOLOGACAO",
-            sandbox: true,
-            messageIds: data.message_ids ?? [],
-            inboxIdMascarado: `${inboxIdReal.slice(0, 2)}***${inboxIdReal.slice(-2)}`,
-            endpointFixo: ENDPOINT_SANDBOX_MAILTRAP_BASE,
-            totalEnviadasGate11: contadorMensagensGate11,
-            limiteGate11: limiteMensagensGate11,
-            modoExecucao: "SANDBOX_CONECTADO",
-            aviso: AVISO_HOMOLOGACAO_SANDBOX,
-          },
-          chamadaExternaRealizada: false,
-          tempoRespostaMs: Date.now() - inicio,
-        };
-      } catch (err: unknown) {
-        circuitBreakerHomologacao.registrarFalha();
-        const isTimeout = err instanceof Error && err.name === "AbortError";
-        return {
-          sucesso: false,
-          transacaoId,
-          statusEvento: isTimeout ? "TIMEOUT_SIMULADO" : "FALHA_SIMULADA",
-          tipoIntegracao: this.tipo,
-          ambiente: "HOMOLOGACAO",
-          timestamp: new Date().toISOString(),
-          mensagem: isTimeout
-            ? `Timeout na conexão com o sandbox (${TIMEOUT_HOMOLOGACAO_MS}ms).`
-            : "Erro de rede ao conectar com o endpoint de sandbox.",
-          detalhesSimulacao: {
-            erro: isTimeout ? "TIMEOUT" : "ERRO_CONEXAO",
-            falhasConsecutivas: circuitBreakerHomologacao.getFalhasConsecutivas(),
-            aviso: AVISO_HOMOLOGACAO_SANDBOX,
-          },
-          chamadaExternaRealizada: false,
-          tempoRespostaMs: Date.now() - inicio,
-        };
-      }
-    }
-
-    // Padrão sem credencial: Mock Local de Homologação em Sandbox
+    // 9. A homologação permanece em mock local. Nenhuma chamada de rede é autorizada.
     circuitBreakerHomologacao.registrarSucesso();
     incrementarContadorMensagensGate11();
     const tempoRespostaMs = opcoes?.tempoEsperaMs ?? 25;
