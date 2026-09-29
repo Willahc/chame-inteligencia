@@ -1,0 +1,15 @@
+Coluna;Descrição
+Condição do veículo;Veículo pertence ao próprio taxista ou veículo pertence a outro taxista ou a uma empresa de frota de táxis, mediante a um contrato de trabalho ou aluguel
+Regime de Operação (Autônomo/Empresa);Classifica o operador do veículo como autônomo (pessoa física) ou empresa (pessoa jurídica)
+Categoria;Tipologia do veículo
+Jan ;Quantidade de licenças de taxi cadastradas no Município no mês de janeiro
+Fev ;Quantidade de licenças de taxi cadastradas no Município no mês de fevereiro
+Mar ;Quantidade de licenças de taxi cadastradas no Município no mês de março
+Abr ;Quantidade de licenças de taxi cadastradas no Município no mês de abril
+Mai ;Quantidade de licenças de taxi cadastradas no Município no mês de maio
+Jun ;Quantidade de licenças de taxi cadastradas no Município no mês de junho
+Jul ;Quantidade de licenças de taxi cadastradas no Município no mês de julho
+Ago ;Quantidade de licenças de taxi cadastradas no Município no mês de agosto
+Set ;Quantidade de licenças de taxi cadastradas no Município no mês de setembro
+Out ;Quantidade de licenças de taxi cadastradas no Município no mês de outubro
+;

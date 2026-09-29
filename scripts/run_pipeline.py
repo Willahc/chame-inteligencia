@@ -74,6 +74,12 @@ STAGES: list[Stage] = [
           ["scrape_diario_oficial_2026.py"], "fontes", manual=True),
     Stage("doc-contemplados", "Cruza contemplados com publicações do DOC",
           ["enrich_doc_contemplados.py"], "fontes", manual=True),
+    Stage("smt", "Baixa licenças SGTP e conselheiros CMTT (CKAN da SMT)",
+          ["fetch_smt_open_data.py"], "fontes", manual=True),
+    Stage("detran", "Baixa e agrega a frota ativa do Detran-SP por município",
+          ["fetch_detran_frota.py"], "fontes", manual=True),
+    Stage("infosiga", "Baixa sinistros do Infosiga e extrai vítimas taxistas",
+          ["fetch_infosiga_taxistas.py"], "fontes", manual=True),
 
     # --- Campo e CRM --------------------------------------------------------
     Stage("geocode", "Geocodifica o catálogo de pontos (Nominatim)",
@@ -87,8 +93,14 @@ STAGES: list[Stage] = [
     Stage("meis", "Reconstrói a base de MEIs de táxi da Zona Oeste",
           ["extrator_meis_taxi_zona_oeste.py"], "campo",
           requires=["data/private/base_meis_zona_oeste_fonte.json"]),
+    Stage("geo-sem-osm", "Geocodifica os 926 pontos DTP sem par no OSM (Nominatim)",
+          ["geocode_dtp_sem_osm.py"], "campo",
+          requires=["data/processed/dtp_pontos_sem_osm.csv"], manual=True),
 
     # --- B2B corporativo ----------------------------------------------------
+    Stage("cnae-pj", "Gera a base de PJ ativas (versionada) e a de MEIs (privada)",
+          ["build_empresas_taxi_cnae.py"], "b2b",
+          requires=["data/processed/taxistas_sp_cnae_receita_*.csv"]),
     Stage("corp-hospitais", "Base de hospitais em 5 km da sede",
           ["extract_hospitals_corporate_5km.py"], "b2b", requires=[PONTOS], manual=True),
     Stage("corp-empresas", "Base de empresas em 5 km da sede",

@@ -1,0 +1,10 @@
+{
+  "data": "2026-09-29T12:59:45-03:00",
+  "pontos_sem_osm": 926,
+  "geocodificados": 736,
+  "nao_encontrados": 190,
+  "cobertura_coordenada_dtp_pct_antes": 21.99,
+  "cobertura_coordenada_dtp_pct_depois": 83.99,
+  "pareamento_osm_gate5_pct": 21.99,
+  "nota": "geocodificacao no nivel de logradouro (enderecos sem numero); sobe a cobertura de COORDENADAS do DTP no mapa, nao o pareamento DTP<->OSM do Gate 5"
+}

@@ -45,3 +45,29 @@ Fonte acrescentada em 28/09/2026 para extrair estabelecimentos de taxi por CNAE 
 Criterio de extracao: `MUNICIPIO = 7107` (codigo IBGE de SAO PAULO/SP) e CNAE da familia taxi presente como atividade principal (`CNAE_FISCAL`) ou entre as secundarias (`CNAE_FISCAL_SECUNDARIA`): `4923001` Servico de taxi, `4923002` Transporte de passageiros - locacao de automoveis com motorista, `5229001` Apoio ao transporte por taxi. `5112901` (taxi aereo) foi excluido por nao ser transporte terrestre.
 
 Os arquivos brutos (5,8 GB) nao foram preservados no repositorio: sao reproduziveis pelo script, que registra URL, tamanho e SHA-256 de cada arquivo em `logs/manifesto_cnpj_receita_2026-09-14.csv`.
+
+## Camada de dados abertos municipais e estaduais (rodada de 29/09/2026)
+
+Aquisicoes novas feitas em 29/09/2026 (BRT) para ampliar as bases do projeto. Todas seguem o mesmo padrao: download idempotente por script + manifesto com URL, SHA-256, licenca e horario da consulta em `logs/`.
+
+| Fonte | Orgao | URL | Conteudo adquirido | Data / cobertura | Licenca | Acesso | Uso no projeto |
+|---|---|---|---|---|---|---|---|
+| SGTP \| Taxi - Licencas (CSV + PDF + dicionario) | SMT/DTP - Prefeitura de Sao Paulo (Portal CKAN) | https://dados.prefeitura.sp.gov.br/dataset/sistema-de-gerenciamento-de-transporte-publico-sgtp-taxi | Serie mensal de licencas de taxi por tipo (C/S-CARRO), titulacao (autonomo/empresa) e categoria | Jan-Mai/2026; maio/2026 = 37.571 licencas | CCZero | HTTP 200 | `scripts/fetch_smt_open_data.py` → `data/raw/smt/`; medida oficial de oferta do municipio |
+| CMTT - Conselheiros por mandato (CSV + dicionario) | SMT/AT - Prefeitura de Sao Paulo (Portal CKAN) | https://dados.prefeitura.sp.gov.br/dataset/conselheiros-por-mandato-do-cmtt | 133 conselheiros por segmento, cargo e genero declarado (inclui SINDITAXI e sindicatos de taxi) | mandato 2024mar-2026jan | CC BY 4.0 | HTTP 200 | mesmo script; mapa de influencia/relacionamento (acesso ao nome de cargo publico e permitido) |
+| Frota Ativa (mensal) | Detran-SP (Portal de Dados Abertos do Estado de SP) | https://dadosabertos.sp.gov.br/dataset/frota-ativa | 3.242.859 linhas agregadas: municipio, categoria, especie, tipo de veiculo, quantidade | Ago/2026 (15 CSVs mensais disponiveis) | dado aberto estadual (Lei 12.527/2011) | CKAN + download do blob Azure via `curl --ssl-no-revoke` (proxy corporativo nao tem revogacao do certificado) | `scripts/fetch_detran_frota.py` → `data/processed/frota_ativa_sp_por_municipio_2026-08.csv` (645 municipios; SP = 6.464.958 veiculos, 3.875.312 automoveis) |
+| Pessoas Envolvidas em Sinistros (mensal) | Detran-SP / Infosiga | https://dadosabertos.sp.gov.br/dataset/pessoas-envolvidas-em-sinistros | uma linha por vitima, com profissao declarada e gravidade da lesao | set/2025-ago/2026 (12 CSVs) | dado aberto estadual | HTTP 200 | `scripts/fetch_infosiga_taxistas.py` → `data/processed/sinistros_vitimas_taxistas_infosiga_mensal.csv` (364 vitimas taxista/mototaxista em Sao Paulo no periodo) |
+
+**Limitacao registrada (Frota Ativa):** a base aberta do Detran nao expoe a categoria de servico `TAXI` — as categorias sao `PARTICULAR`, `ALUGUEL`, `OFICIAL`, `APRENDIZAGEM` etc., e nenhum campo (especie, tipo, marca) distingue o taxi. Por isso a medida de oferta continua sendo a serie do SGTP, e a frota entra apenas como dimensionamento de mercado por municipio. O mesmo vale para o pacote nacional RENAVAM (`i_frota_por_uf_municipio_marca_e_modelo_ano_*.zip`), cujas dimensoes sao UF, municipio, marca, modelo e ano.
+
+**Limitacao registrada (Infosiga):** os pacotes abertos `veiculos-envolvidos-em-sinistros` e `eventos-de-sinistro` tambem nao trazem categoria de servico do veiculo (`tipo_veiculo` = AUTOMOVEL, MOTOCICLETA, ...). O recorte em taxi foi obtido pela `profissao` da vitima (`TAXISTA`, `MOTOTAXISTA`) no pacote de pessoas. O consolidado de sinistros (`dados_infosiga.zip`) exige autenticacao (HTTP 401) e nao foi usado.
+
+### Derivados locais gerados nesta rodada
+
+| Artefato | Origem | Conteudo | Camada |
+|---|---|---|---|
+| `data/processed/empresas_taxi_pj_ativas_sp.csv` | recorte CNAE da RFB (base local) | 5.558 PJ ativas com CNPJ, razao social, CNAE, endereco juridico, telefone e e-mail institucionais | versionada |
+| `data/private/condutores_taxi_mei_ativas_sp.csv` | mesma base | 51.210 MEI ativos (razao social = nome do titular) | local (`.gitignore`) |
+| `data/processed/dtp_pontos_sem_osm_geo.csv` | `dtp_pontos_sem_osm.csv` + Nominatim | 736 dos 926 pontos sem OSM com coordenada de logradouro (94 cairam fora do municipio, 96 nao encontrados) | versionada |
+| `data/processed/cobertura_gate5_geocodificacao.json` | execucao do geocoder | 21.99% → 83.99% de cobertura de coordenadas do DTP (o pareamento DTP↔OSM do Gate 5 permanece em 21.99%) | versionada |
+
+`data/raw/smt/` e versionado (arquivos pequenos, aquisicao preservada). `data/raw/detran/` (355 MB) e `data/raw/infosiga/` (45 MB) ficam fora do Git: o manifesto guarda URL, SHA-256 e o script rebaixa quando precisar.
