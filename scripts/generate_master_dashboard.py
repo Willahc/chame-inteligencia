@@ -586,30 +586,48 @@ def generate_dashboard():
       #dossier-print-container, #dossier-print-container * { visibility: visible; }
       #dossier-print-container { position: absolute; left: 0; top: 0; width: 100%; }
     }
+  
+    /* ===== Menu lateral ===== */
+    #shell{display:flex;min-height:100vh;width:100%;}
+    #sidebar{position:sticky;top:0;height:100vh;width:16.5rem;flex:0 0 16.5rem;overflow-y:auto;
+      display:flex;flex-direction:column;gap:1.35rem;padding:1.15rem .85rem 1rem;
+      background:linear-gradient(180deg,#0a101c 0%,#0e1626 55%,#0a101c 100%);
+      border-right:1px solid rgba(255,255,255,.07);z-index:60;}
+    #sidebar .brand{display:flex;align-items:center;gap:.65rem;padding:0 .35rem;min-width:0;}
+    #sidebar .brand-name{font-size:.9375rem;font-weight:800;color:#fff;letter-spacing:-.01em;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    #sidebar .brand-sub{font-size:.5938rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8;margin-top:.2rem;}
+    #sidebar .side-label{font-size:.5938rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#64748b;padding:0 .65rem;}
+    #sidebar .nav-tab{width:100%;justify-content:flex-start;height:auto;min-height:2.4rem;padding:.35rem .7rem;font-size:.78rem;gap:.55rem;line-height:1.25;text-align:left;}
+    #sidebar .nav-tab > span{min-width:0;}
+    #sidebar .nav-tab > span.ml-1{margin-left:auto;flex:0 0 auto;font-size:.625rem;white-space:nowrap;}
+    #sidebar .side-foot{margin-top:auto;font-size:.625rem;line-height:1.6;color:#64748b;padding:.85rem .65rem 0;border-top:1px solid rgba(255,255,255,.07);}
+    #sidebar .side-foot-cta{margin-top:auto;padding-top:.85rem;border-top:1px solid rgba(255,255,255,.07);}
+    #sidebar .side-foot-cta .btn{width:100%;}
+    @media (max-width:1100px){
+      #sidebar{width:4.5rem;flex-basis:4.5rem;padding:1rem .5rem;align-items:center;gap:1rem;}
+      #sidebar .brand-text,#sidebar .side-label,#sidebar .side-foot,#sidebar .side-foot-cta,#sidebar .nav-tab > span{display:none;}
+      #sidebar .nav-tab{width:2.85rem;justify-content:center;padding:0;gap:0;}
+    }
   </style>
 </head>
-<body class="text-slate-800 min-h-screen flex flex-col">
+<body class="text-slate-800">
+<div id="shell" class="flex min-h-screen w-full">
 
-  <!-- TOP HEADER & MAIN NAVIGATION -->
-  <header id="topbar" class="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-50 shadow-md">
-    <div class="max-w-[1750px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
-      
-      <!-- LOGO & TITULO -->
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-amber-500/20 text-xl">
+  <!-- MENU LATERAL -->
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-amber-500/20 text-xl">
           <i class="ph-bold ph-taxi"></i>
         </div>
-        <div>
-          <div class="flex items-center space-x-2">
-            <h1 class="text-base sm:text-lg font-bold tracking-tight text-white leading-none">Chame Táxi: Central Integrada de Inteligência & CRM 2026</h1>
-            <span class="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30 uppercase tracking-wider">Enterprise Suite</span>
-          </div>
-          <p class="text-[11px] text-slate-400 mt-1">Sede Butantã (Av. Vital Brasil) | Alvarás 2026, MEIs Receita Federal, DOC & Regulação DTP</p>
-        </div>
+      <div class="brand-text">
+        <div class="brand-name">Chame T&aacute;xi</div>
+        <div class="brand-sub">Central 2026</div>
       </div>
+    </div>
 
-      <!-- MAIN MODULE TABS (3 FRENTES DE TRABALHO) -->
-      <div class="flex items-center bg-white/5 p-1 rounded-lg border border-white/10 text-xs font-semibold">
+    <div>
+      <div class="side-label">M&oacute;dulos</div>
+      <div class="flex flex-col gap-1 mt-2">
         <button id="nav-btn-master" onclick="switchMainTab('master')" class="nav-tab is-active bg-amber-500 text-slate-950">
           <i class="ph-bold ph-table"></i>
           <span>1. Base Mestre Universal</span>
@@ -630,8 +648,24 @@ def generate_dashboard():
           <span class="ml-1 bg-purple-500/20 text-purple-300 px-1.5 py-0.2 rounded-full text-[10px]">190 Alvos</span>
         </button>
       </div>
+    </div>
 
-      <!-- GLOBAL QUICK ACTIONS -->
+    <div class="side-foot">Sede Butantã (Av. Vital Brasil) | Alvarás 2026, MEIs Receita Federal, DOC & Regulação DTP</div>
+  </aside>
+
+  <div class="flex-1 min-w-0 flex flex-col">
+
+
+    <!-- TOP HEADER (SLIM) -->
+  <header id="topbar" class="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-50 shadow-md">
+    <div class="max-w-[1750px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-2">
+            <h1 class="text-base sm:text-lg font-bold tracking-tight text-white leading-none">Chame Táxi: Central Integrada de Inteligência & CRM 2026</h1>
+            <span class="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30 uppercase tracking-wider">Enterprise Suite</span>
+          </div>
+      </div>
+<!-- GLOBAL QUICK ACTIONS -->
       <div class="flex items-center space-x-2 text-xs">
         <div class="bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/10 text-slate-300 flex items-center space-x-1.5 hidden xl:flex">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -3780,7 +3814,18 @@ __LINHAS_ABERTOS__
         });
       }
     }
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () {
+        document.querySelectorAll('canvas').forEach(function (cv) {
+          const inst = Chart.getChart(cv);
+          if (inst) inst.update();
+        });
+      });
+    }
   </script>
+  </div>
+</div>
 </body>
 </html>"""
 
