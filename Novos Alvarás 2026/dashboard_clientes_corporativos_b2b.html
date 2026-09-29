@@ -16,78 +16,98 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-    /* ===== Design system - tokens ===== */
+    /* ===== ENTERPRISE DESIGN SYSTEM ===== */
     :root{
-      --accent:#7c3aed; --accent-strong:#6d28d9; --accent-soft:#f5f3ff; --accent-ring:rgba(124,58,237,.30);
-      --ink:#0f172a; --ink-2:#334155; --ink-3:#64748b;
-      --line:#e2e8f0; --line-soft:#eef2f6;
-      --canvas:#f4f6f9;
-      --r-sm:.5rem; --r-md:.625rem; --r-lg:.8125rem; --r-xl:1rem;
-      --sh-1:0 1px 2px rgba(15,23,42,.05), 0 1px 3px rgba(15,23,42,.06);
+      --accent:#7c3aed; --accent-ink:#ffffff; --accent-ring:rgba(124,58,237,.32);
+      --ink:#111827; --ink-2:#374151; --ink-3:#6b7280;
+      --line:#e5e7eb; --line-soft:#f0f1f3;
+      --canvas:#f4f5f7; --surface:#ffffff;
+      --r-sm:.5rem; --r-lg:.625rem; --r-xl:.75rem;
+      --sh-1:0 1px 2px rgba(16,24,40,.05), 0 6px 18px -12px rgba(16,24,40,.14);
       --sh-focus:0 0 0 3px var(--accent-ring);
     }
     body{font-family:'Plus Jakarta Sans',ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
       background-color:var(--canvas);color:var(--ink);
       -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;}
-    ::selection{background:#fde68a;color:#0f172a;}
+    ::selection{background:#ddd6fe;color:#0f172a;}
     :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
     @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
 
-    /* ===== Componentes ===== */
-    .card{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1);}
-    .kpi{padding:.9rem 1rem;position:relative;overflow:hidden;}
-    .kpi::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;
-      background:linear-gradient(90deg,var(--accent),transparent 72%);opacity:.6;pointer-events:none;}
-    .eyebrow{font-size:.6875rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);}
-    .kpi-value{font-size:1.5rem;font-weight:800;line-height:1.15;letter-spacing:-.02em;color:var(--ink);
-      font-variant-numeric:tabular-nums;margin-top:.25rem;}
-    .section-title{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);}
+    /* ===== Topbar ===== */
+    #topbar{background:linear-gradient(115deg,#0a101c 0%,#101828 55%,#0a101c 100%);}
+    #topbar{box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 14px 34px -22px rgba(2,6,23,.95);}
+    #topbar{border-bottom:1px solid rgba(255,255,255,.07);}
+    #topbar h1{font-size:1.0625rem;font-weight:800;letter-spacing:-.012em;}
+    #topbar p{color:#94a3b8;}
 
-    .tbl{border-collapse:collapse;}
-    .tbl thead tr{background:#f8fafc;color:var(--ink-3);}
-    .tbl tbody td{border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums;vertical-align:middle;}
-    .tbl tbody tr:last-child td{border-bottom:0;}
-    .tbl tbody tr:nth-child(even){background:rgba(15,23,42,.014);}
-    .tbl tbody tr{transition:background-color .12s ease;}
-    .tbl tbody tr:hover{background:rgba(15,23,42,.028);}
-
-    .field{display:block;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;color:var(--ink-2);
-      transition:border-color .15s ease,box-shadow .15s ease;}
-    .field:hover{border-color:#cbd5e1;}
-    .field:focus{outline:none;border-color:var(--accent);box-shadow:var(--sh-focus);}
-    .field::placeholder{color:#94a3b8;}
-
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;height:2rem;padding:0 .75rem;
-      border:1px solid transparent;border-radius:var(--r-sm);font-size:.75rem;font-weight:700;line-height:1;
-      cursor:pointer;white-space:nowrap;user-select:none;
-      transition:background-color .15s ease,color .15s ease,border-color .15s ease,box-shadow .15s ease;}
-    .btn:disabled{opacity:.45;cursor:not-allowed;}
-    .btn-ghost{background:#fff;border-color:var(--line);color:var(--ink-2);}
-    .btn-ghost:hover{background:#f1f5f9;color:var(--ink);}
-    .btn-soft{background:#f1f5f9;color:var(--ink-2);}
-    .btn-soft:hover{background:#e2e8f0;color:var(--ink);}
-    .btn-dark{background:#0f172a;border-color:#1e293b;color:#f1f5f9;}
-    .btn-dark:hover{background:#1e293b;color:#fff;}
-    .btn-xs{height:1.75rem;padding:0 .5rem;font-size:.7rem;border-radius:.375rem;}
-
-    .nav-tab{display:inline-flex;align-items:center;gap:.4rem;height:2.125rem;padding:0 .9rem;
-      border-radius:var(--r-sm);font-size:.75rem;font-weight:600;line-height:1;
+    /* ===== Nav ===== */
+    .nav-tab{display:inline-flex;align-items:center;gap:.45rem;height:2.125rem;padding:0 .9rem;
+      border-radius:var(--r-sm);font-size:.75rem;font-weight:600;letter-spacing:.01em;line-height:1;
       transition:background-color .15s ease,color .15s ease,box-shadow .15s ease;}
     .nav-tab:not(.is-active):hover{background:rgba(255,255,255,.08);color:#fff;}
-    .nav-tab.is-active{font-weight:700;box-shadow:0 1px 2px rgba(15,23,42,.25);}
+    .nav-tab.is-active{font-weight:700;box-shadow:0 1px 2px rgba(2,6,23,.35);}
+
+    /* ===== Cards / KPIs ===== */
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1);}
+    .kpi{padding:.95rem 1.05rem 1rem;position:relative;overflow:hidden;transition:box-shadow .15s ease,border-color .15s ease;}
+    .kpi:hover{box-shadow:0 2px 4px rgba(16,24,40,.06), 0 14px 34px -18px rgba(16,24,40,.22);border-color:#dde1e6;}
+    .kpi::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;pointer-events:none;
+      background:linear-gradient(90deg,var(--accent) 0%,rgba(0,0,0,0) 75%);opacity:.9;}
+    .eyebrow{font-size:.6875rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);}
+    .kpi > span.eyebrow{display:block;padding-right:2.5rem;}
+    .kpi-value{font-size:1.625rem;font-weight:800;line-height:1.08;letter-spacing:-.025em;color:var(--ink);
+      font-variant-numeric:tabular-nums;margin-top:.3rem;}
+    .section-title{font-size:.6875rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#475569;}
+
+    /* ===== Tabelas ===== */
+    .tbl{border-collapse:collapse;font-size:.8125rem;color:var(--ink-2);}
+    .tbl thead tr{background:#fafbfc;color:var(--ink-3);border-bottom:1px solid var(--line);}
+    .tbl thead th{padding:.5625rem .875rem;font-size:.65625rem;font-weight:600;letter-spacing:.07em;
+      text-transform:uppercase;color:var(--ink-3);}
+    .tbl tbody td{padding:.625rem .875rem;border-bottom:1px solid var(--line-soft);vertical-align:middle;
+      font-variant-numeric:tabular-nums;}
+    .tbl tbody td:first-child{font-weight:600;color:var(--ink);}
+    .tbl tbody tr:last-child td{border-bottom:0;}
+    .tbl tbody tr{transition:background-color .12s ease;}
+    .tbl tbody tr:hover{background:#f8fafc;}
+
+    /* ===== Campos ===== */
+    .field{display:block;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;
+      color:var(--ink-2);font-size:.8125rem;transition:border-color .15s ease,box-shadow .15s ease;}
+    .field:hover{border-color:#cbd2da;}
+    .field:focus{outline:none;border-color:var(--accent);box-shadow:var(--sh-focus);}
+    .field::placeholder{color:#9ca3af;}
+
+    /* ===== Botoes ===== */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;height:2rem;padding:0 .8125rem;
+      border:1px solid transparent;border-radius:var(--r-sm);font-size:.75rem;font-weight:600;letter-spacing:.01em;
+      line-height:1;cursor:pointer;white-space:nowrap;user-select:none;
+      box-shadow:0 1px 2px rgba(16,24,40,.06);
+      transition:background-color .15s ease,color .15s ease,border-color .15s ease,box-shadow .15s ease,filter .15s ease;}
+    .btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;}
+    .btn-ghost{background:#fff;border-color:var(--line);color:var(--ink-2);box-shadow:0 1px 2px rgba(16,24,40,.04);}
+    .btn-ghost:hover{background:#f9fafb;border-color:#d1d5db;color:var(--ink);}
+    .btn-soft{background:#f3f4f6;border-color:transparent;color:var(--ink-2);box-shadow:none;}
+    .btn-soft:hover{background:#e5e7eb;color:var(--ink);}
+    .btn-dark{background:#111827;border-color:#111827;color:#f9fafb;box-shadow:0 1px 2px rgba(16,24,40,.2);}
+    .btn-dark:hover{background:#1f2937;border-color:#1f2937;}
+    .btn-accent{background:var(--accent);border-color:transparent;color:#ffffff;
+      box-shadow:0 1px 2px rgba(16,24,40,.18);}
+    .btn-accent:hover{filter:brightness(1.06);}
+    .btn-xs{height:1.75rem;padding:0 .5rem;font-size:.6875rem;border-radius:.375rem;}
 
     /* ===== Infra ===== */
     .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    #b2b-leaflet-map { height: calc(100vh - 250px); min-height: 560px; border-radius: 0.75rem; z-index: 10; }
+    #b2b-leaflet-map { height: calc(100vh - 250px); min-height: 560px; border-radius: var(--r-lg); z-index: 10; }
   </style>
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col">
 
   <!-- TOP HEADER & MAIN NAVIGATION -->
-  <header class="bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 border-b border-slate-800 text-white sticky top-0 z-50 shadow-md">
+  <header id="topbar" class="bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 border-b border-slate-800 text-white sticky top-0 z-50 shadow-md">
     <div class="max-w-[1750px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
       
       <!-- LOGO & TITULO -->
@@ -151,7 +171,7 @@
             <span class="eyebrow">Hospitais & Saúde</span>
             <i class="ph-bold ph-first-aid text-rose-600 text-base"></i>
           </div>
-          <div class="text-2xl font-black text-rose-600 tracking-tight">94</div>
+          <div class="kpi-value tracking-tight">94</div>
           <span class="text-[10px] text-slate-500 mt-1">Tier A, Quat. & Clínicas</span>
         </div>
 
@@ -160,7 +180,7 @@
             <span class="eyebrow">Empresas (100+)</span>
             <i class="ph-bold ph-briefcase text-blue-600 text-base"></i>
           </div>
-          <div class="text-2xl font-black text-blue-600 tracking-tight">96</div>
+          <div class="kpi-value tracking-tight">96</div>
           <span class="text-[10px] text-slate-500 mt-1">Sedes Corporativas</span>
         </div>
 
@@ -169,7 +189,7 @@
             <span class="eyebrow">Alta Vulnerabilidade</span>
             <i class="ph-bold ph-flame text-red-500 text-base"></i>
           </div>
-          <div class="text-2xl font-black text-red-600 tracking-tight">85</div>
+          <div class="kpi-value tracking-tight">85</div>
           <span class="text-[10px] text-red-600 font-semibold mt-1">Contratos Frágeis</span>
         </div>
 
@@ -178,7 +198,7 @@
             <span class="eyebrow">Potencial Mensal</span>
             <i class="ph-bold ph-currency-dollar text-emerald-600 text-base"></i>
           </div>
-          <div class="text-2xl font-black text-emerald-600 tracking-tight">R$ 3.83M</div>
+          <div class="kpi-value tracking-tight">R$ 3.83M</div>
           <span class="text-[10px] text-slate-500 mt-1">~103.500 corridas/mês</span>
         </div>
 
@@ -187,7 +207,7 @@
             <span class="eyebrow">Demanda Acessível</span>
             <i class="ph-bold ph-wheelchair text-indigo-600 text-base"></i>
           </div>
-          <div class="text-2xl font-black text-indigo-600 tracking-tight">28</div>
+          <div class="kpi-value tracking-tight">28</div>
           <span class="text-[10px] text-indigo-600 font-semibold mt-1">Hospitais Reabilitação</span>
         </div>
 
@@ -196,7 +216,7 @@
             <span class="eyebrow">Demanda ESG / Elét.</span>
             <i class="ph-bold ph-leaf text-teal-600 text-base"></i>
           </div>
-          <div class="text-2xl font-black text-teal-600 tracking-tight">32</div>
+          <div class="kpi-value tracking-tight">32</div>
           <span class="text-[10px] text-teal-600 font-semibold mt-1">Foco Edital 4 Híbrido</span>
         </div>
       </section>
@@ -226,14 +246,14 @@
             <label class="eyebrow block mb-1">Buscar Empresa / Hospital / Decisor</label>
             <div class="relative">
               <i class="ph-bold ph-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-sm"></i>
-              <input type="text" id="b2b-search-query" oninput="applyB2BFilters()" placeholder="Nome, hospital, bairro, decisor, cargo, dor..." class="field w-full pl-9 pr-3 py-1.5 text-xs text-slate-800"/>
+              <input type="text" id="b2b-search-query" oninput="applyB2BFilters()" placeholder="Nome, hospital, bairro, decisor, cargo, dor..." class="field w-full pl-9 pr-3 py-1.5 text-slate-800"/>
             </div>
           </div>
 
           <!-- FILTRO POR SEGMENTO -->
           <div>
             <label class="eyebrow block mb-1">Segmento / Setor</label>
-            <select id="b2b-segment-filter" onchange="applyB2BFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
+            <select id="b2b-segment-filter" onchange="applyB2BFilters()" class="field w-full px-2.5 py-1.5 font-medium text-slate-700">
               <option value="ALL">Todos os Segmentos (190)</option>
               <option value="HOSPITAIS">🏥 Apenas Hospitais & Saúde (94)</option>
               <option value="EMPRESAS">🏢 Apenas Grandes Empresas (96)</option>
@@ -250,7 +270,7 @@
           <!-- FILTRO POR VULNERABILIDADE -->
           <div>
             <label class="eyebrow block mb-1">Vulnerabilidade Contratual</label>
-            <select id="b2b-vuln-filter" onchange="applyB2BFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
+            <select id="b2b-vuln-filter" onchange="applyB2BFilters()" class="field w-full px-2.5 py-1.5 font-medium text-slate-700">
               <option value="ALL">Todas as Vulnerabilidades</option>
               <option value="Alta">🔥 Alta Vulnerabilidade (85)</option>
               <option value="Média">⏳ Média Vulnerabilidade (105)</option>
@@ -260,7 +280,7 @@
           <!-- FILTRO POR DEMANDA ESPECIAL -->
           <div>
             <label class="eyebrow block mb-1">Foco de Demanda</label>
-            <select id="b2b-demand-filter" onchange="applyB2BFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
+            <select id="b2b-demand-filter" onchange="applyB2BFilters()" class="field w-full px-2.5 py-1.5 font-medium text-slate-700">
               <option value="ALL">Todas as Demandas</option>
               <option value="ACES">♿ Táxi Acessível / Desospitalização</option>
               <option value="VOUCHERS">🌙 Vouchers Noturnos / Horas Extras</option>
@@ -272,7 +292,7 @@
           <!-- FILTRO POR DISTÂNCIA DA SEDE -->
           <div>
             <label class="eyebrow block mb-1">Distância Sede Butantã</label>
-            <select id="b2b-dist-filter" onchange="applyB2BFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
+            <select id="b2b-dist-filter" onchange="applyB2BFilters()" class="field w-full px-2.5 py-1.5 font-medium text-slate-700">
               <option value="ALL">Todas (< 5.0 km)</option>
               <option value="2.5">📍 Raio Imediato (< 2.5 km)</option>
               <option value="4.0">📍 Raio Próximo (< 4.0 km)</option>
@@ -291,7 +311,7 @@
           </div>
           <div class="flex items-center gap-2">
             <span class="text-slate-500 text-[11px]">Itens por página:</span>
-            <select id="b2b-page-size" onchange="changeB2BPageSize()" class="field px-2 py-0.5 text-xs text-slate-700">
+            <select id="b2b-page-size" onchange="changeB2BPageSize()" class="field px-2 py-0.5 text-slate-700">
               <option value="25" selected>25</option>
               <option value="50">50</option>
               <option value="100">100</option>
@@ -301,7 +321,7 @@
         </div>
 
         <div class="overflow-x-auto custom-scrollbar">
-          <table class="tbl w-full text-left text-xs">
+          <table class="tbl w-full text-left">
             <thead>
               <tr class="bg-slate-100 text-slate-700 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
                 <th class="py-2.5 px-3">Prospect / Instituição</th>
@@ -352,7 +372,7 @@
           <button id="btn-toggle-emp" onclick="toggleLayer('emp')" class="btn bg-blue-600 text-white">
             <span>🏢 Empresas (96)</span>
           </button>
-          <select id="map-tile-select" onchange="switchB2BTile(this.value)" class="field px-2.5 py-1.5 text-xs text-slate-700 font-semibold">
+          <select id="map-tile-select" onchange="switchB2BTile(this.value)" class="field px-2.5 py-1.5 text-slate-700 font-semibold">
             <option value="esri_street" selected>Mapa Esri Street</option>
             <option value="google">Google Maps</option>
             <option value="carto">CARTO Voyager</option>
@@ -664,7 +684,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Status do Funil B2B</label>
-              <select id="b2b-crm-status" class="field w-full px-2.5 py-1.5 text-xs font-semibold text-slate-800">
+              <select id="b2b-crm-status" class="field w-full px-2.5 py-1.5 font-semibold text-slate-800">
                 <option value="1 - Novo Prospect">1 - Novo Prospect</option>
                 <option value="2 - Decisor Conectado no LinkedIn">2 - Decisor Conectado no LinkedIn</option>
                 <option value="3 - E-mail / Apresentação Enviada">3 - E-mail / Apresentação Enviada</option>
@@ -677,7 +697,7 @@
             <div class="sm:col-span-2">
               <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Anotações do Contato / Próximos Passos</label>
               <div class="flex gap-2">
-                <input type="text" id="b2b-crm-notes" placeholder="Ex: Falou com Felipe no LinkedIn, reunião pré-agendada para quinta..." class="field flex-1 px-3 py-1.5 text-xs text-slate-800"/>
+                <input type="text" id="b2b-crm-notes" placeholder="Ex: Falou com Felipe no LinkedIn, reunião pré-agendada para quinta..." class="field flex-1 px-3 py-1.5 text-slate-800"/>
                 <button onclick="saveB2BCRM()" class="btn bg-purple-600 hover:bg-purple-500 text-white shrink-0">
                   <i class="ph-bold ph-floppy-disk"></i>
                   <span>Salvar</span>

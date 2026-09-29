@@ -495,14 +495,14 @@ def generate_dashboard():
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-    /* ===== Design system - tokens ===== */
+    /* ===== ENTERPRISE DESIGN SYSTEM ===== */
     :root{
-      --accent:#f59e0b; --accent-strong:#d97706; --accent-soft:#fffbeb; --accent-ring:rgba(245,158,11,.30);
-      --ink:#0f172a; --ink-2:#334155; --ink-3:#64748b;
-      --line:#e2e8f0; --line-soft:#eef2f6;
-      --canvas:#f4f6f9;
-      --r-sm:.5rem; --r-md:.625rem; --r-lg:.8125rem; --r-xl:1rem;
-      --sh-1:0 1px 2px rgba(15,23,42,.05), 0 1px 3px rgba(15,23,42,.06);
+      --accent:#f59e0b; --accent-ink:#0a101c; --accent-ring:rgba(245,158,11,.32);
+      --ink:#111827; --ink-2:#374151; --ink-3:#6b7280;
+      --line:#e5e7eb; --line-soft:#f0f1f3;
+      --canvas:#f4f5f7; --surface:#ffffff;
+      --r-sm:.5rem; --r-lg:.625rem; --r-xl:.75rem;
+      --sh-1:0 1px 2px rgba(16,24,40,.05), 0 6px 18px -12px rgba(16,24,40,.14);
       --sh-focus:0 0 0 3px var(--accent-ring);
     }
     body{font-family:'Plus Jakarta Sans',ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -512,55 +512,75 @@ def generate_dashboard():
     :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
     @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
 
-    /* ===== Componentes ===== */
-    .card{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1);}
-    .kpi{padding:.9rem 1rem;position:relative;overflow:hidden;}
-    .kpi::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;
-      background:linear-gradient(90deg,var(--accent),transparent 72%);opacity:.6;pointer-events:none;}
-    .eyebrow{font-size:.6875rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);}
-    .kpi-value{font-size:1.5rem;font-weight:800;line-height:1.15;letter-spacing:-.02em;color:var(--ink);
-      font-variant-numeric:tabular-nums;margin-top:.25rem;}
-    .section-title{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);}
+    /* ===== Topbar ===== */
+    #topbar{background:linear-gradient(115deg,#0a101c 0%,#101828 55%,#0a101c 100%);}
+    #topbar{box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 14px 34px -22px rgba(2,6,23,.95);}
+    #topbar{border-bottom:1px solid rgba(255,255,255,.07);}
+    #topbar h1{font-size:1.0625rem;font-weight:800;letter-spacing:-.012em;}
+    #topbar p{color:#94a3b8;}
 
-    .tbl{border-collapse:collapse;}
-    .tbl thead tr{background:#f8fafc;color:var(--ink-3);}
-    .tbl tbody td{border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums;vertical-align:middle;}
-    .tbl tbody tr:last-child td{border-bottom:0;}
-    .tbl tbody tr:nth-child(even){background:rgba(15,23,42,.014);}
-    .tbl tbody tr{transition:background-color .12s ease;}
-    .tbl tbody tr:hover{background:rgba(15,23,42,.028);}
-
-    .field{display:block;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;color:var(--ink-2);
-      transition:border-color .15s ease,box-shadow .15s ease;}
-    .field:hover{border-color:#cbd5e1;}
-    .field:focus{outline:none;border-color:var(--accent);box-shadow:var(--sh-focus);}
-    .field::placeholder{color:#94a3b8;}
-
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;height:2rem;padding:0 .75rem;
-      border:1px solid transparent;border-radius:var(--r-sm);font-size:.75rem;font-weight:700;line-height:1;
-      cursor:pointer;white-space:nowrap;user-select:none;
-      transition:background-color .15s ease,color .15s ease,border-color .15s ease,box-shadow .15s ease;}
-    .btn:disabled{opacity:.45;cursor:not-allowed;}
-    .btn-ghost{background:#fff;border-color:var(--line);color:var(--ink-2);}
-    .btn-ghost:hover{background:#f1f5f9;color:var(--ink);}
-    .btn-soft{background:#f1f5f9;color:var(--ink-2);}
-    .btn-soft:hover{background:#e2e8f0;color:var(--ink);}
-    .btn-dark{background:#0f172a;border-color:#1e293b;color:#f1f5f9;}
-    .btn-dark:hover{background:#1e293b;color:#fff;}
-    .btn-xs{height:1.75rem;padding:0 .5rem;font-size:.7rem;border-radius:.375rem;}
-
-    .nav-tab{display:inline-flex;align-items:center;gap:.4rem;height:2.125rem;padding:0 .9rem;
-      border-radius:var(--r-sm);font-size:.75rem;font-weight:600;line-height:1;
+    /* ===== Nav ===== */
+    .nav-tab{display:inline-flex;align-items:center;gap:.45rem;height:2.125rem;padding:0 .9rem;
+      border-radius:var(--r-sm);font-size:.75rem;font-weight:600;letter-spacing:.01em;line-height:1;
       transition:background-color .15s ease,color .15s ease,box-shadow .15s ease;}
     .nav-tab:not(.is-active):hover{background:rgba(255,255,255,.08);color:#fff;}
-    .nav-tab.is-active{font-weight:700;box-shadow:0 1px 2px rgba(15,23,42,.25);}
+    .nav-tab.is-active{font-weight:700;box-shadow:0 1px 2px rgba(2,6,23,.35);}
+
+    /* ===== Cards / KPIs ===== */
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1);}
+    .kpi{padding:.95rem 1.05rem 1rem;position:relative;overflow:hidden;transition:box-shadow .15s ease,border-color .15s ease;}
+    .kpi:hover{box-shadow:0 2px 4px rgba(16,24,40,.06), 0 14px 34px -18px rgba(16,24,40,.22);border-color:#dde1e6;}
+    .kpi::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;pointer-events:none;
+      background:linear-gradient(90deg,var(--accent) 0%,rgba(0,0,0,0) 75%);opacity:.9;}
+    .eyebrow{font-size:.6875rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);}
+    .kpi > span.eyebrow{display:block;padding-right:2.5rem;}
+    .kpi-value{font-size:1.625rem;font-weight:800;line-height:1.08;letter-spacing:-.025em;color:var(--ink);
+      font-variant-numeric:tabular-nums;margin-top:.3rem;}
+    .section-title{font-size:.6875rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#475569;}
+
+    /* ===== Tabelas ===== */
+    .tbl{border-collapse:collapse;font-size:.8125rem;color:var(--ink-2);}
+    .tbl thead tr{background:#fafbfc;color:var(--ink-3);border-bottom:1px solid var(--line);}
+    .tbl thead th{padding:.5625rem .875rem;font-size:.65625rem;font-weight:600;letter-spacing:.07em;
+      text-transform:uppercase;color:var(--ink-3);}
+    .tbl tbody td{padding:.625rem .875rem;border-bottom:1px solid var(--line-soft);vertical-align:middle;
+      font-variant-numeric:tabular-nums;}
+    .tbl tbody td:first-child{font-weight:600;color:var(--ink);}
+    .tbl tbody tr:last-child td{border-bottom:0;}
+    .tbl tbody tr{transition:background-color .12s ease;}
+    .tbl tbody tr:hover{background:#f8fafc;}
+
+    /* ===== Campos ===== */
+    .field{display:block;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;
+      color:var(--ink-2);font-size:.8125rem;transition:border-color .15s ease,box-shadow .15s ease;}
+    .field:hover{border-color:#cbd2da;}
+    .field:focus{outline:none;border-color:var(--accent);box-shadow:var(--sh-focus);}
+    .field::placeholder{color:#9ca3af;}
+
+    /* ===== Botoes ===== */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;height:2rem;padding:0 .8125rem;
+      border:1px solid transparent;border-radius:var(--r-sm);font-size:.75rem;font-weight:600;letter-spacing:.01em;
+      line-height:1;cursor:pointer;white-space:nowrap;user-select:none;
+      box-shadow:0 1px 2px rgba(16,24,40,.06);
+      transition:background-color .15s ease,color .15s ease,border-color .15s ease,box-shadow .15s ease,filter .15s ease;}
+    .btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;}
+    .btn-ghost{background:#fff;border-color:var(--line);color:var(--ink-2);box-shadow:0 1px 2px rgba(16,24,40,.04);}
+    .btn-ghost:hover{background:#f9fafb;border-color:#d1d5db;color:var(--ink);}
+    .btn-soft{background:#f3f4f6;border-color:transparent;color:var(--ink-2);box-shadow:none;}
+    .btn-soft:hover{background:#e5e7eb;color:var(--ink);}
+    .btn-dark{background:#111827;border-color:#111827;color:#f9fafb;box-shadow:0 1px 2px rgba(16,24,40,.2);}
+    .btn-dark:hover{background:#1f2937;border-color:#1f2937;}
+    .btn-accent{background:var(--accent);border-color:transparent;color:#0a101c;
+      box-shadow:0 1px 2px rgba(16,24,40,.18);}
+    .btn-accent:hover{filter:brightness(1.06);}
+    .btn-xs{height:1.75rem;padding:0 .5rem;font-size:.6875rem;border-radius:.375rem;}
 
     /* ===== Infra ===== */
     .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    #leaflet-map { height: calc(100vh - 240px); min-height: 550px; border-radius: 0.75rem; z-index: 10; }
+    #leaflet-map { height: calc(100vh - 240px); min-height: 550px; border-radius: var(--r-lg); z-index: 10; }
     @media print {
       body * { visibility: hidden; }
       #dossier-print-container, #dossier-print-container * { visibility: visible; }
@@ -571,7 +591,7 @@ def generate_dashboard():
 <body class="text-slate-800 min-h-screen flex flex-col">
 
   <!-- TOP HEADER & MAIN NAVIGATION -->
-  <header class="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-50 shadow-md">
+  <header id="topbar" class="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-50 shadow-md">
     <div class="max-w-[1750px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
       
       <!-- LOGO & TITULO -->
@@ -589,7 +609,7 @@ def generate_dashboard():
       </div>
 
       <!-- MAIN MODULE TABS (3 FRENTES DE TRABALHO) -->
-      <div class="flex items-center bg-slate-900/75 p-1 rounded-lg border border-slate-700/60 text-xs font-semibold">
+      <div class="flex items-center bg-white/5 p-1 rounded-lg border border-white/10 text-xs font-semibold">
         <button id="nav-btn-master" onclick="switchMainTab('master')" class="nav-tab is-active bg-amber-500 text-slate-950">
           <i class="ph-bold ph-table"></i>
           <span>1. Base Mestre Universal</span>
@@ -613,11 +633,11 @@ def generate_dashboard():
 
       <!-- GLOBAL QUICK ACTIONS -->
       <div class="flex items-center space-x-2 text-xs">
-        <div class="bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-700/60 text-slate-300 flex items-center space-x-1.5 hidden xl:flex">
+        <div class="bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/10 text-slate-300 flex items-center space-x-1.5 hidden xl:flex">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span>16.863 Motoristas | 99 Colunas</span>
         </div>
-        <button onclick="exportFilteredCSV()" class="btn btn-dark">
+        <button onclick="exportFilteredCSV()" class="btn btn-accent">
           <i class="ph-bold ph-download-simple"></i>
           <span>Exportar Dados</span>
         </button>
@@ -649,7 +669,7 @@ def generate_dashboard():
             <i class="ph-bold ph-certificate"></i>
           </div>
           <span class="eyebrow">Contemplados 2026</span>
-          <div class="text-2xl font-black text-emerald-600 mt-1">2.140</div>
+          <div class="kpi-value mt-1">2.140</div>
           <div class="text-[11px] text-emerald-700 font-medium mt-0.5">1.802 Comum + 338 Acess.</div>
         </div>
 
@@ -658,7 +678,7 @@ def generate_dashboard():
             <i class="ph-bold ph-hourglass-high"></i>
           </div>
           <span class="eyebrow">Suplentes Prioritários</span>
-          <div class="text-2xl font-black text-amber-600 mt-1">370</div>
+          <div class="kpi-value mt-1">370</div>
           <div class="text-[11px] text-amber-700 font-medium mt-0.5">Top Margem Desistência</div>
         </div>
 
@@ -667,7 +687,7 @@ def generate_dashboard():
             <i class="ph-bold ph-target"></i>
           </div>
           <span class="eyebrow">Tier 1 Comercial</span>
-          <div class="text-2xl font-black text-rose-600 mt-1">161</div>
+          <div class="kpi-value mt-1">161</div>
           <div class="text-[11px] text-rose-700 font-medium mt-0.5">Score &ge; 80 (VIP Conversão)</div>
         </div>
 
@@ -676,7 +696,7 @@ def generate_dashboard():
             <i class="ph-bold ph-phone-call"></i>
           </div>
           <span class="eyebrow">Telefones Validados</span>
-          <div class="text-2xl font-black text-indigo-600 mt-1">2.423</div>
+          <div class="kpi-value mt-1">2.423</div>
           <div class="text-[11px] text-indigo-700 font-medium mt-0.5">2.425 MEIs Cadastrados</div>
         </div>
 
@@ -685,7 +705,7 @@ def generate_dashboard():
             <i class="ph-bold ph-identification-card"></i>
           </div>
           <span class="eyebrow">CPFs Completos</span>
-          <div class="text-2xl font-black text-cyan-600 mt-1">914</div>
+          <div class="kpi-value mt-1">914</div>
           <div class="text-[11px] text-cyan-700 font-medium mt-0.5">2.391 Fila Ativa CRM</div>
         </div>
 
@@ -694,7 +714,7 @@ def generate_dashboard():
             <i class="ph-bold ph-newspaper"></i>
           </div>
           <span class="eyebrow">Processos SEI / DOC</span>
-          <div class="text-2xl font-black text-purple-600 mt-1">646</div>
+          <div class="kpi-value mt-1">646</div>
           <div class="text-[11px] text-purple-700 font-medium mt-0.5">100% Contemplados DOC</div>
         </div>
       </section>
@@ -736,7 +756,7 @@ def generate_dashboard():
 
       <!-- EXPLORER TABLE & FILTERS -->
       <section class="card overflow-hidden flex flex-col">
-        <div class="p-4 border-b border-slate-200 bg-slate-50/70 space-y-3">
+        <div class="p-4 border-b border-slate-100 bg-white space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
@@ -769,7 +789,7 @@ def generate_dashboard():
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2.5 pt-1">
             <div>
               <label class="eyebrow block mb-1">Edital / Categoria</label>
-              <select id="filter-edital" onchange="applyFilters()" class="field w-full text-xs px-2.5 py-1.5">
+              <select id="filter-edital" onchange="applyFilters()" class="field w-full px-2.5 py-1.5">
                 <option value="ALL">Todos os Editais</option>
                 <option value="1">Edital 1 (PcD Comum)</option>
                 <option value="2">Edital 2 (Tempo Comum)</option>
@@ -785,7 +805,7 @@ def generate_dashboard():
 
             <div>
               <label class="eyebrow block mb-1">Situação / Alvará</label>
-              <select id="filter-status" onchange="applyFilters()" class="field w-full text-xs px-2.5 py-1.5">
+              <select id="filter-status" onchange="applyFilters()" class="field w-full px-2.5 py-1.5">
                 <option value="ALL">Todas as Situações</option>
                 <option value="CONTEMPLADO">Contemplados (Titulares)</option>
                 <option value="SUPLENTE_ALTA">Suplente Alta Probabilidade</option>
@@ -796,7 +816,7 @@ def generate_dashboard():
 
             <div>
               <label class="eyebrow block mb-1">Tier Prioridade</label>
-              <select id="filter-tier" onchange="applyFilters()" class="field w-full text-xs px-2.5 py-1.5">
+              <select id="filter-tier" onchange="applyFilters()" class="field w-full px-2.5 py-1.5">
                 <option value="ALL">Todos os Tiers</option>
                 <option value="Tier 1">Tier 1 (Ultra Quente / Score &ge; 80) 🔥</option>
                 <option value="Tier 2">Tier 2 (Alta Receptividade / Score 65-79) ⭐</option>
@@ -807,7 +827,7 @@ def generate_dashboard():
 
             <div>
               <label class="eyebrow block mb-1">Vínculo de Ponto</label>
-              <select id="filter-ponto" onchange="applyFilters()" class="field w-full text-xs px-2.5 py-1.5">
+              <select id="filter-ponto" onchange="applyFilters()" class="field w-full px-2.5 py-1.5">
                 <option value="ALL">Todos os Tipos de Ponto</option>
                 <option value="VINCULADO">Ponto Privativo Vinculado</option>
                 <option value="SORTEIO">Tentou Sorteio de Ponto</option>
@@ -817,7 +837,7 @@ def generate_dashboard():
 
             <div>
               <label class="eyebrow block mb-1">Contato / Telefone</label>
-              <select id="filter-contato" onchange="applyFilters()" class="field w-full text-xs px-2.5 py-1.5">
+              <select id="filter-contato" onchange="applyFilters()" class="field w-full px-2.5 py-1.5">
                 <option value="ALL">Todos</option>
                 <option value="COM_TEL">Com Telefone Validado</option>
                 <option value="COM_CPF">Com CPF Completo</option>
@@ -827,7 +847,7 @@ def generate_dashboard():
 
             <div>
               <label class="eyebrow block mb-1">Proximidade Butantã</label>
-              <select id="filter-distancia" onchange="applyFilters()" class="field w-full text-xs px-2.5 py-1.5">
+              <select id="filter-distancia" onchange="applyFilters()" class="field w-full px-2.5 py-1.5">
                 <option value="ALL">Todas as Regiões</option>
                 <option value="5KM">Até 5 km da Sede (Hiperlocal)</option>
                 <option value="10KM">Até 10 km (Zona Oeste)</option>
@@ -838,7 +858,7 @@ def generate_dashboard():
             <div>
               <label class="eyebrow block mb-1">Busca Geral</label>
               <div class="relative">
-                <input type="text" id="search-input" oninput="applyFilters()" placeholder="Nome, CPF, Condutax, SEI..." class="field w-full text-xs pl-7 pr-2.5 py-1.5">
+                <input type="text" id="search-input" oninput="applyFilters()" placeholder="Nome, CPF, Condutax, SEI..." class="field w-full pl-7 pr-2.5 py-1.5">
                 <i class="ph-bold ph-magnifying-glass absolute left-2 top-2 text-slate-400 text-xs"></i>
               </div>
             </div>
@@ -847,7 +867,7 @@ def generate_dashboard():
 
         <!-- TABELA DE RESULTADOS UNIVERSAL -->
         <div class="overflow-x-auto custom-scrollbar flex-1">
-          <table class="tbl w-full text-left text-xs">
+          <table class="tbl w-full text-left">
             <thead>
               <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 uppercase text-[10px] tracking-wider select-none">
                 <th class="py-2.5 px-3">Motorista / Nome</th>
@@ -878,7 +898,7 @@ def generate_dashboard():
       <!-- DADOS ABERTOS MUNICIPAIS E ESTADUAIS (SMT, DETRAN-SP, RECEITA, INFOSIGA)-->
       <!-- ===================================================================== -->
       <section class="card overflow-hidden">
-        <div class="p-4 border-b border-slate-200 bg-slate-50/70 flex flex-wrap items-center justify-between gap-3">
+        <div class="p-4 border-b border-slate-100 bg-white flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
               <i class="ph-bold ph-database text-sky-600"></i>
@@ -929,7 +949,7 @@ __KPIS_ABERTOS__
           </div>
 
           <div class="overflow-x-auto custom-scrollbar">
-            <table class="tbl w-full text-left text-xs">
+            <table class="tbl w-full text-left">
               <thead>
                 <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 uppercase text-[10px] tracking-wider select-none">
                   <th class="py-2.5 px-3">Subprefeitura</th>
@@ -1023,7 +1043,7 @@ __LINHAS_ABERTOS__
         </div>
 
         <div class="relative w-full sm:w-64">
-          <input type="text" id="crm-search-input" oninput="applyCRMFilters()" placeholder="Buscar motorista no CRM..." class="field w-full text-xs pl-7 pr-2.5 py-1.5">
+          <input type="text" id="crm-search-input" oninput="applyCRMFilters()" placeholder="Buscar motorista no CRM..." class="field w-full pl-7 pr-2.5 py-1.5">
           <i class="ph-bold ph-magnifying-glass absolute left-2 top-2 text-slate-400 text-xs"></i>
         </div>
       </section>
@@ -1031,7 +1051,7 @@ __LINHAS_ABERTOS__
       <!-- TABELA OPERACIONAL CRM -->
       <section class="card overflow-hidden flex flex-col">
         <div class="overflow-x-auto custom-scrollbar">
-          <table class="tbl w-full text-left text-xs">
+          <table class="tbl w-full text-left">
             <thead>
               <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 uppercase text-[10px] tracking-wider select-none">
                 <th class="py-2.5 px-3">Motorista</th>
@@ -1077,7 +1097,7 @@ __LINHAS_ABERTOS__
         <div class="flex flex-wrap items-center gap-2 text-xs">
           <div>
             <label class="eyebrow block mb-0.5">Camada Base (Tiles)</label>
-            <select id="map-tile-provider" onchange="switchTileProvider(this.value)" class="field text-xs px-2.5 py-1.5 font-semibold text-slate-700">
+            <select id="map-tile-provider" onchange="switchTileProvider(this.value)" class="field px-2.5 py-1.5 font-semibold text-slate-700">
               <option value="esri_street" selected>Esri Ruas (100% Liberado / Sem Bloqueio) ⭐</option>
               <option value="google">Google Maps (Padrão Vias)</option>
               <option value="carto">CartoDB Voyager (Claro)</option>
@@ -1088,7 +1108,7 @@ __LINHAS_ABERTOS__
 
           <div>
             <label class="eyebrow block mb-0.5">Filtrar Mapa & Rotas</label>
-            <select id="map-route-filter" onchange="filterMapByRoute()" class="field text-xs px-2.5 py-1.5 font-semibold text-slate-700">
+            <select id="map-route-filter" onchange="filterMapByRoute()" class="field px-2.5 py-1.5 font-semibold text-slate-700">
               <option value="ALL">Todos os Pontos, Hospitais & Empresas</option>
               <option value="MOB_VULN_ALTA">🔥 Contratos Alta Vulnerabilidade (Substituição Imediata)</option>
               <option value="MOB_APPS">📱 Clientes Presos no Uber/99 (Ganho Faixa Ônibus SP)</option>
@@ -1194,7 +1214,7 @@ __LINHAS_ABERTOS__
             <i class="ph-bold ph-first-aid"></i>
           </div>
           <span class="eyebrow">Polos de Saúde</span>
-          <div class="text-2xl font-black text-rose-600 mt-1">94</div>
+          <div class="kpi-value mt-1">94</div>
           <div class="text-[11px] text-slate-500 mt-0.5">20 Quaternários Tier A</div>
         </div>
 
@@ -1203,7 +1223,7 @@ __LINHAS_ABERTOS__
             <i class="ph-bold ph-briefcase"></i>
           </div>
           <span class="eyebrow">Empresas 100+</span>
-          <div class="text-2xl font-black text-blue-600 mt-1">96</div>
+          <div class="kpi-value mt-1">96</div>
           <div class="text-[11px] text-slate-500 mt-0.5">Grandes Sedes Presenciais</div>
         </div>
 
@@ -1212,7 +1232,7 @@ __LINHAS_ABERTOS__
             <i class="ph-bold ph-fire"></i>
           </div>
           <span class="eyebrow">Alta Vulnerabilidade</span>
-          <div class="text-2xl font-black text-red-600 mt-1">85</div>
+          <div class="kpi-value mt-1">85</div>
           <div class="text-[11px] text-red-700 font-semibold mt-0.5">Substituição Imediata (44.7%)</div>
         </div>
 
@@ -1230,7 +1250,7 @@ __LINHAS_ABERTOS__
             <i class="ph-bold ph-wheelchair"></i>
           </div>
           <span class="eyebrow">Foco Táxi Acessível</span>
-          <div class="text-2xl font-black text-amber-600 mt-1">28</div>
+          <div class="kpi-value mt-1">28</div>
           <div class="text-[11px] text-slate-500 mt-0.5">Desospitalização & PcD</div>
         </div>
 
@@ -1239,7 +1259,7 @@ __LINHAS_ABERTOS__
             <i class="ph-bold ph-leaf"></i>
           </div>
           <span class="eyebrow">Frota Elétrica ESG</span>
-          <div class="text-2xl font-black text-teal-600 mt-1">32</div>
+          <div class="kpi-value mt-1">32</div>
           <div class="text-[11px] text-slate-500 mt-0.5">Edital 4 (Descarbonização)</div>
         </div>
       </section>
@@ -1274,14 +1294,14 @@ __LINHAS_ABERTOS__
             <label class="eyebrow block mb-1">Buscar Empresa / Hospital / Decisor</label>
             <div class="relative">
               <i class="ph-bold ph-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-sm"></i>
-              <input type="text" id="corp-search-query" oninput="applyCorpFilters()" placeholder="Nome, hospital, bairro, decisor, cargo, dor..." class="field w-full pl-9 pr-3 py-1.5 text-xs text-slate-800"/>
+              <input type="text" id="corp-search-query" oninput="applyCorpFilters()" placeholder="Nome, hospital, bairro, decisor, cargo, dor..." class="field w-full pl-9 pr-3 py-1.5 text-slate-800"/>
             </div>
           </div>
 
           <!-- FILTRO POR SEGMENTO -->
           <div>
             <label class="eyebrow block mb-1">Segmento / Setor</label>
-            <select id="corp-segment-filter" onchange="applyCorpFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
+            <select id="corp-segment-filter" onchange="applyCorpFilters()" class="field w-full px-2.5 py-1.5 font-medium text-slate-700">
               <option value="ALL">Todos os Segmentos (190)</option>
               <option value="HOSPITAIS">🏥 Apenas Hospitais & Saúde (94)</option>
               <option value="EMPRESAS">🏢 Apenas Grandes Empresas (96)</option>
@@ -1298,7 +1318,7 @@ __LINHAS_ABERTOS__
           <!-- FILTRO POR VULNERABILIDADE -->
           <div>
             <label class="eyebrow block mb-1">Vulnerabilidade Contratual</label>
-            <select id="corp-vuln-filter" onchange="applyCorpFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
+            <select id="corp-vuln-filter" onchange="applyCorpFilters()" class="field w-full px-2.5 py-1.5 font-medium text-slate-700">
               <option value="ALL">Todas as Vulnerabilidades</option>
               <option value="Alta">🔥 Alta Vulnerabilidade (85)</option>
               <option value="Média">⏳ Média Vulnerabilidade (105)</option>
@@ -1308,7 +1328,7 @@ __LINHAS_ABERTOS__
           <!-- FILTRO POR DEMANDA ESPECIAL -->
           <div>
             <label class="eyebrow block mb-1">Foco de Demanda</label>
-            <select id="corp-demand-filter" onchange="applyCorpFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
+            <select id="corp-demand-filter" onchange="applyCorpFilters()" class="field w-full px-2.5 py-1.5 font-medium text-slate-700">
               <option value="ALL">Todas as Demandas</option>
               <option value="ACES">♿ Táxi Acessível / Desospitalização</option>
               <option value="VOUCHERS">🌙 Vouchers Noturnos / Horas Extras</option>
@@ -1320,7 +1340,7 @@ __LINHAS_ABERTOS__
           <!-- FILTRO POR DISTÂNCIA DA SEDE -->
           <div>
             <label class="eyebrow block mb-1">Distância Sede Butantã</label>
-            <select id="corp-dist-filter" onchange="applyCorpFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
+            <select id="corp-dist-filter" onchange="applyCorpFilters()" class="field w-full px-2.5 py-1.5 font-medium text-slate-700">
               <option value="ALL">Todas (< 5.0 km)</option>
               <option value="2.5">📍 Raio Imediato (< 2.5 km)</option>
               <option value="4.0">📍 Raio Próximo (< 4.0 km)</option>
@@ -1339,7 +1359,7 @@ __LINHAS_ABERTOS__
           </div>
           <div class="flex items-center gap-2">
             <span class="text-slate-500 text-[11px]">Itens por página:</span>
-            <select id="corp-page-size" onchange="changeCorpPageSize()" class="field px-2 py-0.5 text-xs text-slate-700">
+            <select id="corp-page-size" onchange="changeCorpPageSize()" class="field px-2 py-0.5 text-slate-700">
               <option value="25" selected>25</option>
               <option value="50">50</option>
               <option value="100">100</option>
@@ -1349,7 +1369,7 @@ __LINHAS_ABERTOS__
         </div>
 
         <div class="overflow-x-auto custom-scrollbar">
-          <table class="tbl w-full text-left text-xs">
+          <table class="tbl w-full text-left">
             <thead>
               <tr class="bg-slate-100 text-slate-700 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
                 <th class="py-2.5 px-3">Prospect / Instituição</th>
@@ -1782,7 +1802,7 @@ __LINHAS_ABERTOS__
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Status do Funil B2B</label>
-              <select id="corp-crm-status" class="field w-full px-2.5 py-1.5 text-xs font-semibold text-slate-800">
+              <select id="corp-crm-status" class="field w-full px-2.5 py-1.5 font-semibold text-slate-800">
                 <option value="1 - Novo Prospect">1 - Novo Prospect</option>
                 <option value="2 - Decisor Conectado no LinkedIn">2 - Decisor Conectado no LinkedIn</option>
                 <option value="3 - E-mail / Apresentação Enviada">3 - E-mail / Apresentação Enviada</option>
@@ -1795,7 +1815,7 @@ __LINHAS_ABERTOS__
             <div class="sm:col-span-2">
               <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Anotações do Contato / Próximos Passos</label>
               <div class="flex gap-2">
-                <input type="text" id="corp-crm-notes" placeholder="Ex: Falou com Felipe no LinkedIn, reunião pré-agendada para quinta..." class="field flex-1 px-3 py-1.5 text-xs text-slate-800"/>
+                <input type="text" id="corp-crm-notes" placeholder="Ex: Falou com Felipe no LinkedIn, reunião pré-agendada para quinta..." class="field flex-1 px-3 py-1.5 text-slate-800"/>
                 <button onclick="saveCorpCRM()" class="btn bg-purple-600 hover:bg-purple-500 text-white shrink-0">
                   <i class="ph-bold ph-floppy-disk"></i>
                   <span>Salvar</span>
@@ -2734,7 +2754,7 @@ __LINHAS_ABERTOS__
             ` : `<span class="text-slate-400 text-[10px]">Sem celular</span>`}
           </td>
           <td class="py-2.5 px-3">
-            <select onchange="setLeadSavedStatus('${r.id}', this.value)" class="field text-[11px] px-2 py-1 font-semibold text-slate-700">
+            <select onchange="setLeadSavedStatus('${r.id}', this.value)" class="field px-2 py-1 font-semibold text-slate-700">
               <option value="1 - Novo Lead" ${savedStatus.includes('1 - Novo') ? 'selected' : ''}>1 - Novo Lead</option>
               <option value="2 - Tentativa de Contato" ${savedStatus.includes('2 - Tentativa') ? 'selected' : ''}>2 - Tentativa de Contato</option>
               <option value="3 - Contatado / Conversando" ${savedStatus.includes('3 - Contatado') ? 'selected' : ''}>3 - Contatado / Conversando</option>
@@ -2744,7 +2764,7 @@ __LINHAS_ABERTOS__
             </select>
           </td>
           <td class="py-2.5 px-3">
-            <input type="text" value="${savedNote}" onchange="setLeadSavedNote('${r.id}', this.value)" placeholder="Anotação rápida..." class="field w-full text-[11px] px-2 py-1">
+            <input type="text" value="${savedNote}" onchange="setLeadSavedNote('${r.id}', this.value)" placeholder="Anotação rápida..." class="field w-full px-2 py-1">
           </td>
           <td class="py-2.5 px-3 text-right">
             <button onclick="openDriverModal('${r.id}')" class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-slate-100 rounded-lg transition" title="Ver Dossiê 360°">
@@ -3606,6 +3626,15 @@ __LINHAS_ABERTOS__
   Chart.defaults.plugins.tooltip.padding = 10;
   Chart.defaults.plugins.tooltip.cornerRadius = 8;
   Chart.defaults.plugins.tooltip.titleFont = { weight: '700' };
+  try {
+    Chart.defaults.elements.bar.borderRadius = 3;
+    Chart.defaults.elements.bar.maxBarThickness = 28;
+    Chart.defaults.elements.line.borderWidth = 2;
+    Chart.defaults.elements.line.tension = 0.35;
+    Chart.defaults.elements.point.radius = 0;
+    Chart.defaults.elements.point.hoverRadius = 4;
+    Chart.defaults.scale.grid.color = '#eef1f5';
+  } catch (e) {}
 
       const ctxEditais = document.getElementById('chart-editais').getContext('2d');
       new Chart(ctxEditais, {
