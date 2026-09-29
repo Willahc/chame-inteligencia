@@ -181,7 +181,7 @@ def agregar(src: Path, periodo: str) -> Path:
     dest = PROC / f"frota_ativa_sp_por_municipio_{periodo}.csv"
     PROC.mkdir(parents=True, exist_ok=True)
     with dest.open("w", encoding="utf-8", newline="") as f:
-        w = csv.writer(f)
+        w = csv.writer(f, delimiter=";")
         w.writerow(["id_ibge", "municipio", "mesorregiao_ibge", "e_capital",
                     "frota_total", "automoveis", "motocicletas", "onibus",
                     "veiculos_carga", "veiculos_especiais", "periodo"])
@@ -237,12 +237,17 @@ def main() -> int:
     }
     fields = list(row)
     mpath.parent.mkdir(parents=True, exist_ok=True)
-    new = not mpath.exists()
-    with mpath.open("a", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=fields)
-        if new:
-            w.writeheader()
-        w.writerow(row)
+    existentes = set()
+    if mpath.exists():
+        with mpath.open(encoding="utf-8", newline="") as f:
+            existentes = {r.get("url", "") for r in csv.DictReader(f)}
+    if url not in existentes:
+        new = not mpath.exists()
+        with mpath.open("a", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=fields)
+            if new:
+                w.writeheader()
+            w.writerow(row)
     print(f"manifesto: {mpath.relative_to(ROOT)}")
     return 0
 

@@ -75,7 +75,7 @@ Síntese dos achados:
 
 ## Camada posterior ao Gate 6 — Planilha Mestre, Cockpit e camada B2B
 
-- `scripts/build_master_spreadsheet.py` consolida a **Planilha Mestre Unificada de Taxistas SP 2026** (`planilha_mestre_taxistas_sp_2026.csv` e `.xlsx`, com 15 abas):
+- `scripts/build_master_spreadsheet.py` consolida a **Planilha Mestre Unificada de Taxistas SP 2026** (`planilha_mestre_taxistas_sp_2026.csv` e `.xlsx`, com 20 abas — as abas 16–20 são as bases de dados abertos: licenças SGTP, frota por município, vítimas taxistas, acidentes por subprefeitura e série mensal):
   - **16.863 registros únicos** integrados de 12 bases obrigatórias (alvarás 2026 consolidados, layout de contemplados, ranking de alvos, MEIs da Zona Oeste/Butantã, atos do Diário Oficial DOC 2026, catálogo de pontos, pontos consolidados DTP ↔ OSM, inscritos e resultados dos sorteios de pontos, polos CFC/DTP/IPEM, plano de prospecção territorial e feições OSM sem DTP), mais a base CNPJ da Receita Federal e o cache do DOC quando presentes.
   - Normalização canônica de CPF, CNPJ, Alvará, Condutax, pontuação de captação e geolocalização, além de `Score_Chame_Taxi` (0–100) e `Tier_Prioridade_Comercial`. É um **score de priorização comercial** — não há decisão automatizada nem atribuição automática de vaga.
   - Saída versionada: `planilha_mestre_taxistas_sp_2026_publico.csv` (86 colunas, sem dado pessoal), gerada por `python scripts/privacy.py public-master`. A base completa fica local e no `.gitignore`.
@@ -83,7 +83,7 @@ Síntese dos achados:
   - **100% Esri GIS (sem exigência de API Key)**: camada base **Esri World Street Map** (substituindo OpenStreetMap/CartoDB para eliminar erros 403 e exigência de chave comercial em origens locais `file:///`), com Esri Satélite/Aérea e Esri Topográfico & Relevo como complementares.
   - Overlays: 261 pontos pareados, 10 MEIs da Zona Oeste (com links de WhatsApp direto — dado pessoal, por isso o HTML não é versionado), 26 polos institucionais (DTP, CFC e IPEM), 14 subprefeituras com vazios cartográficos e heatmap de vagas.
 - `scripts/generate_master_dashboard.py` gera o **Cockpit + CRM 360** (`dashboard_mestre_taxistas_sp_2026.html` e espelho em `Novos Alvarás 2026/dashboard_alvaras_taxi_2026.html`, artefatos locais não versionados):
-  - **4 views**: Base Mestre Universal, Fila CRM & WhatsApp, Mapa Tático GIS (SP) e Clientes Corporativos B2B.
+  - **4 views**: Base Mestre Universal (inclui a seção **Dados Abertos Municipais e Estaduais** com 6 indicadores, ranking de sinistros por subprefeitura e série mensal), Fila CRM & WhatsApp, Mapa Tático GIS (SP) e Clientes Corporativos B2B.
   - **Data grid**: ordenação por coluna, paginação configurável (25 a 500), filtros, exportação CSV e gaveta lateral de auditoria do motorista com links de WhatsApp, DOC, SEI, LinkedIn, Google e Hunter.
   - Este é o gerador oficial do dashboard; as versões anteriores (`build_enterprise_tool_v2.py`, `generate_enterprise_tool.py`) foram removidas por produzirem a mesma saída.
 - `scripts/run_pipeline.py` é o orquestrador: `python scripts/run_pipeline.py` lista os estágios, `--only <id>` roda estágios isolados, `--all` roda o pipeline completo (os estágios de rede pesada são manuais e exigem `--include-manual`). As dependências estão em `requirements.txt`.
@@ -96,12 +96,13 @@ O dashboard e as bases de dados completos são artefatos locais de inteligência
 
 ### Rodada de dados abertos de 29/09/2026
 
-Quatro aquisições novas, todas com download idempotente, SHA-256 e licença registrados em `logs/manifesto_*.csv`:
+Seis frentes novas, todas com download idempotente, SHA-256 e licença registrados em `logs/manifesto_*.csv`:
 
 - **SGTP / CMTT** (`scripts/fetch_smt_open_data.py` → `data/raw/smt/`, versionado): série mensal de **licenças de táxi** do município (jan–mai/2026; 37.571 em maio) e a lista dos **133 conselheiros do CMTT** (inclui SINDITAXI e sindicatos de táxi).
 - **Frota ativa do Detran-SP** (`scripts/fetch_detran_frota.py` → `data/processed/frota_ativa_sp_por_municipio_2026-08.csv`): 645 municípios, São Paulo com 6.464.958 veículos. O bruto (355 MB, `data/raw/detran/`) fica fora do Git. **Limitação**: a base não expõe a categoria de serviço `TAXI` — a oferta continua sendo medida pelo SGTP.
 - **Sinistros do Infosiga** (`scripts/fetch_infosiga_taxistas.py` → `data/processed/sinistros_vitimas_taxistas_infosiga_mensal.csv`): 12 meses de vítimas por profissão; **364 vítimas taxista/mototaxista** em São Paulo (set/2025–ago/2026). Os pacotes de veículos/eventos não trazem categoria de táxi.
 - **PJ ativas e MEIs por CNAE** (`scripts/build_empresas_taxi_cnae.py`): `data/processed/empresas_taxi_pj_ativas_sp.csv` (**5.558 empresas PJ ativas**, versionada, telefones/e-mails renomeados para `*_INSTITUCIONAL`) e `data/private/condutores_taxi_mei_ativas_sp.csv` (**51.210 MEI**, local, `razao_social` = nome do titular).
 - **Geocodificação dos pontos sem OSM** (`scripts/geocode_dtp_sem_osm.py`): dos **926** pontos do Gate 5 sem par no OSM, **736** receberam coordenada de logradouro via Nominatim (`data/processed/dtp_pontos_sem_osm_geo.csv`); cobertura de coordenadas do DTP sobe de **21,99% para 83,99%**. O pareamento DTP ↔ OSM do Gate 5 **permanece em 21,99%** — geocodificação própria não é correspondência OSM (`data/processed/cobertura_gate5_geocodificacao.json`).
+- **Acidentes por subprefeitura** (`scripts/build_acidentes_por_subprefeitura.py`): 12 meses do pacote `eventos-de-sinistro` (Detran-SP/Infosiga) recortados pelo `cod_ibge` 3550308 e localizados dentro dos 32 polígonos oficiais do GeoSampa — **44.522 eventos** no município (1.010 fatais, 6.403 atropelamentos), gerando `data/processed/acidentes_sp_por_subprefeitura_2025-09_2026-08.csv` e `data/processed/acidentes_sp_mensal_2025-09_2026-08.csv`. **Limitação**: 34,7% dos eventos não trazem latitude/longitude e 2,0% caem fora dos polígonos; os eventos sem coordenada ficam no balcão `Sem coordenada` e não são distribuídos territorialmente.
 
 

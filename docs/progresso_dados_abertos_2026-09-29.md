@@ -17,6 +17,7 @@ Seis alvos aprovados (A, B, C, CMTT, D, E). Todos concluídos em 29/09/2026.
 | E — sinistros Infosiga | `scripts/fetch_infosiga_taxistas.py` | `data/processed/sinistros_vitimas_taxistas_infosiga_mensal.csv` + `logs/manifesto_infosiga_20260929.csv` | 12 meses (set/2025–ago/2026); **364 vítimas taxista/mototaxista** em São Paulo (~20–39/mês) |
 | C — CNAE da RFB | `scripts/build_empresas_taxi_cnae.py` | `data/processed/empresas_taxi_pj_ativas_sp.csv` (versionada) + `data/private/condutores_taxi_mei_ativas_sp.csv` (local) | **5.558 PJ ativas** (99% com telefone, 96% com e-mail) e **51.210 MEI ativos** |
 | D — geocodificação | `scripts/geocode_dtp_sem_osm.py` | `data/processed/dtp_pontos_sem_osm_geo.csv` + `data/processed/cobertura_gate5_geocodificacao.json` | **736/926** pontos sem OSM receberam coordenada (94 fora do município, 96 não encontrados) |
+| F — acidentes por subprefeitura | `scripts/build_acidentes_por_subprefeitura.py` | `data/processed/acidentes_sp_por_subprefeitura_2025-09_2026-08.csv` + `data/processed/acidentes_sp_mensal_2025-09_2026-08.csv` | 12 meses de `eventos-de-sinistro` recortados em `cod_ibge=3550308` e localizados nos 32 polígonos do GeoSampa: **44.522 eventos** (1.010 fatais, 6.403 atropelamentos), 29.083 geolocalizados |
 
 Cobertura de **coordenadas** do DTP: **21,99% → 83,99%** (997/1.187). O
 **pareamento DTP ↔ OSM do Gate 5 continua 21,99%** — geocodificação própria não
@@ -43,6 +44,12 @@ Cobertura de **coordenadas** do DTP: **21,99% → 83,99%** (997/1.187). O
    `requests` falha com cadeia auto-assinada; o download usa
    `curl.exe --ssl-no-revoke` (cadeia do Windows, sem checagem de revogação)
    com fallback para `requests verify=False`. SHA-256 fica no manifesto.
+5. **Eventos sem coordenada**: 15.439 dos 44.522 eventos (34,7%) não trazem
+   latitude/longitude e 900 (2,0%) caem fora dos polígonos de subprefeitura;
+   ambos ficam em balcões próprios (`Sem coordenada`, `Fora dos poligonos`)
+   e não são distribuídos territorialmente. 18.250 linhas são `NOTIFICACAO`
+   (evento não classificado) e entram no total, mas não nas colunas de
+   fatais/não fatais.
 
 ## Política de dados confirmada
 
@@ -60,21 +67,40 @@ Cobertura de **coordenadas** do DTP: **21,99% → 83,99%** (997/1.187). O
 python scripts/run_pipeline.py --only smt          # SGTP + CMTT
 python scripts/run_pipeline.py --only detran       # frota Detran-SP (rede pesada)
 python scripts/run_pipeline.py --only infosiga     # 12 meses de sinistros
+python scripts/run_pipeline.py --only acidentes    # eventos de sinistro por subprefeitura
 python scripts/run_pipeline.py --only cnae-pj      # PJ públicas + MEI privado
 python scripts/run_pipeline.py --only geo-sem-osm  # 926 pontos no Nominatim (~1 req/s)
 python scripts/privacy.py check                    # deve terminar com 0 violações
 ```
 
 Estágios novos registrados em `scripts/run_pipeline.py`: `smt`, `detran`,
-`infosiga` (grupo `fontes`, manuais), `geo-sem-osm` (grupo `campo`, manual) e
-`cnae-pj` (grupo `b2b`, local).
+`infosiga`, `acidentes` (grupo `fontes`, manuais), `geo-sem-osm` (grupo
+`campo`, manual) e `cnae-pj` (grupo `b2b`, local).
+
+## Integração nos produtos (executada em 29/09/2026)
+
+- **Planilha Mestre** (`scripts/build_master_spreadsheet.py`): passou de 15 para
+  **20 abas**, na sequência já usada pelo script:
+  - `16_Licencas_SGTP_Taxi` (25 linhas, jan–mai/2026),
+  - `17_Frota_Ativa_Por_Municipio` (645 municípios, ago/2026),
+  - `18_Sinistros_Vitimas_Taxistas` (623 linhas, 12 meses),
+  - `19_Acidentes_Por_Subprefeitura` (34 balcões) e
+  - `20_Acidentes_SP_Mensal` (12 meses).
+  Os cinco CSVs são lidos com `sep=';'`, `encoding='utf-8-sig'` e entram apenas
+  no `.xlsx` (o CSV mestre continua sendo a base de motoristas).
+- **Dashboard oficial** (`scripts/generate_master_dashboard.py`): nova seção
+  **Dados Abertos Municipais e Estaduais** na view 1, com 6 cards de KPI
+  (licenças SGTP, frota estadual, PJ ativas, sinistros, vítimas taxistas e
+  cobertura geográfica), gráfico de barras das 10 subprefeituras com mais
+  sinistros, gráfico de linha da série mensal e tabela dos 10 primeiros.
+  Os dados entram pelo placeholder `__ABERTOS_PLACEHOLDER__` e os HTMLs de
+  KPI/tabela por `__KPIS_ABERTOS__` / `__LINHAS_ABERTOS__`.
+- **Separador**: os CSVs derivados desta rodada passaram a usar `;`
+  (convenção do repositório, abre direto no Excel pt-BR) e os escritores dos
+  scripts de aquisição foram idempotentes por URL para não duplicar linhas de
+  manifesto em reexecuções.
 
 ## Próximos passos possíveis (não executados)
 
-- Integrar as três bases novas (licenças SGTP, frota por município, sinistros
-  de taxistas) na Planilha Mestre e nos dashboards.
-- Recortar acidentes por subprefeitura/distrito a partir de
-  `eventos-de-sinistro` (tem `latitude/longitude` e `cod_ibge`) como camada de
-  risco territorial.
 - Reavaliar a cobertura do Gate 5 se o DTP publicar relação georreferenciada
   (foi solicitado por minuta em 23/09/2026).

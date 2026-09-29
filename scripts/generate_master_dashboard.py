@@ -16,6 +16,8 @@ que integra:
 import os
 import sys
 import io
+import re
+import glob
 import json
 import pandas as pd
 import numpy as np
@@ -340,6 +342,120 @@ def generate_dashboard():
                 })
     print(f"Grandes Empresas Corporativas (100+ Colaboradores): {len(emp_records):,} locais.")
 
+    # 6. Dados abertos municipais e estaduais (SMT/SGTP, Detran-SP, Receita e Infosiga)
+    def _ler_aberto(*caminhos):
+        for p in caminhos:
+            if os.path.exists(p):
+                try:
+                    return pd.read_csv(p, sep=';', encoding='utf-8-sig', low_memory=False)
+                except Exception as exc:
+                    print(f"  [aviso] nao foi possivel ler {p}: {exc}")
+        return None
+
+    def _br(n):
+        return f"{int(n):,}".replace(",", ".")
+
+    df_sgtp = _ler_aberto(r'data\processed\sgtp_licencas_taxi_mensal.csv')
+    df_frota = _ler_aberto(r'data\processed\frota_ativa_sp_por_municipio_2026-08.csv')
+    df_sin_tax = _ler_aberto(r'data\processed\sinistros_vitimas_taxistas_infosiga_mensal.csv')
+    df_emp_pj = _ler_aberto(r'data\processed\empresas_taxi_pj_ativas_sp.csv')
+    df_acid_sub = _ler_aberto(*sorted(glob.glob(r'data\processed\acidentes_sp_por_subprefeitura_*.csv'), reverse=True))
+    df_acid_mes = _ler_aberto(*sorted(glob.glob(r'data\processed\acidentes_sp_mensal_*.csv'), reverse=True))
+
+    sgtp_total, sgtp_rotulo = 0, ''
+    if df_sgtp is not None and len(df_sgtp):
+        mes_cols = [c for c in df_sgtp.columns if re.match(r'^[a-z]{3}_\d{4}$', c)]
+        if mes_cols:
+            ult_mes = mes_cols[-1]
+            sgtp_total = int(pd.to_numeric(
+                df_sgtp.loc[df_sgtp['categoria'] == '(subtotal)', ult_mes], errors='coerce').sum())
+            sgtp_rotulo = ult_mes.replace('_', '/')
+
+    frota_estado = frota_capital = 0
+    frota_periodo = ''
+    if df_frota is not None and len(df_frota):
+        frota_estado = int(pd.to_numeric(df_frota['frota_total'], errors='coerce').sum())
+        frota_capital = int(pd.to_numeric(
+            df_frota.loc[df_frota['e_capital'] == 'sim', 'frota_total'], errors='coerce').sum())
+        frota_periodo = str(df_frota['periodo'].iloc[0])
+
+    pj_total = len(df_emp_pj) if df_emp_pj is not None else 0
+
+    vit_taxista, vit_fatais = 0, 0
+    if df_sin_tax is not None and len(df_sin_tax):
+        sp_vit = df_sin_tax[df_sin_tax['municipio'] == 'SAO PAULO']
+        vit_taxista = int(pd.to_numeric(sp_vit['vitimas_taxista'], errors='coerce').sum())
+        vit_fatais = int(pd.to_numeric(sp_vit['fatais'], errors='coerce').sum())
+
+    SEM_GEO = ['Sem coordenada', 'Fora dos poligonos']
+    acid_total = acid_fatais = acid_atrop = acid_local = 0
+    acid_periodo, acid_top, acid_mes_series = '', [], []
+    if df_acid_sub is not None and len(df_acid_sub):
+        acid_total = int(pd.to_numeric(df_acid_sub['sinistros'], errors='coerce').sum())
+        acid_fatais = int(pd.to_numeric(df_acid_sub['sinistros_fatais'], errors='coerce').sum())
+        acid_atrop = int(pd.to_numeric(df_acid_sub['atropelamentos'], errors='coerce').sum())
+        acid_local = acid_total - int(pd.to_numeric(
+            df_acid_sub.loc[df_acid_sub['subprefeitura'].isin(SEM_GEO), 'sinistros'],
+            errors='coerce').sum())
+        acid_periodo = str(df_acid_sub['periodo'].iloc[0])
+        top = df_acid_sub[~df_acid_sub['subprefeitura'].isin(SEM_GEO)].head(10)
+        acid_top = [{
+            "sub": str(r['subprefeitura']) if len(str(r['subprefeitura'])) <= 3
+            else str(r['subprefeitura']).title(),
+            "sin": int(r['sinistros']),
+            "fatais": int(r['sinistros_fatais']),
+            "atrop": int(r['atropelamentos']),
+            "env": int(r['envolvidos_total']),
+        } for _, r in top.iterrows()]
+    if df_acid_mes is not None and len(df_acid_mes):
+        acid_mes_series = [{
+            "mes": str(r['ano_mes']),
+            "sin": int(r['sinistros']),
+            "fatais": int(r['sinistros_fatais']),
+            "atrop": int(r['atropelamentos']),
+        } for _, r in df_acid_mes.iterrows()]
+
+    cobertura_pct = round(acid_local / acid_total * 100, 1) if acid_total else 0.0
+    kpis_abertos = [
+        {"label": "Licenças de Táxi (SGTP)", "valor": _br(sgtp_total), "icone": "ph-id-card",
+         "bg": "bg-sky-50", "txt": "text-sky-600", "sub": f"{sgtp_rotulo} | SMT/DTP"},
+        {"label": "Frota Ativa (Estado SP)", "valor": _br(frota_estado), "icone": "ph-car",
+         "bg": "bg-blue-50", "txt": "text-blue-600", "sub": f"{frota_periodo} | capital {_br(frota_capital)}"},
+        {"label": "PJ de Táxi Ativas", "valor": _br(pj_total), "icone": "ph-buildings",
+         "bg": "bg-purple-50", "txt": "text-purple-600", "sub": "Receita Federal | CNAE táxi"},
+        {"label": "Sinistros no Município", "valor": _br(acid_total), "icone": "ph-warning",
+         "bg": "bg-rose-50", "txt": "text-rose-600", "sub": f"{acid_periodo} | {_br(acid_fatais)} fatais"},
+        {"label": "Vítimas Taxistas", "valor": _br(vit_taxista), "icone": "ph-steering-wheel",
+         "bg": "bg-amber-50", "txt": "text-amber-600", "sub": f"12 meses | {vit_fatais} fatal(is) | Infosiga"},
+        {"label": "Sinistros Geolocalizados", "valor": f"{cobertura_pct}%".replace('.', ','), "icone": "ph-map-pin",
+         "bg": "bg-emerald-50", "txt": "text-emerald-600", "sub": f"{_br(acid_local)} de {_br(acid_total)} com coordenada"},
+    ]
+
+    kpis_html = ''.join(
+        '        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">\n'
+        f'          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg {k["bg"]} {k["txt"]} flex items-center justify-center text-lg">\n'
+        f'            <i class="ph-bold {k["icone"]}"></i>\n'
+        '          </div>\n'
+        f'          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{k["label"]}</span>\n'
+        f'          <div class="text-2xl font-black text-slate-900 mt-1">{k["valor"]}</div>\n'
+        f'          <div class="text-[11px] text-slate-500 mt-0.5">{k["sub"]}</div>\n'
+        '        </div>\n'
+        for k in kpis_abertos)
+
+    linhas_abertos = ''.join(
+        '                <tr class="hover:bg-slate-50">\n'
+        f'                  <td class="py-2 px-3 font-semibold text-slate-800">{t["sub"]}</td>\n'
+        f'                  <td class="py-2 px-3 text-right">{_br(t["sin"])}</td>\n'
+        f'                  <td class="py-2 px-3 text-right text-slate-500">{_br(t["sin"] - t["fatais"])}</td>\n'
+        f'                  <td class="py-2 px-3 text-right font-bold text-rose-600">{_br(t["fatais"])}</td>\n'
+        f'                  <td class="py-2 px-3 text-right text-amber-600">{_br(t["atrop"])}</td>\n'
+        f'                  <td class="py-2 px-3 text-right text-slate-500">{_br(t["env"])}</td>\n'
+        '                </tr>\n'
+        for t in acid_top)
+
+    print(f"Dados abertos carregados: SGTP {sgtp_total} licenças | frota {frota_estado} | "
+          f"PJ {pj_total} | sinistros {acid_total} | vítimas taxista {vit_taxista}.")
+
     json_data = json.dumps(records, ensure_ascii=False)
     json_stats = json.dumps(edital_stats, ensure_ascii=False)
     json_tiers = json.dumps(tier_counts, ensure_ascii=False)
@@ -349,6 +465,15 @@ def generate_dashboard():
     json_map_pontos = json.dumps(pontos_records, ensure_ascii=False)
     json_hospitais = json.dumps(hosp_records, ensure_ascii=False)
     json_empresas = json.dumps(emp_records, ensure_ascii=False)
+    json_abertos = json.dumps({
+        "sub_labels": [t["sub"] for t in acid_top],
+        "sub_sinistros": [t["sin"] for t in acid_top],
+        "sub_fatais": [t["fatais"] for t in acid_top],
+        "mes_labels": [m["mes"] for m in acid_mes_series],
+        "mes_sinistros": [m["sin"] for m in acid_mes_series],
+        "mes_fatais": [m["fatais"] for m in acid_mes_series],
+        "mes_atrop": [m["atrop"] for m in acid_mes_series],
+    }, ensure_ascii=False)
 
     print("Montando aplicação HTML com os 3 módulos (Base Mestre, CRM WhatsApp e Mapa GIS)...")
 
@@ -684,6 +809,80 @@ def generate_dashboard():
           <div class="text-slate-500" id="pagination-info">Mostrando 0 a 0 de 0 registros</div>
           <div class="flex items-center space-x-1" id="pagination-controls">
             <!-- Botões dinâmicos de paginação -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- DADOS ABERTOS MUNICIPAIS E ESTADUAIS (SMT, DETRAN-SP, RECEITA, INFOSIGA)-->
+      <!-- ===================================================================== -->
+      <section class="bg-white rounded-xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-200 bg-slate-50/70 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+              <i class="ph-bold ph-database text-sky-600"></i>
+              Dados Abertos Municipais e Estaduais
+            </h2>
+            <p class="text-xs text-slate-500">Licenças SGTP e frota Detran, PJ ativas da Receita e sinistros de trânsito no município de São Paulo, com recorte territorial por subprefeitura.</p>
+          </div>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-200 uppercase tracking-wider">6 indicadores</span>
+        </div>
+
+        <div class="p-4 space-y-4">
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5">
+__KPIS_ABERTOS__
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm lg:col-span-2 flex flex-col">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                <div>
+                  <h2 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 uppercase tracking-wide">
+                    <i class="ph-bold ph-map-trifold text-rose-500 text-sm"></i>
+                    Risco de Trânsito por Subprefeitura (Top 10)
+                  </h2>
+                  <p class="text-[11px] text-slate-400">Sinistros de trânsito localizados por coordenada dentro dos polígonos oficiais do GeoSampa</p>
+                </div>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-50 text-rose-600 border border-rose-200">Infosiga / Detran-SP</span>
+              </div>
+              <div class="h-64 w-full flex-1">
+                <canvas id="chart-abertos-subpref"></canvas>
+              </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm flex flex-col">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                <div>
+                  <h2 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 uppercase tracking-wide">
+                    <i class="ph-bold ph-chart-line-up text-sky-500 text-sm"></i>
+                    Série Mensal no Município
+                  </h2>
+                  <p class="text-[11px] text-slate-400">Sinistros, fatais e atropelamentos por mês</p>
+                </div>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-50 text-sky-600 border border-sky-200">12 meses</span>
+              </div>
+              <div class="h-64 w-full flex-1">
+                <canvas id="chart-abertos-mes"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 uppercase text-[10px] tracking-wider select-none">
+                  <th class="py-2.5 px-3">Subprefeitura</th>
+                  <th class="py-2.5 px-3 text-right">Sinistros</th>
+                  <th class="py-2.5 px-3 text-right">Não Fatais</th>
+                  <th class="py-2.5 px-3 text-right">Fatais</th>
+                  <th class="py-2.5 px-3 text-right">Atropelamentos</th>
+                  <th class="py-2.5 px-3 text-right">Envolvidos</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-abertos" class="divide-y divide-slate-100 text-slate-700">
+__LINHAS_ABERTOS__
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -1567,6 +1766,7 @@ def generate_dashboard():
     const TIER_STATS = __TIER_STATS_PLACEHOLDER__;
     const CRM_LEADS = __CRM_DATA_PLACEHOLDER__;
     const MAP_PONTOS = __MAP_PONTOS_PLACEHOLDER__;
+    const ABERTOS = __ABERTOS_PLACEHOLDER__;
     const HOSPITAIS_5KM = __HOSPITAIS_PLACEHOLDER__;
     const EMPRESAS_5KM = __EMPRESAS_PLACEHOLDER__;
 
@@ -3394,6 +3594,89 @@ def generate_dashboard():
           cutout: '70%'
         }
       });
+
+      if (ABERTOS.sub_labels.length) {
+        const ctxAbertosSub = document.getElementById('chart-abertos-subpref').getContext('2d');
+        new Chart(ctxAbertosSub, {
+          type: 'bar',
+          data: {
+            labels: ABERTOS.sub_labels,
+            datasets: [
+              {
+                label: 'Sinistros',
+                data: ABERTOS.sub_sinistros,
+                backgroundColor: '#f43f5e',
+                borderRadius: 6
+              },
+              {
+                label: 'Fatais',
+                data: ABERTOS.sub_fatais,
+                backgroundColor: '#0f172a',
+                borderRadius: 6
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { boxWidth: 12, font: { family: 'Plus Jakarta Sans', size: 10 } } }
+            },
+            scales: {
+              x: { grid: { display: false }, ticks: { font: { size: 9 } } },
+              y: { grid: { color: '#f1f5f9' }, beginAtZero: true }
+            }
+          }
+        });
+      }
+
+      if (ABERTOS.mes_labels.length) {
+        const ctxAbertosMes = document.getElementById('chart-abertos-mes').getContext('2d');
+        new Chart(ctxAbertosMes, {
+          type: 'line',
+          data: {
+            labels: ABERTOS.mes_labels,
+            datasets: [
+              {
+                label: 'Sinistros',
+                data: ABERTOS.mes_sinistros,
+                borderColor: '#0284c7',
+                backgroundColor: 'rgba(2, 132, 199, 0.12)',
+                fill: true,
+                tension: 0.35,
+                pointRadius: 3
+              },
+              {
+                label: 'Atropelamentos',
+                data: ABERTOS.mes_atrop,
+                borderColor: '#f59e0b',
+                backgroundColor: 'transparent',
+                tension: 0.35,
+                pointRadius: 3
+              },
+              {
+                label: 'Fatais',
+                data: ABERTOS.mes_fatais,
+                borderColor: '#0f172a',
+                backgroundColor: 'transparent',
+                tension: 0.35,
+                pointRadius: 3
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { boxWidth: 12, font: { family: 'Plus Jakarta Sans', size: 10 } } }
+            },
+            scales: {
+              x: { grid: { display: false }, ticks: { font: { size: 9 } } },
+              y: { grid: { color: '#f1f5f9' }, beginAtZero: true }
+            }
+          }
+        });
+      }
     }
   </script>
 </body>
@@ -3407,6 +3690,9 @@ def generate_dashboard():
     final_html = final_html.replace('__MAP_PONTOS_PLACEHOLDER__', json_map_pontos)
     final_html = final_html.replace('__HOSPITAIS_PLACEHOLDER__', json_hospitais)
     final_html = final_html.replace('__EMPRESAS_PLACEHOLDER__', json_empresas)
+    final_html = final_html.replace('__ABERTOS_PLACEHOLDER__', json_abertos)
+    final_html = final_html.replace('__KPIS_ABERTOS__', kpis_html)
+    final_html = final_html.replace('__LINHAS_ABERTOS__', linhas_abertos)
 
     out_root = 'dashboard_mestre_taxistas_sp_2026.html'
     out_folder = os.path.join('Novos Alvarás 2026', 'dashboard_alvaras_taxi_2026.html')

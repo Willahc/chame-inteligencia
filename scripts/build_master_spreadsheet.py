@@ -18,6 +18,7 @@ import io
 import re
 import math
 import json
+import glob
 import urllib.parse
 import unicodedata
 import pandas as pd
@@ -1314,10 +1315,26 @@ def build_master():
         except Exception:
             pass
 
-    # Aba 12: Suplentes Prioritários da Fila de Espera (Dentro da Margem de Desistência DTP)
+    # Abas 12: Suplentes Prioritários da Fila de Espera (Dentro da Margem de Desistência DTP)
     df_suplentes_prioritarios = df_master[
         df_master['Classificacao_Suplencia_Fila'].str.contains('Alta Probabilidade', na=False)
     ].copy()
+
+    # Abas 16-20: Dados abertos municipais e estaduais (SMT/SGTP, Detran e Infosiga)
+    def _ler_aberto(*caminhos):
+        for p in caminhos:
+            if os.path.exists(p):
+                try:
+                    return pd.read_csv(p, sep=';', encoding='utf-8-sig', low_memory=False)
+                except Exception as exc:
+                    print(f"  [aviso] nao foi possivel ler {p}: {exc}")
+        return None
+
+    df_sgtp = _ler_aberto(r'data\processed\sgtp_licencas_taxi_mensal.csv')
+    df_frota = _ler_aberto(r'data\processed\frota_ativa_sp_por_municipio_2026-08.csv')
+    df_sin_tax = _ler_aberto(r'data\processed\sinistros_vitimas_taxistas_infosiga_mensal.csv')
+    df_acid_sub = _ler_aberto(*sorted(glob.glob(r'data\processed\acidentes_sp_por_subprefeitura_*.csv'), reverse=True))
+    df_acid_mes = _ler_aberto(*sorted(glob.glob(r'data\processed\acidentes_sp_mensal_*.csv'), reverse=True))
 
     sheets_to_export = [
         ('01_Base_Mestre_Motoristas', df_master),
@@ -1340,6 +1357,20 @@ def build_master():
         sheets_to_export.append(('14_Clientes_Corp_Hospitais_5km', df_hosp_export))
     if df_emp_export is not None:
         sheets_to_export.append(('15_Empresas_Corp_100_Mais_5km', df_emp_export))
+
+    abas_abertos = [
+        ('16_Licencas_SGTP_Taxi', df_sgtp, 'Licenças de táxi (SGTP/SMT), Jan-Mai/2026'),
+        ('17_Frota_Ativa_Por_Municipio', df_frota, 'Frota ativa do Detran-SP por município (ago/2026)'),
+        ('18_Sinistros_Vitimas_Taxistas', df_sin_tax, 'Vítimas taxistas em sinistros (Infosiga), 12 meses'),
+        ('19_Acidentes_Por_Subprefeitura', df_acid_sub, 'Sinistros por subprefeitura, set/2025-ago/2026'),
+        ('20_Acidentes_SP_Mensal', df_acid_mes, 'Sinistros no município, série mensal'),
+    ]
+    for nome_aba, df_aba, desc_aba in abas_abertos:
+        if df_aba is not None:
+            sheets_to_export.append((nome_aba, df_aba))
+            print(f"  -> Aba '{nome_aba}' incluida ({len(df_aba):,} linhas): {desc_aba}")
+        else:
+            print(f"  [aviso] base ausente, aba '{nome_aba}' nao incluida: {desc_aba}")
 
     print(f"\nGerando Super Pasta de Trabalho Excel Multi-Abas: {output_xlsx_root}...")
     with pd.ExcelWriter(output_xlsx_root, engine='openpyxl') as writer:

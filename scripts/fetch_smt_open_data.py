@@ -25,6 +25,7 @@ Uso:
 import argparse
 import csv
 import hashlib
+import re
 import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -35,6 +36,7 @@ sys.stdout.reconfigure(encoding="utf-8")
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw" / "smt"
+PROC_SMT = ROOT / "data" / "processed"
 LOGS = ROOT / "logs"
 
 BRT = timezone(timedelta(hours=-3))
@@ -107,6 +109,67 @@ def sha256_of(path: Path) -> str:
     return h.hexdigest()
 
 
+MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+
+
+def gerar_licencas_tidy() -> Path | None:
+    """Reorganiza o CSV de licencas (layout em blocos) em tabela retangular.
+
+    Original: uma linha por (tipo, titulacao, categoria) com uma coluna por mes
+    alternando quantidade e percentual. Saida: uma linha por combinacao com as
+    quantidades mensais.
+    """
+    origem = RAW / "sgtp_licencas_taxi_05.2026.csv"
+    if not origem.exists():
+        return None
+    with origem.open(encoding="utf-8-sig", newline="") as f:
+        linhas = [l for l in csv.reader(f, delimiter=";") if any(c.strip() for c in l)]
+    if not linhas:
+        return None
+
+    cab = linhas[0]
+    colunas_mes = [(i, c.strip()) for i, c in enumerate(cab)
+                   if c.strip().rstrip(" ") in MESES]
+    if not colunas_mes:
+        print("[aviso] nao consegui identificar as colunas de mes do SGTP")
+        return None
+    ano_match = re.search(r"(\d{4})", origem.stem)
+    ano = ano_match.group(1) if ano_match else "2026"
+
+    def inteiro(v: str) -> str:
+        v = (v or "").strip().replace(".", "")
+        return v if v.isdigit() else ""
+
+    registros = []
+    for linha in linhas[1:]:
+        def cel(i: int) -> str:
+            return linha[i].strip() if i < len(linha) else ""
+        titul = cel(2)
+        cat = cel(3) or "(subtotal)"
+        valores = {mes: inteiro(cel(i)) for i, mes in colunas_mes}
+        if not any(valores.values()):
+            continue
+        registros.append({
+            "tipo_veiculo": cel(0),
+            "titulacao": titul or "(total)",
+            "categoria": cat,
+            **{f"{mes.lower()}_{ano}": v for mes, v in valores.items()},
+        })
+
+    destino = PROC_SMT
+    destino.mkdir(parents=True, exist_ok=True)
+    saida = destino / "sgtp_licencas_taxi_mensal.csv"
+    campos = ["tipo_veiculo", "titulacao", "categoria"] + \
+             [f"{mes.lower()}_{ano}" for _, mes in colunas_mes]
+    with saida.open("w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=campos, delimiter=";", extrasaction="ignore")
+        w.writeheader()
+        for r in registros:
+            w.writerow(r)
+    print(f"[agregado] {saida.relative_to(ROOT)} ({len(registros)} linhas)")
+    return saida
+
+
 def fetch(res: dict, dry: bool) -> dict:
     dest = RAW / res["dest"]
     RAW.mkdir(parents=True, exist_ok=True)
@@ -150,13 +213,19 @@ def write_manifest(rows: list) -> Path:
         "licenca", "status_http", "observacoes",
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
-    new_file = not path.exists()
-    with path.open("a", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=fields)
-        if new_file:
-            w.writeheader()
-        for row in rows:
-            if row.get("status_http") in (200, "dry-run"):
+    existentes = set()
+    if path.exists():
+        with path.open(encoding="utf-8", newline="") as f:
+            existentes = {r.get("url", "") for r in csv.DictReader(f)}
+    novos = [r for r in rows
+             if r.get("status_http") in (200, "dry-run") and r.get("url") not in existentes]
+    if novos:
+        precisa_header = not path.exists() or path.stat().st_size == 0
+        with path.open("a", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=fields)
+            if precisa_header:
+                w.writeheader()
+            for row in novos:
                 w.writerow(row)
     return path
 
@@ -180,6 +249,7 @@ def main() -> int:
     if not args.dry_run:
         path = write_manifest([r for r in rows if r.get("status_http") == 200])
         print(f"manifesto: {path.relative_to(ROOT)}")
+        gerar_licencas_tidy()
 
     ok = sum(1 for r in rows if r.get("status_http") in (200, "dry-run", "skip"))
     print(f"recursos ok: {ok}/{len(rows)}")

@@ -180,7 +180,7 @@ def main() -> int:
     dest_out = PROC / "sinistros_vitimas_taxistas_infosiga_mensal.csv"
     PROC.mkdir(parents=True, exist_ok=True)
     with dest_out.open("w", encoding="utf-8", newline="") as f:
-        w = csv.writer(f)
+        w = csv.writer(f, delimiter=";")
         w.writerow(["ano_mes", "municipio", "profissao", "vitimas_taxista",
                     "graves", "fatais", "outras_gravidades",
                     "total_vitimas_estado_no_mes", "arquivos_fonte"])
@@ -196,14 +196,20 @@ def main() -> int:
     mpath = LOGS / f"manifesto_infosiga_{datetime.now(BRT):%Y%m%d}.csv"
     fields = list(rows_manifesto[0]) if rows_manifesto else []
     if fields:
-        new = not mpath.exists()
-        with mpath.open("a", encoding="utf-8", newline="") as f:
-            w = csv.DictWriter(f, fieldnames=fields)
-            if new:
-                w.writeheader()
-            for row in rows_manifesto:
-                w.writerow(row)
-        print(f"manifesto: {mpath.relative_to(ROOT)}")
+        existentes = set()
+        if mpath.exists():
+            with mpath.open(encoding="utf-8", newline="") as f:
+                existentes = {r.get("url", "") for r in csv.DictReader(f)}
+        novos = [r for r in rows_manifesto if r["url"] not in existentes]
+        if novos:
+            new = not mpath.exists()
+            with mpath.open("a", encoding="utf-8", newline="") as f:
+                w = csv.DictWriter(f, fieldnames=fields)
+                if new:
+                    w.writeheader()
+                for row in novos:
+                    w.writerow(row)
+        print(f"manifesto: {mpath.relative_to(ROOT)} (+{len(novos)} linhas novas)")
 
     return 0 if baixados == len(lista) else 1
 

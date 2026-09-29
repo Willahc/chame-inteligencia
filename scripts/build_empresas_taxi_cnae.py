@@ -106,14 +106,14 @@ def main() -> int:
 
     saida_pj = PROC / SAIDA_PJ
     with saida_pj.open("w", encoding="utf-8", newline="") as f:
-        w = csv.writer(f)
+        w = csv.writer(f, delimiter=";")
         w.writerow([destino for _, destino in COLS_PJ])
         for r in sorted(pjs, key=lambda r: r.get("RAZAO_SOCIAL") or ""):
             w.writerow([r.get(orig, "") for orig, _ in COLS_PJ])
 
     saida_mei = PRIVATE / SAIDA_MEI
     with saida_mei.open("w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=COLS_MEI, extrasaction="ignore")
+        w = csv.DictWriter(f, fieldnames=COLS_MEI, delimiter=";", extrasaction="ignore")
         w.writeheader()
         for r in sorted(meiss, key=lambda r: r.get("RAZAO_SOCIAL") or ""):
             w.writerow({c: r.get(c, "") for c in COLS_MEI})

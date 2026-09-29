@@ -80,6 +80,8 @@ STAGES: list[Stage] = [
           ["fetch_detran_frota.py"], "fontes", manual=True),
     Stage("infosiga", "Baixa sinistros do Infosiga e extrai vítimas taxistas",
           ["fetch_infosiga_taxistas.py"], "fontes", manual=True),
+    Stage("acidentes", "Recorta sinistros de trânsito por subprefeitura (GeoSampa)",
+          ["build_acidentes_por_subprefeitura.py"], "fontes", manual=True),
 
     # --- Campo e CRM --------------------------------------------------------
     Stage("geocode", "Geocodifica o catálogo de pontos (Nominatim)",
