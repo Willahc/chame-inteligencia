@@ -15,7 +15,68 @@
   <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/index.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+
+    /* ===== Design system - tokens ===== */
+    :root{
+      --accent:#7c3aed; --accent-strong:#6d28d9; --accent-soft:#f5f3ff; --accent-ring:rgba(124,58,237,.30);
+      --ink:#0f172a; --ink-2:#334155; --ink-3:#64748b;
+      --line:#e2e8f0; --line-soft:#eef2f6;
+      --canvas:#f4f6f9;
+      --r-sm:.5rem; --r-md:.625rem; --r-lg:.8125rem; --r-xl:1rem;
+      --sh-1:0 1px 2px rgba(15,23,42,.05), 0 1px 3px rgba(15,23,42,.06);
+      --sh-focus:0 0 0 3px var(--accent-ring);
+    }
+    body{font-family:'Plus Jakarta Sans',ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+      background-color:var(--canvas);color:var(--ink);
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;}
+    ::selection{background:#fde68a;color:#0f172a;}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+    @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+
+    /* ===== Componentes ===== */
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1);}
+    .kpi{padding:.9rem 1rem;position:relative;overflow:hidden;}
+    .kpi::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;
+      background:linear-gradient(90deg,var(--accent),transparent 72%);opacity:.6;pointer-events:none;}
+    .eyebrow{font-size:.6875rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);}
+    .kpi-value{font-size:1.5rem;font-weight:800;line-height:1.15;letter-spacing:-.02em;color:var(--ink);
+      font-variant-numeric:tabular-nums;margin-top:.25rem;}
+    .section-title{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);}
+
+    .tbl{border-collapse:collapse;}
+    .tbl thead tr{background:#f8fafc;color:var(--ink-3);}
+    .tbl tbody td{border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums;vertical-align:middle;}
+    .tbl tbody tr:last-child td{border-bottom:0;}
+    .tbl tbody tr:nth-child(even){background:rgba(15,23,42,.014);}
+    .tbl tbody tr{transition:background-color .12s ease;}
+    .tbl tbody tr:hover{background:rgba(15,23,42,.028);}
+
+    .field{display:block;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;color:var(--ink-2);
+      transition:border-color .15s ease,box-shadow .15s ease;}
+    .field:hover{border-color:#cbd5e1;}
+    .field:focus{outline:none;border-color:var(--accent);box-shadow:var(--sh-focus);}
+    .field::placeholder{color:#94a3b8;}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;height:2rem;padding:0 .75rem;
+      border:1px solid transparent;border-radius:var(--r-sm);font-size:.75rem;font-weight:700;line-height:1;
+      cursor:pointer;white-space:nowrap;user-select:none;
+      transition:background-color .15s ease,color .15s ease,border-color .15s ease,box-shadow .15s ease;}
+    .btn:disabled{opacity:.45;cursor:not-allowed;}
+    .btn-ghost{background:#fff;border-color:var(--line);color:var(--ink-2);}
+    .btn-ghost:hover{background:#f1f5f9;color:var(--ink);}
+    .btn-soft{background:#f1f5f9;color:var(--ink-2);}
+    .btn-soft:hover{background:#e2e8f0;color:var(--ink);}
+    .btn-dark{background:#0f172a;border-color:#1e293b;color:#f1f5f9;}
+    .btn-dark:hover{background:#1e293b;color:#fff;}
+    .btn-xs{height:1.75rem;padding:0 .5rem;font-size:.7rem;border-radius:.375rem;}
+
+    .nav-tab{display:inline-flex;align-items:center;gap:.4rem;height:2.125rem;padding:0 .9rem;
+      border-radius:var(--r-sm);font-size:.75rem;font-weight:600;line-height:1;
+      transition:background-color .15s ease,color .15s ease,box-shadow .15s ease;}
+    .nav-tab:not(.is-active):hover{background:rgba(255,255,255,.08);color:#fff;}
+    .nav-tab.is-active{font-weight:700;box-shadow:0 1px 2px rgba(15,23,42,.25);}
+
+    /* ===== Infra ===== */
     .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
@@ -45,19 +106,19 @@
 
       <!-- BOTÕES DE NAVEGAÇÃO -->
       <div class="flex items-center space-x-2 text-xs font-semibold">
-        <button id="nav-btn-table" onclick="switchB2BTab('table')" class="px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 bg-purple-600 text-white font-bold shadow-sm">
+        <button id="nav-btn-table" onclick="switchB2BTab('table')" class="nav-tab is-active bg-purple-600 text-white">
           <i class="ph-bold ph-table"></i>
           <span>1. Tabela & Dossiês (190)</span>
         </button>
-        <button id="nav-btn-map" onclick="switchB2BTab('map')" class="px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-300 hover:text-white">
+        <button id="nav-btn-map" onclick="switchB2BTab('map')" class="nav-tab text-slate-300 hover:text-white">
           <i class="ph-bold ph-map-pin"></i>
           <span>2. Mapa GIS B2B</span>
         </button>
-        <button id="nav-btn-intel" onclick="switchB2BTab('intel')" class="px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-300 hover:text-white">
+        <button id="nav-btn-intel" onclick="switchB2BTab('intel')" class="nav-tab text-slate-300 hover:text-white">
           <i class="ph-bold ph-lightning"></i>
           <span>3. Inteligência de Decisores</span>
         </button>
-        <a href="dashboard_mestre_taxistas_sp_2026.html" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition flex items-center gap-1 shadow-sm ml-2">
+        <a href="dashboard_mestre_taxistas_sp_2026.html" class="btn bg-amber-500 hover:bg-amber-400 text-slate-950 ml-2">
           <i class="ph-bold ph-taxi"></i>
           <span>Portal Taxistas 2026 ↗</span>
         </a>
@@ -76,63 +137,63 @@
       
       <!-- CARDS DE METRICAS E KPI B2B -->
       <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="card kpi flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="text-[10px] font-bold uppercase tracking-wider">Prospects B2B</span>
+            <span class="eyebrow">Prospects B2B</span>
             <i class="ph-bold ph-buildings text-purple-600 text-base"></i>
           </div>
-          <div class="text-2xl font-black text-slate-900 tracking-tight">190</div>
+          <div class="kpi-value tracking-tight">190</div>
           <span class="text-[10px] text-purple-600 font-semibold mt-1">Raio 5.0 km Sede</span>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="card kpi flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="text-[10px] font-bold uppercase tracking-wider">Hospitais & Saúde</span>
+            <span class="eyebrow">Hospitais & Saúde</span>
             <i class="ph-bold ph-first-aid text-rose-600 text-base"></i>
           </div>
           <div class="text-2xl font-black text-rose-600 tracking-tight">94</div>
           <span class="text-[10px] text-slate-500 mt-1">Tier A, Quat. & Clínicas</span>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="card kpi flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="text-[10px] font-bold uppercase tracking-wider">Empresas (100+)</span>
+            <span class="eyebrow">Empresas (100+)</span>
             <i class="ph-bold ph-briefcase text-blue-600 text-base"></i>
           </div>
           <div class="text-2xl font-black text-blue-600 tracking-tight">96</div>
           <span class="text-[10px] text-slate-500 mt-1">Sedes Corporativas</span>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="card kpi flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="text-[10px] font-bold uppercase tracking-wider">Alta Vulnerabilidade</span>
+            <span class="eyebrow">Alta Vulnerabilidade</span>
             <i class="ph-bold ph-flame text-red-500 text-base"></i>
           </div>
           <div class="text-2xl font-black text-red-600 tracking-tight">85</div>
           <span class="text-[10px] text-red-600 font-semibold mt-1">Contratos Frágeis</span>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="card kpi flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="text-[10px] font-bold uppercase tracking-wider">Potencial Mensal</span>
+            <span class="eyebrow">Potencial Mensal</span>
             <i class="ph-bold ph-currency-dollar text-emerald-600 text-base"></i>
           </div>
           <div class="text-2xl font-black text-emerald-600 tracking-tight">R$ 3.83M</div>
           <span class="text-[10px] text-slate-500 mt-1">~103.500 corridas/mês</span>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="card kpi flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="text-[10px] font-bold uppercase tracking-wider">Demanda Acessível</span>
+            <span class="eyebrow">Demanda Acessível</span>
             <i class="ph-bold ph-wheelchair text-indigo-600 text-base"></i>
           </div>
           <div class="text-2xl font-black text-indigo-600 tracking-tight">28</div>
           <span class="text-[10px] text-indigo-600 font-semibold mt-1">Hospitais Reabilitação</span>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="card kpi flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="text-[10px] font-bold uppercase tracking-wider">Demanda ESG / Elét.</span>
+            <span class="eyebrow">Demanda ESG / Elét.</span>
             <i class="ph-bold ph-leaf text-teal-600 text-base"></i>
           </div>
           <div class="text-2xl font-black text-teal-600 tracking-tight">32</div>
@@ -141,18 +202,18 @@
       </section>
 
       <!-- BARRA DE FILTROS B2B -->
-      <section class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+      <section class="card p-4 space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
           <div class="flex items-center space-x-2">
             <i class="ph-bold ph-funnel text-purple-600 text-lg"></i>
             <h3 class="font-bold text-slate-900 text-sm">Filtros Táticos de Prospecção B2B</h3>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="exportB2BCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition text-xs font-bold flex items-center gap-1.5 shadow-sm">
+            <button onclick="exportB2BCSV()" class="btn bg-slate-800 hover:bg-slate-700 text-white">
               <i class="ph-bold ph-download-simple"></i>
               <span>Exportar Base Filtrada (CSV)</span>
             </button>
-            <button onclick="switchB2BTab('map')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition text-xs font-bold flex items-center gap-1.5 shadow-sm">
+            <button onclick="switchB2BTab('map')" class="btn bg-purple-600 hover:bg-purple-500 text-white">
               <i class="ph-bold ph-map-pin"></i>
               <span>Explorar no Mapa GIS</span>
             </button>
@@ -162,17 +223,17 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           <!-- BUSCA RÁPIDA -->
           <div class="lg:col-span-2">
-            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Buscar Empresa / Hospital / Decisor</label>
+            <label class="eyebrow block mb-1">Buscar Empresa / Hospital / Decisor</label>
             <div class="relative">
               <i class="ph-bold ph-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-sm"></i>
-              <input type="text" id="b2b-search-query" oninput="applyB2BFilters()" placeholder="Nome, hospital, bairro, decisor, cargo, dor..." class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition"/>
+              <input type="text" id="b2b-search-query" oninput="applyB2BFilters()" placeholder="Nome, hospital, bairro, decisor, cargo, dor..." class="field w-full pl-9 pr-3 py-1.5 text-xs text-slate-800"/>
             </div>
           </div>
 
           <!-- FILTRO POR SEGMENTO -->
           <div>
-            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Segmento / Setor</label>
-            <select id="b2b-segment-filter" onchange="applyB2BFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <label class="eyebrow block mb-1">Segmento / Setor</label>
+            <select id="b2b-segment-filter" onchange="applyB2BFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
               <option value="ALL">Todos os Segmentos (190)</option>
               <option value="HOSPITAIS">🏥 Apenas Hospitais & Saúde (94)</option>
               <option value="EMPRESAS">🏢 Apenas Grandes Empresas (96)</option>
@@ -188,8 +249,8 @@
 
           <!-- FILTRO POR VULNERABILIDADE -->
           <div>
-            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Vulnerabilidade Contratual</label>
-            <select id="b2b-vuln-filter" onchange="applyB2BFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <label class="eyebrow block mb-1">Vulnerabilidade Contratual</label>
+            <select id="b2b-vuln-filter" onchange="applyB2BFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
               <option value="ALL">Todas as Vulnerabilidades</option>
               <option value="Alta">🔥 Alta Vulnerabilidade (85)</option>
               <option value="Média">⏳ Média Vulnerabilidade (105)</option>
@@ -198,8 +259,8 @@
 
           <!-- FILTRO POR DEMANDA ESPECIAL -->
           <div>
-            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Foco de Demanda</label>
-            <select id="b2b-demand-filter" onchange="applyB2BFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <label class="eyebrow block mb-1">Foco de Demanda</label>
+            <select id="b2b-demand-filter" onchange="applyB2BFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
               <option value="ALL">Todas as Demandas</option>
               <option value="ACES">♿ Táxi Acessível / Desospitalização</option>
               <option value="VOUCHERS">🌙 Vouchers Noturnos / Horas Extras</option>
@@ -210,8 +271,8 @@
 
           <!-- FILTRO POR DISTÂNCIA DA SEDE -->
           <div>
-            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Distância Sede Butantã</label>
-            <select id="b2b-dist-filter" onchange="applyB2BFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <label class="eyebrow block mb-1">Distância Sede Butantã</label>
+            <select id="b2b-dist-filter" onchange="applyB2BFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
               <option value="ALL">Todas (< 5.0 km)</option>
               <option value="2.5">📍 Raio Imediato (< 2.5 km)</option>
               <option value="4.0">📍 Raio Próximo (< 4.0 km)</option>
@@ -221,7 +282,7 @@
       </section>
 
       <!-- TABELA INTERATIVA DE CLIENTES CORPORATIVOS B2B -->
-      <section class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+      <section class="card overflow-hidden flex flex-col">
         <div class="p-3 bg-slate-50/80 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div class="flex items-center gap-2">
             <span class="font-bold text-slate-800" id="b2b-results-count">Exibindo 0 clientes</span>
@@ -230,7 +291,7 @@
           </div>
           <div class="flex items-center gap-2">
             <span class="text-slate-500 text-[11px]">Itens por página:</span>
-            <select id="b2b-page-size" onchange="changeB2BPageSize()" class="bg-white border border-slate-200 rounded px-2 py-0.5 text-xs text-slate-700">
+            <select id="b2b-page-size" onchange="changeB2BPageSize()" class="field px-2 py-0.5 text-xs text-slate-700">
               <option value="25" selected>25</option>
               <option value="50">50</option>
               <option value="100">100</option>
@@ -240,7 +301,7 @@
         </div>
 
         <div class="overflow-x-auto custom-scrollbar">
-          <table class="w-full text-left border-collapse text-xs">
+          <table class="tbl w-full text-left text-xs">
             <thead>
               <tr class="bg-slate-100 text-slate-700 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
                 <th class="py-2.5 px-3">Prospect / Instituição</th>
@@ -253,7 +314,7 @@
                 <th class="py-2.5 px-3 text-center">Ações Rápidas</th>
               </tr>
             </thead>
-            <tbody id="b2b-table-body" class="divide-y divide-slate-100">
+            <tbody id="b2b-table-body" class="">
               <!-- Linhas geradas via JavaScript -->
             </tbody>
           </table>
@@ -273,7 +334,7 @@
     <div id="tab-content-map" class="space-y-4 hidden">
       
       <!-- CONTROLES SUPERIORES DO MAPA -->
-      <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="card p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
         <div class="flex items-center space-x-3">
           <div class="flex items-center space-x-1.5 font-bold text-slate-800">
             <i class="ph-bold ph-map-trifold text-purple-600 text-base"></i>
@@ -285,13 +346,13 @@
 
         <!-- CAMADAS & PROVEDORES -->
         <div class="flex items-center space-x-2">
-          <button id="btn-toggle-hosp" onclick="toggleLayer('hosp')" class="px-3 py-1.5 bg-rose-600 text-white font-bold rounded-lg transition text-xs shadow-sm flex items-center gap-1">
+          <button id="btn-toggle-hosp" onclick="toggleLayer('hosp')" class="btn bg-rose-600 text-white">
             <span>🏥 Hospitais (94)</span>
           </button>
-          <button id="btn-toggle-emp" onclick="toggleLayer('emp')" class="px-3 py-1.5 bg-blue-600 text-white font-bold rounded-lg transition text-xs shadow-sm flex items-center gap-1">
+          <button id="btn-toggle-emp" onclick="toggleLayer('emp')" class="btn bg-blue-600 text-white">
             <span>🏢 Empresas (96)</span>
           </button>
-          <select id="map-tile-select" onchange="switchB2BTile(this.value)" class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 font-semibold">
+          <select id="map-tile-select" onchange="switchB2BTile(this.value)" class="field px-2.5 py-1.5 text-xs text-slate-700 font-semibold">
             <option value="esri_street" selected>Mapa Esri Street</option>
             <option value="google">Google Maps</option>
             <option value="carto">CARTO Voyager</option>
@@ -301,7 +362,7 @@
       </div>
 
       <!-- MAPA CONTAINER -->
-      <div class="bg-white p-2 rounded-xl border border-slate-200 shadow-sm relative">
+      <div class="card p-2 relative">
         <div id="b2b-leaflet-map"></div>
       </div>
 
@@ -451,11 +512,11 @@
             </span>
             <div class="grid grid-cols-2 gap-2 pt-1 border-t border-rose-200/60">
               <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase block">Fornecedor Atual</span>
+                <span class="eyebrow">Fornecedor Atual</span>
                 <span id="b2b-modal-forn" class="font-bold text-slate-900">—</span>
               </div>
               <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase block">Modelo de Operação</span>
+                <span class="eyebrow">Modelo de Operação</span>
                 <span id="b2b-modal-tipo-mob" class="font-semibold text-slate-800">—</span>
               </div>
             </div>
@@ -465,11 +526,11 @@
             </div>
             <div class="grid grid-cols-2 gap-2 pt-1 border-t border-rose-200/60">
               <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase block">Corridas Estimadas</span>
+                <span class="eyebrow">Corridas Estimadas</span>
                 <span id="b2b-modal-corridas" class="font-bold text-slate-900">—</span>
               </div>
               <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase block">Potencial de Receita</span>
+                <span class="eyebrow">Potencial de Receita</span>
                 <span id="b2b-modal-rec" class="font-black text-emerald-600">—</span>
               </div>
             </div>
@@ -482,21 +543,21 @@
               <span>Localização & Proximidade Sede Butantã</span>
             </span>
             <div class="pt-1 border-t border-blue-200/60">
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Endereço Completo</span>
+              <span class="eyebrow">Endereço Completo</span>
               <span id="b2b-modal-end" class="font-bold text-slate-900 leading-snug block">—</span>
             </div>
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase block">Distância Sede</span>
+                <span class="eyebrow">Distância Sede</span>
                 <span id="b2b-modal-dist" class="font-bold text-blue-700">—</span>
               </div>
               <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase block">Tempo de Deslocamento</span>
+                <span class="eyebrow">Tempo de Deslocamento</span>
                 <span id="b2b-modal-tempo" class="font-bold text-slate-800">—</span>
               </div>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Ponto de Táxi DTP Próximo</span>
+              <span class="eyebrow">Ponto de Táxi DTP Próximo</span>
               <span id="b2b-modal-ponto" class="font-semibold text-slate-800">—</span>
             </div>
           </div>
@@ -514,26 +575,26 @@
           </div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-1 border-t border-emerald-200/60">
             <div>
-              <span class="text-[10px] font-bold text-slate-500 uppercase block">Área Decisora</span>
+              <span class="eyebrow">Área Decisora</span>
               <span id="b2b-modal-dec-area" class="font-bold text-slate-900 block">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-500 uppercase block">Cargos-Alvo Prioritários</span>
+              <span class="eyebrow">Cargos-Alvo Prioritários</span>
               <span id="b2b-modal-dec-cargos" class="font-semibold text-slate-800 block">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-500 uppercase block">Liderança Mapeada / Canal</span>
+              <span class="eyebrow">Liderança Mapeada / Canal</span>
               <span id="b2b-modal-dec-lideres" class="font-bold text-indigo-700 block">—</span>
             </div>
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-1.5 border-t border-emerald-200/60">
             <div>
-              <span class="text-[10px] font-bold text-slate-500 uppercase block">Padrão de E-mail Corporativo</span>
+              <span class="eyebrow">Padrão de E-mail Corporativo</span>
               <span id="b2b-modal-email-padrao" class="font-mono text-[11px] font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-emerald-200 block">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-500 uppercase block">E-mail Provável do Decisor / Canal</span>
+              <span class="eyebrow">E-mail Provável do Decisor / Canal</span>
               <span id="b2b-modal-email-dec" class="font-mono text-[11px] font-bold text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-200 block">—</span>
             </div>
           </div>
@@ -543,31 +604,31 @@
         <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
           <span class="text-[10px] uppercase font-bold text-slate-600 tracking-wider block">Ações Rápidas de Prospecção</span>
           <div class="flex flex-wrap gap-2">
-            <a id="b2b-modal-link-linkedin" href="#" target="_blank" class="px-3 py-1.5 bg-[#0a66c2] hover:bg-[#004182] text-white rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <a id="b2b-modal-link-linkedin" href="#" target="_blank" class="btn bg-[#0a66c2] hover:bg-[#004182] text-white">
               <i class="ph-bold ph-linkedin-logo"></i>
               <span>Buscar no LinkedIn Web ↗</span>
             </a>
-            <a id="b2b-modal-link-google" href="#" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <a id="b2b-modal-link-google" href="#" target="_blank" class="btn bg-slate-800 hover:bg-slate-700 text-white">
               <i class="ph-bold ph-google-logo"></i>
               <span>Ver Perfis no Google (Sem Login) ↗</span>
             </a>
-            <a id="b2b-modal-link-hunter" href="#" target="_blank" class="px-3 py-1.5 bg-[#e11d48] hover:bg-[#be123c] text-white rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <a id="b2b-modal-link-hunter" href="#" target="_blank" class="btn bg-[#e11d48] hover:bg-[#be123c] text-white">
               <i class="ph-bold ph-target"></i>
               <span>Hunter.io (E-mails do Domínio) ↗</span>
             </a>
-            <a id="b2b-modal-link-dork-email" href="#" target="_blank" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <a id="b2b-modal-link-dork-email" href="#" target="_blank" class="btn bg-emerald-600 hover:bg-emerald-500 text-white">
               <i class="ph-bold ph-envelope"></i>
               <span>Google Dork E-mails ↗</span>
             </a>
-            <a id="b2b-modal-link-maps" href="#" target="_blank" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <a id="b2b-modal-link-maps" href="#" target="_blank" class="btn bg-blue-600 hover:bg-blue-500 text-white">
               <i class="ph-bold ph-navigation-arrow"></i>
               <span>Rota Google Maps ↗</span>
             </a>
-            <button id="b2b-modal-btn-locate" onclick="locateCurrentB2BOnMap()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <button id="b2b-modal-btn-locate" onclick="locateCurrentB2BOnMap()" class="btn bg-amber-500 hover:bg-amber-400 text-slate-950">
               <i class="ph-bold ph-crosshair"></i>
               <span>Ver no Mapa GIS</span>
             </button>
-            <a id="b2b-modal-link-tel" href="#" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg font-bold text-xs flex items-center gap-1.5 transition">
+            <a id="b2b-modal-link-tel" href="#" class="btn bg-slate-200 hover:bg-slate-300 text-slate-800">
               <i class="ph-bold ph-phone"></i>
               <span id="b2b-modal-tel-txt">Ligar Central</span>
             </a>
@@ -581,7 +642,7 @@
               <i class="ph-bold ph-chat-text text-sm"></i>
               <span>Script Personalizado de Abordagem Comercial (InMail / Cold Email)</span>
             </span>
-            <button onclick="copyB2BScript()" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded text-[11px] flex items-center gap-1 transition shadow-sm">
+            <button onclick="copyB2BScript()" class="btn bg-amber-500 hover:bg-amber-400 text-slate-950">
               <i class="ph-bold ph-copy"></i>
               <span id="b2b-copy-script-btn-txt">Copiar Mensagem Pronta</span>
             </button>
@@ -603,7 +664,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Status do Funil B2B</label>
-              <select id="b2b-crm-status" class="w-full bg-white border border-purple-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <select id="b2b-crm-status" class="field w-full px-2.5 py-1.5 text-xs font-semibold text-slate-800">
                 <option value="1 - Novo Prospect">1 - Novo Prospect</option>
                 <option value="2 - Decisor Conectado no LinkedIn">2 - Decisor Conectado no LinkedIn</option>
                 <option value="3 - E-mail / Apresentação Enviada">3 - E-mail / Apresentação Enviada</option>
@@ -616,8 +677,8 @@
             <div class="sm:col-span-2">
               <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Anotações do Contato / Próximos Passos</label>
               <div class="flex gap-2">
-                <input type="text" id="b2b-crm-notes" placeholder="Ex: Falou com Felipe no LinkedIn, reunião pré-agendada para quinta..." class="flex-1 bg-white border border-purple-200 rounded-lg px-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
-                <button onclick="saveB2BCRM()" class="px-3.5 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg transition text-xs shadow-sm flex items-center gap-1 shrink-0">
+                <input type="text" id="b2b-crm-notes" placeholder="Ex: Falou com Felipe no LinkedIn, reunião pré-agendada para quinta..." class="field flex-1 px-3 py-1.5 text-xs text-slate-800"/>
+                <button onclick="saveB2BCRM()" class="btn bg-purple-600 hover:bg-purple-500 text-white shrink-0">
                   <i class="ph-bold ph-floppy-disk"></i>
                   <span>Salvar</span>
                 </button>
@@ -633,7 +694,7 @@
         <div class="flex items-center gap-2">
           <span class="text-[11px] text-slate-500" id="b2b-modal-footer-id">ID Prospect: CORP-000</span>
         </div>
-        <button onclick="closeB2BModal()" class="px-4 py-2 bg-slate-200 text-slate-800 font-bold rounded-xl hover:bg-slate-300 transition text-xs">
+        <button onclick="closeB2BModal()" class="btn bg-slate-200 text-slate-800 hover:bg-slate-300">
           Fechar Dossiê B2B
         </button>
       </div>
@@ -701,20 +762,20 @@
       tabMap.classList.add('hidden');
       tabIntel.classList.add('hidden');
 
-      btnTable.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-300 hover:text-white";
-      btnMap.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-300 hover:text-white";
-      btnIntel.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-300 hover:text-white";
+      btnTable.className="nav-tab text-slate-300 hover:text-white";
+      btnMap.className="nav-tab text-slate-300 hover:text-white";
+      btnIntel.className="nav-tab text-slate-300 hover:text-white";
 
       if (tab === 'table') {
         tabTable.classList.remove('hidden');
-        btnTable.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 bg-purple-600 text-white font-bold shadow-sm";
+        btnTable.className="nav-tab is-active bg-purple-600 text-white";
       } else if (tab === 'map') {
         tabMap.classList.remove('hidden');
-        btnMap.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 bg-purple-600 text-white font-bold shadow-sm";
+        btnMap.className="nav-tab is-active bg-purple-600 text-white";
         initB2BMap();
       } else if (tab === 'intel') {
         tabIntel.classList.remove('hidden');
-        btnIntel.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 bg-purple-600 text-white font-bold shadow-sm";
+        btnIntel.className="nav-tab is-active bg-purple-600 text-white";
       }
     }
 
@@ -926,10 +987,10 @@
           Mostrando <b>${startIdx}</b> a <b>${endIdx}</b> de <b>${totalItems}</b> clientes corporativos
         </div>
         <div class="flex items-center space-x-1">
-          <button onclick="changeB2BPage(1)" ${currentB2BPage === 1 ? 'disabled' : ''} class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed">
+          <button onclick="changeB2BPage(1)" ${currentB2BPage === 1 ? 'disabled' : ''} class="btn btn-ghost btn-xs">
             <i class="ph-bold ph-caret-double-left"></i>
           </button>
-          <button onclick="changeB2BPage(${currentB2BPage - 1})" ${currentB2BPage === 1 ? 'disabled' : ''} class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed">
+          <button onclick="changeB2BPage(${currentB2BPage - 1})" ${currentB2BPage === 1 ? 'disabled' : ''} class="btn btn-ghost btn-xs">
             <i class="ph-bold ph-caret-left"></i>
           </button>
       `;
@@ -938,17 +999,17 @@
       let endP = Math.min(totalPages, currentB2BPage + 2);
       for (let p = startP; p <= endP; p++) {
         if (p === currentB2BPage) {
-          html += `<button class="px-2.5 py-1 rounded bg-purple-600 text-white font-bold">${p}</button>`;
+          html += `<button class="btn bg-purple-600 text-white">${p}</button>`;
         } else {
-          html += `<button onclick="changeB2BPage(${p})" class="px-2.5 py-1 rounded bg-white border border-slate-200 text-slate-700 hover:bg-slate-100">${p}</button>`;
+          html += `<button onclick="changeB2BPage(${p})" class="btn btn-ghost btn-xs">${p}</button>`;
         }
       }
 
       html += `
-          <button onclick="changeB2BPage(${currentB2BPage + 1})" ${currentB2BPage === totalPages ? 'disabled' : ''} class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed">
+          <button onclick="changeB2BPage(${currentB2BPage + 1})" ${currentB2BPage === totalPages ? 'disabled' : ''} class="btn btn-ghost btn-xs">
             <i class="ph-bold ph-caret-right"></i>
           </button>
-          <button onclick="changeB2BPage(${totalPages})" ${currentB2BPage === totalPages ? 'disabled' : ''} class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed">
+          <button onclick="changeB2BPage(${totalPages})" ${currentB2BPage === totalPages ? 'disabled' : ''} class="btn btn-ghost btn-xs">
             <i class="ph-bold ph-caret-double-right"></i>
           </button>
         </div>
@@ -993,9 +1054,9 @@
       const vulnBadge = document.getElementById('b2b-modal-vuln-badge');
       vulnBadge.innerText = `Vuln: ${item.mob_vuln}`;
       if (item.mob_vuln === 'Alta') {
-        vulnBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-500/20 text-red-300 border border-red-500/30";
+        vulnBadge.className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-500/20 text-red-300 border border-red-500/30";
       } else {
-        vulnBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30";
+        vulnBadge.className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30";
       }
 
       const subTitle = item.isHosp 
@@ -1235,11 +1296,11 @@
         const btn = document.getElementById('btn-toggle-hosp');
         if (isHospVisible) {
           hospLayerGroup.addTo(b2bMapInstance);
-          btn.className = "px-3 py-1.5 bg-rose-600 text-white font-bold rounded-lg transition text-xs shadow-sm flex items-center gap-1";
+          btn.className="btn bg-rose-600 text-white";
           btn.innerHTML = `<span>🏥 Hospitais (${HOSPITAIS_DATA.length})</span>`;
         } else {
           b2bMapInstance.removeLayer(hospLayerGroup);
-          btn.className = "px-3 py-1.5 bg-slate-200 text-slate-700 font-bold rounded-lg transition text-xs shadow-sm flex items-center gap-1";
+          btn.className="btn bg-slate-200 text-slate-700";
           btn.innerHTML = `<span>🏥 Hospitais (Oculto)</span>`;
         }
       } else {
@@ -1247,11 +1308,11 @@
         const btn = document.getElementById('btn-toggle-emp');
         if (isEmpVisible) {
           empLayerGroup.addTo(b2bMapInstance);
-          btn.className = "px-3 py-1.5 bg-blue-600 text-white font-bold rounded-lg transition text-xs shadow-sm flex items-center gap-1";
+          btn.className="btn bg-blue-600 text-white";
           btn.innerHTML = `<span>🏢 Empresas (${EMPRESAS_DATA.length})</span>`;
         } else {
           b2bMapInstance.removeLayer(empLayerGroup);
-          btn.className = "px-3 py-1.5 bg-slate-200 text-slate-700 font-bold rounded-lg transition text-xs shadow-sm flex items-center gap-1";
+          btn.className="btn bg-slate-200 text-slate-700";
           btn.innerHTML = `<span>🏢 Empresas (Oculto)</span>`;
         }
       }

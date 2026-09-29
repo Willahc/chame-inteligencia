@@ -432,12 +432,12 @@ def generate_dashboard():
     ]
 
     kpis_html = ''.join(
-        '        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">\n'
+        '        <div class="card kpi group">\n'
         f'          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg {k["bg"]} {k["txt"]} flex items-center justify-center text-lg">\n'
         f'            <i class="ph-bold {k["icone"]}"></i>\n'
         '          </div>\n'
-        f'          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{k["label"]}</span>\n'
-        f'          <div class="text-2xl font-black text-slate-900 mt-1">{k["valor"]}</div>\n'
+        f'          <span class="eyebrow">{k["label"]}</span>\n'
+        f'          <div class="kpi-value mt-1">{k["valor"]}</div>\n'
         f'          <div class="text-[11px] text-slate-500 mt-0.5">{k["sub"]}</div>\n'
         '        </div>\n'
         for k in kpis_abertos)
@@ -494,7 +494,68 @@ def generate_dashboard():
   <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/index.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+
+    /* ===== Design system - tokens ===== */
+    :root{
+      --accent:#f59e0b; --accent-strong:#d97706; --accent-soft:#fffbeb; --accent-ring:rgba(245,158,11,.30);
+      --ink:#0f172a; --ink-2:#334155; --ink-3:#64748b;
+      --line:#e2e8f0; --line-soft:#eef2f6;
+      --canvas:#f4f6f9;
+      --r-sm:.5rem; --r-md:.625rem; --r-lg:.8125rem; --r-xl:1rem;
+      --sh-1:0 1px 2px rgba(15,23,42,.05), 0 1px 3px rgba(15,23,42,.06);
+      --sh-focus:0 0 0 3px var(--accent-ring);
+    }
+    body{font-family:'Plus Jakarta Sans',ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+      background-color:var(--canvas);color:var(--ink);
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;}
+    ::selection{background:#fde68a;color:#0f172a;}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+    @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+
+    /* ===== Componentes ===== */
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1);}
+    .kpi{padding:.9rem 1rem;position:relative;overflow:hidden;}
+    .kpi::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;
+      background:linear-gradient(90deg,var(--accent),transparent 72%);opacity:.6;pointer-events:none;}
+    .eyebrow{font-size:.6875rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);}
+    .kpi-value{font-size:1.5rem;font-weight:800;line-height:1.15;letter-spacing:-.02em;color:var(--ink);
+      font-variant-numeric:tabular-nums;margin-top:.25rem;}
+    .section-title{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);}
+
+    .tbl{border-collapse:collapse;}
+    .tbl thead tr{background:#f8fafc;color:var(--ink-3);}
+    .tbl tbody td{border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums;vertical-align:middle;}
+    .tbl tbody tr:last-child td{border-bottom:0;}
+    .tbl tbody tr:nth-child(even){background:rgba(15,23,42,.014);}
+    .tbl tbody tr{transition:background-color .12s ease;}
+    .tbl tbody tr:hover{background:rgba(15,23,42,.028);}
+
+    .field{display:block;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;color:var(--ink-2);
+      transition:border-color .15s ease,box-shadow .15s ease;}
+    .field:hover{border-color:#cbd5e1;}
+    .field:focus{outline:none;border-color:var(--accent);box-shadow:var(--sh-focus);}
+    .field::placeholder{color:#94a3b8;}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;height:2rem;padding:0 .75rem;
+      border:1px solid transparent;border-radius:var(--r-sm);font-size:.75rem;font-weight:700;line-height:1;
+      cursor:pointer;white-space:nowrap;user-select:none;
+      transition:background-color .15s ease,color .15s ease,border-color .15s ease,box-shadow .15s ease;}
+    .btn:disabled{opacity:.45;cursor:not-allowed;}
+    .btn-ghost{background:#fff;border-color:var(--line);color:var(--ink-2);}
+    .btn-ghost:hover{background:#f1f5f9;color:var(--ink);}
+    .btn-soft{background:#f1f5f9;color:var(--ink-2);}
+    .btn-soft:hover{background:#e2e8f0;color:var(--ink);}
+    .btn-dark{background:#0f172a;border-color:#1e293b;color:#f1f5f9;}
+    .btn-dark:hover{background:#1e293b;color:#fff;}
+    .btn-xs{height:1.75rem;padding:0 .5rem;font-size:.7rem;border-radius:.375rem;}
+
+    .nav-tab{display:inline-flex;align-items:center;gap:.4rem;height:2.125rem;padding:0 .9rem;
+      border-radius:var(--r-sm);font-size:.75rem;font-weight:600;line-height:1;
+      transition:background-color .15s ease,color .15s ease,box-shadow .15s ease;}
+    .nav-tab:not(.is-active):hover{background:rgba(255,255,255,.08);color:#fff;}
+    .nav-tab.is-active{font-weight:700;box-shadow:0 1px 2px rgba(15,23,42,.25);}
+
+    /* ===== Infra ===== */
     .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
@@ -528,22 +589,22 @@ def generate_dashboard():
       </div>
 
       <!-- MAIN MODULE TABS (3 FRENTES DE TRABALHO) -->
-      <div class="flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700/80 text-xs font-semibold">
-        <button id="nav-btn-master" onclick="switchMainTab('master')" class="px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 bg-amber-500 text-slate-950 font-bold shadow-sm">
+      <div class="flex items-center bg-slate-900/75 p-1 rounded-lg border border-slate-700/60 text-xs font-semibold">
+        <button id="nav-btn-master" onclick="switchMainTab('master')" class="nav-tab is-active bg-amber-500 text-slate-950">
           <i class="ph-bold ph-table"></i>
           <span>1. Base Mestre Universal</span>
         </button>
-        <button id="nav-btn-crm" onclick="switchMainTab('crm')" class="px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-300 hover:text-white">
+        <button id="nav-btn-crm" onclick="switchMainTab('crm')" class="nav-tab text-slate-300 hover:text-white">
           <i class="ph-bold ph-whatsapp-logo text-emerald-400 text-sm"></i>
           <span>2. Fila CRM & WhatsApp</span>
           <span class="ml-1 bg-emerald-500/20 text-emerald-300 px-1.5 py-0.2 rounded-full text-[10px]">2.391</span>
         </button>
-        <button id="nav-btn-map" onclick="switchMainTab('map')" class="px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-300 hover:text-white">
+        <button id="nav-btn-map" onclick="switchMainTab('map')" class="nav-tab text-slate-300 hover:text-white">
           <i class="ph-bold ph-map-pin text-sky-400 text-sm"></i>
           <span>3. Mapa Tático GIS (SP)</span>
           <span class="ml-1 bg-sky-500/20 text-sky-300 px-1.5 py-0.2 rounded-full text-[10px]">6 Rotas</span>
         </button>
-        <button id="nav-btn-corp" onclick="switchMainTab('corp')" class="px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-300 hover:text-white">
+        <button id="nav-btn-corp" onclick="switchMainTab('corp')" class="nav-tab text-slate-300 hover:text-white">
           <i class="ph-bold ph-buildings text-purple-400 text-sm"></i>
           <span>4. Clientes Corporativos B2B</span>
           <span class="ml-1 bg-purple-500/20 text-purple-300 px-1.5 py-0.2 rounded-full text-[10px]">190 Alvos</span>
@@ -556,7 +617,7 @@ def generate_dashboard():
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span>16.863 Motoristas | 99 Colunas</span>
         </div>
-        <button onclick="exportFilteredCSV()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold px-3 py-1.5 rounded-lg transition flex items-center space-x-1 shadow-sm">
+        <button onclick="exportFilteredCSV()" class="btn btn-dark">
           <i class="ph-bold ph-download-simple"></i>
           <span>Exportar Dados</span>
         </button>
@@ -574,65 +635,65 @@ def generate_dashboard():
       
       <!-- EXECUTIVE KPI CARDS -->
       <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3.5">
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-users-four"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Base Mestre Total</span>
-          <div class="text-2xl font-black text-slate-900 mt-1">16.863</div>
+          <span class="eyebrow">Base Mestre Total</span>
+          <div class="kpi-value mt-1">16.863</div>
           <div class="text-[11px] text-slate-500 mt-0.5">16.783 Alv + 80 DOC</div>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-certificate"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Contemplados 2026</span>
+          <span class="eyebrow">Contemplados 2026</span>
           <div class="text-2xl font-black text-emerald-600 mt-1">2.140</div>
           <div class="text-[11px] text-emerald-700 font-medium mt-0.5">1.802 Comum + 338 Acess.</div>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-hourglass-high"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Suplentes Prioritários</span>
+          <span class="eyebrow">Suplentes Prioritários</span>
           <div class="text-2xl font-black text-amber-600 mt-1">370</div>
           <div class="text-[11px] text-amber-700 font-medium mt-0.5">Top Margem Desistência</div>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-target"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tier 1 Comercial</span>
+          <span class="eyebrow">Tier 1 Comercial</span>
           <div class="text-2xl font-black text-rose-600 mt-1">161</div>
           <div class="text-[11px] text-rose-700 font-medium mt-0.5">Score &ge; 80 (VIP Conversão)</div>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-phone-call"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Telefones Validados</span>
+          <span class="eyebrow">Telefones Validados</span>
           <div class="text-2xl font-black text-indigo-600 mt-1">2.423</div>
           <div class="text-[11px] text-indigo-700 font-medium mt-0.5">2.425 MEIs Cadastrados</div>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-cyan-50 text-cyan-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-identification-card"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">CPFs Completos</span>
+          <span class="eyebrow">CPFs Completos</span>
           <div class="text-2xl font-black text-cyan-600 mt-1">914</div>
           <div class="text-[11px] text-cyan-700 font-medium mt-0.5">2.391 Fila Ativa CRM</div>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-newspaper"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Processos SEI / DOC</span>
+          <span class="eyebrow">Processos SEI / DOC</span>
           <div class="text-2xl font-black text-purple-600 mt-1">646</div>
           <div class="text-[11px] text-purple-700 font-medium mt-0.5">100% Contemplados DOC</div>
         </div>
@@ -640,10 +701,10 @@ def generate_dashboard():
 
       <!-- CHARTS SECTION -->
       <section class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm lg:col-span-2 flex flex-col">
+        <div class="card p-4 lg:col-span-2 flex flex-col">
           <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
             <div>
-              <h2 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 uppercase tracking-wide">
+              <h2 class="section-title flex items-center gap-1.5">
                 <i class="ph-bold ph-chart-bar text-amber-500 text-sm"></i>
                 Funil Concorrencial: Demanda vs Vagas por Edital (2026)
               </h2>
@@ -656,10 +717,10 @@ def generate_dashboard():
           </div>
         </div>
 
-        <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm flex flex-col">
+        <div class="card p-4 flex flex-col">
           <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
             <div>
-              <h2 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 uppercase tracking-wide">
+              <h2 class="section-title flex items-center gap-1.5">
                 <i class="ph-bold ph-target text-rose-500 text-sm"></i>
                 Scoring Comercial Chame Táxi
               </h2>
@@ -674,7 +735,7 @@ def generate_dashboard():
       </section>
 
       <!-- EXPLORER TABLE & FILTERS -->
-      <section class="bg-white rounded-xl border border-slate-200/80 shadow-sm overflow-hidden flex flex-col">
+      <section class="card overflow-hidden flex flex-col">
         <div class="p-4 border-b border-slate-200 bg-slate-50/70 space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -685,19 +746,19 @@ def generate_dashboard():
               <p class="text-xs text-slate-500">Consulte qualquer um dos 16.863 motoristas por Nome, CPF, Condutax, SEI ou Telefone e abra o Dossiê 360°.</p>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="resetAllFilters()" class="text-xs font-semibold text-slate-600 hover:text-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition flex items-center gap-1">
+              <button onclick="resetAllFilters()" class="btn btn-ghost">
                 <i class="ph-bold ph-arrow-counter-clockwise"></i>
                 <span>Limpar Filtros</span>
               </button>
-              <button onclick="filterTier1()" class="text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+              <button onclick="filterTier1()" class="btn text-rose-700 bg-rose-50 hover:bg-rose-100">
                 <i class="ph-bold ph-star"></i>
                 <span>Tier 1 VIP (50)</span>
               </button>
-              <button onclick="filterSuplentes()" class="text-xs font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+              <button onclick="filterSuplentes()" class="btn text-amber-800 bg-amber-50 hover:bg-amber-100">
                 <i class="ph-bold ph-hourglass-high"></i>
                 <span>Suplentes Top (370)</span>
               </button>
-              <button onclick="filterMEIs()" class="text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+              <button onclick="filterMEIs()" class="btn text-indigo-700 bg-indigo-50 hover:bg-indigo-100">
                 <i class="ph-bold ph-phone"></i>
                 <span>Com Telefone (2.423)</span>
               </button>
@@ -707,8 +768,8 @@ def generate_dashboard():
           <!-- CONTROLES DE FILTRO -->
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2.5 pt-1">
             <div>
-              <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Edital / Categoria</label>
-              <select id="filter-edital" onchange="applyFilters()" class="w-full text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+              <label class="eyebrow block mb-1">Edital / Categoria</label>
+              <select id="filter-edital" onchange="applyFilters()" class="field w-full text-xs px-2.5 py-1.5">
                 <option value="ALL">Todos os Editais</option>
                 <option value="1">Edital 1 (PcD Comum)</option>
                 <option value="2">Edital 2 (Tempo Comum)</option>
@@ -723,8 +784,8 @@ def generate_dashboard():
             </div>
 
             <div>
-              <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Situação / Alvará</label>
-              <select id="filter-status" onchange="applyFilters()" class="w-full text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+              <label class="eyebrow block mb-1">Situação / Alvará</label>
+              <select id="filter-status" onchange="applyFilters()" class="field w-full text-xs px-2.5 py-1.5">
                 <option value="ALL">Todas as Situações</option>
                 <option value="CONTEMPLADO">Contemplados (Titulares)</option>
                 <option value="SUPLENTE_ALTA">Suplente Alta Probabilidade</option>
@@ -734,8 +795,8 @@ def generate_dashboard():
             </div>
 
             <div>
-              <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tier Prioridade</label>
-              <select id="filter-tier" onchange="applyFilters()" class="w-full text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+              <label class="eyebrow block mb-1">Tier Prioridade</label>
+              <select id="filter-tier" onchange="applyFilters()" class="field w-full text-xs px-2.5 py-1.5">
                 <option value="ALL">Todos os Tiers</option>
                 <option value="Tier 1">Tier 1 (Ultra Quente / Score &ge; 80) 🔥</option>
                 <option value="Tier 2">Tier 2 (Alta Receptividade / Score 65-79) ⭐</option>
@@ -745,8 +806,8 @@ def generate_dashboard():
             </div>
 
             <div>
-              <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Vínculo de Ponto</label>
-              <select id="filter-ponto" onchange="applyFilters()" class="w-full text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+              <label class="eyebrow block mb-1">Vínculo de Ponto</label>
+              <select id="filter-ponto" onchange="applyFilters()" class="field w-full text-xs px-2.5 py-1.5">
                 <option value="ALL">Todos os Tipos de Ponto</option>
                 <option value="VINCULADO">Ponto Privativo Vinculado</option>
                 <option value="SORTEIO">Tentou Sorteio de Ponto</option>
@@ -755,8 +816,8 @@ def generate_dashboard():
             </div>
 
             <div>
-              <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Contato / Telefone</label>
-              <select id="filter-contato" onchange="applyFilters()" class="w-full text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+              <label class="eyebrow block mb-1">Contato / Telefone</label>
+              <select id="filter-contato" onchange="applyFilters()" class="field w-full text-xs px-2.5 py-1.5">
                 <option value="ALL">Todos</option>
                 <option value="COM_TEL">Com Telefone Validado</option>
                 <option value="COM_CPF">Com CPF Completo</option>
@@ -765,8 +826,8 @@ def generate_dashboard():
             </div>
 
             <div>
-              <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Proximidade Butantã</label>
-              <select id="filter-distancia" onchange="applyFilters()" class="w-full text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+              <label class="eyebrow block mb-1">Proximidade Butantã</label>
+              <select id="filter-distancia" onchange="applyFilters()" class="field w-full text-xs px-2.5 py-1.5">
                 <option value="ALL">Todas as Regiões</option>
                 <option value="5KM">Até 5 km da Sede (Hiperlocal)</option>
                 <option value="10KM">Até 10 km (Zona Oeste)</option>
@@ -775,9 +836,9 @@ def generate_dashboard():
             </div>
 
             <div>
-              <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Busca Geral</label>
+              <label class="eyebrow block mb-1">Busca Geral</label>
               <div class="relative">
-                <input type="text" id="search-input" oninput="applyFilters()" placeholder="Nome, CPF, Condutax, SEI..." class="w-full text-xs bg-white border border-slate-200 rounded-lg pl-7 pr-2.5 py-1.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                <input type="text" id="search-input" oninput="applyFilters()" placeholder="Nome, CPF, Condutax, SEI..." class="field w-full text-xs pl-7 pr-2.5 py-1.5">
                 <i class="ph-bold ph-magnifying-glass absolute left-2 top-2 text-slate-400 text-xs"></i>
               </div>
             </div>
@@ -786,7 +847,7 @@ def generate_dashboard():
 
         <!-- TABELA DE RESULTADOS UNIVERSAL -->
         <div class="overflow-x-auto custom-scrollbar flex-1">
-          <table class="w-full text-left border-collapse text-xs">
+          <table class="tbl w-full text-left text-xs">
             <thead>
               <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 uppercase text-[10px] tracking-wider select-none">
                 <th class="py-2.5 px-3">Motorista / Nome</th>
@@ -798,7 +859,7 @@ def generate_dashboard():
                 <th class="py-2.5 px-3 text-right">Ação</th>
               </tr>
             </thead>
-            <tbody id="table-body" class="divide-y divide-slate-100 text-slate-700">
+            <tbody id="table-body" class="text-slate-700">
               <!-- Renderizado via JavaScript -->
             </tbody>
           </table>
@@ -816,7 +877,7 @@ def generate_dashboard():
       <!-- ===================================================================== -->
       <!-- DADOS ABERTOS MUNICIPAIS E ESTADUAIS (SMT, DETRAN-SP, RECEITA, INFOSIGA)-->
       <!-- ===================================================================== -->
-      <section class="bg-white rounded-xl border border-slate-200/80 shadow-sm overflow-hidden">
+      <section class="card overflow-hidden">
         <div class="p-4 border-b border-slate-200 bg-slate-50/70 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
@@ -834,10 +895,10 @@ __KPIS_ABERTOS__
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm lg:col-span-2 flex flex-col">
+            <div class="card p-4 lg:col-span-2 flex flex-col">
               <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
                 <div>
-                  <h2 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 uppercase tracking-wide">
+                  <h2 class="section-title flex items-center gap-1.5">
                     <i class="ph-bold ph-map-trifold text-rose-500 text-sm"></i>
                     Risco de Trânsito por Subprefeitura (Top 10)
                   </h2>
@@ -850,10 +911,10 @@ __KPIS_ABERTOS__
               </div>
             </div>
 
-            <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm flex flex-col">
+            <div class="card p-4 flex flex-col">
               <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
                 <div>
-                  <h2 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 uppercase tracking-wide">
+                  <h2 class="section-title flex items-center gap-1.5">
                     <i class="ph-bold ph-chart-line-up text-sky-500 text-sm"></i>
                     Série Mensal no Município
                   </h2>
@@ -868,7 +929,7 @@ __KPIS_ABERTOS__
           </div>
 
           <div class="overflow-x-auto custom-scrollbar">
-            <table class="w-full text-left border-collapse text-xs">
+            <table class="tbl w-full text-left text-xs">
               <thead>
                 <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 uppercase text-[10px] tracking-wider select-none">
                   <th class="py-2.5 px-3">Subprefeitura</th>
@@ -879,7 +940,7 @@ __KPIS_ABERTOS__
                   <th class="py-2.5 px-3 text-right">Envolvidos</th>
                 </tr>
               </thead>
-              <tbody id="tbody-abertos" class="divide-y divide-slate-100 text-slate-700">
+              <tbody id="tbody-abertos" class="text-slate-700">
 __LINHAS_ABERTOS__
               </tbody>
             </table>
@@ -930,47 +991,47 @@ __LINHAS_ABERTOS__
       </section>
 
       <!-- BARRA DE FILTROS RÁPIDOS CRM -->
-      <section class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm flex flex-wrap items-center justify-between gap-3">
+      <section class="card p-4 flex flex-wrap items-center justify-between gap-3">
         <div class="flex flex-wrap items-center gap-2">
-          <button onclick="setCRMFilter('ALL')" id="crm-btn-all" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 transition">
+          <button onclick="setCRMFilter('ALL')" id="crm-btn-all" class="btn bg-amber-500 text-slate-950">
             Todos (2.391)
           </button>
-          <button onclick="setCRMFilter('TIER1')" id="crm-btn-tier1" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-800 transition flex items-center gap-1 font-bold border border-rose-200">
+          <button onclick="setCRMFilter('TIER1')" id="crm-btn-tier1" class="btn bg-rose-50 hover:bg-rose-100 text-rose-800">
             <i class="ph-bold ph-fire text-rose-600"></i>
             <span>Tier 1: Ultra Quente (Score &ge; 80) 🔥</span>
           </button>
-          <button onclick="setCRMFilter('CONTEMPLADOS')" id="crm-btn-contemplados" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1">
+          <button onclick="setCRMFilter('CONTEMPLADOS')" id="crm-btn-contemplados" class="btn btn-soft">
             <i class="ph-bold ph-certificate text-emerald-600"></i>
             <span>Contemplados VIP (302)</span>
           </button>
-          <button onclick="setCRMFilter('BUTANTA')" id="crm-btn-butanta" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1">
+          <button onclick="setCRMFilter('BUTANTA')" id="crm-btn-butanta" class="btn btn-soft">
             <i class="ph-bold ph-map-pin text-sky-600"></i>
             <span>Zona Oeste / Butantã (622)</span>
           </button>
-          <button onclick="setCRMFilter('ELETRICOS')" id="crm-btn-eletricos" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1">
+          <button onclick="setCRMFilter('ELETRICOS')" id="crm-btn-eletricos" class="btn btn-soft">
             <i class="ph-bold ph-lightning text-amber-500"></i>
             <span>Híbrido/Elétrico (Edital 4)</span>
           </button>
-          <button onclick="setCRMFilter('MULHERES')" id="crm-btn-mulheres" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1">
+          <button onclick="setCRMFilter('MULHERES')" id="crm-btn-mulheres" class="btn btn-soft">
             <i class="ph-bold ph-gender-female text-rose-500"></i>
             <span>Mulheres Taxistas (Edital 3)</span>
           </button>
-          <button onclick="setCRMFilter('SUPLENTES')" id="crm-btn-suplentes" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1">
+          <button onclick="setCRMFilter('SUPLENTES')" id="crm-btn-suplentes" class="btn btn-soft">
             <i class="ph-bold ph-hourglass text-purple-600"></i>
             <span>Suplentes Top (47)</span>
           </button>
         </div>
 
         <div class="relative w-full sm:w-64">
-          <input type="text" id="crm-search-input" oninput="applyCRMFilters()" placeholder="Buscar motorista no CRM..." class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg pl-7 pr-2.5 py-1.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          <input type="text" id="crm-search-input" oninput="applyCRMFilters()" placeholder="Buscar motorista no CRM..." class="field w-full text-xs pl-7 pr-2.5 py-1.5">
           <i class="ph-bold ph-magnifying-glass absolute left-2 top-2 text-slate-400 text-xs"></i>
         </div>
       </section>
 
       <!-- TABELA OPERACIONAL CRM -->
-      <section class="bg-white rounded-xl border border-slate-200/80 shadow-sm overflow-hidden flex flex-col">
+      <section class="card overflow-hidden flex flex-col">
         <div class="overflow-x-auto custom-scrollbar">
-          <table class="w-full text-left border-collapse text-xs">
+          <table class="tbl w-full text-left text-xs">
             <thead>
               <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 uppercase text-[10px] tracking-wider select-none">
                 <th class="py-2.5 px-3">Motorista</th>
@@ -983,7 +1044,7 @@ __LINHAS_ABERTOS__
                 <th class="py-2.5 px-3 text-right">Dossiê</th>
               </tr>
             </thead>
-            <tbody id="crm-table-body" class="divide-y divide-slate-100 text-slate-700">
+            <tbody id="crm-table-body" class="text-slate-700">
               <!-- Renderizado via JavaScript -->
             </tbody>
           </table>
@@ -1004,7 +1065,7 @@ __LINHAS_ABERTOS__
     <div id="tab-content-map" class="hidden space-y-6">
       
       <!-- CONTROLES DO MAPA E ROTAS -->
-      <section class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm flex flex-wrap items-center justify-between gap-4">
+      <section class="card p-4 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
             <i class="ph-bold ph-map-pin-line text-sky-500"></i>
@@ -1015,8 +1076,8 @@ __LINHAS_ABERTOS__
 
         <div class="flex flex-wrap items-center gap-2 text-xs">
           <div>
-            <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Camada Base (Tiles)</label>
-            <select id="map-tile-provider" onchange="switchTileProvider(this.value)" class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-semibold text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <label class="eyebrow block mb-0.5">Camada Base (Tiles)</label>
+            <select id="map-tile-provider" onchange="switchTileProvider(this.value)" class="field text-xs px-2.5 py-1.5 font-semibold text-slate-700">
               <option value="esri_street" selected>Esri Ruas (100% Liberado / Sem Bloqueio) ⭐</option>
               <option value="google">Google Maps (Padrão Vias)</option>
               <option value="carto">CartoDB Voyager (Claro)</option>
@@ -1026,8 +1087,8 @@ __LINHAS_ABERTOS__
           </div>
 
           <div>
-            <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Filtrar Mapa & Rotas</label>
-            <select id="map-route-filter" onchange="filterMapByRoute()" class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-semibold text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <label class="eyebrow block mb-0.5">Filtrar Mapa & Rotas</label>
+            <select id="map-route-filter" onchange="filterMapByRoute()" class="field text-xs px-2.5 py-1.5 font-semibold text-slate-700">
               <option value="ALL">Todos os Pontos, Hospitais & Empresas</option>
               <option value="MOB_VULN_ALTA">🔥 Contratos Alta Vulnerabilidade (Substituição Imediata)</option>
               <option value="MOB_APPS">📱 Clientes Presos no Uber/99 (Ganho Faixa Ônibus SP)</option>
@@ -1051,14 +1112,14 @@ __LINHAS_ABERTOS__
           </div>
 
           <div class="pt-3.5 flex items-center gap-2">
-            <button onclick="centerMapOnSede()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg transition flex items-center gap-1 shadow-sm">
+            <button onclick="centerMapOnSede()" class="btn bg-amber-500 hover:bg-amber-400 text-slate-950">
               <i class="ph-bold ph-crosshair"></i>
               <span>Sede Butantã</span>
             </button>
-            <button id="btn-toggle-hospitais" onclick="toggleHospitalsLayer()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-lg transition flex items-center gap-1 shadow-sm" title="Exibir ou ocultar os 94 hospitais e clínicas B2B no raio de 5 km">
+            <button id="btn-toggle-hospitais" onclick="toggleHospitalsLayer()" class="btn bg-rose-600 hover:bg-rose-500 text-white" title="Exibir ou ocultar os 94 hospitais e clínicas B2B no raio de 5 km">
               <span>🏥 Hospitais 5km (94)</span>
             </button>
-            <button id="btn-toggle-empresas" onclick="toggleEmpresasLayer()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition flex items-center gap-1 shadow-sm" title="Exibir ou ocultar as 96 grandes empresas e edifícios corporativos no raio de 5 km">
+            <button id="btn-toggle-empresas" onclick="toggleEmpresasLayer()" class="btn bg-blue-600 hover:bg-blue-500 text-white" title="Exibir ou ocultar as 96 grandes empresas e edifícios corporativos no raio de 5 km">
               <span>🏢 Empresas 100+ (96)</span>
             </button>
           </div>
@@ -1069,7 +1130,7 @@ __LINHAS_ABERTOS__
       <section class="grid grid-cols-1 lg:grid-cols-4 gap-5">
         
         <!-- CONTAINER DO MAPA LEAFLET -->
-        <div class="lg:col-span-3 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm relative">
+        <div class="card lg:col-span-3 p-2.5 relative">
           <div id="leaflet-map"></div>
           
           <!-- LEGENDA FLUTUANTE -->
@@ -1094,7 +1155,7 @@ __LINHAS_ABERTOS__
         </div>
 
         <!-- PAINEL LATERAL: PONTOS PRIORITÁRIOS DA ROTA -->
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col h-[calc(100vh-240px)] min-h-[550px]">
+        <div class="card p-4 flex flex-col h-[calc(100vh-240px)] min-h-[550px]">
           <div class="pb-3 border-b border-slate-100 mb-2">
             <h3 class="font-bold text-xs text-slate-800 uppercase tracking-wider flex items-center justify-between">
               <span>Pontos Prioritários</span>
@@ -1119,72 +1180,72 @@ __LINHAS_ABERTOS__
       
       <!-- EXECUTIVE KPI CARDS -->
       <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3.5">
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-buildings"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Prospects B2B</span>
-          <div class="text-2xl font-black text-slate-900 mt-1">190</div>
+          <span class="eyebrow">Total Prospects B2B</span>
+          <div class="kpi-value mt-1">190</div>
           <div class="text-[11px] text-purple-600 font-semibold mt-0.5">Raio 5 km Butantã</div>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-first-aid"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Polos de Saúde</span>
+          <span class="eyebrow">Polos de Saúde</span>
           <div class="text-2xl font-black text-rose-600 mt-1">94</div>
           <div class="text-[11px] text-slate-500 mt-0.5">20 Quaternários Tier A</div>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-briefcase"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Empresas 100+</span>
+          <span class="eyebrow">Empresas 100+</span>
           <div class="text-2xl font-black text-blue-600 mt-1">96</div>
           <div class="text-[11px] text-slate-500 mt-0.5">Grandes Sedes Presenciais</div>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-fire"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Alta Vulnerabilidade</span>
+          <span class="eyebrow">Alta Vulnerabilidade</span>
           <div class="text-2xl font-black text-red-600 mt-1">85</div>
           <div class="text-[11px] text-red-700 font-semibold mt-0.5">Substituição Imediata (44.7%)</div>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-currency-circle-dollar"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Receita Mensal Estimada</span>
+          <span class="eyebrow">Receita Mensal Estimada</span>
           <div class="text-xl font-black text-emerald-600 mt-1">R$ 3.83M</div>
           <div class="text-[11px] text-slate-500 mt-0.5">Contratos B2B Faturados</div>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-wheelchair"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Foco Táxi Acessível</span>
+          <span class="eyebrow">Foco Táxi Acessível</span>
           <div class="text-2xl font-black text-amber-600 mt-1">28</div>
           <div class="text-[11px] text-slate-500 mt-0.5">Desospitalização & PcD</div>
         </div>
 
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-sm relative overflow-hidden group">
+        <div class="card kpi group">
           <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-leaf"></i>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Frota Elétrica ESG</span>
+          <span class="eyebrow">Frota Elétrica ESG</span>
           <div class="text-2xl font-black text-teal-600 mt-1">32</div>
           <div class="text-[11px] text-slate-500 mt-0.5">Edital 4 (Descarbonização)</div>
         </div>
       </section>
 
       <!-- FILTROS AVANÇADOS & BARRA DE BUSCA -->
-      <section class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+      <section class="card p-4 space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
           <div class="flex items-center gap-2">
             <h2 class="text-sm font-bold text-slate-900 tracking-tight flex items-center gap-2">
@@ -1196,11 +1257,11 @@ __LINHAS_ABERTOS__
             </span>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="exportCorpCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition text-xs font-bold flex items-center gap-1.5 shadow-sm">
+            <button onclick="exportCorpCSV()" class="btn bg-slate-800 hover:bg-slate-700 text-white">
               <i class="ph-bold ph-download-simple"></i>
               <span>Exportar Base B2B (CSV)</span>
             </button>
-            <button onclick="switchMainTab('map')" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg transition text-xs font-bold flex items-center gap-1.5 shadow-sm">
+            <button onclick="switchMainTab('map')" class="btn bg-sky-600 hover:bg-sky-500 text-white">
               <i class="ph-bold ph-map-pin"></i>
               <span>Ver Alvos no Mapa GIS</span>
             </button>
@@ -1210,17 +1271,17 @@ __LINHAS_ABERTOS__
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           <!-- BUSCA RÁPIDA -->
           <div class="lg:col-span-2">
-            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Buscar Empresa / Hospital / Decisor</label>
+            <label class="eyebrow block mb-1">Buscar Empresa / Hospital / Decisor</label>
             <div class="relative">
               <i class="ph-bold ph-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-sm"></i>
-              <input type="text" id="corp-search-query" oninput="applyCorpFilters()" placeholder="Nome, hospital, bairro, decisor, cargo, dor..." class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition"/>
+              <input type="text" id="corp-search-query" oninput="applyCorpFilters()" placeholder="Nome, hospital, bairro, decisor, cargo, dor..." class="field w-full pl-9 pr-3 py-1.5 text-xs text-slate-800"/>
             </div>
           </div>
 
           <!-- FILTRO POR SEGMENTO -->
           <div>
-            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Segmento / Setor</label>
-            <select id="corp-segment-filter" onchange="applyCorpFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <label class="eyebrow block mb-1">Segmento / Setor</label>
+            <select id="corp-segment-filter" onchange="applyCorpFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
               <option value="ALL">Todos os Segmentos (190)</option>
               <option value="HOSPITAIS">🏥 Apenas Hospitais & Saúde (94)</option>
               <option value="EMPRESAS">🏢 Apenas Grandes Empresas (96)</option>
@@ -1236,8 +1297,8 @@ __LINHAS_ABERTOS__
 
           <!-- FILTRO POR VULNERABILIDADE -->
           <div>
-            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Vulnerabilidade Contratual</label>
-            <select id="corp-vuln-filter" onchange="applyCorpFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <label class="eyebrow block mb-1">Vulnerabilidade Contratual</label>
+            <select id="corp-vuln-filter" onchange="applyCorpFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
               <option value="ALL">Todas as Vulnerabilidades</option>
               <option value="Alta">🔥 Alta Vulnerabilidade (85)</option>
               <option value="Média">⏳ Média Vulnerabilidade (105)</option>
@@ -1246,8 +1307,8 @@ __LINHAS_ABERTOS__
 
           <!-- FILTRO POR DEMANDA ESPECIAL -->
           <div>
-            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Foco de Demanda</label>
-            <select id="corp-demand-filter" onchange="applyCorpFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <label class="eyebrow block mb-1">Foco de Demanda</label>
+            <select id="corp-demand-filter" onchange="applyCorpFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
               <option value="ALL">Todas as Demandas</option>
               <option value="ACES">♿ Táxi Acessível / Desospitalização</option>
               <option value="VOUCHERS">🌙 Vouchers Noturnos / Horas Extras</option>
@@ -1258,8 +1319,8 @@ __LINHAS_ABERTOS__
 
           <!-- FILTRO POR DISTÂNCIA DA SEDE -->
           <div>
-            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Distância Sede Butantã</label>
-            <select id="corp-dist-filter" onchange="applyCorpFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <label class="eyebrow block mb-1">Distância Sede Butantã</label>
+            <select id="corp-dist-filter" onchange="applyCorpFilters()" class="field w-full px-2.5 py-1.5 text-xs font-medium text-slate-700">
               <option value="ALL">Todas (< 5.0 km)</option>
               <option value="2.5">📍 Raio Imediato (< 2.5 km)</option>
               <option value="4.0">📍 Raio Próximo (< 4.0 km)</option>
@@ -1269,7 +1330,7 @@ __LINHAS_ABERTOS__
       </section>
 
       <!-- TABELA INTERATIVA DE CLIENTES CORPORATIVOS B2B -->
-      <section class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+      <section class="card overflow-hidden flex flex-col">
         <div class="p-3 bg-slate-50/80 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div class="flex items-center gap-2">
             <span class="font-bold text-slate-800" id="corp-results-count">Exibindo 0 clientes</span>
@@ -1278,7 +1339,7 @@ __LINHAS_ABERTOS__
           </div>
           <div class="flex items-center gap-2">
             <span class="text-slate-500 text-[11px]">Itens por página:</span>
-            <select id="corp-page-size" onchange="changeCorpPageSize()" class="bg-white border border-slate-200 rounded px-2 py-0.5 text-xs text-slate-700">
+            <select id="corp-page-size" onchange="changeCorpPageSize()" class="field px-2 py-0.5 text-xs text-slate-700">
               <option value="25" selected>25</option>
               <option value="50">50</option>
               <option value="100">100</option>
@@ -1288,7 +1349,7 @@ __LINHAS_ABERTOS__
         </div>
 
         <div class="overflow-x-auto custom-scrollbar">
-          <table class="w-full text-left border-collapse text-xs">
+          <table class="tbl w-full text-left text-xs">
             <thead>
               <tr class="bg-slate-100 text-slate-700 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
                 <th class="py-2.5 px-3">Prospect / Instituição</th>
@@ -1301,7 +1362,7 @@ __LINHAS_ABERTOS__
                 <th class="py-2.5 px-3 text-center">Ações Rápidas</th>
               </tr>
             </thead>
-            <tbody id="corp-table-body" class="divide-y divide-slate-100">
+            <tbody id="corp-table-body" class="">
               <!-- Linhas geradas via JavaScript -->
             </tbody>
           </table>
@@ -1361,7 +1422,7 @@ __LINHAS_ABERTOS__
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
             <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Score Chame Táxi</span>
             <div class="flex items-baseline gap-2">
-              <span id="modal-score" class="text-2xl font-black text-slate-900">—</span>
+              <span id="modal-score" class="kpi-value">—</span>
               <span id="modal-tier" class="text-[10px] font-bold text-slate-500">Sem Score</span>
             </div>
             <p id="modal-just-score" class="text-[11px] text-slate-500 mt-1 italic leading-tight">Sem pontuação comercial atribuída.</p>
@@ -1400,21 +1461,21 @@ __LINHAS_ABERTOS__
 
         <!-- CARD 4: REQUISITOS REGULATÓRIOS DO VEÍCULO (DTP) -->
         <div class="space-y-1.5">
-          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider border-b border-slate-100 pb-1 flex items-center gap-1.5">
+          <h4 class="section-title border-b border-slate-100 pb-1 flex items-center gap-1.5">
             <i class="ph-bold ph-car-profile text-amber-500"></i>
             Homologação Veicular & Exigências DTP
           </h4>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-slate-50 p-3 rounded-xl border border-slate-200">
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Regra do Veículo</span>
+              <span class="eyebrow">Regra do Veículo</span>
               <span id="modal-veic-exig" class="font-bold text-slate-800">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Modelos Homologados Aceitos</span>
+              <span class="eyebrow">Modelos Homologados Aceitos</span>
               <span id="modal-veic-mod" class="font-semibold text-emerald-800 leading-tight block">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Prazo Vistoria DTP</span>
+              <span class="eyebrow">Prazo Vistoria DTP</span>
               <span id="modal-veic-prazo" class="font-bold text-rose-700">—</span>
             </div>
           </div>
@@ -1422,25 +1483,25 @@ __LINHAS_ABERTOS__
 
         <!-- CARD 5: DETALHES DO SORTEIO 2026 -->
         <div class="space-y-1.5">
-          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider border-b border-slate-100 pb-1 flex items-center gap-1.5">
+          <h4 class="section-title border-b border-slate-100 pb-1 flex items-center gap-1.5">
             <i class="ph-bold ph-file-text text-slate-500"></i>
             Dados Oficiais do Edital
           </h4>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-slate-50 p-3 rounded-xl border border-slate-200">
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Edital</span>
+              <span class="eyebrow">Edital</span>
               <span id="modal-edital" class="font-semibold text-slate-800">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Modalidade Cota</span>
+              <span class="eyebrow">Modalidade Cota</span>
               <span id="modal-cota" class="font-semibold text-slate-800">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Protocolo Inscrição</span>
+              <span class="eyebrow">Protocolo Inscrição</span>
               <span id="modal-protocolo" class="font-semibold text-slate-800">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Gênero / Faixa</span>
+              <span class="eyebrow">Gênero / Faixa</span>
               <span id="modal-gen" class="font-semibold text-slate-800">—</span>
             </div>
           </div>
@@ -1448,25 +1509,25 @@ __LINHAS_ABERTOS__
 
         <!-- CARD 6: CONTATOS, WHATSAPP & TERRITORIALIDADE -->
         <div class="space-y-1.5">
-          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider border-b border-slate-100 pb-1 flex items-center gap-1.5">
+          <h4 class="section-title border-b border-slate-100 pb-1 flex items-center gap-1.5">
             <i class="ph-bold ph-phone-call text-emerald-600"></i>
             Contatos, Endereço & Distância até a Sede
           </h4>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-slate-50 p-3 rounded-xl border border-slate-200">
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Telefone Principal</span>
+              <span class="eyebrow">Telefone Principal</span>
               <span id="modal-tel1" class="font-bold text-slate-900">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Distância Sede Butantã</span>
+              <span class="eyebrow">Distância Sede Butantã</span>
               <span id="modal-dist-km" class="font-black text-indigo-700">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Bairro / Região</span>
+              <span class="eyebrow">Bairro / Região</span>
               <span id="modal-bairro" class="font-semibold text-slate-800">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">CEP</span>
+              <span class="eyebrow">CEP</span>
               <span id="modal-cep" class="font-semibold text-slate-800">—</span>
             </div>
           </div>
@@ -1505,16 +1566,16 @@ __LINHAS_ABERTOS__
       <!-- MODAL FOOTER -->
       <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-2">
-          <a id="modal-btn-wpp-ready" href="#" target="_blank" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition text-xs flex items-center gap-1.5 shadow-sm">
+          <a id="modal-btn-wpp-ready" href="#" target="_blank" class="btn bg-emerald-600 hover:bg-emerald-500 text-white">
             <i class="ph-bold ph-whatsapp-logo text-sm"></i>
             <span>Disparar WhatsApp (Mensagem Pronta)</span>
           </a>
-          <button onclick="window.print()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition text-xs flex items-center gap-1.5 shadow-sm">
+          <button onclick="window.print()" class="btn bg-slate-800 hover:bg-slate-700 text-white">
             <i class="ph-bold ph-printer"></i>
             <span>Imprimir Ficha Dossiê</span>
           </button>
         </div>
-        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-800 font-bold rounded-xl hover:bg-slate-300 transition text-xs">
+        <button onclick="closeModal()" class="btn bg-slate-200 text-slate-800 hover:bg-slate-300">
           Fechar Dossiê
         </button>
       </div>
@@ -1569,11 +1630,11 @@ __LINHAS_ABERTOS__
             </span>
             <div class="grid grid-cols-2 gap-2 pt-1 border-t border-rose-200/60">
               <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase block">Fornecedor Atual</span>
+                <span class="eyebrow">Fornecedor Atual</span>
                 <span id="corp-modal-forn" class="font-bold text-slate-900">—</span>
               </div>
               <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase block">Modelo de Operação</span>
+                <span class="eyebrow">Modelo de Operação</span>
                 <span id="corp-modal-tipo-mob" class="font-semibold text-slate-800">—</span>
               </div>
             </div>
@@ -1583,11 +1644,11 @@ __LINHAS_ABERTOS__
             </div>
             <div class="grid grid-cols-2 gap-2 pt-1 border-t border-rose-200/60">
               <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase block">Corridas Estimadas</span>
+                <span class="eyebrow">Corridas Estimadas</span>
                 <span id="corp-modal-corridas" class="font-bold text-slate-900">—</span>
               </div>
               <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase block">Potencial de Receita</span>
+                <span class="eyebrow">Potencial de Receita</span>
                 <span id="corp-modal-rec" class="font-black text-emerald-600">—</span>
               </div>
             </div>
@@ -1600,21 +1661,21 @@ __LINHAS_ABERTOS__
               <span>Localização & Proximidade Sede Butantã</span>
             </span>
             <div class="pt-1 border-t border-blue-200/60">
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Endereço Completo</span>
+              <span class="eyebrow">Endereço Completo</span>
               <span id="corp-modal-end" class="font-bold text-slate-900 leading-snug block">—</span>
             </div>
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase block">Distância Sede</span>
+                <span class="eyebrow">Distância Sede</span>
                 <span id="corp-modal-dist" class="font-bold text-blue-700">—</span>
               </div>
               <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase block">Tempo de Deslocamento</span>
+                <span class="eyebrow">Tempo de Deslocamento</span>
                 <span id="corp-modal-tempo" class="font-bold text-slate-800">—</span>
               </div>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Ponto de Táxi DTP Próximo</span>
+              <span class="eyebrow">Ponto de Táxi DTP Próximo</span>
               <span id="corp-modal-ponto" class="font-semibold text-slate-800">—</span>
             </div>
           </div>
@@ -1632,26 +1693,26 @@ __LINHAS_ABERTOS__
           </div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-1 border-t border-emerald-200/60">
             <div>
-              <span class="text-[10px] font-bold text-slate-500 uppercase block">Área Decisora</span>
+              <span class="eyebrow">Área Decisora</span>
               <span id="corp-modal-dec-area" class="font-bold text-slate-900 block">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-500 uppercase block">Cargos-Alvo Prioritários</span>
+              <span class="eyebrow">Cargos-Alvo Prioritários</span>
               <span id="corp-modal-dec-cargos" class="font-semibold text-slate-800 block">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-500 uppercase block">Liderança Mapeada / Canal</span>
+              <span class="eyebrow">Liderança Mapeada / Canal</span>
               <span id="corp-modal-dec-lideres" class="font-bold text-indigo-700 block">—</span>
             </div>
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-1.5 border-t border-emerald-200/60">
             <div>
-              <span class="text-[10px] font-bold text-slate-500 uppercase block">Padrão de E-mail Corporativo</span>
+              <span class="eyebrow">Padrão de E-mail Corporativo</span>
               <span id="corp-modal-email-padrao" class="font-mono text-[11px] font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-emerald-200 block">—</span>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-slate-500 uppercase block">E-mail Provável do Decisor / Canal</span>
+              <span class="eyebrow">E-mail Provável do Decisor / Canal</span>
               <span id="corp-modal-email-dec" class="font-mono text-[11px] font-bold text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-200 block">—</span>
             </div>
           </div>
@@ -1661,31 +1722,31 @@ __LINHAS_ABERTOS__
         <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
           <span class="text-[10px] uppercase font-bold text-slate-600 tracking-wider block">Ações Rápidas de Prospecção</span>
           <div class="flex flex-wrap gap-2">
-            <a id="corp-modal-link-linkedin" href="#" target="_blank" class="px-3 py-1.5 bg-[#0a66c2] hover:bg-[#004182] text-white rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <a id="corp-modal-link-linkedin" href="#" target="_blank" class="btn bg-[#0a66c2] hover:bg-[#004182] text-white">
               <i class="ph-bold ph-linkedin-logo"></i>
               <span>Buscar no LinkedIn Web ↗</span>
             </a>
-            <a id="corp-modal-link-google" href="#" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <a id="corp-modal-link-google" href="#" target="_blank" class="btn bg-slate-800 hover:bg-slate-700 text-white">
               <i class="ph-bold ph-google-logo"></i>
               <span>Ver Perfis no Google (Sem Login) ↗</span>
             </a>
-            <a id="corp-modal-link-hunter" href="#" target="_blank" class="px-3 py-1.5 bg-[#e11d48] hover:bg-[#be123c] text-white rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <a id="corp-modal-link-hunter" href="#" target="_blank" class="btn bg-[#e11d48] hover:bg-[#be123c] text-white">
               <i class="ph-bold ph-target"></i>
               <span>Hunter.io (E-mails do Domínio) ↗</span>
             </a>
-            <a id="corp-modal-link-dork-email" href="#" target="_blank" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <a id="corp-modal-link-dork-email" href="#" target="_blank" class="btn bg-emerald-600 hover:bg-emerald-500 text-white">
               <i class="ph-bold ph-envelope"></i>
               <span>Google Dork E-mails ↗</span>
             </a>
-            <a id="corp-modal-link-maps" href="#" target="_blank" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <a id="corp-modal-link-maps" href="#" target="_blank" class="btn bg-blue-600 hover:bg-blue-500 text-white">
               <i class="ph-bold ph-navigation-arrow"></i>
               <span>Rota Google Maps ↗</span>
             </a>
-            <button id="corp-modal-btn-locate" onclick="locateCurrentCorpOnMap()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+            <button id="corp-modal-btn-locate" onclick="locateCurrentCorpOnMap()" class="btn bg-amber-500 hover:bg-amber-400 text-slate-950">
               <i class="ph-bold ph-crosshair"></i>
               <span>Ver no Mapa GIS</span>
             </button>
-            <a id="corp-modal-link-tel" href="#" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg font-bold text-xs flex items-center gap-1.5 transition">
+            <a id="corp-modal-link-tel" href="#" class="btn bg-slate-200 hover:bg-slate-300 text-slate-800">
               <i class="ph-bold ph-phone"></i>
               <span id="corp-modal-tel-txt">Ligar Central</span>
             </a>
@@ -1699,7 +1760,7 @@ __LINHAS_ABERTOS__
               <i class="ph-bold ph-chat-text text-sm"></i>
               <span>Script Personalizado de Abordagem Comercial (InMail / Cold Email)</span>
             </span>
-            <button onclick="copyCorpScript()" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded text-[11px] flex items-center gap-1 transition shadow-sm">
+            <button onclick="copyCorpScript()" class="btn bg-amber-500 hover:bg-amber-400 text-slate-950">
               <i class="ph-bold ph-copy"></i>
               <span id="corp-copy-script-btn-txt">Copiar Mensagem Pronta</span>
             </button>
@@ -1721,7 +1782,7 @@ __LINHAS_ABERTOS__
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Status do Funil B2B</label>
-              <select id="corp-crm-status" class="w-full bg-white border border-purple-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <select id="corp-crm-status" class="field w-full px-2.5 py-1.5 text-xs font-semibold text-slate-800">
                 <option value="1 - Novo Prospect">1 - Novo Prospect</option>
                 <option value="2 - Decisor Conectado no LinkedIn">2 - Decisor Conectado no LinkedIn</option>
                 <option value="3 - E-mail / Apresentação Enviada">3 - E-mail / Apresentação Enviada</option>
@@ -1734,8 +1795,8 @@ __LINHAS_ABERTOS__
             <div class="sm:col-span-2">
               <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Anotações do Contato / Próximos Passos</label>
               <div class="flex gap-2">
-                <input type="text" id="corp-crm-notes" placeholder="Ex: Falou com Felipe no LinkedIn, reunião pré-agendada para quinta..." class="flex-1 bg-white border border-purple-200 rounded-lg px-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500"/>
-                <button onclick="saveCorpCRM()" class="px-3.5 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg transition text-xs shadow-sm flex items-center gap-1 shrink-0">
+                <input type="text" id="corp-crm-notes" placeholder="Ex: Falou com Felipe no LinkedIn, reunião pré-agendada para quinta..." class="field flex-1 px-3 py-1.5 text-xs text-slate-800"/>
+                <button onclick="saveCorpCRM()" class="btn bg-purple-600 hover:bg-purple-500 text-white shrink-0">
                   <i class="ph-bold ph-floppy-disk"></i>
                   <span>Salvar</span>
                 </button>
@@ -1751,7 +1812,7 @@ __LINHAS_ABERTOS__
         <div class="flex items-center gap-2">
           <span class="text-[11px] text-slate-500" id="corp-modal-footer-id">ID Prospect: CORP-000</span>
         </div>
-        <button onclick="closeCorpModal()" class="px-4 py-2 bg-slate-200 text-slate-800 font-bold rounded-xl hover:bg-slate-300 transition text-xs">
+        <button onclick="closeCorpModal()" class="btn bg-slate-200 text-slate-800 hover:bg-slate-300">
           Fechar Dossiê B2B
         </button>
       </div>
@@ -1824,24 +1885,24 @@ __LINHAS_ABERTOS__
       tabMap.classList.add('hidden');
       if (tabCorp) tabCorp.classList.add('hidden');
 
-      btnMaster.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-300 hover:text-white";
-      btnCRM.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-300 hover:text-white";
-      btnMap.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-300 hover:text-white";
-      if (btnCorp) btnCorp.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-300 hover:text-white";
+      btnMaster.className="nav-tab text-slate-300 hover:text-white";
+      btnCRM.className="nav-tab text-slate-300 hover:text-white";
+      btnMap.className="nav-tab text-slate-300 hover:text-white";
+      if (btnCorp) btnCorp.className="nav-tab text-slate-300 hover:text-white";
 
       if (tab === 'master') {
         tabMaster.classList.remove('hidden');
-        btnMaster.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 bg-amber-500 text-slate-950 font-bold shadow-sm";
+        btnMaster.className="nav-tab is-active bg-amber-500 text-slate-950";
       } else if (tab === 'crm') {
         tabCRM.classList.remove('hidden');
-        btnCRM.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 bg-emerald-500 text-slate-950 font-bold shadow-sm";
+        btnCRM.className="nav-tab is-active bg-emerald-500 text-slate-950";
       } else if (tab === 'map') {
         tabMap.classList.remove('hidden');
-        btnMap.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 bg-sky-500 text-slate-950 font-bold shadow-sm";
+        btnMap.className="nav-tab is-active bg-sky-500 text-slate-950";
         initLeafletMap();
       } else if (tab === 'corp') {
         if (tabCorp) tabCorp.classList.remove('hidden');
-        if (btnCorp) btnCorp.className = "px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 bg-purple-600 text-white font-bold shadow-sm";
+        if (btnCorp) btnCorp.className="nav-tab is-active bg-purple-600 text-white";
         applyCorpFilters();
       }
     }
@@ -2005,7 +2066,7 @@ __LINHAS_ABERTOS__
 
         // Adicionar ao painel lateral
         const card = document.createElement('div');
-        card.className = "p-2.5 rounded-lg border border-slate-200 hover:border-sky-300 bg-slate-50/60 hover:bg-sky-50/40 transition cursor-pointer text-[11px]";
+        card.className="p-2.5 rounded-lg border border-slate-200 hover:border-sky-300 bg-slate-50/60 hover:bg-sky-50/40 transition cursor-pointer text-[11px]";
         card.onclick = () => {
           if (leafletMapInstance) {
             leafletMapInstance.setView([p.lat, p.lon], 16);
@@ -2135,7 +2196,7 @@ __LINHAS_ABERTOS__
         const vulnBadge = h.mob_vuln === 'Alta' ? 'text-rose-700 bg-rose-50 border-rose-200' : 'text-amber-700 bg-amber-50 border-amber-200';
 
         const card = document.createElement('div');
-        card.className = "p-2.5 rounded-lg border border-slate-200 hover:border-rose-300 bg-slate-50/60 hover:bg-rose-50/40 transition cursor-pointer text-[11px]";
+        card.className="p-2.5 rounded-lg border border-slate-200 hover:border-rose-300 bg-slate-50/60 hover:bg-rose-50/40 transition cursor-pointer text-[11px]";
         card.onclick = () => {
           if (leafletMapInstance) {
             leafletMapInstance.setView([h.lat, h.lon], 16);
@@ -2182,13 +2243,13 @@ __LINHAS_ABERTOS__
       if (isHospitalsVisible) {
         hospitalsMarkersLayer.addTo(leafletMapInstance);
         if (btn) {
-          btn.className = "px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-lg transition flex items-center gap-1 shadow-sm";
+          btn.className="btn bg-rose-600 hover:bg-rose-500 text-white";
           btn.innerHTML = `<span>🏥 Hospitais 5km (${HOSPITAIS_5KM.length})</span>`;
         }
       } else {
         leafletMapInstance.removeLayer(hospitalsMarkersLayer);
         if (btn) {
-          btn.className = "px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-lg transition flex items-center gap-1 shadow-sm";
+          btn.className="btn bg-slate-200 hover:bg-slate-300 text-slate-700";
           btn.innerHTML = `<span>🏥 Hospitais (Oculto)</span>`;
         }
       }
@@ -2309,7 +2370,7 @@ __LINHAS_ABERTOS__
         const vulnBadge = e.mob_vuln === 'Alta' ? 'text-rose-700 bg-rose-50 border-rose-200' : 'text-amber-700 bg-amber-50 border-amber-200';
 
         const card = document.createElement('div');
-        card.className = "p-2.5 rounded-lg border border-slate-200 hover:border-blue-300 bg-slate-50/60 hover:bg-blue-50/40 transition cursor-pointer text-[11px]";
+        card.className="p-2.5 rounded-lg border border-slate-200 hover:border-blue-300 bg-slate-50/60 hover:bg-blue-50/40 transition cursor-pointer text-[11px]";
         card.onclick = () => {
           if (leafletMapInstance) {
             leafletMapInstance.setView([e.lat, e.lon], 16);
@@ -2357,13 +2418,13 @@ __LINHAS_ABERTOS__
       if (isEmpresasVisible) {
         empresasMarkersLayer.addTo(leafletMapInstance);
         if (btn) {
-          btn.className = "px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition flex items-center gap-1 shadow-sm";
+          btn.className="btn bg-blue-600 hover:bg-blue-500 text-white";
           btn.innerHTML = `<span>🏢 Empresas 100+ (${EMPRESAS_5KM.length})</span>`;
         }
       } else {
         leafletMapInstance.removeLayer(empresasMarkersLayer);
         if (btn) {
-          btn.className = "px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-lg transition flex items-center gap-1 shadow-sm";
+          btn.className="btn bg-slate-200 hover:bg-slate-300 text-slate-700";
           btn.innerHTML = `<span>🏢 Empresas (Oculto)</span>`;
         }
       }
@@ -2379,7 +2440,7 @@ __LINHAS_ABERTOS__
       // Hospitais primeiro
       hospitals.forEach(h => {
         const card = document.createElement('div');
-        card.className = "p-2 rounded-lg border border-rose-200 hover:border-rose-400 bg-rose-50/50 hover:bg-rose-100/50 transition cursor-pointer text-[11px]";
+        card.className="p-2 rounded-lg border border-rose-200 hover:border-rose-400 bg-rose-50/50 hover:bg-rose-100/50 transition cursor-pointer text-[11px]";
         card.onclick = () => {
           if (leafletMapInstance) {
             leafletMapInstance.setView([h.lat, h.lon], 16);
@@ -2412,7 +2473,7 @@ __LINHAS_ABERTOS__
       // Empresas em seguida
       empresas.forEach(e => {
         const card = document.createElement('div');
-        card.className = "p-2 rounded-lg border border-blue-200 hover:border-blue-400 bg-blue-50/50 hover:bg-blue-100/50 transition cursor-pointer text-[11px]";
+        card.className="p-2 rounded-lg border border-blue-200 hover:border-blue-400 bg-blue-50/50 hover:bg-blue-100/50 transition cursor-pointer text-[11px]";
         card.onclick = () => {
           if (leafletMapInstance) {
             leafletMapInstance.setView([e.lat, e.lon], 16);
@@ -2544,13 +2605,13 @@ __LINHAS_ABERTOS__
       ['all', 'tier1', 'contemplados', 'butanta', 'eletricos', 'mulheres', 'suplentes'].forEach(k => {
         const b = document.getElementById(`crm-btn-${k}`);
         if (b) {
-          b.className = "text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1";
+          b.className="btn btn-soft";
         }
       });
 
       const activeBtn = document.getElementById(`crm-btn-${cat.toLowerCase()}`);
       if (activeBtn) {
-        activeBtn.className = "text-xs font-bold px-3 py-1.5 rounded-lg bg-rose-600 text-white transition flex items-center gap-1 shadow-sm";
+        activeBtn.className="btn bg-rose-600 text-white";
       }
       applyCRMFilters();
     }
@@ -2638,7 +2699,7 @@ __LINHAS_ABERTOS__
 
       pageData.forEach(r => {
         const tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-50/80 transition";
+        tr.className="hover:bg-slate-50/80 transition";
 
         const savedStatus = getLeadSavedStatus(r.id);
         const savedNote = getLeadSavedNote(r.id);
@@ -2666,14 +2727,14 @@ __LINHAS_ABERTOS__
           </td>
           <td class="py-2.5 px-3 text-center">
             ${r.wpp_url ? `
-              <a href="${r.wpp_url}" target="_blank" onclick="setLeadSavedStatus('${r.id}', '3 - Contatado / Conversando'); renderCRMTable();" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] shadow-sm transition">
+              <a href="${r.wpp_url}" target="_blank" onclick="setLeadSavedStatus('${r.id}', '3 - Contatado / Conversando'); renderCRMTable();" class="btn bg-emerald-600 hover:bg-emerald-500 text-white">
                 <i class="ph-bold ph-whatsapp-logo text-sm"></i>
                 <span>WhatsApp</span>
               </a>
             ` : `<span class="text-slate-400 text-[10px]">Sem celular</span>`}
           </td>
           <td class="py-2.5 px-3">
-            <select onchange="setLeadSavedStatus('${r.id}', this.value)" class="text-[11px] bg-white border border-slate-200 rounded-lg px-2 py-1 font-semibold text-slate-700 focus:ring-1 focus:ring-amber-500">
+            <select onchange="setLeadSavedStatus('${r.id}', this.value)" class="field text-[11px] px-2 py-1 font-semibold text-slate-700">
               <option value="1 - Novo Lead" ${savedStatus.includes('1 - Novo') ? 'selected' : ''}>1 - Novo Lead</option>
               <option value="2 - Tentativa de Contato" ${savedStatus.includes('2 - Tentativa') ? 'selected' : ''}>2 - Tentativa de Contato</option>
               <option value="3 - Contatado / Conversando" ${savedStatus.includes('3 - Contatado') ? 'selected' : ''}>3 - Contatado / Conversando</option>
@@ -2683,7 +2744,7 @@ __LINHAS_ABERTOS__
             </select>
           </td>
           <td class="py-2.5 px-3">
-            <input type="text" value="${savedNote}" onchange="setLeadSavedNote('${r.id}', this.value)" placeholder="Anotação rápida..." class="w-full text-[11px] bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:outline-none">
+            <input type="text" value="${savedNote}" onchange="setLeadSavedNote('${r.id}', this.value)" placeholder="Anotação rápida..." class="field w-full text-[11px] px-2 py-1">
           </td>
           <td class="py-2.5 px-3 text-right">
             <button onclick="openDriverModal('${r.id}')" class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-slate-100 rounded-lg transition" title="Ver Dossiê 360°">
@@ -2700,9 +2761,9 @@ __LINHAS_ABERTOS__
       
       const pctrl = document.getElementById('crm-pagination-controls');
       pctrl.innerHTML = `
-        <button onclick="if(currentCRMPage>1){currentCRMPage--; renderCRMTable();}" class="px-2 py-1 rounded border border-slate-200 bg-white text-slate-600 disabled:opacity-40" ${currentCRMPage===1?'disabled':''}>Anterior</button>
+        <button onclick="if(currentCRMPage>1){currentCRMPage--; renderCRMTable();}" class="btn btn-ghost btn-xs" ${currentCRMPage===1?'disabled':''}>Anterior</button>
         <span class="px-2 text-slate-500 font-bold">${currentCRMPage} / ${totalPages}</span>
-        <button onclick="if(currentCRMPage<${totalPages}){currentCRMPage++; renderCRMTable();}" class="px-2 py-1 rounded border border-slate-200 bg-white text-slate-600 disabled:opacity-40" ${currentCRMPage===totalPages?'disabled':''}>Próxima</button>
+        <button onclick="if(currentCRMPage<${totalPages}){currentCRMPage++; renderCRMTable();}" class="btn btn-ghost btn-xs" ${currentCRMPage===totalPages?'disabled':''}>Próxima</button>
       `;
     }
 
@@ -2798,7 +2859,7 @@ __LINHAS_ABERTOS__
 
       pageData.forEach(r => {
         const tr = document.createElement('tr');
-        tr.className = "hover:bg-amber-50/40 transition cursor-pointer";
+        tr.className="hover:bg-amber-50/40 transition cursor-pointer";
         tr.onclick = (e) => {
           if (!e.target.closest('button') && !e.target.closest('a')) {
             openDriverModal(r.id);
@@ -2841,7 +2902,7 @@ __LINHAS_ABERTOS__
             ` : '<span class="text-slate-300">—</span>'}
           </td>
           <td class="py-2.5 px-3 text-right">
-            <button onclick="openDriverModal('${r.id}')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 rounded-lg font-bold text-[11px] transition">
+            <button onclick="openDriverModal('${r.id}')" class="btn bg-amber-50 hover:bg-amber-100 text-amber-900">
               Ver Dossiê
             </button>
           </td>
@@ -2854,9 +2915,9 @@ __LINHAS_ABERTOS__
       
       const pctrl = document.getElementById('pagination-controls');
       pctrl.innerHTML = `
-        <button onclick="if(currentMasterPage>1){currentMasterPage--; renderMasterTable();}" class="px-2 py-1 rounded border border-slate-200 bg-white text-slate-600 disabled:opacity-40" ${currentMasterPage===1?'disabled':''}>Anterior</button>
+        <button onclick="if(currentMasterPage>1){currentMasterPage--; renderMasterTable();}" class="btn btn-ghost btn-xs" ${currentMasterPage===1?'disabled':''}>Anterior</button>
         <span class="px-2 text-slate-500 font-bold">${currentMasterPage} / ${totalPages}</span>
-        <button onclick="if(currentMasterPage<${totalPages}){currentMasterPage++; renderMasterTable();}" class="px-2 py-1 rounded border border-slate-200 bg-white text-slate-600 disabled:opacity-40" ${currentMasterPage===totalPages?'disabled':''}>Próxima</button>
+        <button onclick="if(currentMasterPage<${totalPages}){currentMasterPage++; renderMasterTable();}" class="btn btn-ghost btn-xs" ${currentMasterPage===totalPages?'disabled':''}>Próxima</button>
       `;
     }
 
@@ -3208,10 +3269,10 @@ __LINHAS_ABERTOS__
           Mostrando <b>${startIdx}</b> a <b>${endIdx}</b> de <b>${totalItems}</b> clientes corporativos
         </div>
         <div class="flex items-center space-x-1">
-          <button onclick="changeCorpPage(1)" ${currentCorpPage === 1 ? 'disabled' : ''} class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed">
+          <button onclick="changeCorpPage(1)" ${currentCorpPage === 1 ? 'disabled' : ''} class="btn btn-ghost btn-xs">
             <i class="ph-bold ph-caret-double-left"></i>
           </button>
-          <button onclick="changeCorpPage(${currentCorpPage - 1})" ${currentCorpPage === 1 ? 'disabled' : ''} class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed">
+          <button onclick="changeCorpPage(${currentCorpPage - 1})" ${currentCorpPage === 1 ? 'disabled' : ''} class="btn btn-ghost btn-xs">
             <i class="ph-bold ph-caret-left"></i>
           </button>
       `;
@@ -3220,17 +3281,17 @@ __LINHAS_ABERTOS__
       let endP = Math.min(totalPages, currentCorpPage + 2);
       for (let p = startP; p <= endP; p++) {
         if (p === currentCorpPage) {
-          html += `<button class="px-2.5 py-1 rounded bg-purple-600 text-white font-bold">${p}</button>`;
+          html += `<button class="btn bg-purple-600 text-white">${p}</button>`;
         } else {
-          html += `<button onclick="changeCorpPage(${p})" class="px-2.5 py-1 rounded bg-white border border-slate-200 text-slate-700 hover:bg-slate-100">${p}</button>`;
+          html += `<button onclick="changeCorpPage(${p})" class="btn btn-ghost btn-xs">${p}</button>`;
         }
       }
 
       html += `
-          <button onclick="changeCorpPage(${currentCorpPage + 1})" ${currentCorpPage === totalPages ? 'disabled' : ''} class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed">
+          <button onclick="changeCorpPage(${currentCorpPage + 1})" ${currentCorpPage === totalPages ? 'disabled' : ''} class="btn btn-ghost btn-xs">
             <i class="ph-bold ph-caret-right"></i>
           </button>
-          <button onclick="changeCorpPage(${totalPages})" ${currentCorpPage === totalPages ? 'disabled' : ''} class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed">
+          <button onclick="changeCorpPage(${totalPages})" ${currentCorpPage === totalPages ? 'disabled' : ''} class="btn btn-ghost btn-xs">
             <i class="ph-bold ph-caret-double-right"></i>
           </button>
         </div>
@@ -3277,9 +3338,9 @@ __LINHAS_ABERTOS__
       const vulnBadge = document.getElementById('corp-modal-vuln-badge');
       vulnBadge.innerText = `Vuln: ${item.mob_vuln}`;
       if (item.mob_vuln === 'Alta') {
-        vulnBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-500/20 text-red-300 border border-red-500/30";
+        vulnBadge.className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-500/20 text-red-300 border border-red-500/30";
       } else {
-        vulnBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30";
+        vulnBadge.className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30";
       }
 
       const subTitle = item.isHosp 
@@ -3534,6 +3595,18 @@ __LINHAS_ABERTOS__
 
     // INICIALIZAÇÃO DOS GRÁFICOS CHART.JS
     function initCharts() {
+  Chart.defaults.font.family = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif";
+  Chart.defaults.font.size = 11;
+  Chart.defaults.color = '#64748b';
+  Chart.defaults.borderColor = '#e8edf3';
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+  Chart.defaults.plugins.legend.labels.boxWidth = 7;
+  Chart.defaults.plugins.legend.labels.padding = 14;
+  Chart.defaults.plugins.tooltip.backgroundColor = '#0f172a';
+  Chart.defaults.plugins.tooltip.padding = 10;
+  Chart.defaults.plugins.tooltip.cornerRadius = 8;
+  Chart.defaults.plugins.tooltip.titleFont = { weight: '700' };
+
       const ctxEditais = document.getElementById('chart-editais').getContext('2d');
       new Chart(ctxEditais, {
         type: 'bar',
