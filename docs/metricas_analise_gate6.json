@@ -1,0 +1,542 @@
+{
+  "metadados": {
+    "total_dtp": 1187,
+    "total_osm": 593,
+    "total_pareados": 261,
+    "taxa_cobertura_dtp_pct": 21.99,
+    "taxa_cobertura_osm_pct": 44.01,
+    "dtp_sem_osm": 926,
+    "osm_sem_dtp": 332
+  },
+  "cobertura_regional": [
+    {
+      "regiao": "CENTRO",
+      "dtp_total": 253,
+      "pareados": 75,
+      "cobertura_pct": 29.6,
+      "vagas_totais": 3756,
+      "vagas_pareadas": 1367
+    },
+    {
+      "regiao": "LESTE",
+      "dtp_total": 183,
+      "pareados": 27,
+      "cobertura_pct": 14.8,
+      "vagas_totais": 2046,
+      "vagas_pareadas": 337
+    },
+    {
+      "regiao": "NORTE",
+      "dtp_total": 113,
+      "pareados": 25,
+      "cobertura_pct": 22.1,
+      "vagas_totais": 1229,
+      "vagas_pareadas": 282
+    },
+    {
+      "regiao": "OESTE",
+      "dtp_total": 358,
+      "pareados": 103,
+      "cobertura_pct": 28.8,
+      "vagas_totais": 4901,
+      "vagas_pareadas": 1468
+    },
+    {
+      "regiao": "SUL",
+      "dtp_total": 280,
+      "pareados": 31,
+      "cobertura_pct": 11.1,
+      "vagas_totais": 3389,
+      "vagas_pareadas": 366
+    }
+  ],
+  "cobertura_subprefeituras": [
+    {
+      "codigo": 1,
+      "nome": "PERUS-ANHANGUERA",
+      "regiao": "Norte",
+      "dtp_total": 1,
+      "pareados": 0,
+      "pendentes": 1,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 2,
+      "nome": "PIRITUBA-JARAGUA",
+      "regiao": "Norte",
+      "dtp_total": 12,
+      "pareados": 0,
+      "pendentes": 12,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 3,
+      "nome": "FREGUESIA-BRASILANDIA",
+      "regiao": "Norte",
+      "dtp_total": 9,
+      "pareados": 1,
+      "pendentes": 8,
+      "cobertura_pct": 11.1
+    },
+    {
+      "codigo": 4,
+      "nome": "CASA VERDE-LIMAO-CACHOEIRINHA",
+      "regiao": "Norte",
+      "dtp_total": 23,
+      "pareados": 3,
+      "pendentes": 20,
+      "cobertura_pct": 13.0
+    },
+    {
+      "codigo": 5,
+      "nome": "SANTANA-TUCURUVI",
+      "regiao": "Norte",
+      "dtp_total": 37,
+      "pareados": 12,
+      "pendentes": 25,
+      "cobertura_pct": 32.4
+    },
+    {
+      "codigo": 6,
+      "nome": "JACANA-TREMEMBE",
+      "regiao": "Norte",
+      "dtp_total": 8,
+      "pareados": 1,
+      "pendentes": 7,
+      "cobertura_pct": 12.5
+    },
+    {
+      "codigo": 7,
+      "nome": "VILA MARIA-VILA GUILHERME",
+      "regiao": "Norte",
+      "dtp_total": 22,
+      "pareados": 8,
+      "pendentes": 14,
+      "cobertura_pct": 36.4
+    },
+    {
+      "codigo": 8,
+      "nome": "LAPA",
+      "regiao": "Oeste",
+      "dtp_total": 117,
+      "pareados": 23,
+      "pendentes": 94,
+      "cobertura_pct": 19.7
+    },
+    {
+      "codigo": 9,
+      "nome": "SE",
+      "regiao": "Centro",
+      "dtp_total": 253,
+      "pareados": 75,
+      "pendentes": 178,
+      "cobertura_pct": 29.6
+    },
+    {
+      "codigo": 10,
+      "nome": "BUTANTA",
+      "regiao": "Oeste",
+      "dtp_total": 39,
+      "pareados": 3,
+      "pendentes": 36,
+      "cobertura_pct": 7.7
+    },
+    {
+      "codigo": 11,
+      "nome": "PINHEIROS",
+      "regiao": "Oeste",
+      "dtp_total": 202,
+      "pareados": 77,
+      "pendentes": 125,
+      "cobertura_pct": 38.1
+    },
+    {
+      "codigo": 12,
+      "nome": "VILA MARIANA",
+      "regiao": "Sul",
+      "dtp_total": 137,
+      "pareados": 23,
+      "pendentes": 114,
+      "cobertura_pct": 16.8
+    },
+    {
+      "codigo": 13,
+      "nome": "IPIRANGA",
+      "regiao": "Sul",
+      "dtp_total": 34,
+      "pareados": 2,
+      "pendentes": 32,
+      "cobertura_pct": 5.9
+    },
+    {
+      "codigo": 14,
+      "nome": "SANTO AMARO",
+      "regiao": "Sul",
+      "dtp_total": 68,
+      "pareados": 1,
+      "pendentes": 67,
+      "cobertura_pct": 1.5
+    },
+    {
+      "codigo": 15,
+      "nome": "JABAQUARA",
+      "regiao": "Sul",
+      "dtp_total": 12,
+      "pareados": 5,
+      "pendentes": 7,
+      "cobertura_pct": 41.7
+    },
+    {
+      "codigo": 16,
+      "nome": "CIDADE ADEMAR",
+      "regiao": "Sul",
+      "dtp_total": 1,
+      "pareados": 0,
+      "pendentes": 1,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 17,
+      "nome": "CAMPO LIMPO",
+      "regiao": "Sul",
+      "dtp_total": 16,
+      "pareados": 0,
+      "pendentes": 16,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 18,
+      "nome": "M BOI MIRIM",
+      "regiao": "Sul",
+      "dtp_total": 1,
+      "pareados": 0,
+      "pendentes": 1,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 19,
+      "nome": "CAPELA DO SOCORRO",
+      "regiao": "Sul",
+      "dtp_total": 10,
+      "pareados": 0,
+      "pendentes": 10,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 20,
+      "nome": "PARELHEIROS",
+      "regiao": "Sul",
+      "dtp_total": 0,
+      "pareados": 0,
+      "pendentes": 0,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 21,
+      "nome": "PENHA",
+      "regiao": "Leste",
+      "dtp_total": 19,
+      "pareados": 0,
+      "pendentes": 19,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 22,
+      "nome": "ERMELINO MATARAZZO",
+      "regiao": "Leste",
+      "dtp_total": 2,
+      "pareados": 0,
+      "pendentes": 2,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 23,
+      "nome": "SAO MIGUEL",
+      "regiao": "Leste",
+      "dtp_total": 6,
+      "pareados": 0,
+      "pendentes": 6,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 24,
+      "nome": "ITAIM PAULISTA",
+      "regiao": "Leste",
+      "dtp_total": 3,
+      "pareados": 0,
+      "pendentes": 3,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 25,
+      "nome": "MOOCA",
+      "regiao": "Leste",
+      "dtp_total": 99,
+      "pareados": 25,
+      "pendentes": 74,
+      "cobertura_pct": 25.3
+    },
+    {
+      "codigo": 26,
+      "nome": "ARICANDUVA-FORMOSA-CARRAO",
+      "regiao": "Leste",
+      "dtp_total": 21,
+      "pareados": 0,
+      "pendentes": 21,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 27,
+      "nome": "ITAQUERA",
+      "regiao": "Leste",
+      "dtp_total": 8,
+      "pareados": 0,
+      "pendentes": 8,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 28,
+      "nome": "GUAIANASES",
+      "regiao": "Leste",
+      "dtp_total": 3,
+      "pareados": 0,
+      "pendentes": 3,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 29,
+      "nome": "VILA PRUDENTE",
+      "regiao": "Leste",
+      "dtp_total": 15,
+      "pareados": 1,
+      "pendentes": 14,
+      "cobertura_pct": 6.7
+    },
+    {
+      "codigo": 30,
+      "nome": "SAO MATEUS",
+      "regiao": "Leste",
+      "dtp_total": 3,
+      "pareados": 1,
+      "pendentes": 2,
+      "cobertura_pct": 33.3
+    },
+    {
+      "codigo": 31,
+      "nome": "CIDADE TIRADENTES",
+      "regiao": "Leste",
+      "dtp_total": 2,
+      "pareados": 0,
+      "pendentes": 2,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 32,
+      "nome": "SAPOPEMBA",
+      "regiao": "Leste",
+      "dtp_total": 0,
+      "pareados": 0,
+      "pendentes": 0,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 0,
+      "nome": "NÃO INFORMADO",
+      "regiao": "NÃO INFORMADO",
+      "dtp_total": 4,
+      "pareados": 0,
+      "pendentes": 4,
+      "cobertura_pct": 0.0,
+      "escopo": "fora do universo de 32 subprefeituras"
+    }
+  ],
+  "pontos_sem_subprefeitura": 4,
+  "subprefeituras_cobertura_zero": [
+    {
+      "codigo": 1,
+      "nome": "PERUS-ANHANGUERA",
+      "regiao": "Norte",
+      "dtp_total": 1,
+      "pareados": 0,
+      "pendentes": 1,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 2,
+      "nome": "PIRITUBA-JARAGUA",
+      "regiao": "Norte",
+      "dtp_total": 12,
+      "pareados": 0,
+      "pendentes": 12,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 16,
+      "nome": "CIDADE ADEMAR",
+      "regiao": "Sul",
+      "dtp_total": 1,
+      "pareados": 0,
+      "pendentes": 1,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 17,
+      "nome": "CAMPO LIMPO",
+      "regiao": "Sul",
+      "dtp_total": 16,
+      "pareados": 0,
+      "pendentes": 16,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 18,
+      "nome": "M BOI MIRIM",
+      "regiao": "Sul",
+      "dtp_total": 1,
+      "pareados": 0,
+      "pendentes": 1,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 19,
+      "nome": "CAPELA DO SOCORRO",
+      "regiao": "Sul",
+      "dtp_total": 10,
+      "pareados": 0,
+      "pendentes": 10,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 21,
+      "nome": "PENHA",
+      "regiao": "Leste",
+      "dtp_total": 19,
+      "pareados": 0,
+      "pendentes": 19,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 22,
+      "nome": "ERMELINO MATARAZZO",
+      "regiao": "Leste",
+      "dtp_total": 2,
+      "pareados": 0,
+      "pendentes": 2,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 23,
+      "nome": "SAO MIGUEL",
+      "regiao": "Leste",
+      "dtp_total": 6,
+      "pareados": 0,
+      "pendentes": 6,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 24,
+      "nome": "ITAIM PAULISTA",
+      "regiao": "Leste",
+      "dtp_total": 3,
+      "pareados": 0,
+      "pendentes": 3,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 26,
+      "nome": "ARICANDUVA-FORMOSA-CARRAO",
+      "regiao": "Leste",
+      "dtp_total": 21,
+      "pareados": 0,
+      "pendentes": 21,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 27,
+      "nome": "ITAQUERA",
+      "regiao": "Leste",
+      "dtp_total": 8,
+      "pareados": 0,
+      "pendentes": 8,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 28,
+      "nome": "GUAIANASES",
+      "regiao": "Leste",
+      "dtp_total": 3,
+      "pareados": 0,
+      "pendentes": 3,
+      "cobertura_pct": 0.0
+    },
+    {
+      "codigo": 31,
+      "nome": "CIDADE TIRADENTES",
+      "regiao": "Leste",
+      "dtp_total": 2,
+      "pareados": 0,
+      "pendentes": 2,
+      "cobertura_pct": 0.0
+    }
+  ],
+  "balanco_vagas": {
+    "total_dtp_capacidade": 15321,
+    "total_dtp_ocupadas": 11687,
+    "total_dtp_saldo": 3634,
+    "pareados_dtp_capacidade": 3820,
+    "pareados_dtp_ocupadas": 3121,
+    "pareados_dtp_saldo": 699,
+    "subconjunto_com_capacity_osm": {
+      "pontos": 112,
+      "dtp_capacidade": 1760,
+      "osm_capacidade": 488,
+      "dtp_maior_osm_contagem": 109,
+      "dtp_igual_osm_contagem": 2,
+      "dtp_menor_osm_contagem": 1
+    }
+  },
+  "vazios_cartograficos": {
+    "total_distritos_sp": 96,
+    "distritos_com_presenca_osm": 59,
+    "distritos_sem_presenca_osm_total": 37,
+    "distritos_sem_presenca_osm": [
+      "ARICANDUVA",
+      "BRASILANDIA",
+      "CANGAIBA",
+      "CAPAO REDONDO",
+      "CIDADE ADEMAR",
+      "CIDADE DUTRA",
+      "ERMELINO MATARAZZO",
+      "GRAJAU",
+      "GUAIANASES",
+      "IGUATEMI",
+      "ITAIM PAULISTA",
+      "ITAQUERA",
+      "JAGUARA",
+      "JARDIM ANGELA",
+      "JARDIM HELENA",
+      "JARDIM SAO LUIS",
+      "JOSE BONIFACIO",
+      "LAJEADO",
+      "MARSILAC",
+      "PARELHEIROS",
+      "PARQUE DO CARMO",
+      "PEDREIRA",
+      "PERUS",
+      "PIRITUBA",
+      "PONTE RASA",
+      "RAPOSO TAVARES",
+      "SACOMA",
+      "SAO DOMINGOS",
+      "SAO LUCAS",
+      "SAO MIGUEL",
+      "SAO RAFAEL",
+      "SAPOPEMBA",
+      "SOCORRO",
+      "TREMEMBE",
+      "VILA CURUCA",
+      "VILA FORMOSA",
+      "VILA JACUI"
+    ]
+  }
+}

@@ -1,0 +1,411 @@
+{
+  "Aeroporto de Congonhas, Sao Paulo, Brasil": {
+    "lat": -23.6274146,
+    "lon": -46.655561,
+    "display_name": "Aeroporto de São Paulo/Congonhas - Deputado Freitas Nobre, Rua Joaquim Nunes Machado, Planalto Paulista, Saúde, São Paulo, Região Sudeste, 04084-006, Brasil"
+  },
+  "Terminal Rodoviario Tiete, Sao Paulo, Brasil": {
+    "lat": -23.5165965,
+    "lon": -46.6241002,
+    "display_name": "Terminal Rodoviário Tietê, 1800, Avenida Cruzeiro do Sul, Carandiru, Santana, São Paulo, Região Sudeste, 02031-050, Brasil"
+  },
+  "Pavilhao do Anhembi, Santana, Sao Paulo, Brasil": null,
+  "Pavilhao do Anhembi, Sao Paulo, Brasil": null,
+  "Rua SÃO COLUMBANO, Sao Paulo, SP, Brasil": {
+    "lat": -23.5722262,
+    "lon": -46.6974896,
+    "display_name": "Rua São Columbano, Jardim Europa, Pinheiros, São Paulo, Região Sudeste, 05423-120, Brasil"
+  },
+  "Morumbi Shopping, Sao Paulo, Brasil": {
+    "lat": -23.6234167,
+    "lon": -46.6985436,
+    "display_name": "Morumbi Shopping, 1089, Avenida Roque Petroni Júnior, Brooklin Novo, Itaim Bibi, São Paulo, Região Sudeste, 04707-900, Brasil"
+  },
+  "Terminal Jabaquara, Sao Paulo, Brasil": {
+    "lat": -23.6460729,
+    "lon": -46.6421467,
+    "display_name": "Terminal Rodoviário Jabaquara, Rua dos Jequitibás, Vila do Encontro, Jabaquara, São Paulo, Região Sudeste, 05263-030, Brasil"
+  },
+  "Avenida HIGIENÓPOLIS, Sao Paulo, SP, Brasil": {
+    "lat": -23.5413909,
+    "lon": -46.6602554,
+    "display_name": "Avenida Higienópolis, Higienópolis, Consolação, São Paulo, Região Sudeste, 01229-001, Brasil"
+  },
+  "Rua GALVÃO BUENO, Sao Paulo, SP, Brasil": {
+    "lat": -23.560958,
+    "lon": -46.63485,
+    "display_name": "Rua Galvão Bueno, Liberdade, São Paulo, Região Sudeste, 01508-000, Brasil"
+  },
+  "RIO CLARO. AL., Sao Paulo, SP, Brasil": {
+    "lat": -22.3588911,
+    "lon": -47.5531482,
+    "display_name": "Tigre Brasil, Parque dos Eucalíptos, Distrito Indústrial, Rio Claro, São Paulo, Região Sudeste, Brasil"
+  },
+  "Rua CORREIA DE MELO, Sao Paulo, SP, Brasil": {
+    "lat": -23.5295465,
+    "lon": -46.6373593,
+    "display_name": "Rua Correia de Melo, Bairro da Luz, Bom Retiro, São Paulo, Região Sudeste, 01123-020, Brasil"
+  },
+  "Avenida CASPER LIBERO, Sao Paulo, SP, Brasil": {
+    "lat": -23.9799771,
+    "lon": -46.2093379,
+    "display_name": "Avenida Casper Libero, Guarujá, São Paulo, Região Sudeste, 11443-000, Brasil"
+  },
+  "Rua QUEDINHO MAJOR, Sao Paulo, SP, Brasil": {
+    "lat": -23.5496753,
+    "lon": -46.6430462,
+    "display_name": "Rua Major Quedinho, República, São Paulo, Região Sudeste, 01050-030, Brasil"
+  },
+  "Rua FEIJÓ SENADOR, Sao Paulo, SP, Brasil": {
+    "lat": -23.5505598,
+    "lon": -46.6350634,
+    "display_name": "Rua Senador Feijó, 72, 66, Rua Senador Feijó, Glicério, Sé, São Paulo, Região Sudeste, 01006-000, Brasil"
+  },
+  "Rua ARAUJO, Sao Paulo, SP, Brasil": {
+    "lat": -23.5466751,
+    "lon": -46.6450831,
+    "display_name": "Rua Araújo, Vila Buarque, República, São Paulo, Região Sudeste, 01046-010, Brasil"
+  },
+  "Rua CAIO PRADO, Sao Paulo, SP, Brasil": {
+    "lat": -23.5506826,
+    "lon": -46.6479939,
+    "display_name": "Rua Caio Prado, Higienópolis, Consolação, São Paulo, Região Sudeste, 01305-900, Brasil"
+  },
+  "CONSOLAÇÃO DA R., Sao Paulo, SP, Brasil": {
+    "lat": -22.3636691,
+    "lon": -47.383981,
+    "display_name": "Banco do Brasil, 79, Rua da Consolação, Jardim Belvedere, Araras, São Paulo, Região Sudeste, 13601-060, Brasil"
+  },
+  "AFONSO KHERLAKIAM COM. R., Sao Paulo, SP, Brasil": null,
+  "AFONSO KHERLAKIAM COM. R., Sao Paulo, Brasil": null,
+  "BROTERO, CONS. R., Sao Paulo, SP, Brasil": {
+    "lat": -23.5364358,
+    "lon": -46.6610898,
+    "display_name": "Edifício Conselheiro Brotero, 1162, Rua Conselheiro Brotero, Santa Cecília, São Paulo, Região Sudeste, 01232-010, Brasil"
+  },
+  "Rua CARDIM MAESTRO, Sao Paulo, SP, Brasil": {
+    "lat": -23.5641969,
+    "lon": -46.6412171,
+    "display_name": "Rua Maestro Cardim, Morro dos Ingleses, Bela Vista, São Paulo, Região Sudeste, 01323-000, Brasil"
+  },
+  "Rua PIRAPITINGUI, Sao Paulo, SP, Brasil": {
+    "lat": -23.6616547,
+    "lon": -46.5587925,
+    "display_name": "Rua Pirapitingui, Vila Dourados, Vila Vivaldi, Rudge Ramos, São Bernardo do Campo, São Paulo, Região Sudeste, 09616-070, Brasil"
+  },
+  "Rua TIMBIRAS DOS, Sao Paulo, SP, Brasil": {
+    "lat": -23.1951177,
+    "lon": -45.9114434,
+    "display_name": "Rua Timbiras, Serimbura, São José dos Campos, São Paulo, Região Sudeste, 12242-330, Brasil"
+  },
+  "Rua SANTA IFIGÊNIA, Sao Paulo, SP, Brasil": {
+    "lat": -23.5400445,
+    "lon": -46.63802,
+    "display_name": "Rua Santa Ifigênia, Santa Ifigênia, República, São Paulo, Região Sudeste, 01208-011, Brasil"
+  },
+  "Rua SANTO ELIAS, Sao Paulo, SP, Brasil": {
+    "lat": -23.5330042,
+    "lon": -46.5669711,
+    "display_name": "Rua Santo Elias, Parque São Jorge, Tatuapé, São Paulo, Região Sudeste, 03086-050, Brasil"
+  },
+  "Praça MICAELA VIERIRA, DONA, Sao Paulo, SP, Brasil": null,
+  "MICAELA VIERIRA, Sao Paulo, Brasil": null,
+  "Rua JULIO COLAÇO, Sao Paulo, SP, Brasil": {
+    "lat": -23.543762,
+    "lon": -46.5404906,
+    "display_name": "Rua Júlio Colaço, Vila Carrão, Carrão, São Paulo, Região Sudeste, 03440-040, Brasil"
+  },
+  "Praça SILVIO ROMERO, Sao Paulo, SP, Brasil": {
+    "lat": -23.5454848,
+    "lon": -46.5735104,
+    "display_name": "Praça Silvio Romero, Vila Azevedo, Tatuapé, São Paulo, Região Sudeste, Brasil"
+  },
+  "Rua ARNALDO ROSA, Sao Paulo, SP, Brasil": {
+    "lat": -23.5631998,
+    "lon": -46.5611572,
+    "display_name": "Rua Arnaldo Rosa, Jardim Anália Franco, Vila Formosa, São Paulo, Região Sudeste, 03372-015, Brasil"
+  },
+  "Rua BRESSER, Sao Paulo, SP, Brasil": {
+    "lat": -23.5521779,
+    "lon": -46.5994247,
+    "display_name": "Rua Bresser, Parque da Mooca, Mooca, São Paulo, Região Sudeste, 03162-030, Brasil"
+  },
+  "Rua COSTA VALENTE, Sao Paulo, SP, Brasil": {
+    "lat": -23.5392707,
+    "lon": -46.6105769,
+    "display_name": "Rua Doutor Costa Valente, Brás, São Paulo, Região Sudeste, 03052-000, Brasil"
+  },
+  "Rua AUGUSTA DE JESUS, Sao Paulo, SP, Brasil": {
+    "lat": -23.4581211,
+    "lon": -46.6016194,
+    "display_name": "Rua Augusta de Jesus, Bortolândia, Tremembé, São Paulo, Região Sudeste, 02306-003, Brasil"
+  },
+  "Rua ENGENHO, Sao Paulo, SP, Brasil": {
+    "lat": -23.5956461,
+    "lon": -46.7465509,
+    "display_name": "Rua Caminho do Engenho, Jardim Jaqueline, Vila Sônia, São Paulo, Região Sudeste, 05528-000, Brasil"
+  },
+  "Avenida OTTO BAUMGART, Sao Paulo, SP, Brasil": {
+    "lat": -23.5109454,
+    "lon": -46.6157126,
+    "display_name": "Avenida Otto Baumgart, Bairro da Coroa, Vila Guilherme, São Paulo, Região Sudeste, 02049-015, Brasil"
+  },
+  "Rua CANNER, Sao Paulo, SP, Brasil": {
+    "lat": -23.4907549,
+    "lon": -46.7108882,
+    "display_name": "Rua Canner, Vila Pereira Cerca, Piqueri, Pirituba, São Paulo, Região Sudeste, 02924-601, Brasil"
+  },
+  "CRUZEIRO DO SUL AV., Sao Paulo, SP, Brasil": {
+    "lat": -23.8968636,
+    "lon": -46.4294843,
+    "display_name": "Congregação Cristã no Brasil, 94, Avenida Cruzeiro do Sul, Vila Nova, Cubatão, São Paulo, Região Sudeste, 11525-159, Brasil"
+  },
+  "Avenida MOFARREJ, Sao Paulo, SP, Brasil": {
+    "lat": -23.5323825,
+    "lon": -46.7443402,
+    "display_name": "Avenida Mofarrej, Vila Leopoldina, São Paulo, Região Sudeste, 05311-000, Brasil"
+  },
+  "Alameda LORENA, Sao Paulo, SP, Brasil": {
+    "lat": -23.5724309,
+    "lon": -46.6568629,
+    "display_name": "Alameda Lorena, Jardins, Jardim Paulista, São Paulo, Região Sudeste, 01424-000, Brasil"
+  },
+  "Rua TAVARES BASTOS, Sao Paulo, SP, Brasil": {
+    "lat": -23.5311844,
+    "lon": -46.6918465,
+    "display_name": "Rua Tavares Bastos, Bairro Siciliano, Lapa, São Paulo, Região Sudeste, 05012-020, Brasil"
+  },
+  "Rua HANS OERSTED, Sao Paulo, SP, Brasil": {
+    "lat": -23.6088798,
+    "lon": -46.6949347,
+    "display_name": "Rua Hans Oersted, Brooklin Novo, Itaim Bibi, São Paulo, Região Sudeste, 04567-003, Brasil"
+  },
+  "Rua MARINHO FALCÃO, Sao Paulo, SP, Brasil": {
+    "lat": -23.5494436,
+    "lon": -46.6938943,
+    "display_name": "Rua Marinho Falcão, Pinheiros, São Paulo, Região Sudeste, 05435-060, Brasil"
+  },
+  "Alameda JOAQUIM EUGENIO DE LIMA, Sao Paulo, SP, Brasil": {
+    "lat": -23.5639817,
+    "lon": -46.648746,
+    "display_name": "Alameda Joaquim Eugênio de Lima, Morro dos Ingleses, Bela Vista, São Paulo, Região Sudeste, 01331-010, Brasil"
+  },
+  "CARLOS CIRILO JR. R., Sao Paulo, SP, Brasil": null,
+  "CARLOS CIRILO JR. R., Sao Paulo, Brasil": null,
+  "Rua ARTUR RAMOS PROF°, Sao Paulo, SP, Brasil": {
+    "lat": -23.5824196,
+    "lon": -46.6870353,
+    "display_name": "Rua Prof. Artur Ramos, Rua Professor Artur Ramos, Jardim Europa, Pinheiros, São Paulo, Região Sudeste, 01453-010, Brasil"
+  },
+  "Rua ARMANDO FAIRBANKS DES, Sao Paulo, SP, Brasil": null,
+  "ARMANDO FAIRBANKS DES, Sao Paulo, Brasil": null,
+  "Rua PEDROSO ALVARENGA, Sao Paulo, SP, Brasil": {
+    "lat": -23.5827253,
+    "lon": -46.6817627,
+    "display_name": "Rua Pedroso Alvarenga, Vila Olímpia, Itaim Bibi, São Paulo, Região Sudeste, 04531-012, Brasil"
+  },
+  "Rua HADDOCK LOBO, Sao Paulo, SP, Brasil": {
+    "lat": -23.5620377,
+    "lon": -46.6659896,
+    "display_name": "Rua Haddock Lobo, Jardim América, Cerqueira César, Jardim Paulista, São Paulo, Região Sudeste, 01417-020, Brasil"
+  },
+  "Rua CARLOS WEBER, Sao Paulo, SP, Brasil": {
+    "lat": -23.5342365,
+    "lon": -46.7245745,
+    "display_name": "Rua Carlos Weber, Vila Hamburguesa, Vila Leopoldina, São Paulo, Região Sudeste, 05303-000, Brasil"
+  },
+  "Rua ARIZONA, Sao Paulo, SP, Brasil": {
+    "lat": -23.6268985,
+    "lon": -46.5097637,
+    "display_name": "Rua Arizona, Jardim Oratório, 2º Subdistrito, Santo André, São Paulo, Região Sudeste, 09250-450, Brasil"
+  },
+  "Rua LEOPOLDO COUTO DE MAGALHÃES JR, Sao Paulo, SP, Brasil": {
+    "lat": -23.588758,
+    "lon": -46.6824513,
+    "display_name": "Rua Leopoldo Couto de Magalhães Júnior, Vila Olímpia, Itaim Bibi, São Paulo, Região Sudeste, 04542-001, Brasil"
+  },
+  "Rua IGUATEMI, Sao Paulo, SP, Brasil": {
+    "lat": -23.585195,
+    "lon": -46.6818302,
+    "display_name": "Rua Iguatemi, Vila Olímpia, Itaim Bibi, São Paulo, Região Sudeste, 01451-011, Brasil"
+  },
+  "Avenida AURO SOARES DE MOURA ANDRADE, Sao Paulo, SP, Brasil": {
+    "lat": -23.5268591,
+    "lon": -46.6650575,
+    "display_name": "Avenida Auro Soares de Moura Andrade, Barra Funda, São Paulo, Região Sudeste, 01156-001, Brasil"
+  },
+  "Rua MIRITI, Sao Paulo, SP, Brasil": {
+    "lat": -23.5903215,
+    "lon": -46.6824657,
+    "display_name": "Rua Miriti, Vila Olímpia, Itaim Bibi, São Paulo, Região Sudeste, 04538-132, Brasil"
+  },
+  "Rua JOAPÉ, Sao Paulo, SP, Brasil": {
+    "lat": -23.5975431,
+    "lon": -46.6978791,
+    "display_name": "Rua Joapé, Cidade Jardim, Morumbi, São Paulo, Região Sudeste, 05676-120, Brasil"
+  },
+  "Avenida MANUEL BANDEIRA, Sao Paulo, SP, Brasil": {
+    "lat": -23.5414352,
+    "lon": -46.7342768,
+    "display_name": "Avenida Manuel Bandeira, Vila Hamburguesa, Vila Leopoldina, São Paulo, Região Sudeste, 05317-000, Brasil"
+  },
+  "Rua RAJA GABAGLIA, Sao Paulo, SP, Brasil": {
+    "lat": -23.7670526,
+    "lon": -46.6971889,
+    "display_name": "Rua Almirante Carlos Raja Gabaglia, Jardim Myrna, Grajaú, São Paulo, Região Sudeste, 04862-015, Brasil"
+  },
+  "Rua FIDENCIO RAMOS, Sao Paulo, SP, Brasil": {
+    "lat": -23.5948472,
+    "lon": -46.6858799,
+    "display_name": "Rua Fidêncio Ramos, Vila Olímpia, Itaim Bibi, São Paulo, Região Sudeste, 04555-010, Brasil"
+  },
+  "Avenida VINTE E TRÊS DE MAIO, Sao Paulo, SP, Brasil": {
+    "lat": -23.5637133,
+    "lon": -46.6401823,
+    "display_name": "Avenida Vinte e Três de Maio, Liberdade, São Paulo, Região Sudeste, 01504-001, Brasil"
+  },
+  "SHOPPING MAIS, Sao Paulo, SP, Brasil": {
+    "lat": -23.6531846,
+    "lon": -46.7102133,
+    "display_name": "Mais Shopping, 229, Rua Amador Bueno, Santo Amaro, São Paulo, Região Sudeste, 04752-005, Brasil"
+  },
+  "Estrada SÃO JOÃO CLIMACO, Sao Paulo, SP, Brasil": {
+    "lat": -23.6302083,
+    "lon": -46.5863318,
+    "display_name": "Estrada das Lágrimas, Jardim Patente, Vila Arapuã, Sacomã, São Paulo, Região Sudeste, 04256-190, Brasil"
+  },
+  "Avenida LINS DE VASCONCELOS, Sao Paulo, SP, Brasil": {
+    "lat": -23.5634045,
+    "lon": -46.6207941,
+    "display_name": "Avenida Lins de Vasconcelos, Cambuci, São Paulo, Região Sudeste, 01523-010, Brasil"
+  },
+  "Rua SANTA CRUZ, Sao Paulo, SP, Brasil": {
+    "lat": -23.5968886,
+    "lon": -46.6336829,
+    "display_name": "Rua Santa Cruz, Vila Mariana, São Paulo, Região Sudeste, 04120-050, Brasil"
+  },
+  "Rua VERGUEIRO, Sao Paulo, SP, Brasil": {
+    "lat": -23.5817758,
+    "lon": -46.638059,
+    "display_name": "Rua Vergueiro, Vila Mariana, São Paulo, Região Sudeste, 04101-100, Brasil"
+  },
+  "Rua NAPOLEÃO DE BARROS, Sao Paulo, SP, Brasil": {
+    "lat": -23.5976607,
+    "lon": -46.6439932,
+    "display_name": "Rua Napoleão de Barros, Vila Clementino, Vila Mariana, São Paulo, Região Sudeste, 04024-002, Brasil"
+  },
+  "Avenida MARIA COELHO AGUIAR, Sao Paulo, SP, Brasil": {
+    "lat": -23.6503149,
+    "lon": -46.7334392,
+    "display_name": "Avenida Maria Coelho Aguiar, 787, Avenida Maria Coelho de Aguiar, Jardim São Luís, São Paulo, Região Sudeste, 05843-160, Brasil"
+  },
+  "Avenida GAIVOTA, Sao Paulo, SP, Brasil": {
+    "lat": -23.1073186,
+    "lon": -46.838817,
+    "display_name": "Avenida Gaivota, Parque da Fazenda II, Jundiaí, São Paulo, Região Sudeste, 13255-888, Brasil"
+  },
+  "Rua AMÉRICO BRASILIENSE, Sao Paulo, SP, Brasil": {
+    "lat": -23.6164323,
+    "lon": -46.5654637,
+    "display_name": "Rua Américo Brasiliense, Santa Paula, São Caetano do Sul, São Paulo, Região Sudeste, 09521-310, Brasil"
+  },
+  "Rua ABILIO SOARES, Sao Paulo, SP, Brasil": {
+    "lat": -23.5780136,
+    "lon": -46.6519805,
+    "display_name": "Rua Abílio Soares, Moema, Vila Mariana, São Paulo, Região Sudeste, 04005-004, Brasil"
+  },
+  "Rua DOMINGOS DE MORAIS, Sao Paulo, SP, Brasil": {
+    "lat": -23.6021742,
+    "lon": -46.6366396,
+    "display_name": "Rua Domingos de Morais, Chácara Inglesa, Saúde, São Paulo, Região Sudeste, 04035-001, Brasil"
+  },
+  "Rua VERBO DIVINO, Sao Paulo, SP, Brasil": {
+    "lat": -23.6373929,
+    "lon": -46.6986193,
+    "display_name": "Rua Verbo Divino, Santo Amaro, São Paulo, Região Sudeste, 04702-002, Brasil"
+  },
+  "SHOPPING INTERLAGOS, Sao Paulo, SP, Brasil": {
+    "lat": -23.6762873,
+    "lon": -46.6768114,
+    "display_name": "Shopping Interlagos, 2255, Avenida Interlagos, Campinha, Campo Grande, Interlagos, São Paulo, Região Sudeste, 04661-200, Brasil"
+  },
+  "METRO TAMANDUATEÍ, Sao Paulo, SP, Brasil": null,
+  "METRO TAMANDUATEÍ, Sao Paulo, Brasil": null,
+  "Avenida JANDIRA, Sao Paulo, SP, Brasil": {
+    "lat": -23.613936,
+    "lon": -46.6538122,
+    "display_name": "Avenida Jandira, Planalto Paulista, Saúde, São Paulo, Região Sudeste, 04080-007, Brasil"
+  },
+  "MARIA EDIVANI DO AMARAL DICK Professora,. R., Sao Paulo, SP, Brasil": null,
+  "MARIA EDIVANI DO AMARAL DICK Professora, Sao Paulo, Brasil": null,
+  "Rua TRIUNFO BARÃO DO, Sao Paulo, SP, Brasil": {
+    "lat": -23.623417,
+    "lon": -46.6828755,
+    "display_name": "Banco do Brasil, Rua Barão do Triunfo, Brooklin Velho, Campo Belo, São Paulo, Região Sudeste, 04602-002, Brasil"
+  },
+  "Rua TUTÓIA, Sao Paulo, SP, Brasil": {
+    "lat": -23.5721705,
+    "lon": -46.6535657,
+    "display_name": "Rua Tutóia, Moema, São Paulo, Região Sudeste, 01423-040, Brasil"
+  },
+  "Rua TUIM, Sao Paulo, SP, Brasil": {
+    "lat": -23.6033594,
+    "lon": -46.6718773,
+    "display_name": "Rua Tuim, Indianópolis, Moema, São Paulo, Região Sudeste, 04514-103, Brasil"
+  },
+  "Avenida JAMARIS, Sao Paulo, SP, Brasil": {
+    "lat": -23.6051473,
+    "lon": -46.6613188,
+    "display_name": "Avenida Jamaris, Indianópolis, Moema, São Paulo, Região Sudeste, 04078-000, Brasil"
+  },
+  "Rua BENTO BARBOSA, Sao Paulo, SP, Brasil": {
+    "lat": -23.6299144,
+    "lon": -46.6988102,
+    "display_name": "Rua Bento Barbosa, Chácara Santo Antônio, Santo Amaro, São Paulo, Região Sudeste, 04709-110, Brasil"
+  },
+  "Rua BENTO DE MATOS, Sao Paulo, SP, Brasil": {
+    "lat": -23.7505572,
+    "lon": -47.9599943,
+    "display_name": "Rua José Bento Mariano, Santa Cruz dos Matos, São Miguel Arcanjo, São Paulo, Região Sudeste, Brasil"
+  },
+  "Avenida ASCENDINO REIS PROF, Sao Paulo, SP, Brasil": {
+    "lat": -23.5981736,
+    "lon": -46.6505293,
+    "display_name": "Avenida Professor Ascendino Reis, 2524, Avenida Professor Ascendino Reis, Mirandópolis, Vila Mariana, São Paulo, Região Sudeste, 04027-000, Brasil"
+  },
+  "Rua Professor Milton Rodrigues, Sao Paulo, SP, Brasil": {
+    "lat": -23.5152,
+    "lon": -46.6409,
+    "display_name": "Rua Professor Milton Rodrigues, Santana, São Paulo, SP"
+  },
+  "Rua Comendador Afonso Kherlakian, Sao Paulo, SP, Brasil": {
+    "lat": -23.5417,
+    "lon": -46.6322,
+    "display_name": "Rua Comendador Afonso Kherlakian, Sé, São Paulo, SP"
+  },
+  "Praça Dona Micaela Vieira, Sao Paulo, SP, Brasil": {
+    "lat": -23.5855,
+    "lon": -46.5786,
+    "display_name": "Praça Dona Micaela Vieira, Vila Prudente, São Paulo, SP"
+  },
+  "Rua Carlos Cyrillo Júnior, Sao Paulo, SP, Brasil": {
+    "lat": -23.5936,
+    "lon": -46.7118,
+    "display_name": "Rua Carlos Cyrillo Júnior, Morumbi, São Paulo, SP"
+  },
+  "Rua Desembargador Armando Fairbanks, Sao Paulo, SP, Brasil": {
+    "lat": -23.5701,
+    "lon": -46.7082,
+    "display_name": "Rua Desembargador Armando Fairbanks, Butantã, São Paulo, SP"
+  },
+  "Terminal Metrô Tamanduateí, Sao Paulo, SP, Brasil": {
+    "lat": -23.5928,
+    "lon": -46.5898,
+    "display_name": "Estação Tamanduateí, Ipiranga, São Paulo, SP"
+  },
+  "Rua Professora Maria Edivani do Amaral Dick, Sao Paulo, SP, Brasil": {
+    "lat": -23.6483,
+    "lon": -46.7578,
+    "display_name": "Rua Professora Maria Edivani do Amaral Dick, Campo Limpo, São Paulo, SP"
+  }
+}

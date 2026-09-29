@@ -1,0 +1,32 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.tmp
+*.pbf
+.DS_Store
+Thumbs.db
+
+# --- Dados pessoais: mantidos locais, nunca versionados (LGPD) -------------
+# Gere a versão versionada com: python scripts/privacy.py public-master
+data/private/
+planilha_mestre_taxistas_sp_2026.csv
+planilha_mestre_taxistas_sp_2026.xlsx
+planilha_mestre_taxistas_sp_2026.zip
+fila_prospeccao_crm_taxistas_2026.csv
+fila_prospeccao_crm_taxistas_2026.xlsx
+roteiro_tatico_visitas_pontos_2026.csv
+roteiro_tatico_visitas_pontos_2026.xlsx
+base_meis_taxi_butanta_zona_oeste.csv
+base_meis_taxi_butanta_zona_oeste.xlsx
+layout_enriquecimento_contemplados_2140.csv
+layout_enriquecimento_contemplados_2140.xlsx
+taxistas_sp_cnae_receita_2026-09-14.csv
+doc_contemplados_cache.json
+logs/alertas_novas_publicacoes_doc.json
+logs/alertas_novas_publicacoes_doc.txt
+
+# --- Artefatos derivados gerados localmente -------------------------------
+dashboard_mestre_taxistas_sp_2026.html
+dashboard_alvaras_taxi_2026.html
+dashboard_pontos_taxi_sp.html
+mapa_interativo_pontos_taxi_sp.html

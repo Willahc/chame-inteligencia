@@ -1,0 +1,927 @@
+﻿ponto;endereco;sub;regiao;cap;ocup;saldo;situacao;origem_arquivo;unmatched_reason
+31;SERRA DE JAPI, R.;7;LESTE;15;14;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+69;ISABEL SCHIMIDT, R.;14;SUL;13;11;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+114;GUILHERME RUDGE MJ, PÇA.;25;LESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+128;HIGIENÓPOLIS, AV.;9;CENTRO;39;38;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+132;MOFARREJ, AV.;8;OESTE;18;16;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+141;CASTRO ALVES, R.;9;CENTRO;36;34;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+150;CARDOSO DE ALMEIDA, R.;8;OESTE;12;9;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+159;LIMEIRA, AL. BR. DE.;9;CENTRO;9;7;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+160;QUINZE DE OUTUBRO, R.;26;LESTE;13;10;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+161;ITAQUERI, R.;25;LESTE;12;11;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+202;HELENA ZERRENER, R.;9;CENTRO;9;4;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+262;JOAQUIM ALVES PRAÇA;21;LESTE;7;5;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+272;SANTO ELIAS, R.;25;LESTE;27;24;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+293;CAIUBI, R.;8;OESTE;18;16;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+294;DENTISTA BARRETO, R.;26;LESTE;5;2;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+296;ANTÔNIO PRUDENTE PROF, R.;9;CENTRO;33;32;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+299;PELOTAS, R.;12;SUL;20;18;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+310;VINTE E TRÊS DE MAIO, AV.;12;SUL;53;43;10;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+346;LECOR, GEN, R.;13;SUL;12;3;9;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+351;PAULO BREGARO, R.;13;SUL;20;17;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+356;ESTILO BARROCO, R.;14;SUL;38;36;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+360;AUGUSTA DE JESUS, R.;6;NORTE;5;3;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+393;TRÊS IRMÃOS DOS, R.;10;OESTE;15;12;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+422;LORENA, AL.;11;OESTE;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+460;MICAELA VIERIRA, DONA, PÇA.;21;LESTE;15;14;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+461;ADELINO, R. PADRE;25;LESTE;10;6;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+466;EDUARDO TABERNEIRA RANGEL, PÇ;25;LESTE;17;13;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+478;TEREZINA, R.;25;LESTE;19;17;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+482;SHOPPING MAIS;14;SUL;24;17;7;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+486;CAMPEVAS, R.;8;OESTE;10;5;5;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+506;CICINATO POMPONET, R.;8;OESTE;11;8;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+507;CLEMENTE ALVARES, R.;8;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+508;GUARARÁ, R.;11;OESTE;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+519;CUNHA GAGO, R.;11;OESTE;20;18;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+530;ZELINA, AV.;29;LESTE;24;21;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+533;JOSÉ MARIA LISBOA, R.;11;OESTE;24;22;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+548;JULIO MARIA PE. R.;5;NORTE;7;4;3;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+564;JOÃO CESÁRIO, CAP.;21;LESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+569;FRANCISCO DIAS, R.;13;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+574;TAVARES BASTOS, R.;8;OESTE;33;31;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+578;MARIQUINHA SCIASCIA, R.;6;NORTE;18;16;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+582;SÃO JOÃO CLIMACO, EST.;13;SUL;21;20;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+594;ALBERTO DE SOUZA COM. PÇA;6;NORTE;4;1;3;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+595;ROBERTO ALVES DE C. FILHO GEN. R.;14;SUL;4;1;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+596;NATAL, R.;25;LESTE;13;11;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+625;CALIFORNIA, R.;11;OESTE;17;15;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+629;MARCONDES DE BRITO, AV.;21;LESTE;7;6;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+631;CARLOS DA CUNHA MATOS, R.;2;NORTE;13;11;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+639;WILLIAN SPEERS,R.;8;OESTE;27;25;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+640;CASSUARINAS, R.;15;SUL;3;1;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+641;GIANCHETTA, ALM. RUA.;26;LESTE;6;3;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+646;GEORGIA, R.;11;OESTE;8;6;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+653;JOÃO XXIII, AV.;26;LESTE;6;2;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+655;APIACÁS, R.;8;OESTE;20;19;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+672;ITAMARACÁ, R.;25;LESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+675;RIBAS, R. CONS.;8;OESTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+690;ITAPIGI, R.;25;LESTE;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+696;SÃO LUCAS, AV.;29;LESTE;12;7;5;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+697;SANTA MARCELINA, R.;27;LESTE;26;25;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+701;CARLOS DE LAET, R.;5;NORTE;29;28;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+702;SANATÓRIO, AV.;7;NORTE;7;2;5;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+713;SANTA RITA DE CÁSSIA, PÇA.;12;SUL;23;21;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+735;DURVAL VILALVA, DR, R.;24;LESTE;12;11;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+742;ALEIXO MONTEIRO MAFRA, PÇA.;23;LESTE;18;14;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+748;MIGUEL RACHID, R.;22;LESTE;13;3;10;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+750;JOSÉ GARZOTTI, PE. R.;19;SUL;13;10;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+751;JOSÉ GUILHERME EIRAS DR, R.;23;LESTE;8;7;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+754;LUIS DO PAÇO, R.;25;LESTE;30;0;30;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+755;NOSSA SRA DA CONCEIÇÃO, LGO.;9;CENTRO;31;23;8;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+760;LUIS PICOLO, R.;23;LESTE;13;8;5;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+764;GUILHERME ASBAHR NETO, R.;14;SUL;33;32;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+767;ENGENHO,R.;4;NORTE;18;17;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+770;CRUZ DAS ALMAS, R.;15;SUL;12;11;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+772;MARTINIANO DE CARVALHO, R.;9;CENTRO;30;29;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+773;ADOLFO PINHEIRO, AV.;14;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+778;JULIO BUONO, AV.;7;NORTE;2;1;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+782;LINS DE VASCONCELOS, AV.;12;SUL;46;44;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+783;SANTA CRUZ, R.;12;SUL;27;25;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+786;CANIMÃ, R.;25;LESTE;30;27;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+791;NOVA CANTAREI, R.;5;NORTE;16;15;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+794;GALVÃO BUENO, R.;9;CENTRO;17;16;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+798;SANTA CRUZ, R.;12;SUL;15;14;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+804;ARIQUEME, R.;11;OESTE;37;36;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+811;ALFREDO EGIDIO DE SOUZA ARANHA, AV.;14;SUL;40;37;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+814;HAVRE DO, R.;4;NORTE;16;12;4;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+831;PAIM, R.;9;CENTRO;24;22;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+833;QUINTA DE SÃO MIGUEL, R.;28;LESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+834;LAUDELINO FERREIRA DO AMARAL, R.;23;LESTE;12;5;7;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+835;JUAZEIRO DO NORTE, R.;21;LESTE;30;11;19;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+837;PAULO LOPES LEÃO, R.;27;LESTE;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+839;HANS OERSTED, R.;11;OESTE;20;14;6;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+840;BATALHA DA, LGO.;12;SUL;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+841;SILVÉRIO DE CARVALHO, R.;4;NORTE;7;6;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+845;GABRIEL DE RESENDE P. M. AV.;12;SUL;13;11;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+848;MARACANA, R.;8;OESTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+850;TAMANDARÉ, R.;9;CENTRO;23;20;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+852;JOÃO SERRANO, R.;4;NORTE;20;19;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+853;VERGUEIRO, R.;12;SUL;34;32;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+855;JOÃO RAMALHO, R.;8;OESTE;23;22;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+857;CARLOS WEBER, R.;8;OESTE;17;16;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+859;OTAVIO GOMES, TEN. R.;9;CENTRO;22;19;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+861;CRUZ DE MALTAR, R.;5;NORTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+865;MENOTTI LAUDÍSIO, AV.;2;NORTE;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+866;ESTELA, R.;12;SUL;14;13;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+871;CASTRO AVELAENS, R.;29;LESTE;18;5;13;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+872;WANDERLEY, R.;8;OESTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+873;FRANCESES DOS R.;9;CENTRO;23;22;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+878;ANTÔNIO JOSÉ DOS SANTOS, PADRE, AV.;11;OESTE;17;16;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+880;MICHEL OUCHANA, R.;6;NORTE;11;10;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+881;CELESTINO BOURROL PROF°, AV.;4;NORTE;18;13;5;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+882;TAMANDARÉ, R.;9;CENTRO;28;22;6;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+888;LORETO, R.;13;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+889;MARINHO FALCÃO, R.;11;OESTE;34;33;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+892;JOAQUIM EUGENIO DE LIMA, AL.;11;OESTE;23;18;5;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+895;GENTIL FALCÃO R. GEN.;11;OESTE;21;19;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+899;MARTINS FRANCISCO, R.;9;CENTRO;12;9;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+904;MINAS DE PRATA, R.;11;OESTE;27;25;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+906;SANTA CRUZ, R.;12;SUL;4;3;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+908;NAPOLEÃO DE BARROS, R.;12;SUL;13;11;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+915;IPEROIG, R.;8;OESTE;23;21;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+918;ANTÁRTICA, AV.;8;OESTE;41;40;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+919;OSCAR PORTO, CEL. R.;12;SUL;17;16;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+926;ANA NERI DONA, R.;9;CENTRO;13;11;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+927;CARRÃO, CONSELHEIRO, R.;9;CENTRO;3;1;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+929;PASCOAL MARTINS, PÇA.;8;OESTE;18;15;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+930;FÁBIO, R.;26;LESTE;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+935;CORCOVADO, R.;8;OESTE;18;17;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+937;RIO CLARO. AL.;9;CENTRO;20;19;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+941;HUMBERTO I, R.;12;SUL;18;17;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+943;TURMALINA, AV.;9;CENTRO;15;12;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+944;TOPÁZIO, R.;12;SUL;13;10;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+947;MARIA COELHO AGUIAR, AV.;18;SUL;59;53;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+948;CESAR CASTIGLIONI JR R, DR.;4;NORTE;12;6;6;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+949;WALDEMAR CARLOS PEREIRA, AV.;21;LESTE;20;19;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+950;ARARIBÓIA, R.;25;LESTE;12;10;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+951;RUBENS GRANJA DEP, AV.;13;SUL;17;16;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+952;EULÁLIO DE CARVALHO, PÇA.;26;LESTE;11;1;10;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+954;GAIVOTA, AV.;12;SUL;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+959;CATARINA BRAÍDA, R.;25;LESTE;12;8;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+965;AGATÁ, R.;9;CENTRO;4;3;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+966;URUSSUI, R.;11;OESTE;13;9;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+971;JOSÉ BOEMER ROSCHEL, PÇA.;19;SUL;12;6;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+974;JOHN HARISSON, R.;8;OESTE;15;13;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+975;KIYOSHI HIRATA, R.;21;LESTE;4;2;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+979;IZABEL MARIA GARCIA PARRA, R.;5;NORTE;17;13;4;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1103;CENNO SBRIGHI, R.;8;OESTE;25;19;6;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1110;HENRIQUE DE PAULA FRANÇA, R.;23;LESTE;7;3;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1114;CASA BRANCA, AL.;11;OESTE;26;24;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1118;DARWIN, R.;14;SUL;28;27;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1126;FAUSTINO PAGANINI, R.;21;LESTE;2;1;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1127;BENTO COELHO DA SILVEIRA, R.;15;SUL;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1129;OTTO BAUMGART, AV.;7;NORTE;91;85;6;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1135;AROABA, R.;8;OESTE;15;14;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1140;NOVO MUNDO, PÇA.;7;NORTE;17;11;6;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1141;GRAÇA, DA R.;9;CENTRO;9;7;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1148;GAJÊ, PÇA.;21;LESTE;12;9;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1151;CARLOS CIRILO JR. R.;10;OESTE;29;28;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1152;DEMOSTENES BAT. FIGUEIRA MARQUES PROF, R.;9;CENTRO;3;2;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1154;LORENA, AL.;11;OESTE;13;11;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1157;MARIO GUEDES MAL, R.;8;OESTE;15;9;6;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1159;ITU DE MQ, R.;9;CENTRO;11;10;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1160;ANGELO CRISTIANINI, AV.;16;SUL;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1161;SANTA INÊS, AV.;5;NORTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1164;PANTALEÃO TELES, R. GAL.;14;SUL;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1165;LORENA, AL.;11;OESTE;22;21;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1168;GALVÃO BUENO, R.;9;CENTRO;24;20;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1169;SANTO JOÃO VICENZOTO. PÇA.;26;LESTE;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1171;AMÉRICO BRASILIENSE, R.;14;SUL;13;11;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1172;MÁRIO VILLAS BOAS RODRIGUES DR, AV.;14;SUL;26;23;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1175;MURTINHO NOBRE, R.;10;OESTE;13;11;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1176;DARIO RIBEIRO PROF, R.;4;NORTE;13;10;3;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1178;CEDRO DO LIBANO, PÇA.;11;OESTE;4;2;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1179;MARIA NAZARO DA SILVA, R.;3;NORTE;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1188;ELISIO TEIXEIRA LEITE, AV.;2;NORTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1195;PEDRO ALVARES CABRAL, AV.;12;SUL;25;22;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1198;PIAUI, R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1199;SANTA MARINA, AV.;8;OESTE;10;5;5;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1202;VALE DESEMBARGADOR DO, R.;8;OESTE;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1203;COSTA, R.;9;CENTRO;8;6;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1204;ABILIO SOARES, R.;12;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1205;MAESTRO MARCO ANTONIO PRIMON, PÇA.;4;NORTE;12;10;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1206;CAMPOS SALES, R.;25;LESTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1212;DOMINGOS DE MORAIS, R.;12;SUL;20;19;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1214;CORREIA DE MELO, R.;9;CENTRO;17;16;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1216;LIBERDADE, AV.;9;CENTRO;14;13;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1220;LUIS PIRES DE MINAS, AV.;30;LESTE;10;3;7;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1223;MARIA BUCALEM HADDAD, R.;13;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1228;ALCIDES LOURENÇO DA ROCHA, R.;11;OESTE;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1231;MELVIN JONES, PÇA.;8;OESTE;20;18;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1232;GREGÓRIO RAMALHO, R.;27;LESTE;15;14;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1240;DOMINGOS DE MORAIS, R.;12;SUL;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1242;VERGUEIRO, R.;9;CENTRO;22;13;9;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1245;LINS DE VASCONCELOS, AV.;9;CENTRO;17;16;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1249;MENDES GONÇALVES, R.;25;LESTE;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1258;WENDELL WILKIE, PÇA.;9;CENTRO;14;13;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1259;AFONSO ARAUJO, R.;14;SUL;12;9;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1263;SANTO ANTONIO, R.;9;CENTRO;3;2;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1269;JOÃO ADOLFO, R.;9;CENTRO;21;20;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1271;GEOLÂNDIA, R.;7;NORTE;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1275;ORLANDO GARCIA DA SILVEIRA, PE. R.;3;NORTE;9;2;7;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1276;AQUIANES, R.;10;OESTE;23;21;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1280;CAMPUS DA CIDADE UNIVERSITÁRIA;10;OESTE;20;18;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1282;JULIO COLAÇO, R.;21;LESTE;21;20;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1284;DIAMANTINA, R.;7;NORTE;6;2;4;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1285;CARDOSO DE MELO DR, R.;11;OESTE;13;8;5;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1293;CASPER LIBERO, AV.;9;CENTRO;31;26;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1299;ROBERTO ALVES DE C. FILHO GAL. R.;14;SUL;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1301;QUEDINHO MAJOR, R.;9;CENTRO;26;25;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1304;NOVA PRATA, R.;7;NORTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1308;OTTO BAUMGART, AV.;7;NORTE;33;29;4;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1311;ROLAND GARROS, R.;7;NORTE;2;1;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1315;GRAÇA, DA R.;9;CENTRO;13;12;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1317;JOÃO PESSOA, AV.;5;NORTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1318;DIOGO DE FARIA, DR. R.;12;SUL;15;14;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1320;VILA EMA, AV.;29;LESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1321;VERBO DIVINO, R.;14;SUL;23;20;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1330;TAVARES BASTOS, R.;8;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1332;SÉ DA, PÇA.;9;CENTRO;33;32;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1334;TITO, R.;8;OESTE;7;6;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1341;JAPURÁ, R.;9;CENTRO;38;33;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1343;JOÃO MANUEL PE, R.;11;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1344;SILVIA, R.;9;CENTRO;10;5;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1347;LIMEIRA BARÃO DE, AL.;9;CENTRO;13;10;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1349;AURORA, R.;9;CENTRO;17;13;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1350;ANTONELO DA MESSINA, AV.;6;NORTE;2;1;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1352;CAYOWAÁ, R.;8;OESTE;18;15;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1354;AVANHADAVA, R.;9;CENTRO;37;35;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1356;ACHILLES ORLANDO CURTOLO,R.;8;OESTE;13;11;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1357;TURISTICA DO JARAGUA, EST.;2;NORTE;15;12;3;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1358;JARACATIÁ, R.;17;SUL;4;2;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1359;CRISTOVÃO COLOMBO, R.;9;CENTRO;41;40;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1375;ITU MARQUES DE, R.;9;CENTRO;17;15;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1376;SALVADOR GIANETTI, R.;28;LESTE;18;9;9;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1378;TRÊS RIOS , R.;9;CENTRO;26;18;8;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1379;AURORA, R.;9;CENTRO;26;22;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1380;GEORGE SMITH, R.;8;OESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1382;MANOEL DA NOBREGA, R.;12;SUL;13;9;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1383;LIMEIRA BARÃO DE, AL;9;CENTRO;12;3;9;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1385;IPIRANGA, AV.;9;CENTRO;40;35;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1389;FEIJÓ SENADOR, R.;9;CENTRO;27;26;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1390;CLEMENTE ALVARES, R.;9;CENTRO;10;7;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1391;ANA CINTRA, R.;9;CENTRO;5;3;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1393;FRUTUOSO DA COSTA, R.;25;LESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1398;AUGUSTO DE FARINHA, R.;10;OESTE;11;9;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1399;ROGER PATTI, PÇA.;11;OESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1400;CHAVANTES, R.;25;LESTE;12;8;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1401;ORATÓRIO DO, R.;25;LESTE;10;4;6;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1404;AMARAL GAMA;5;NORTE;11;9;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1407;JACEGUAI, R.;9;CENTRO;12;11;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1408;ALLYRIO HUNGUENEY DE MATOS ENG, R.;14;SUL;13;9;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1410;RENGEL PESTAVA, AV.;9;CENTRO;30;27;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1412;JOSÉ PINHEIRO, R.;21;LESTE;7;5;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1421;TRÊS PEDRAS, R.;29;LESTE;19;16;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1423;BRAULIO GOMES, R.;9;CENTRO;33;29;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1427;VIEIRA DA SILVA , R.;11;OESTE;21;20;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1428;RODRIGUES VILARES, AV.;19;SUL;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1429;ELISA PEREIRA DE BARROS DONA, R.;11;OESTE;21;17;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1432;BEIRA RIO, R.;11;OESTE;26;24;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1433;INCONFIDÊNCIA MINEIRA, AV.;26;LESTE;8;7;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1434;MUNIZ DE SOUZA, R.;9;CENTRO;10;6;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1441;MANOEL DE ANDRADE DOM, R.;13;SUL;11;9;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1446;MERCEDES, AV.;8;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1448;SPENCER VAMPRÉ, R.;3;NORTE;7;6;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1450;IPIRANGA, AV.;9;CENTRO;9;7;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1453;SÃO GONÇALO DO RIO DAS PEDRAS, R.;24;LESTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1459;BOIPEVA, R.;21;LESTE;36;34;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1464;ALESSANDRO G. DELL ARINGA, R.;30;LESTE;2;1;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1466;CANNER, R.;2;NORTE;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1468;CAETANO PINTO, R.;25;LESTE;6;4;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1470;CORIOLANDO DURAND, R.;15;SUL;4;3;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1475;SANTO ALBANO, AV.;13;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1477;ARTUR RAMOS PROF° , R.;11;OESTE;14;10;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1486;JOÃO ALVES PIMENTA, R.;3;NORTE;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1491;FIOVARANTE LOPES GARCIA, R.;22;LESTE;8;7;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1497;ITAPIRA,R.;25;LESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1498;ARACÊ, R.;26;LESTE;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1502;HERMINIO LEMOS, R.;9;CENTRO;7;6;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1505;SHOPPING INTERLAGOS;14;SUL;21;15;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1507;CANTAREIRA DA, R.;9;CENTRO;17;16;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1508;GIACOMO DELLA PORTA, R.;3;NORTE;9;2;7;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1509;DOZE DE OUTUBRO, R.;8;OESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1514;EDUARDO, R.;6;NORTE;4;2;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1516;SAMPAIO VIDAL, PÇA.;26;LESTE;18;17;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1530;BARRETO MUNIZ, R.;13;SUL;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1532;SANTA EDWIGES, PÇA.;8;OESTE;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1536;CASPER LIBERO, AV.;9;CENTRO;12;7;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1546;ARMANDO FAIRBANKS DES, R.;10;OESTE;4;3;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1547;FLÓRIDA, R.;11;OESTE;28;27;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1552;BITTENCOURT RODRIGUES R. DR.;9;CENTRO;4;2;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1555;MERCURIO, AV.;9;CENTRO;22;20;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1561;JOAQUIM EUGENIO DE LIMA, AL.;11;OESTE;22;19;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1563;AIRES MARTINS TORRES DR, R.;10;OESTE;6;3;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1564;ALEXANDRE DUMAS, R.;14;SUL;12;11;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1567;MARTINIANO DE CARVALHO, R.;9;CENTRO;10;8;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1570;POMBALHINHO BARÃO DE, R.;8;OESTE;12;7;5;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1574;VIEIRA DE CARVALHO, R.;9;CENTRO;13;4;9;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1575;GLÓRIA, DA R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1576;CARNEIRO GAL, R.;9;CENTRO;32;27;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1577;TOBIAS BRIG, R.;9;CENTRO;2;1;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1578;BASILIO DA GAMA, R.;9;CENTRO;24;23;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1583;LOURENÇO GRANATO DR, R.;9;CENTRO;15;13;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1587;JOÃO ANTÔNIO DE OLIVEIRA, R.;25;LESTE;18;15;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1589;ANTÔNIO TAVARES, R.;9;CENTRO;7;3;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1593;PEDROSO ALVARENGA, R.;11;OESTE;27;26;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1594;LIMIERA BARÃO DE, AL.;9;CENTRO;9;8;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1605;GALVÃO BUENO, R.;9;CENTRO;10;7;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1607;ANTÔNIO FELÍCIO;11;OESTE;12;11;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1609;CONCÓRDIA DA, LGO;25;LESTE;18;16;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1610;JOAQUIM EUGENIO DE LIMA, AL.;9;CENTRO;9;7;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1615;APENINOS, R.;9;CENTRO;13;10;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1621;LIMA E SILVA, R.;13;SUL;4;1;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1626;CUBATÃO, R.;12;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1628;CESAR CASTIGLIONI JR,DR. R.;4;NORTE;13;10;3;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1633;TRUMAIN, AV.;;LESTE;6;2;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1635;CUNHA HORTA, R.;9;CENTRO;4;2;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1639;OLIVIA G. PENTEADO, R.;19;SUL;9;2;7;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1640;SANTO AMARO, R.;14;SUL;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1642;FILADELFIO AZEVEDO PROF°, R.;12;SUL;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1646;BASILEIA, AV.;5;NORTE;17;14;3;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1648;ARMANDO FERRENTINE, AV.;12;SUL;17;15;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1649;VIEIRA DE CARVALHO, R.;9;CENTRO;14;5;9;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1651;ARAUJO, R.;9;CENTRO;24;16;8;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1653;CONSOLAÇÃO DA, R.;9;CENTRO;16;9;7;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1657;CIPRIANO BARATA, R.;13;SUL;8;6;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1662;LOURENÇO MARQUES, R.;11;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1669;OSAKA, R.;7;NORTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1676;JAUAPERI, AL.;12;SUL;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1677;MARIO AMARAL, R.;12;SUL;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1678;HADDOCK LOBO, R.;11;OESTE;37;35;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1683;AMÉRICO BRASILIENSE, R.;14;SUL;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1690;JOSÉ FERREIRA DE CASTRO, R.;4;NORTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1691;CARLOS KOSERITZ, PÇA.;7;NORTE;2;1;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1699;JOSÉ DE MAGALHÃES, R.;12;SUL;11;9;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1703;SABARÁ, R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1707;MARIANO PROCÓPIO, R.;12;SUL;7;6;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1708;CARLOS WEBER, R.;8;OESTE;12;11;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1710;METRO TAMANDUATEÍ;13;SUL;18;6;12;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1712;CANÁRIO, R.;12;SUL;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1717;INGLESES DOS, R.;9;CENTRO;8;7;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1728;COSMORAMA, PÇA.;7;NORTE;12;10;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1729;SAFIRA, R.;9;CENTRO;13;12;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1732;ASDRUBAL DA CUNHA GEN, AV.;10;OESTE;2;1;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1734;CANARIAS, PÇA;26;LESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1738;TABATINGUERA, R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1740;SOUZA LOPES, R.;5;NORTE;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1743;FRANCISCO PERES, R.;13;SUL;4;1;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1745;DRÁUSIO, R.;10;OESTE;7;4;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1751;ESTEVÃO BARBOSA, R.;8;OESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1752;BRESSER, AV.;25;LESTE;7;5;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1753;DOMINGOS PAIVA, R.;25;LESTE;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1754;SANTA EFIGÊNIA, R.;9;CENTRO;10;5;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1757;PASSO DA PÁTRIA, R.;8;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1758;EDUARDO AMARO DR, R.;12;SUL;21;20;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1760;CAIO PRADO, R.;9;CENTRO;11;7;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1766;TANABI, R.;8;OESTE;13;10;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1767;LOPES DE OLIVEIRA, R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1771;TIMBIRAS DOS, R.;9;CENTRO;14;12;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1772;OURO BRANCO, R.;11;OESTE;10;4;6;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1775;BENTO ARAUJO, R.;5;NORTE;4;3;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1777;LUIS AUGUSTO DE OLIVEIRA, R.;5;NORTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1780;AROUCHE DO, LGO.;9;CENTRO;10;8;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1784;MARIA FIGUEIREDO, R.;12;SUL;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1787;ALBUQUERQUE LINS, R.;9;CENTRO;8;6;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1791;LIMEIRA BARÃO DE , AL.;9;CENTRO;9;8;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1792;FURTADO CONS. R.;9;CENTRO;5;3;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1793;PEROBAS DAS, R.;15;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1795;ITUVERAVA, R.;29;LESTE;4;1;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1796;IRLANDINO SANDOVAL CEL, R.;11;OESTE;15;13;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1799;WENCESLAU FLEXA, R.;11;OESTE;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1806;ESTAÇÃO BELÉM DO METRÔ;25;LESTE;12;8;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1808;CAMPO VERDE, R.;11;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1814;ITÚ MARQ. DE , R.;9;CENTRO;18;10;8;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1815;ISAI LEIRNER, PÇA.;10;OESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1816;DOMINGOS DE MORAIS, R.;12;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1819;VASCO DA GAMA, R.;25;LESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1823;RIO DA JANEIRO, R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1828;CONSOLAÇÃO DA R.;9;CENTRO;13;12;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1833;COSTA BARROS, R.;29;LESTE;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1834;CLEMENTE ALVARES, R.;8;OESTE;7;4;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1837;ISABEL DE CASTELA, R.;11;OESTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1839;PAULO EIRO, R.;14;SUL;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1843;CARDOSO DE ALMEIDA, R.;8;OESTE;11;9;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1844;MENDES JR, R.;25;LESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1850;CONSOLAÇÃO DA, R.;11;OESTE;11;10;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1859;PEDROSO ALVARENGA, R.;11;OESTE;13;10;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1863;BRAS CARDOSO, R.;12;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1866;OSCAR CINTRA GODINHO, R.;9;CENTRO;9;3;6;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1868;TEIXEIRA DA SILVA, R.;12;SUL;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1869;AURELIANO COUTINHO, R.;9;CENTRO;9;6;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1871;BARBOSA RODRIGUES, R.;9;CENTRO;9;6;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1872;ROCHA, R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1877;AFONSO KHERLAKIAM COM. R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1879;SILVIO ROMERO, PÇA.;25;LESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1883;TAGUÁ,R.;9;CENTRO;7;6;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1884;SANTO AMARO, R.;9;CENTRO;9;8;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1886;TABATINGUERA, R.;9;CENTRO;8;7;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1887;TEFÉ BARÃO DE, R.;8;OESTE;5;3;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1888;DUÍLIO, R.;8;OESTE;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1891;BAGÉ, R.;12;SUL;11;10;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1892;CANUTO DO VAL , R.;9;CENTRO;9;5;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1893;PLINIO BARRETO, R. DR.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1896;OSVALDO GOMES BARRETO, R.;26;LESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1900;VERBO DIVINO, R.;14;SUL;17;14;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1901;CONSOLAÇÃO DA R.;9;CENTRO;23;19;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1904;DOMINGOS DE MORAIS, R.;12;SUL;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1905;PEDRO DE TOLEDO, R.;12;SUL;17;14;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1907;RIO BRANCO BARÃO, DO.;14;SUL;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1909;IPIRANGA, AV.;9;CENTRO;20;17;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1910;ROMILDO NOGUEIRA DE SÁ PROFª, R.;5;NORTE;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1912;ALAGOAS, R.;9;CENTRO;10;8;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1913;ALEXANDRE MARTINS MACHADO, PÇA.;21;LESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1914;ALMÉRICO DE MOURA GAL. R.;10;OESTE;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1917;JOAQUIM NEVES MONTEIRO, R.;14;SUL;3;1;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1921;OTONIS, DOS R.;12;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1924;SÃO JOÃO, AV.;9;CENTRO;12;4;8;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1926;URIMONDUBA, R.;11;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1928;MARIO LOPES LEÃO, AV.;14;SUL;12;9;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1930;MUTINGA, AV.;2;NORTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1933;TAGUAPACA, R.;14;SUL;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1937;HUMAITÁ, R.;9;CENTRO;13;12;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1942;JOÃO LOURENÇO, R.;12;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1946;BRITO PEIXOTO, R.;11;OESTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+1949;SABÃO DO, EST.;3;NORTE;7;6;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+1957;CATARINA BRAÍDA, R.;25;LESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1960;MORAES DE BARROS, R.;14;SUL;8;6;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1962;ESTADO DO AV.;9;CENTRO;4;3;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1966;CRISPINIANO CONS, R.;9;CENTRO;26;22;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+1969;VERBO DIVINO, R.;14;SUL;21;17;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1974;HAIDÊE SILVA MARTINS PROF, R.;14;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1980;BOTUCATU, R.;12;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1983;PTOLOMEU, R.;19;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1985;ARTUR ETZEL, R.;12;SUL;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1989;VERBO DIVINO, R.;14;SUL;32;29;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1992;DEMOSTENES, R.;14;SUL;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1993;ITABAIANA, R.;25;LESTE;11;8;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+1994;MOACIR SIMÕES DA ROCHA, R.;14;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+1997;MARIA FIGUEIREDO, R.;12;SUL;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2000;GABRIELLA MISTRAL, AV.;21;LESTE;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2002;VERGUEIRO, R.;9;CENTRO;9;2;7;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2004;ARIZONA, R.;11;OESTE;64;63;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2009;AURELIANO LEAL, R.;5;NORTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2011;BENTO FRIAS, R.;10;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2012;AZEVEDO, R.;25;LESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2017;LUIGI GALVANI, R.;11;OESTE;21;18;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2019;TUIM, R.;12;SUL;11;9;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2021;ALEXANDRE DUMAS, R.;14;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2022;LEOPOLDO COUTO DE MAGALHÃES JR, R.;11;OESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2023;NEGRÃO, TENENTE, R.;11;OESTE;13;11;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2027;JOSÉ MARIA DE FARIA, AV.;8;OESTE;4;3;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2030;AFONSO MARIANO FAGUNDES, R.;12;SUL;4;2;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2031;ELIZABETH BARBEGIAN BALDINATO, R.;10;OESTE;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2034;JANDIRA, AV.;12;SUL;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2035;JOSÉ MARIA LISBOA, R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2038;GAMBOAS DAS, R.;5;NORTE;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2040;HOMEM DE MELO DR, R.;8;OESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2043;BERNARDO DOS SANTOS, R.;10;OESTE;34;30;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2046;GUARARAPES, R.;11;OESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2053;MARIA EDIVANI DO AMARAL DICK PROFª,. R.;14;SUL;88;84;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2054;CRUZEIRO DO SUL AV.;5;NORTE;27;25;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2056;ROBÉRIO DIAS, R.;29;LESTE;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2058;GUIDO GIOVANNI ROCCHI, PÇA.;4;NORTE;12;10;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2059;JOÃO DOS SANTOS ABREU, R.;4;NORTE;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2060;GUACA DO, AV.;5;NORTE;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2062;ANTENAGORAS, R.;4;NORTE;7;6;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2068;APIACÁS, R.;8;OESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2078;JESUINO CARDOSO, R.;11;OESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2088;BICA DA R.;3;NORTE;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2089;ANTÔNIO JOVINO ENG°, R.;17;SUL;3;1;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2091;SANTA INÊS, AV.;5;NORTE;7;6;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2095;JOSÉ BENEDITO MACEDO, R.;10;OESTE;2;1;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2104;AMÉRICO BRASILIENSE, R.;14;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2105;DOIS DE JULHO, R.;13;SUL;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2107;JOLY, R.;25;LESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2110;CHANÉS, R. DOS.;12;SUL;10;4;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2113;JACEGUAI, R.;9;CENTRO;6;3;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2114;CHARLES MILLER, PÇA;9;CENTRO;20;19;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2117;BROTERO, CONS. R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2120;CONSTANTINO BARRADAS, R.;13;SUL;8;7;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2128;IARA, R.;11;OESTE;13;10;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2131;VÁRZEA DA, R.;8;OESTE;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2132;ITAPURA, R.;25;LESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2136;CARNEIRO RIBEIRO, AV.;26;LESTE;9;4;5;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2142;GIRASSOL, R.;11;OESTE;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2144;SANTO ANTONIO, R.;9;CENTRO;10;3;7;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2145;CARLOS DE CAMPOS, AV.;25;LESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2147;AUGUSTO FERREIRA DE MORAES, R.;19;SUL;5;2;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2148;IRAMAIA, R.;11;OESTE;22;21;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2152;LIMEIRA BARÃO , AL.;9;CENTRO;6;1;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2160;JOAQUIM FLORIANO, R.;11;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2163;BERGAMOTA, R.;11;OESTE;8;7;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2165;JOÃO ADEMAR DE ALMEIDA PRADO, PÇ.;10;OESTE;8;7;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2168;NICOLAU DE SOUZA QUEIROZ DR, R.;12;SUL;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2172;CAIUBI, R.;8;OESTE;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2174;NAGIB FARAH MALUF, AV.;27;LESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2177;AMAURI, R.;11;OESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2184;FRANCO DA ROCHA, DR, R.;8;OESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2185;TUCUMÃ, R.;8;OESTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2191;RAUL POMPÉIA, R.;8;OESTE;8;7;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2195;JOSÉ GETÚLIO, R.;9;CENTRO;10;8;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2197;CARDIM MAESTRO, R.;9;CENTRO;10;8;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2198;BOTICARIO, R.;9;CENTRO;9;3;6;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2199;LABATUT, R.;13;SUL;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2203;LOPES NETO, R.;11;OESTE;25;23;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2204;BUTIRAPÕA, R.;8;OESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2205;MARIA JOAQUINA, R.;25;LESTE;8;7;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2206;CHAMANÁ, R.;21;LESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2207;ROBERTO ZUCOLLO, AV.;8;OESTE;21;11;10;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2210;AMADOR BUENO, R.;14;SUL;13;6;7;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2211;JOSÉ GALANTE, AV.;17;SUL;11;10;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2213;EVARISTO VAZ DE ARRUDA, R.;25;LESTE;8;6;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2216;ARNALDO ROSA, R.;26;LESTE;62;61;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2217;LAVRADIO, R.;9;CENTRO;9;6;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2219;ALBUQUERQUE LINS, R.;9;CENTRO;12;5;7;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2220;EMILIO DE MENESES, R.;9;CENTRO;9;4;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2221;VIEIRA DE MORAES, R.;14;SUL;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2225;MIRANTE, R.;5;NORTE;16;11;5;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2226;TUPINIQUINS , AL.;12;SUL;13;10;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2229;GLÓRIA DA, R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2230;FREDERICO GUARION, R.;17;SUL;13;11;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2240;GUIMARÃES PASSOS, R.;12;SUL;8;7;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2243;LINS DE VASCONCELOS, AV.;9;CENTRO;9;7;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2244;EDUARDO DE SOUZA ARANHA DR, R.;11;OESTE;14;11;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2246;BASILIO DA CUNHA, R.;9;CENTRO;9;5;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2249;PRESTES MAIA, AV.;9;CENTRO;8;2;6;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2250;HUSSEIN YOUSSEF, R.;14;SUL;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2252;CLARINDO, R.;17;SUL;9;4;5;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2253;CAMPINAS, AL.;11;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2256;JANUARIO, R.;29;LESTE;3;1;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2259;ANHAGABAÚ, VALE.;9;CENTRO;23;18;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2262;LUIS GOES, R.;12;SUL;17;16;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2267;NOVE DE JULHO, AV.;14;SUL;12;10;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2268;TRIUNFO BARÃO DO, R.;14;SUL;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2270;CORDILHEIRAS, R.;8;OESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2271;JOSÉ EUZÉBIO CEL. R.;9;CENTRO;7;5;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2275;MASCOTE, AV.;15;SUL;19;17;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2277;PALESTINA, R.;15;SUL;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2281;DEUS MADRE DE, R.;25;LESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2282;CASPER LIBERO, AV.;9;CENTRO;9;5;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2287;CANTAREIRA, R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2290;BUGIO, R.;11;OESTE;13;10;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2291;SILVA MELO DR, R.;14;SUL;12;11;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2292;JOÃO MANUEL PADRE, R.;11;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2293;EGDAR POE, R.;8;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2295;ANTÔNIO PAIVA SAMPAIO COM, R.;5;NORTE;8;6;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2297;ARMANDO LOMBARDI, R.;10;OESTE;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2299;CAMPINAS BARAÃO DE, R.;9;CENTRO;3;2;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2304;JOAQUIM EUGENIO DE LIMA, AL.;11;OESTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2306;SANTA QUITÉRIA, PÇA.;21;LESTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2307;OLGA, AL.;8;OESTE;9;4;5;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2309;CLOVIS DE OLIVEIRA, R.;10;OESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2311;CECILIA DAVY, R.;2;NORTE;5;2;3;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2312;IGUATEMI, R.;11;OESTE;24;23;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2313;TUTÓIA, R.;12;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2314;PACAEMBU, AV.;9;CENTRO;9;4;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2323;TALMUD THORA, R.;9;CENTRO;3;2;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2324;OLIVEIRA DIAS, R.;11;OESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2328;DEKIA, R.;14;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2329;FÁBIO LOPES DOS, R.;17;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2330;CARDIM PROF°, PÇA.;10;OESTE;10;6;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2332;SANTA JUSTINA, R.;11;OESTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2334;SINFONIA ITALIANA, R.;19;SUL;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2335;FERNANDO PRESTES CEL. PÇA.;9;CENTRO;9;8;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2336;GUAIMBÉ, R.;25;LESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2337;TUCUNA, R.;8;OESTE;12;10;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2338;MELO DE OLIVEIRA CEL, R.;8;OESTE;7;5;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2340;JOVITA, R.;5;NORTE;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2346;DOMINGOS FERNANDES, R.;12;SUL;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2347;BENTO DE ANDRADE, R,;12;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2348;EDGARD SÁLES, R.;4;NORTE;12;7;5;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2351;JACU PESSEGO, AV.;27;LESTE;15;0;15;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2354;BALTAZAR FERNANDES, R.;11;OESTE;13;10;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2367;DEZOITO DE FEVEREIRO. R.;26;LESTE;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2369;FRANCISCO FALCONI, AV.;29;LESTE;7;5;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2372;SERGIO BUARQUE DE HOLANDA PROF, PÇA.;11;OESTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2374;MACHADO BITENCOURT, R.;12;SUL;13;11;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2377;ALEXANDRE DUMAS;14;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2379;AURÉLIA, R.;8;OESTE;4;3;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2382;JOSÉ ALVES DA CUNHA LIMA, R.;10;OESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2383;CONDILLAC, R.;12;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2384;COELHO LISBOA, R.;25;LESTE;5;3;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2387;MERGENTHALER, R.;8;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2388;PINTASSILGO, R.;12;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2390;TUIM, R.;12;SUL;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2391;JAMARIS, AV.;12;SUL;21;20;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2393;CRUZ E SOUZA, R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2398;ALBERTO COSTA, R.;5;NORTE;3;1;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2400;TRÊS DE MAIO, R.;12;SUL;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2406;OTAVIO GONÇALVES MARTINS, R.;2;NORTE;12;11;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2408;GABRIEL DOS SANTOS, R.;9;CENTRO;6;4;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2414;COIMBRA, R.;25;LESTE;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2416;TEIXEIRA DA SILVA, R.;12;SUL;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2417;LUCIO MARTINS RODRIGUES PROF. AV.;10;OESTE;17;15;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2418;ITAIM, AV.;24;LESTE;4;2;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2423;ITACOLOMI, R.;9;CENTRO;9;8;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2427;DIOGO DE FARIA R.;12;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2428;BELMIRO NASCIMENTO MARTINS, PÇA.;9;CENTRO;7;6;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2431;AGOSTINHO GOMES, R.;13;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2433;ANTONIETA ALTENFELDER, R.;6;NORTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2436;ALENCAR ARARIPE, R.;13;SUL;11;6;5;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2437;GOMES DE CARVALHO, R.;11;OESTE;25;22;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2439;LINS DE VASCONCELOS, AV.;9;CENTRO;10;7;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2445;BELA VISTA, DE BARONESA, R.;14;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2446;ELISEU DE OLIVEIRA, R.;11;OESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2447;HIGIENÓPOLIS, AV.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2448;GUAIANAZES, R.;9;CENTRO;9;5;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2450;EDUARDO VIANA, R.;9;CENTRO;18;17;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2454;CHARLES SPENCER CHAPLIN, R.;17;SUL;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2458;PIRAPITINGUI, R.;9;CENTRO;9;7;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2460;NUNDIAU, R.;14;SUL;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2467;FURTADO CONS, R.;9;CENTRO;9;8;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2469;PAULINO VITAL DE MORAES, R.;17;SUL;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2472;FRANCISCO OCTAVIO PACCA, R.;19;SUL;5;3;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2473;EÇA DE QUEIROZ, R.;12;SUL;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2476;JORGE AMERICANO, R.;8;OESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2477;CARAVELAS, R.;12;SUL;5;3;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2479;ITALINA, R.;27;LESTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2481;ANASTACIO DO AV.;2;NORTE;8;6;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2482;ARNO, R.;9;CENTRO;9;1;8;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2484;ARNALDO JOÃO SEMERARO PROF° R.;13;SUL;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2486;ITAPURA, R.;25;LESTE;9;4;5;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2488;PASCAL, R.;14;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2490;JOSÉ MARIA LISBOA, R.;11;OESTE;10;6;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2494;VIEIRA DE MORAES, R.;14;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2495;MARAGLIANO MAJOR, R.;12;SUL;12;11;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2497;SEBASTIÃO PAES, R.;14;SUL;8;6;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2502;FAGUNDES FILHO, R.;12;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2505;ALVARO ALVIM, R.;12;SUL;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2506;VALE DESEMBARGADOR DO, R.;8;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2514;MINERVA, R.;8;OESTE;9;4;5;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2515;FEDERAÇÃO PAULISTA DE FUTEBOL, R.;8;OESTE;4;3;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2517;ESCOBAR ORTIZ, R.;12;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2518;RENATO PAES DE BARROS DR, R.;11;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2523;MARACAI, R.;9;CENTRO;2;1;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2525;MARIA LUCIA DUARTE, R.;2;NORTE;5;2;3;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2527;OLINDA MARQUÊS DE, R.;13;SUL;4;2;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2528;BORGES DE BARROS, R.;11;OESTE;12;11;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2530;MARTINIANO DE CARVALHO, R.;9;CENTRO;9;1;8;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2531;BROTERO, CONS. R.;9;CENTRO;7;5;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2533;CANUTO SARAIVA, R.;25;LESTE;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2534;ALCANTARA MACHADO, AV.;25;LESTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2537;AMANDO FRANCO SOARES CAIUBY DR, R.;10;OESTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2538;ALBERTO DE OLIVEIRA LIMA DR, AV.;10;OESTE;8;5;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2539;GERMAINE BUCHARD DNA, R.;8;OESTE;8;7;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2540;MANIFESTO DO, R.;13;SUL;7;2;5;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2544;ANTÔNIO AGGIO, R.;17;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2547;CARLOS PETIT, R.;12;SUL;7;6;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2549;SÃO SEBASTIÃO, AV.;14;SUL;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2552;CARINÁS DOS, AV.;12;SUL;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2561;ARATÃS, AV.;12;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2563;JOSÉ AUGUSTO PENTEADO, R.;8;OESTE;18;17;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2566;SILVIO DANTAS BERTACCHI DR, R.;10;OESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2567;COMENDADOR MIGUEL CALFAT, R.;11;OESTE;11;10;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2568;PRIMEIRO DE JANEIRO, R.;12;SUL;8;7;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2569;LUIS GOMES CARDIM SANGIRARDI ENG, AV.;12;SUL;5;3;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2575;PEDROSO ALVARENGA, R.;11;OESTE;25;24;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2577;NEBRASKA, R.;11;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2579;AÇOCE,AV.;12;SUL;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2581;FÁBIA, R.;8;OESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2582;ARRUDA BOTELHO, AV.;11;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2583;CAPITAL, PÇA.;25;LESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2584;LUIS ALVES SIQUEIRA, PE. R.;9;CENTRO;18;17;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2585;TATUIRA, R.;23;LESTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2589;AURO SOARES DE MOURA ANDRADE, AV.;8;OESTE;43;39;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2591;CHAFIC MALLUF, R.;14;SUL;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2594;CARMO DO RIO VERDE, R.;14;SUL;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2596;DEMÓSTENES, R.;14;SUL;11;9;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2598;AGOSTINHO GOMES, R.;13;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2602;BELMIRO VALVERDE, R.;28;LESTE;5;1;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2603;FRANCO DA ROCHA DR, R.;8;OESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2604;JOAQUIM FERREIRA LOBO, R.;11;OESTE;21;20;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2605;BOM PASTOR, R.;13;SUL;7;4;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2607;HELVETIA, R.;9;CENTRO;4;1;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2613;SAMPAIO GÓIS, R.;12;SUL;13;10;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2614;TOMAS CARVALHAL, R.;12;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2615;ODILON PIRES, AV.;26;LESTE;4;3;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2618;LEOPOLDO COUTO DE MAGALHÃES, JR. R.;11;OESTE;14;11;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2619;JULIO DINIZ, R.;11;OESTE;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2621;SILVIO TRAMONTANO, R.;17;SUL;12;7;5;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2622;ADOLFO PINTO DR, AV.;8;OESTE;9;4;5;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2627;PORTO FELIZ, R.;25;LESTE;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2628;PASSO DA PÁTRIA, R.;8;OESTE;13;5;8;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2629;AIMORÉS, R.;9;CENTRO;11;10;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2630;CIPRIANO BARATA, R.;13;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2631;IAIA, R.;11;OESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2633;CAÇAPAVA, R.;11;OESTE;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2639;ANASTACIO DO, R.;2;NORTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2642;LACERDA FRANCO DEP, R.;11;OESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2643;SALTO, R.;12;SUL;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2644;TUTOIA, R.;12;SUL;10;6;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2645;ELEONORA CINTRA, R.;26;LESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2646;HEITOR PEIXOTO, R.;9;CENTRO;9;1;8;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2647;CLIPPERTON,R.;17;SUL;5;3;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2648;CARLOS QUEIROZ TELLES, ESTR.;17;SUL;2;1;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2650;ESCOBAR ORTIZ, R.;12;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2651;AÇOCÊ, AV.;12;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2654;VICTÓRIO PRIMON, R.;4;NORTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2655;MIGUEL DELGADO, R.;5;NORTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2658;JOAQUIM TÁVORA, R.;12;SUL;12;9;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2659;PAMPLONA, R.;9;CENTRO;10;7;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2660;IDA KOLB PROF°, R.;4;NORTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2662;ACLIMAÇÃO,AV,;9;CENTRO;4;2;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2664;JÚLIO CONCEIÇÃO, R.;9;CENTRO;8;4;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2665;FERNANDES MOREIRA, R.;14;SUL;17;15;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2666;TRIPOLI, R.;8;OESTE;9;4;5;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2671;CÂNDIDO MOTTA FILHO, R.;10;OESTE;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2674;RAGUEB CHOFI, PÇA.;9;CENTRO;10;6;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2679;ÁTICA, R.;14;SUL;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2684;PORTUGAL, AV.;11;OESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2685;LIRA CEARENSE, R.;17;SUL;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2686;IUBATINGA, R.;17;SUL;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2688;CARAÍBAS, R.;8;OESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2691;BENTO BARBOSA, R.;14;SUL;13;12;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2693;JOSÉ ÁLVARES MACIEL, R.;10;OESTE;6;4;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2695;QUINTANA, R.;11;OESTE;11;10;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2696;ARRUDA ALVIM, R.;11;OESTE;6;4;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2697;MONTE ALEGRE, R.;8;OESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2698;MARSELHESA, R.;12;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2700;CANDIDO ESPINHEIRA, R.;9;CENTRO;9;5;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2701;MIRALTA, R.;11;OESTE;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2707;TORRES HOMEM CONS, R.;11;OESTE;5;4;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2708;ARABERI, R.;11;OESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2709;PLINIO FIGUEIREDO, R.;9;CENTRO;6;4;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2716;VIEIRA DE MORAES, R.;14;SUL;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2718;DIOGO JACOME, R.;12;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2720;GUILHERME GIORGI, R.;26;LESTE;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2725;SAPOPEMBA, AV.;29;LESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2727;CHIPRE, R.;11;OESTE;10;6;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2731;JOSÉ DE ANCHIETA PE, R.;14;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2732;CARLOS WEBER, R.;8;OESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2733;QUIRINO DOS SANTOS, R.;8;OESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2735;RONDINHA, R.;12;SUL;11;7;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2737;MIRITI, R.;11;OESTE;24;23;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2738;SILVEIRA DA MOTA, R.;9;CENTRO;5;3;2;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2741;SÃO JOAQUIM, R.;9;CENTRO;9;8;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2742;GERMANO ULBRICH, R.;17;SUL;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2743;MARTINIANO DE CARVALHO, R.;9;CENTRO;9;8;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2746;JABAQUARA, AV.;12;SUL;9;2;7;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2748;ANDRÉ AMPERE, R.;11;OESTE;10;4;6;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2750;TUIM, R.;12;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2752;GODÓI MINISTRO, R.;8;OESTE;12;10;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2755;BENEDITO LAPIN, R.;11;OESTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2756;TOPÁZIO, R.;9;CENTRO;9;3;6;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2757;VERGUEIRO, R.;12;SUL;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2758;RUBENS MEIRELLES DR, R.;8;OESTE;7;2;5;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2759;JOSÉ COCCIUFFO, R.;13;SUL;8;7;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2760;NOSSA SRA DA ASSUNÇÃO, AV.;10;OESTE;7;5;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2762;BONNEVILLE, LG.;14;SUL;5;2;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2765;BALTAZAR LISBOA, R.;12;SUL;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2770;GUARAMORIS DOS, AL;12;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2771;ARAPARI, R.;12;SUL;9;4;5;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2773;MANOEL DE NÓBREGA, R.;12;SUL;15;13;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2781;JABAQUARA, AV.;12;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2784;CURUPACÊ, R.;25;LESTE;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2787;ADOLFO PINHEIRO, AV.;14;SUL;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2788;BRAGANÇA PAULISTA, R.;14;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2789;CAROLINA RIBEIRO PROF°, R.;12;SUL;7;2;5;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2790;LEANDRO DUPRE, R.;12;SUL;7;5;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2792;PRATES CONDE, R.;25;LESTE;9;4;5;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2793;ALAGOAS, R.;9;CENTRO;10;9;1;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2794;ARATÃS, AV.;12;SUL;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2795;JAUAPERI, AL.;12;SUL;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2802;CARLOS WEBER, R.;8;OESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2804;CAMPOS GERAIS BARÃO DE, AV.;10;OESTE;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2805;CORGIE ASSAD ABDALLA, R.;10;OESTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2807;CONSOLAÇÃO DA R.;11;OESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2810;ARCIPRESTES ANSELMO DE OLIVEIRA. PÇA.;11;OESTE;4;2;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2812;EUGÊNIO LEITE CÔNEGO, R.;11;OESTE;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2813;PAMARIS DOS, AL.;12;SUL;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2814;DEZENOVE DE JANEIRO, R.;26;LESTE;9;0;9;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2815;TIMBIRAS DOS, R.;9;CENTRO;9;6;3;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2817;ARTUR DE ALMEIDA, R.;12;SUL;2;1;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2820;MARIANA CIUFULI ZANFELICE. R.;8;OESTE;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2821;ARRUDA ALVIM, R.;11;OESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2822;HERMENEGILDO DE CAMPOS ALMEIDA PROF, R.;4;NORTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2825;PEDROSO ALVARENGA, R.;11;OESTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2828;URUSSUÍ, R.;11;OESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2832;MARIANO PROCÓPIO, R.;13;SUL;10;9;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2838;PETRÔNIO PORTELA MIN, AV.;3;NORTE;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2839;MILLER, R.;25;LESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2842;BERNADINO LUINI, R.;31;LESTE;2;1;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2843;CAMPEVAS, R.;8;OESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2848;PINTASSILGO, R.;12;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2850;CAMPINAS, AL.;11;OESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2852;FRANCISCO ALARICO BERGAMO, R.;27;LESTE;3;2;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2858;INHOMERIM VISCONDE DE, R.;25;LESTE;9;0;9;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2859;BEIRA RIO, R.;11;OESTE;11;10;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2860;GONÇALVES LEDO, R.;13;SUL;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2865;JOSÉ SALLES ENG°, R.;19;SUL;7;5;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2866;QUATA, R.;11;OESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2872;APENINOS, R.;12;SUL;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2880;FRANÇA PINTO, R.;12;SUL;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2883;ADRIANO RIBEIRO DE SOUZA, R.;14;SUL;4;3;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2886;LEITE FERRAZ. R.;12;SUL;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2887;TAUNAY VISCONDE DE, R.;14;SUL;6;3;3;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2891;FERREIRA LOPES DR, R.;14;SUL;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2896;EVARISTO DE CAMPOS CEL, R.;5;NORTE;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+2898;LACERDA FRANCO DEP, R.;11;OESTE;10;3;7;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2901;CONCEIÇÃO DE MONTE ALEGRE, R.;11;OESTE;10;1;9;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2903;ESTEVÃO PERNET PE, R.;25;LESTE;9;4;5;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2905;CAPISTRANO DE ABREU, R.;9;CENTRO;9;2;7;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2909;CAETANO VELASCO, R.;11;OESTE;15;14;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2912;MONTEMAGNO, AV.;25;LESTE;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2916;MONTE APRAZÍVEL, R.;12;SUL;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2917;SANTA MARINA, AV.;8;OESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2918;CACIQUE DOS, R.;12;SUL;2;1;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2919;BRESSER, R.;25;LESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2924;JOAPÉ, R. ( SHOPPING CIDADE JARDIM );10;OESTE;85;75;10;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2933;GUILHERME WINTER, R. ENG.;12;SUL;18;16;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+2935;CARNEIRO LEÃO, R.;25;LESTE;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+2949;TREZE DE MAIO, R.;9;CENTRO;10;2;8;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+2984;JULIO DINIZ, R.;11;OESTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+2997;HUET BACELAR, R.;13;SUL;10;5;5;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3002;SAPUCAIA, R.;25;LESTE;13;4;9;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3004;BELMONTE, R.;8;OESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3005;MELO DE OLIVEIRA, CEL. R.;8;OESTE;9;4;5;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3006;HADDOCK LOBO, R.;11;OESTE;10;8;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3007;BANIBAS, R.;11;OESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3008;GASPAR FERNANDES, R.;13;SUL;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3011;CAIO GRACO, R.;8;OESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3017;JURUBATUBA, AV.;11;OESTE;4;2;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3019;JOÃO PADILHA, R.;29;LESTE;29;23;6;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3022;BACELAR DR, R.;12;SUL;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3027;APUCARANA, R.;25;LESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3029;ANTÔNIO DE MACEDO SOARES, R.;14;SUL;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3031;RINALDO RIVETTI, R.;8;OESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3036;APARECIDA DO RIO NEGRO, AV.;2;NORTE;29;24;5;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+3042;COLANTONIO, R.;17;SUL;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3044;JOSÉ OSCAR DE ABREU SAMPAIO, R.;26;LESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3048;TENERIFE, R.;11;OESTE;21;12;9;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3049;ELISA WHITAKER, R.;25;LESTE;30;19;11;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3050;MORAES DE BARROS SENADOR, LG.;25;LESTE;9;0;9;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3054;EUSÉLIO STEVAUX ENG, AV.;14;SUL;15;10;5;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3056;JUVÊNCIO DE ARAÚJO FIGUEIREDO, R.;1;NORTE;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+3057;SÃO CAETANO, R.;25;LESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3059;MANOEL JORGE RIBEIRO, R.;21;LESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3061;NATIVIDADE, R.;12;SUL;20;15;5;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3063;MANUEL BANDEIRA, AV.;8;OESTE;28;20;8;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3064;ARNALDO CINTRA, R.;25;LESTE;9;0;9;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3065;EUCLIDES DA SILVERA, DES.;4;NORTE;12;7;5;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+3068;JESUINO CARDOSO MIN, R.;11;OESTE;25;16;9;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3070;METALURGICOS, AV.;31;LESTE;9;4;5;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3071;ITAPIRA, R.;9;CENTRO;10;2;8;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+3072;GUILHERME BARBOSA DE MELO, R.;11;OESTE;12;10;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3073;CASTILHO, R.;11;OESTE;18;10;8;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3076;GEORGE WESTINGHOUSE, PÇA.;8;OESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3077;TAMARATACA, R.;25;LESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3080;PAULO ANDRIGHETTI, R.;25;LESTE;13;10;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3085;MARIA MONTESSORI, PÇA.;7;NORTE;9;2;7;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+3091;TITO, R.;8;OESTE;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3092;ARISTON AZEVEDO, AV.;25;LESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3094;CAMILO, R.;8;OESTE;10;7;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3097;TUPANACI, R.;13;SUL;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3099;JOSÉ DE MORAES FERRAZ, R.;10;OESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3102;ROUSSEAU, R.;12;SUL;12;1;11;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3103;FIAÇÃO DA SAÚDE, R.;12;SUL;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3104;FELIPE CAMARÃO, R.;25;LESTE;10;5;5;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3105;MIGUEL IGNÁCIO CURI, R.;27;LESTE;9;2;7;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3109;SANTA IFIGÊNIA, R.;9;CENTRO;9;4;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+3111;FRADIQUE COUTINHO, R.;11;OESTE;9;2;7;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3113;CHAGAS SANTOS GAL, R.;13;SUL;10;5;5;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3114;PASQUALE GALLIUPI, R.;10;OESTE;14;7;7;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3116;ALMIRANTE DELAMARE, AV.;19;SUL;4;2;2;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3118;CAIARÁ, R.;14;SUL;25;17;8;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3119;PASCOAL IMPERATRIZ, DR. R.;11;OESTE;17;2;15;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3120;JOAQUIM TAVORA, R.;12;SUL;12;4;8;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3122;SARUTAIÁ, AL.;11;OESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3123;RAJA GABAGLIA, R.;11;OESTE;9;2;7;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3124;FONSECA ROSA CAP, R.;14;SUL;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3126;HILÁRIO FURLAN, R.;11;OESTE;12;1;11;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3127;JOSÉ SKAZALL, R.;8;OESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3130;VITORINO CAMILO, R.;9;CENTRO;9;1;8;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+3131;PAES LEME, R.;11;OESTE;9;2;7;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3134;BELA ALIANÇA, R.;8;OESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3135;COSTA VALENTE, R.;25;LESTE;8;6;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3136;AURO SOARES DE MOURA ANDRADE, R.;;NORTE;9;4;5;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+3137;BOSQUE, DO, R.;9;CENTRO;9;1;8;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+3138;FRADIQUE COUTINHO, R.;11;OESTE;13;8;5;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3141;PADRE FRANCISCO DE TOLEDO, AV.;21;LESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3142;RELÍQUIA, R.;4;NORTE;9;2;7;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+3143;ITAPURA, R.;25;LESTE;25;13;12;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3144;CARDIM MAESTRO, R.;9;CENTRO;10;3;7;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+3145;ITALIANOS DOS, R.;9;CENTRO;9;1;8;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+3146;MACHADO PADRE, R.;12;SUL;10;5;5;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3150;CLEMENTE FERREIRA DR, PÇA;9;CENTRO;18;13;5;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+3151;PEDRO AVANCINE, R.;;SUL;12;6;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3152;ORATÓRIO DO, R.;29;LESTE;8;0;8;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3153;EDGARD EGIDIO DE SOUZA ENG, R.;9;CENTRO;12;1;11;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+3154;THOMAS EDISON, AV.;8;OESTE;17;16;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3156;D' OURO, R.;12;SUL;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3158;OTONIS DOS, R;12;SUL;13;3;10;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3159;FRANCISCO DA LIRA, R.;5;NORTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+3163;CACONDE, R.;11;OESTE;15;5;10;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3164;OSCAR FREIRE, R.;9;CENTRO;12;1;11;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+3166;CLAUDIA, R.;21;LESTE;9;2;7;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3167;URIEL GASPAR, R.;25;LESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3169;MARIA CAROLINA, R.;11;OESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3171;CAIXIUNA, R.;25;LESTE;9;0;9;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3175;DANTE CARRARO, R.;11;OESTE;12;10;2;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3176;PANTOJO, R.;25;LESTE;9;0;9;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3179;BENTO DE MATOS, R.;14;SUL;90;74;16;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3180;CLEMENTE PORTEN, R.;10;OESTE;12;1;11;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3182;JOÃO LOPES DE LIMA, R.;29;LESTE;9;6;3;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3183;ÁTILIO RÉGULO ARENA, R.;10;OESTE;54;38;16;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3184;PIRES DA MOTA, R.;9;CENTRO;9;5;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+3185;FRANCISCO DE SOUZA DOM, R.;9;CENTRO;9;3;6;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+3186;FIDENCIO RAMOS, R.;11;OESTE;32;14;18;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3187;ALEXANDRE FLEMING, PÇA.;25;LESTE;15;7;8;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3188;JOSE RANGEL DE CAMARGO, R.;4;NORTE;9;3;6;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+3189;COIMBRA, R.;25;LESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3190;ANA ROSA CAP, R.;11;OESTE;12;2;10;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3194;ATILIO INNOCENTI PROF, R.;11;OESTE;13;7;6;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3196;INHAÚMA, R.;8;OESTE;9;2;7;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3198;OTÁVIO MANGABEIRA SEM, R.;10;OESTE;6;5;1;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3199;ULISSES CRUZ, R.;25;LESTE;11;2;9;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3201;ASCENDINO REIS PROF, AV.;12;SUL;10;4;6;Ativo;Relacao de pontos para sorteio_Zona Sul.pdf;SEM_CORRESPONDENCIA_OSM
+3204;RODRIGUES DOS SANTOS, R.;25;LESTE;9;5;4;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3205;MARCELINO MAJOR, R.;25;LESTE;9;8;1;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3208;DANTAS CONS. R.;25;LESTE;9;7;2;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3209;NACAR VISCONDE DE, R.;11;OESTE;10;2;8;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3210;EDUARDO COTHING DR, AV.;26;LESTE;9;1;8;Ativo;Relacao de pontos para sorteio_Zona Leste.pdf;SEM_CORRESPONDENCIA_OSM
+3211;OTÁCILIO TOMANIK, AV.;;NORTE;11;6;5;Ativo;Relacao de pontos para sorteio_Zona Norte.pdf;SEM_CORRESPONDENCIA_OSM
+3212;RUI BARBOSA, R.;9;CENTRO;9;5;4;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+3221;RENATO PAES DE BARROS DR, R.;11;OESTE;6;3;3;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3223;HELVÉTIA, R.;9;CENTRO;31;6;25;Ativo;Relacao de pontos para sorteio _Regiao Central.pdf;SEM_CORRESPONDENCIA_OSM
+3226;CALLIMAQUE, R.;11;OESTE;10;4;6;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM
+3227;JOSÉ CESAR DE OLIVEIRA, AV.;8;OESTE;14;2;12;Ativo;Relacao de pontos para sorteio_Zona Oeste.pdf;SEM_CORRESPONDENCIA_OSM

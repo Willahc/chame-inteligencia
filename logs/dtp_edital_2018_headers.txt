@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Date: Wed, 23 Sep 2026 12:17:55 GMT
+Server: Apache/2.4.37 (Red Hat Enterprise Linux) OpenSSL/1.1.1k
+Last-Modified: Wed, 19 Sep 2018 14:20:24 GMT
+ETag: "246b3-5763a1b6f1a00"
+Accept-Ranges: bytes
+Content-Length: 149171
+Content-Type: application/pdf
+

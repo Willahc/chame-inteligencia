@@ -1,0 +1,13 @@
+# Limitações — Gate 4
+
+1. A consulta de descoberta de limite OSM no endpoint primário retornou HTTP 504. A validação direta da relation 298285 também retornou HTTP 504; o endpoint alternativo encerrou a conexão e a consulta final não gerou resposta utilizável. Em retomada autorizada em 23/09/2026 às 14:00 BRT, o status do endpoint primário estava disponível, mas a mesma consulta recebeu novamente HTTP 504; o status do endpoint alternativo expirou. Não foram feitas novas tentativas.
+2. Relation 298285 foi identificada por Nominatim como São Paulo, boundary/administrative, mas seu `admin_level` não foi confirmado por Overpass. O recorte municipal da extração OSM usou o polígono oficial GeoSampa da PMSP, não a relação OSM; a relação OSM permanece apenas como referência de consulta futura.
+3. A resposta Overpass nunca foi obtida (504/queda). A extração municipal foi obtida por outra via (PBF Geofabrik + parser + recorte por polígono oficial), então a ausência de resposta Overpass não representa ausência de feições nem bloqueia o Gate.
+4. O GeoSampa não apresentou, no GetCapabilities consultado, camada WFS separada intitulada “região administrativa”; as referências `região_05` e `região_08` foram preservadas apenas como atributos de distritos/subprefeituras.
+5. A validade topológica completa de polígonos não foi testada, pois não há biblioteca local de validação e não foi instalada dependência adicional. Geometrias vazias não foram encontradas e nenhuma geometria foi alterada.
+6. A licença específica por camada GeoSampa não está declarada no GetCapabilities/DescribeFeatureType. A atribuição municipal e revisão dos termos vigentes são necessárias antes de redistribuir.
+7. Não houve geocodificação, matching DTP–OSM, cruzamento espacial, reprojeção, correção de geometria, mapa ou gravação em `data/processed/`.
+8. O BBBike exige e-mail para gerar extrato municipal. Não é apropriado fornecer e-mail sem indicação expressa do solicitante; por isso sua relação municipal não foi obtida.
+9. A extração OSM deriva do PBF Geofabrik do Sudeste, recortada pelo polígono oficial do município; feições de táxi fora de São Paulo, no Sudeste, foram corretamente descartadas (102 ways da fonte). O recorte valida inclusão de nodes/ways/relations; a confirmação em campo ou por autoridade competente cabe em etapa futura.
+10. Há um PBF interrompido/inválido (`...T1415.osm.pbf`) mantido como evidência técnica. Somente `...T1425.osm.pbf` tem tamanho remoto confirmado e hash válido para uso futuro.
+11. A minuta para e-SIC não foi protocolada; o envio exigiria autenticação e uma ação externa do solicitante.

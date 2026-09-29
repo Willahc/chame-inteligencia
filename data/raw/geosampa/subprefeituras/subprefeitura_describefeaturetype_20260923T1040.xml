@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:geoportal="http://geoportal.prodam" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://geoportal.prodam">
+  <xsd:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://wfs.geosampa.prefeitura.sp.gov.br/geoserver/schemas/gml/3.2.1/gml.xsd"/>
+  <xsd:complexType name="subprefeituraType">
+    <xsd:complexContent>
+      <xsd:extension base="gml:AbstractFeatureType">
+        <xsd:sequence>
+          <xsd:element maxOccurs="1" minOccurs="1" name="cd_identificador_subprefeitura" nillable="false" type="xsd:decimal"/>
+          <xsd:element maxOccurs="1" minOccurs="1" name="ge_poligono" nillable="false" type="gml:SurfacePropertyType"/>
+          <xsd:element maxOccurs="1" minOccurs="1" name="cd_subprefeitura" nillable="false" type="xsd:string"/>
+          <xsd:element maxOccurs="1" minOccurs="1" name="nm_subprefeitura" nillable="false" type="xsd:string"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="tx_escala" nillable="true" type="xsd:string"/>
+          <xsd:element maxOccurs="1" minOccurs="1" name="sg_fonte_original" nillable="false" type="xsd:string"/>
+          <xsd:element maxOccurs="1" minOccurs="1" name="dt_criacao" nillable="false" type="xsd:date"/>
+          <xsd:element maxOccurs="1" minOccurs="1" name="cd_tipo_discrepancia" nillable="false" type="xsd:int"/>
+          <xsd:element maxOccurs="1" minOccurs="1" name="dt_atualizacao" nillable="false" type="xsd:dateTime"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="cd_usuario_atualizacao" nillable="true" type="xsd:string"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="sg_subprefeitura" nillable="true" type="xsd:string"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="qt_area_quilometro" nillable="true" type="xsd:decimal"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="qt_area_metro" nillable="true" type="xsd:decimal"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="cd_regiao_05" nillable="true" type="xsd:int"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="nm_regiao_05" nillable="true" type="xsd:string"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="cd_regiao_08" nillable="true" type="xsd:int"/>
+          <xsd:element maxOccurs="1" minOccurs="0" name="nm_regiao_08" nillable="true" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="subprefeitura" substitutionGroup="gml:AbstractFeature" type="geoportal:subprefeituraType"/>
+</xsd:schema>

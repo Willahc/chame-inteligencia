@@ -1,0 +1,17 @@
+2026-09-28 15:25:12,934 [INFO] ================================================================================
+2026-09-28 15:25:12,935 [INFO] INICIANDO EXECUÇÃO DO MONITOR DO DIÁRIO OFICIAL (DOC-SP / DTP)
+2026-09-28 15:25:12,935 [INFO] ================================================================================
+2026-09-28 15:25:14,289 [INFO] Monitorando 2,135 motoristas estratégicos (Contemplados + Suplentes Prioritários).
+2026-09-28 15:25:14,300 [INFO] Cache de motoristas previamente consultados: 2,135 registros.
+2026-09-28 15:25:14,300 [INFO] Iniciando varredura por termos institucionais regulatórios...
+2026-09-28 15:25:14,301 [INFO] Varrendo query: "DTP" "ALVARÁ" "TÁXI" (3 páginas)...
+2026-09-28 15:25:17,513 [INFO] Varrendo query: "DTP" "CONDUTAX" (2 páginas)...
+2026-09-28 15:25:21,524 [INFO] Varrendo query: "DEPARTAMENTO DE TRANSPORTES PÚBLICOS" "SORTEIO" (2 páginas)...
+2026-09-28 15:25:23,372 [INFO] Varrendo query: "SMT.DTP" "HOMOLOGAÇÃO" (2 páginas)...
+2026-09-28 15:25:25,216 [INFO] Total de matérias institucionais analisadas: 20
+2026-09-28 15:25:25,216 [INFO] Total de alertas com correspondência direta em motoristas monitorados: 0
+2026-09-28 15:25:25,219 [INFO] Relatório de Alertas atualizado com sucesso em: C:\Users\winsilva\Documents\William\Mapeamento\logs\alertas_novas_publicacoes_doc.txt
+2026-09-28 15:25:25,219 [INFO] Base de Alertas JSON atualizada em: C:\Users\winsilva\Documents\William\Mapeamento\logs\alertas_novas_publicacoes_doc.json
+2026-09-28 15:25:25,219 [INFO] ================================================================================
+2026-09-28 15:25:25,219 [INFO] MONITORAMENTO FINALIZADO COM ÊXITO.
+2026-09-28 15:25:25,220 [INFO] ================================================================================

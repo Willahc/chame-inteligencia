@@ -1,0 +1,56 @@
+Gate 4 — consultas Overpass/OSM para feições diretamente relacionadas a táxi
+Data da tentativa: 2026-09-23, America/Sao_Paulo
+
+1) Descoberta inicial de limite (endpoint https://overpass-api.de/api/interpreter)
+[out:json][timeout:60];
+area["ISO3166-1"="BR"][admin_level=2]->.br;
+rel(area.br)["boundary"="administrative"]["admin_level"="8"]["name"="São Paulo"];
+out tags;
+Resultado: HTTP 504; não gerou arquivo bruto.
+
+2) Verificação direta inicialmente tentada, identificador não confirmado
+[out:json][timeout:60];
+rel(298);
+out tags;
+Resultado: HTTP 200, zero elementos; identificador descartado.
+
+3) Identificação de limite usada
+Método: busca nominal OSM Nominatim, sem addressdetails/extratags/namedetails.
+Resultado preservado: data/external/osm/taxi/limite_osm_nominatim_20260923T1050.json
+relation_id: 298285
+Nome retornado: São Paulo
+Tipo retornado: boundary / administrative
+area_id derivado: 3600298285 (= 3600000000 + relation_id)
+
+4) Verificação do relation_id no endpoint primário
+[out:json][timeout:60];
+rel(298285);
+out tags;
+Resultado: HTTP 504; não gerou arquivo bruto.
+
+5) Verificação no endpoint alternativo https://overpass.kumi.systems/api/interpreter
+[out:json][timeout:60];
+rel(298285);
+out tags;
+Resultado: conexão encerrada sem resposta; não gerou arquivo bruto.
+
+6) Consulta final consolidada de táxi, executada uma única vez no endpoint https://overpass.private.coffee/api/interpreter
+[out:json][timeout:180];
+area(3600298285)->.municipio;
+(
+  nwr(area.municipio)["amenity"="taxi"];
+  nwr(area.municipio)["taxi"="yes"];
+  nwr(area.municipio)["public_transport"="taxi"];
+);
+out tags center;
+
+Resultado: sem resposta gravável no tempo de execução; nenhum arquivo bruto de táxi foi criado e não foram feitas novas tentativas.
+
+Escopo: somente node, way e relation com marcadores explicitamente relacionados a táxi. A saída `out tags center` não solicita `meta`, portanto não solicita usuário, UID, changeset ou histórico de contribuidores.
+
+7) Retomada autorizada pelo usuário em 23/09/2026, 14:00 BRT
+Foi consultado antes o status de https://overpass-api.de/api/status: HTTP 200, quatro slots livres.
+Foi executada uma única vez a mesma consulta consolidada do item 6 no endpoint primário.
+Resultado: HTTP 504 Gateway Timeout; nenhum arquivo bruto foi criado.
+Teste de disponibilidade de https://overpass.private.coffee/api/status: timeout de leitura após 12 segundos.
+Não foram feitas novas tentativas nem ampliado o escopo.

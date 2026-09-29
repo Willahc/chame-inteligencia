@@ -1,0 +1,426 @@
+
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+
+
+<head>
+
+    <script>
+        var ContentPath = '/Content/';
+         var ContentPathAudio = '/Autenticacao/';
+    </script>
+
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="/Content/css/bootstrap.css" />
+
+    <link rel="stylesheet" type="text/css" href="/Content/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/css/responsive.dataTables.min.css" />
+
+
+    <!-- material symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <!-- material symbols -->
+
+
+    <link rel="stylesheet" type="text/css" href="/Content/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/css/Index.css" />
+    <link rel="icon" type="image/x-icon" href="/Content/img/favicon.ico" />
+    <link rel="icon" type="image/png" href="/Content/img/favicon.png" />
+    <link rel="apple-touch-icon" href="/Content/img/apple-touch-icon.png" />
+
+    <link rel="manifest" href="/Content/img/manifest.json" />
+    <link rel="mask-icon" href="/Content/img/safari-pinned-tab.svg" color="#417da2">
+    <meta name="theme-color" content="#ffffff">
+
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <[endif]-->
+
+    <title>Pesquisa do Transporte Diferenciado (Táxi, Escolar, Fretamento, Motofrete e Carga a Frete)</title>
+    <meta property="og:title" content="Pesquisa do Transporte Diferenciado (Táxi, Escolar, Fretamento, Motofrete e Carga a Frete)">
+
+
+
+</head>
+
+<body>
+
+    <header id="skipto-topo" class="border-bottom">
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-12 col-sm-12 col-md-6">
+
+                    <nav>
+
+                        <ul class="menu-access">
+
+                            <li><a href="#skipto-topo" accesskey="1" title="Digite Alt+1 ou, no Firefox, Alt+Shift+1">Ir para o topo<span class="acceskeynumber">1</span></a></li>
+
+                            <li><a href="#skipto-content" accesskey="2" title="Digite Alt+2 ou, no Firefox, Alt+Shift+2">Ir para o conteúdo<span class="acceskeynumber">2</span></a></li>
+
+                            <li><a href="#skipto-footer" accesskey="3" title="Digite Alt+3 ou, no Firefox, Alt+Shift+3">Ir para o rodapé<span class="acceskeynumber">3</span></a></li>
+
+                            <li><a href="#pesquisar" accesskey="4" title="Digite Alt+4 ou, no Firefox, Alt+Shift+4">Ir para o menu<span class="acceskeynumber">4</span></a></li>
+
+                        </ul>
+
+                    </nav>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="header-pmsp">
+            <div class="container">
+                <div class="row">
+                    <div class="col-8 col-sm-8 col-md-8 col-lg-7">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <a href="http://www.capital.sp.gov.br" class="text-uppercase">Cidade de São Paulo</a>
+                            </div>
+                            <div class="d-none d-md-block col-md-4 text-center">
+                                <a href="http://transparencia.prefeitura.sp.gov.br/sistema-eletronico-de-informacao-ao-cidadao-e-sic/">
+                                    Acesso à informação&nbsp;<img src="/Content/img/acessInfo.png" class="acessInfo" alt="Ir para a página de Acesso à Informação" />
+                                </a>
+                            </div>
+                            <div class="d-none d-md-block col-md-4 text-end">
+                                <a href="http://transparencia.prefeitura.sp.gov.br/" class="text-uppercase">Transparência São Paulo</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-none d-md-flex col-4 col-sm-4 col-md-4 col-lg-5 accessibility-buttons">
+                        <span class="acessibilidade d-sm-none d-lg-inline-block">Acessibilidade</span>
+                        <ul title="Ferramentas de acessibilidade">
+                            <li>
+                                <button class="fontResizer_add" title="Aumentar a fonte">A+</button>
+                            </li>
+                            <li>
+                                <button class="fontResizer_minus" title="Diminuir a fonte">A-</button>
+                            </li>
+                            <li>
+                                <button class="fontResizer_reset"
+                                        title="Voltar ao tamanho padrão">
+                                    A
+                                </button>
+                            </li>
+                            <li>
+                                <button title="Alto contraste" class="btn-contraste1">
+                                    <span class="material-symbols-outlined">contrast</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="header-projeto">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-12 pt-4">
+                        <a href="index.html" title="Nome do projeto" class="logo-projeto">
+                            <img src="/Content/img/transportesNovaVersao.png" class="logo-imagem d-inline me-4" alt="Secretaria Municipal de Mobilidade Urbana e Transporte" />
+                            <h1 class="titulo-sistema flex-column align-items-start">
+                                <div class="text-uppercase">Secretaria Municipal de Mobilidade Urbana e Transporte</div>
+                                <div class="fw-bold font-size-21">Departamento de Transportes Públicos</div>
+                            </h1>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <main id="skipto-content">
+
+        <section>
+
+            <div class="container">
+
+                
+<form action="/PesquisaTransportes/Consultar?Length=4" method="post">                    <h2>Pesquisa do Transporte Diferenciado (Táxi, Escolar, Fretamento, Motofrete e Carga a Frete)</h2>
+                    <div class="row grid-opcoes">
+                        <div class="col-12 col-lg-3 container-opcao">
+                            <fieldset class="campos-busca">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="radio" name="tipo_pesquisa" id="pesquisa-veiculo" value="Veiculo">Veículos
+                                    </label>
+                                </div>
+                                <div class="accordion-panel">
+                                    <p>Informe pelo menos um dos dados abaixo:</p>
+                                    <label class="mb-4">
+                                        Placa<input type="text" id="CodPlaca" name="CodPlacVeic" class="form-control" maxlength="7" disabled />
+                                    </label><label class="mb-4">
+                                        Licença<input type="text" id="CodLicenca" name="codNroLice" class="form-control" disabled />
+                                    </label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-12 col-lg-3 container-opcao">
+                            <fieldset class="campos-busca">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="radio" name="tipo_pesquisa" id="pesquisa-condutor" value="Condutor">Condutores
+                                    </label>
+                                </div>
+                                <div class="accordion-panel">
+                                    <label class="mb-4">
+                                        CPF (somente números)
+                                        <input type="text" id="CodCpf" name="CpfCondutor" class="form-control cpf" disabled />
+                                    </label>
+                                    <label class="mb-4">
+
+
+                                        Modalidade<select class="form-select" disabled name="ModalCondutor">
+                                            <option value="" selected disabled>Selecione</option>
+                                          
+                                                <option value=C>CARGA-FRETE</option>
+                                                <option value=E>ESCOLAR</option>
+                                                <option value=M>MOTO-FRETE</option>
+                                                <option value=T>T&#193;XI</option>
+                                        </select>
+
+
+                                    </label>
+                                </div>
+
+
+
+                            </fieldset>
+
+
+                        </div>
+                        <div class="col-12 col-lg-3 container-opcao">
+                            <fieldset class="campos-busca">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="radio" name="tipo_pesquisa" id="pesquisa-empresa" value="Empresa">Empresas
+                                    </label>
+                                </div>
+                                <div class="accordion-panel">
+                                    <label class="mb-4">
+                                        Modalidade<select disabled class="form-select" name="ModalEmpresa">
+                                            <option value="" selected disabled>Selecione</option>
+                                                <option value=C>CARGA-FRETE</option>
+                                                <option value=E>ESCOLAR</option>
+                                                <option value=F>FRETAMENTO</option>
+                                                <option value=M>MOTO-FRETE</option>
+                                                <option value=N>FRET. INTERMUNICIPAL</option>
+                                                <option value=T>T&#193;XI</option>
+                                        </select>
+                                    </label>
+                                    <label class="mb-4">
+                                        Tipo de empresa<select disabled class="form-select" name="TipoEmpresa">
+                                            <option value="" selected disabled>Selecione</option>
+                                            <option value="E">ESCOLA DE CONDUTORES</option>
+                                            <option value="V">OIA - (Organismo de Inspeção Acreditado) - Vistorias</option>
+                                            <option value="P">PUBLICIDADE</option>
+                                            <option value="T">TRANSPORTE</option>
+                                        </select>
+                                    </label>
+                                    <label class="mb-4">
+                                        Razão social (opcional)<input disabled type="text" name="NomeRazaoSocial" maxlength="40" class="form-control" />
+                                    </label>
+                                    <label class="mb-4">Nome fantasia (opcional)<input disabled type="text" name="NomeFantasia" maxlength="40" class="form-control" /></label>
+                                </div>
+
+                            </fieldset>
+                        </div>
+                        <div class="col-12 col-lg-3 container-opcao">
+                            <fieldset class="campos-busca">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="radio" name="tipo_pesquisa" id="pesquisa-despachante" value="Despachante">Despachantes
+                                    </label>
+                                </div>
+
+                                <!-- <div class="accordion-panel">
+                                </div> -->
+
+                            </fieldset>
+                        </div>
+
+                    </div>
+                    <!-- ------------------------------------------captcha prodam ------------------------------------>
+                    <div class="row ps-3 mt-1 mt-xl-0">
+                        <div class="col-12 col-sm-12 col-md-8 col-lg-5 col-xl-4 col-xxl-3 offset-xl-2 offset-xxl-3 d-flex justify-content-end align-items-start flex-column">
+                            <div class="d-flex w-100 mt-5">
+                                <img src="/Autenticacao/ImagemCaptcha" id="imagemCaptcha" alt="Captcha" class="captcha" /><span class="d-flex flex-column ps-4">
+                                    <a href="#!" class="disabled-link d-inline-flex my-1" onclick="TocarAudio()"><span class="material-symbols-outlined me-2" aria-hidden="true">volume_up</span><span>Ouvir captcha</span></a>
+                                    <a href="#!" class="disabled-link d-inline-flex my-1" id="lnkRefresh"><span class="material-symbols-outlined me-2" aria-hidden="true">refresh</span><span>Novo captcha</span></a>
+                                </span>
+                            </div>
+                            <label class="d-block w-100 mt-5 digite-captcha">Digite o texto da imagem acima: *<input type="text" id="txtCaptcha" name="ChaveCaptcha" class="form-control" maxlength="4" /></label>
+                            <input type="hidden" id="hdnFormatoSomCaptcha" value="mp3" />
+
+                            <div id="dvSom">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-7 col-xl-6 col-xxl-6 d-flex align-items-end">
+                            <input type="button" value="Limpar" id="btn-limpar" disabled class="button-secondary w-100 w-md-unset mt-5 mt-lg-5 mt-md-0 mb-md-0 me-5 ms-lg-1 me-lg-4">
+                            <input type="submit" value="Pesquisar" id="btn-pesquisar" disabled class="button-primary mt-5 w-100 w-md-unset" onclick="return ConsistirTela();">
+                        </div>
+                    </div>
+                    <!--  -----------------------------FIM CAPTCHA----------------------------------------------   ---->
+                    <div class="row">
+                        <label name="msgErroTela">
+
+                        </label>
+                    </div>
+</form>                
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer id="skipto-footer">
+
+        <div class="footer-project">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-2 col-xl-2 py-4 pe-0 d-flex justify-content-center justify-content-lg-start">
+                        <a href="http://capital.sp.gov.br/web/mobilidade">
+                            <img src="/Content/img/transportesNovaVersao.png" alt="Site da Secretaria Municipal de Mobilidade Urbana e Transporte" class="img-fluid logo-secretaria">
+                        </a>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-6 col-xl-5 py-4 px-0 d-flex flex-column align-items-center align-items-md-start justify-content-center text-center text-lg-start">
+                        <span class="fw-bold text-uppercase text-center text-md-start">Secretaria Municipal de Mobilidade Urbana e Transporte</span>
+                        <span>Setor de Protocolo - Rua Joaquim Carlos, 655 - Pari - São Paulo, SP</span>
+                        <span>CEP 03019-000</span>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-5 col-lg-4 col-xl-5 py-4 px-0 d-flex flex-column align-items-center align-items-md-start justify-content-start">
+                        <a href="mailto:dtpprotocolo@prefeitura.sp.gov.br" class="mb-2 d-flex align-items-start justify-content-center">
+                            <img src="/Content/img/email.svg" alt="Email" class="me-3 mb-1" />
+                            <span>dtpprotocolo@prefeitura.sp.gov.br</span>
+                        </a>
+                        <span>
+                            <img src="/Content/img/phone.svg" alt="Telefone" class="me-2" />
+                            <span class="align-top">156</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="footer-credits">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 d-flex align-items-center justify-content-end">
+                        <span class="me-4 d-inline-block font-size-13">Hospedagem e desenvolvimento</span><a href="http://www.prodam.sp.gov.br" class="logo-prodam">Prodam SP</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script type="text/javascript" language="JavaScript" src="/Scripts/js/jquery-3.5.1.js"></script>
+    <script type="text/javascript" language="JavaScript" src="/Scripts/js/jquery.cookie.js"></script>
+
+    <script type="text/javascript" language="JavaScript" src="/Scripts/js/jquery.mask.min.js"></script>
+
+    <!-- BUNDLE -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    -->
+    <!-- BUNDLE -->
+    <!-- POPPER -->
+    <script type="text/javascript" language="JavaScript" src="/Scripts/js/popper.min.js"></script>
+    <!-- POPPER -->
+    <!-- BOOTSTRAP 5 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script> -->
+    <script type="text/javascript" language="JavaScript" src="/Scripts/js/bootstrap.js"></script>
+    <!-- BOOTSTRAP 5 -->
+
+    <script type="text/javascript" language="JavaScript" src="/Scripts/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="JavaScript" src="/Scripts/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" language="JavaScript" src="/Scripts/js/dataTables.responsive.min.js"></script>
+
+
+
+    <script type="text/javascript" language="JavaScript" src="/Scripts/js/functions.js"></script>
+    <script type="text/javascript" language="JavaScript" src="/Scripts/js/Index.js"></script>
+
+    
+
+
+    <noscript>
+        O Javascript do navegador está desabilitado. &nbsp; Habilite o Javascript nas configurações do navegador para a  melhor utilização do sistema.
+    </noscript>
+
+
+    
+    <script>
+
+        $(document).ready(function () {
+            // manda foco quando escolho no botao do radio
+            $("input[type=radio][name='tipo_pesquisa']").on('click', function () {
+
+                let valorSelecionado = $(this).val();
+                if (valorSelecionado == 'Veiculo') { }
+                setTimeout(function () {
+                    $('#CodPlaca').focus();
+                }, 10);
+
+                if (valorSelecionado == 'Condutor') { }
+                setTimeout(function () {
+                    $('#CodCpf').focus();
+                }, 10);
+
+                if (valorSelecionado == 'Empresa') { }
+                setTimeout(function () {
+                    $("[name='ModalEmpresa']").focus();
+                }, 10);
+            });
+
+
+
+        });
+
+
+        $(document).ready(function () {
+            $("#lnkRefresh").click(function () {
+
+                $.ajax({
+                    url: "/PesquisaTransportes/RecarregarCaptcha", // Action method URL
+                    type: "POST",
+                    data: {}, // Data sent to server
+                    success: function (response) {
+                       // console.log(response);
+                        if (response.imageData) {
+
+                            $("#imagemCaptcha").attr("src", "data:image/jpeg;base64," + response.imageData);
+                        }
+                    },
+                    error: function () {
+                        alert("Erro ao obter captcha");
+                    }
+                });
+
+
+            });
+        });
+
+    </script>
+
+
+</body>
+
+</html>

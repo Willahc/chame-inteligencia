@@ -1,0 +1,15 @@
+# Dependências do pipeline Mapeamento (Python 3.13.15, Windows)
+# Instalação: python -m pip install -r requirements.txt
+#
+# Observação: geopandas/shapely não são usados — a geometria é tratada com
+# pyproj e ElementTree stdlib (ver scripts/extract_osm_taxi.py e
+# scripts/match_dtp_osm.py).
+
+numpy==2.5.3
+openpyxl==3.1.5
+pandas==3.0.5
+pypdf==6.18.0
+pyproj==3.8.0
+requests==2.34.2
+urllib3==2.8.0
+folium==0.20.0

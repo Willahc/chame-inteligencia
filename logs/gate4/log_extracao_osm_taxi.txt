@@ -1,0 +1,83 @@
+﻿OUT = data\external\osm\taxi\osm_taxi_saopaulo_geofabrik_20260923T1211_raw.osm
+# Execução de reprodução (determinística). SHA-256 idêntico ao canônico
+# B274414D3B2F9BB408E8EB8EF22085E0134A0A87A396ADC0B513502333B9E508.
+# Execução original em 23/09/2026 12:11 BRT (arquivo T1211); esta re-execução
+# gerou temporariamente T1250 e foi descartada por ter conteúdo idêntico.
+[p1] blobs=500 nodes=43 ways=0 rels=0 7.0s
+[p1] blobs=1000 nodes=71 ways=0 rels=0 14.0s
+[p1] blobs=1500 nodes=87 ways=0 rels=0 21.5s
+[p1] blobs=2000 nodes=97 ways=0 rels=0 29.1s
+[p1] blobs=2500 nodes=110 ways=0 rels=0 35.5s
+[p1] blobs=3000 nodes=203 ways=0 rels=0 42.0s
+[p1] blobs=3500 nodes=307 ways=0 rels=0 48.5s
+[p1] blobs=4000 nodes=309 ways=0 rels=0 54.6s
+[p1] blobs=4500 nodes=316 ways=0 rels=0 61.2s
+[p1] blobs=5000 nodes=331 ways=0 rels=0 67.5s
+[p1] blobs=5500 nodes=349 ways=0 rels=0 73.8s
+[p1] blobs=6000 nodes=355 ways=0 rels=0 79.9s
+[p1] blobs=6500 nodes=365 ways=0 rels=0 86.5s
+[p1] blobs=7000 nodes=366 ways=0 rels=0 92.4s
+[p1] blobs=7500 nodes=379 ways=0 rels=0 97.8s
+[p1] blobs=8000 nodes=390 ways=0 rels=0 103.0s
+[p1] blobs=8500 nodes=398 ways=0 rels=0 108.4s
+[p1] blobs=9000 nodes=398 ways=0 rels=0 113.5s
+[p1] blobs=9500 nodes=398 ways=0 rels=0 118.8s
+[p1] blobs=10000 nodes=399 ways=0 rels=0 124.3s
+[p1] blobs=10500 nodes=400 ways=0 rels=0 129.7s
+[p1] blobs=11000 nodes=407 ways=0 rels=0 135.1s
+[p1] blobs=11500 nodes=409 ways=0 rels=0 140.7s
+[p1] blobs=12000 nodes=415 ways=0 rels=0 146.8s
+[p1] blobs=12500 nodes=420 ways=0 rels=0 152.4s
+[p1] blobs=13000 nodes=427 ways=0 rels=0 157.9s
+[p1] blobs=13500 nodes=433 ways=0 rels=0 163.5s
+[p1] blobs=14000 nodes=446 ways=0 rels=0 169.1s
+[p1] blobs=14500 nodes=464 ways=0 rels=0 174.8s
+[p1] blobs=15000 nodes=471 ways=0 rels=0 180.6s
+[p1] blobs=15500 nodes=497 ways=0 rels=0 186.9s
+[p1] blobs=16000 nodes=531 ways=0 rels=0 192.4s
+[p1] blobs=16500 nodes=555 ways=0 rels=0 198.1s
+[p1] blobs=17000 nodes=571 ways=0 rels=0 203.9s
+[p1] blobs=17500 nodes=588 ways=0 rels=0 209.2s
+[p1] blobs=18000 nodes=592 ways=36 rels=0 238.8s
+[p1] blobs=18500 nodes=592 ways=63 rels=0 293.4s
+[p1] done blobs=18927 taxi_nodes=592 taxi_ways=108 taxi_rels=3 needed_refs=566 333.1s
+[p2] blobs=500 coords=36 5.0s
+[p2] blobs=1000 coords=91 9.6s
+[p2] blobs=1500 coords=140 14.2s
+[p2] blobs=2000 coords=164 18.5s
+[p2] blobs=2500 coords=181 22.9s
+[p2] blobs=3000 coords=206 27.6s
+[p2] blobs=3500 coords=234 32.1s
+[p2] blobs=4000 coords=238 36.8s
+[p2] blobs=4500 coords=242 41.1s
+[p2] blobs=5000 coords=260 45.4s
+[p2] blobs=5500 coords=275 50.6s
+[p2] blobs=6000 coords=283 55.4s
+[p2] blobs=6500 coords=283 59.9s
+[p2] blobs=7000 coords=283 64.1s
+[p2] blobs=7500 coords=292 68.4s
+[p2] blobs=8000 coords=307 72.9s
+[p2] blobs=8500 coords=309 77.7s
+[p2] blobs=9000 coords=311 82.2s
+[p2] blobs=9500 coords=311 86.4s
+[p2] blobs=10000 coords=311 90.8s
+[p2] blobs=10500 coords=311 95.1s
+[p2] blobs=11000 coords=311 100.8s
+[p2] blobs=11500 coords=315 105.2s
+[p2] blobs=12000 coords=323 109.7s
+[p2] blobs=12500 coords=341 114.2s
+[p2] blobs=13000 coords=342 118.8s
+[p2] blobs=13500 coords=346 123.4s
+[p2] blobs=14000 coords=353 127.9s
+[p2] blobs=14500 coords=372 132.3s
+[p2] blobs=15000 coords=375 137.4s
+[p2] blobs=15500 coords=443 142.1s
+[p2] blobs=16000 coords=449 146.7s
+[p2] blobs=16500 coords=479 151.5s
+[p2] blobs=17000 coords=530 156.1s
+[p2] blobs=17500 coords=551 161.1s
+[p2] blobs=18000 coords=566 166.0s
+[p2] blobs=18500 coords=566 169.9s
+[p2] done coords=566 173.0s
+[out] taxi_nodes=592 way_ref_nodes=26 ways=6 rels=3 dropped_ways=102
+total 506.8s
