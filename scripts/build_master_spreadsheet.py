@@ -162,20 +162,57 @@ def get_mei_geo_info(cep_str, bairro_str):
     dist = haversine_distance(CHAME_TAXI_LAT, CHAME_TAXI_LON, lat, lon) if (lat and lon) else None
     return dist, reg
 
+VALID_BR_DDDS = {
+    '11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', 
+    '31', '32', '33', '34', '35', '37', '38', '41', '42', '43', '44', '45', '46', '47', 
+    '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '67', '68', 
+    '69', '71', '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '86', '87', 
+    '88', '89', '91', '92', '93', '94', '95', '96', '97', '98', '99'
+}
+
 def normalize_and_format_phone(ddd_str, tel_str):
-    d = re.sub(r'\D+', '', str(ddd_str or '')).strip()
-    t = re.sub(r'\D+', '', str(tel_str or '')).strip()
-    if not t:
+    d_raw = re.sub(r'\D+', '', str(ddd_str or '')).strip()
+    t_raw = re.sub(r'\D+', '', str(tel_str or '')).strip()
+    
+    if not t_raw or len(set(t_raw)) <= 1 or t_raw.startswith('0000'):
         return "", "", "Sem Telefone"
-    if not d:
-        d = "11"
-    if len(t) in (10, 11) and t[:2] == d:
-        local = t[2:]
-    elif len(t) == 10 and t[:2] in ('11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41', '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '67', '68', '69', '71', '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '86', '87', '88', '89', '91', '92', '93', '94', '95', '96', '97', '98', '99'):
+        
+    t = t_raw
+    # Tratar prefixos espúrios e duplicações comuns
+    if len(t) == 13 and t[:2] == '11' and t[2:4] in VALID_BR_DDDS:
+        t = t[2:]
+    elif len(t) == 15 and t[:4] == '1155' and t[4:6] in VALID_BR_DDDS:
+        t = t[4:]
+    elif len(t) in (12, 13) and t[:2] == '55' and t[2:4] in VALID_BR_DDDS:
+        t = t[2:]
+        
+    d = d_raw if d_raw in VALID_BR_DDDS else ""
+    
+    if len(t) == 11 and t[:2] in VALID_BR_DDDS:
         d = t[:2]
         local = t[2:]
-    else:
+    elif len(t) == 10 and t[:2] in VALID_BR_DDDS:
+        d = t[:2]
+        local = t[2:]
+    elif len(t) in (8, 9):
         local = t
+        if not d:
+            d = "11"
+    else:
+        if d and len(t) >= 8:
+            local = t
+        elif len(t) >= 10 and t[:2] in VALID_BR_DDDS:
+            d = t[:2]
+            local = t[2:]
+        else:
+            return "", "", "Sem Telefone"
+
+    if not d:
+        d = "11"
+
+    # Descartar dummy placeholder numbers
+    if len(local) < 8 or len(set(local)) <= 1 or local.startswith('0000'):
+        return "", "", "Sem Telefone"
 
     eh_celular = False
     if len(local) == 9 and local.startswith('9'):
@@ -188,7 +225,7 @@ def normalize_and_format_phone(ddd_str, tel_str):
         fmt = f"({d}) {local[:5]}-{local[5:]}"
         wpp = f"https://wa.me/55{d}{local}"
         tipo = "Celular (WhatsApp Provável)"
-    elif len(local) == 8:
+    elif len(local) == 8 and local[0] in '2345':
         fmt = f"({d}) {local[:4]}-{local[4:]}"
         wpp = ""
         tipo = "Fixo (Voz)"
@@ -198,6 +235,7 @@ def normalize_and_format_phone(ddd_str, tel_str):
         tipo = "Outro"
 
     return fmt, wpp, tipo
+
 
 def get_vehicle_rules(edital_num, categoria_str=""):
     ed = str(edital_num or "").replace('.0', '').strip()
@@ -751,17 +789,23 @@ def build_master():
 
         # Normalização e formatação de telefones + verificação de celular
         fmt_t1, wpp_t1, tipo_t1 = normalize_and_format_phone("", tel_1)
-        if fmt_t1:
-            tel_1 = fmt_t1
-            if tipo_t1.startswith("Celular"):
-                whatsapp_ativo = "Sim (WhatsApp Provável)"
-            elif whatsapp_ativo != "Sim":
-                whatsapp_ativo = "Não (Fixo)"
         fmt_t2, wpp_t2, tipo_t2 = normalize_and_format_phone("", tel_2)
-        if fmt_t2:
-            tel_2 = fmt_t2
-            if tipo_t2.startswith("Celular") and whatsapp_ativo not in ["Sim", "Sim (WhatsApp Provável)"]:
-                whatsapp_ativo = "Sim (WhatsApp Provável - Tel 2)"
+
+        # Se Tel 2 for celular e Tel 1 for fixo/vazio, prioriza o celular em Tel 1
+        if (not tipo_t1.startswith("Celular") and tipo_t2.startswith("Celular")) or (not fmt_t1 and fmt_t2):
+            fmt_t1, fmt_t2 = fmt_t2, fmt_t1
+            wpp_t1, wpp_t2 = wpp_t2, wpp_t1
+            tipo_t1, tipo_t2 = tipo_t2, tipo_t1
+
+        tel_1 = fmt_t1
+        tel_2 = fmt_t2
+
+        if tipo_t1.startswith("Celular"):
+            whatsapp_ativo = "Sim (WhatsApp Provável)"
+        elif tel_1:
+            whatsapp_ativo = "Não (Fixo)"
+        else:
+            whatsapp_ativo = "Não verificado"
 
         # Extração de CPF se identificado
         cpf_identificado = ""

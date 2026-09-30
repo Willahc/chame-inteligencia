@@ -50,6 +50,10 @@ def format_cpf(digits):
 
 def format_phone(tel):
     t = re.sub(r'\D', '', str(tel))
+    if len(t) == 13 and t[:2] == '11':
+        t = t[2:]
+    elif len(t) in (12, 13) and t[:2] == '55':
+        t = t[2:]
     if len(t) == 10:
         if t[2] in '6789':  # Celular móvel histórico sem o 9º dígito
             t = t[:2] + '9' + t[2:]
@@ -206,8 +210,24 @@ def main():
         if len(t1_clean) < 8 and len(t2_clean) < 8:
             continue
             
-        # Determinar canal WhatsApp preferencial e mensagem personalizada pronta
-        tel_principal = t1_clean if len(t1_clean) >= 8 else t2_clean
+        # Tratar duplicações em tel_principal se houver
+        t1_c = t1_clean
+        t2_c = t2_clean
+        if len(t1_c) == 13 and t1_c[:2] == '11': t1_c = t1_c[2:]
+        if len(t2_c) == 13 and t2_c[:2] == '11': t2_c = t2_c[2:]
+        if len(t1_c) in (12, 13) and t1_c[:2] == '55': t1_c = t1_c[2:]
+        if len(t2_c) in (12, 13) and t2_c[:2] == '55': t2_c = t2_c[2:]
+
+        eh_cel_1 = (len(t1_c) == 11 and t1_c[2] in '6789') or (len(t1_c) == 10 and t1_c[2] in '6789') or (len(t1_c) in (8, 9) and t1_c[0] in '6789')
+        eh_cel_2 = (len(t2_c) == 11 and t2_c[2] in '6789') or (len(t2_c) == 10 and t2_c[2] in '6789') or (len(t2_c) in (8, 9) and t2_c[0] in '6789')
+
+        if not eh_cel_1 and eh_cel_2:
+            tel_principal = t2_c
+            tel_secundario = t1_c
+        else:
+            tel_principal = t1_c if len(t1_c) >= 8 else t2_c
+            tel_secundario = t2_c if tel_principal == t1_c else t1_c
+
         if len(tel_principal) == 8:
             tel_principal = '11' + tel_principal
         if len(tel_principal) == 10 and tel_principal[2] in '6789':
