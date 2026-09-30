@@ -329,19 +329,17 @@ def main():
         df_out.to_csv(OUT_CSV, sep=';', index=False, encoding='utf-8-sig')
         print(f"  => Arquivo interno salvo: {OUT_CSV} ({len(df_out):,} registros)")
 
-        # Versão Pública Mascarada LGPD
+        # Versão Pública Mascarada LGPD (estritamente conforme privacy.py)
         df_pub = df_out.copy()
         df_pub['Nome_Motorista'] = df_pub['Nome_Motorista'].apply(mascarar_nome)
-        df_pub['Telefone_Principal'] = df_pub['Telefone_Principal'].apply(mascarar_telefone)
-        df_pub['Telefone_Secundario'] = df_pub['Telefone_Secundario'].apply(mascarar_telefone)
-        df_pub['Link_WhatsApp'] = df_pub['Link_WhatsApp'].apply(lambda w: 'Sim' if w and str(w).startswith('http') else 'Não')
-        df_pub['Email'] = df_pub['Email'].apply(lambda e: '***@***' if e and '@' in str(e) else '')
-        df_pub['Empresa_Logradouro'] = 'Logradouro Omitido (LGPD)'
-        df_pub['Empresa_Numero'] = 'S/N'
-        df_pub['Empresa_Complemento'] = ''
+        df_pub['Empresa_Razao_Social'] = df_pub['Empresa_Razao_Social'].apply(mascarar_nome)
+        cols_drop = ['Telefone_Principal', 'Telefone_Secundario', 'Link_WhatsApp', 'Email',
+                     'Empresa_Logradouro', 'Empresa_Numero', 'Empresa_Complemento']
+        df_pub.drop(columns=cols_drop, inplace=True, errors='ignore')
 
         df_pub.to_csv(OUT_PUBLIC_CSV, sep=';', index=False, encoding='utf-8-sig')
         print(f"  => Arquivo público salvo: {OUT_PUBLIC_CSV} ({len(df_pub):,} registros)")
+
 
     print("\nResumo da Extração Fonética:")
     print(f"- Total resgatados: {len(enriched)}")
