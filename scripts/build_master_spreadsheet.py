@@ -162,6 +162,43 @@ def get_mei_geo_info(cep_str, bairro_str):
     dist = haversine_distance(CHAME_TAXI_LAT, CHAME_TAXI_LON, lat, lon) if (lat and lon) else None
     return dist, reg
 
+def normalize_and_format_phone(ddd_str, tel_str):
+    d = re.sub(r'\D+', '', str(ddd_str or '')).strip()
+    t = re.sub(r'\D+', '', str(tel_str or '')).strip()
+    if not t:
+        return "", "", "Sem Telefone"
+    if not d:
+        d = "11"
+    if len(t) in (10, 11) and t[:2] == d:
+        local = t[2:]
+    elif len(t) == 10 and t[:2] in ('11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41', '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '67', '68', '69', '71', '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '86', '87', '88', '89', '91', '92', '93', '94', '95', '96', '97', '98', '99'):
+        d = t[:2]
+        local = t[2:]
+    else:
+        local = t
+
+    eh_celular = False
+    if len(local) == 9 and local.startswith('9'):
+        eh_celular = True
+    elif len(local) == 8 and local[0] in '6789':
+        local = '9' + local
+        eh_celular = True
+
+    if eh_celular and len(local) == 9:
+        fmt = f"({d}) {local[:5]}-{local[5:]}"
+        wpp = f"https://wa.me/55{d}{local}"
+        tipo = "Celular (WhatsApp Provável)"
+    elif len(local) == 8:
+        fmt = f"({d}) {local[:4]}-{local[4:]}"
+        wpp = ""
+        tipo = "Fixo (Voz)"
+    else:
+        fmt = f"({d}) {local}"
+        wpp = ""
+        tipo = "Outro"
+
+    return fmt, wpp, tipo
+
 def get_vehicle_rules(edital_num, categoria_str=""):
     ed = str(edital_num or "").replace('.0', '').strip()
     cat = str(categoria_str or "").upper()
@@ -367,6 +404,7 @@ def build_master():
     path_polos = r'data\processed\polos_formacao_taxistas_cfc_dtp.csv'
     path_plano = r'Novos Alvarás 2026\plano_prospeccao_territorial_taxistas_2026.csv'
     path_osm_sem_dtp = r'data\processed\osm_pontos_sem_dtp.csv'
+    path_meis_gerais = r'data\processed\meis_gerais_taxistas_sp_enriquecidos.csv'
 
     print("Carregando bases do projeto...")
     alv = pd.read_csv(path_alv, sep=';', encoding='utf-8-sig', low_memory=False)
@@ -417,6 +455,22 @@ def build_master():
                     if len(k_no_prep.split()) >= 2 and k_no_prep not in rf_map_no_prep:
                         rf_map_no_prep[k_no_prep] = r_data
         print(f"-> CNPJs da Receita Federal mapeados (Razão + Fantasia): {len(rf_map):,} exatos | {len(rf_map_no_prep):,} sem preposição.")
+
+    # 2.1 Indexando MEIs Gerais da Receita Federal (todos os CNAEs - SP)
+    print("\nIndexando MEIs gerais da Receita Federal (todos os CNAEs - SP)...")
+    meis_gerais_map = {}
+    meis_gerais_name_map = {}
+    if os.path.exists(path_meis_gerais):
+        df_mg = pd.read_csv(path_meis_gerais, sep=';', encoding='utf-8-sig', low_memory=False)
+        for _, r in df_mg.iterrows():
+            m_id = clean_val(r.get('ID_Master', ''))
+            m_nome = norm_name(r.get('Nome_Motorista', ''))
+            r_dict = r.to_dict()
+            if m_id:
+                meis_gerais_map[m_id] = r_dict
+            if m_nome and m_nome not in meis_gerais_name_map:
+                meis_gerais_name_map[m_nome] = r_dict
+        print(f"-> MEIs Gerais da Receita Federal (SP) carregados: {len(meis_gerais_map):,} registros.")
 
     # 3. Indexando tabelas auxiliares
     print("\nIndexando tabelas auxiliares...")
@@ -516,6 +570,7 @@ def build_master():
 
         id_master = f"MST-ALV-{idx+1:05d}"
         origem_principal = "Sorteio de Alvarás 2026"
+        mei_geral_rec = meis_gerais_map.get(id_master) or meis_gerais_name_map.get(nome_norm)
 
         bases_presentes = ["Alvarás 2026"]
         if lay_rec is not None:
@@ -526,6 +581,8 @@ def build_master():
             bases_presentes.append("MEI Zona Oeste (Butantã)")
         elif mei_rf_rec is not None:
             bases_presentes.append("MEI Receita Federal (CNAE SP)")
+        elif mei_geral_rec is not None:
+            bases_presentes.append("MEI Receita Federal Geral (SP)")
         if do_rec is not None or (doc_cached_list and len(doc_cached_list) > 0):
             bases_presentes.append("Diário Oficial 2026")
         if ponto_sort_rec is not None or clean_val(row.get('Vinculo_Ponto_Privativo', '')) != "Ponto Livre / Sem Ponto Privativo":
@@ -648,11 +705,72 @@ def build_master():
             if not cep and mei_cep:
                 cep = mei_cep
             status_enriq = "Enriquecido (Receita Federal CNAE)"
+        elif mei_geral_rec is not None:
+            possui_mei = "Sim"
+            mei_origem = "Receita Federal MEI Geral (SP)"
+            mei_cnpj = clean_val(mei_geral_rec.get('MEI_CNPJ', ''))
+            mei_razao = clean_val(mei_geral_rec.get('MEI_Razao_Social', ''))
+            mei_fantasia = ""
+            mei_situacao = clean_val(mei_geral_rec.get('MEI_Situacao_Cadastral', ''))
+            mei_abertura = clean_val(mei_geral_rec.get('MEI_Data_Inicio', ''))
+            mei_logradouro = clean_val(mei_geral_rec.get('MEI_Logradouro', ''))
+            mei_numero = clean_val(mei_geral_rec.get('MEI_Numero', ''))
+            mei_bairro = clean_val(mei_geral_rec.get('MEI_Bairro', ''))
+            mei_cep = clean_val(mei_geral_rec.get('MEI_CEP', ''))
+            dist_calc, reg_calc = get_mei_geo_info(mei_cep, mei_bairro)
+            if dist_calc is not None:
+                mei_distancia = f"{dist_calc:.2f}".replace('.', ',')
+            mei_regiao_macro = reg_calc
+            t1 = clean_val(mei_geral_rec.get('Telefone_Principal', ''))
+            if t1 and not tel_1:
+                tel_1 = t1
+            t2 = clean_val(mei_geral_rec.get('Telefone_Secundario', ''))
+            if t2 and not tel_2:
+                tel_2 = t2
+            em = clean_val(mei_geral_rec.get('Email', ''))
+            if em and not email_principal:
+                email_principal = em
+            if not bairro_res and mei_bairro:
+                bairro_res = mei_bairro
+            if not cep and mei_cep:
+                cep = mei_cep
+            status_enriq = "Enriquecido (Receita Federal MEI Geral SP)"
+
+        # Se ainda não tinha telefone, mas mei_geral_rec possui telefone, complementa contatos
+        if not tel_1 and mei_geral_rec is not None:
+            t1 = clean_val(mei_geral_rec.get('Telefone_Principal', ''))
+            if t1:
+                tel_1 = t1
+            t2 = clean_val(mei_geral_rec.get('Telefone_Secundario', ''))
+            if t2 and not tel_2:
+                tel_2 = t2
+            if not email_principal:
+                email_principal = clean_val(mei_geral_rec.get('Email', ''))
+            if not status_enriq.startswith("Enriquecido"):
+                status_enriq = "Enriquecido (Receita Federal MEI Geral SP)"
+
+        # Normalização e formatação de telefones + verificação de celular
+        fmt_t1, wpp_t1, tipo_t1 = normalize_and_format_phone("", tel_1)
+        if fmt_t1:
+            tel_1 = fmt_t1
+            if tipo_t1.startswith("Celular"):
+                whatsapp_ativo = "Sim (WhatsApp Provável)"
+            elif whatsapp_ativo != "Sim":
+                whatsapp_ativo = "Não (Fixo)"
+        fmt_t2, wpp_t2, tipo_t2 = normalize_and_format_phone("", tel_2)
+        if fmt_t2:
+            tel_2 = fmt_t2
+            if tipo_t2.startswith("Celular") and whatsapp_ativo not in ["Sim", "Sim (WhatsApp Provável)"]:
+                whatsapp_ativo = "Sim (WhatsApp Provável - Tel 2)"
 
         # Extração de CPF se identificado
         cpf_identificado = ""
         if mei_rf_rec is not None:
             cpf_raw = clean_val(mei_rf_rec.get('CPF_EXTRAIDO', ''))
+            if cpf_raw:
+                cpf_identificado = format_cpf(cpf_raw)
+        elif mei_geral_rec is not None:
+            cpf_raw = clean_val(mei_geral_rec.get('MEI_CPF_Extraido', ''))
             if cpf_raw:
                 cpf_identificado = format_cpf(cpf_raw)
 
@@ -1047,30 +1165,76 @@ def build_master():
             acao_com = "Apresentar serviços corporativos da Chame Táxi."
 
         mei_rf_rec = rf_map.get(nome_norm)
-        possui_mei = "Sim" if mei_rf_rec is not None else "Não"
-        mei_origem = "Receita Federal CNPJ Aberto (Municipal)" if mei_rf_rec is not None else "Não localizado"
-        mei_cnpj = clean_val(mei_rf_rec.get('CNPJ', '')) if mei_rf_rec is not None else ""
-        mei_razao = clean_val(mei_rf_rec.get('RAZAO_SOCIAL', '')) if mei_rf_rec is not None else ""
-        mei_fantasia = clean_val(mei_rf_rec.get('NOME_FANTASIA', '')) if mei_rf_rec is not None else ""
-        mei_situacao = clean_val(mei_rf_rec.get('SITUACAO_CADASTRAL', '')) if mei_rf_rec is not None else ""
-        mei_abertura = clean_val(mei_rf_rec.get('DATA_INICIO_ATIVIDADE', '')) if mei_rf_rec is not None else ""
-        mei_logradouro = clean_val(mei_rf_rec.get('LOGRADOURO', '')) if mei_rf_rec is not None else ""
-        mei_numero = clean_val(mei_rf_rec.get('NUMERO', '')) if mei_rf_rec is not None else ""
-        mei_bairro = clean_val(mei_rf_rec.get('BAIRRO', '')) if mei_rf_rec is not None else ""
-        mei_cep = clean_val(mei_rf_rec.get('CEP', '')) if mei_rf_rec is not None else ""
+        if mei_rf_rec is None and nome_norm:
+            cand_no_prep = strip_prep(nome_norm)
+            if len(cand_no_prep.split()) >= 2:
+                mei_rf_rec = rf_map_no_prep.get(cand_no_prep)
+        mei_geral_rec = meis_gerais_map.get(id_master) or meis_gerais_name_map.get(nome_norm)
 
+        possui_mei = "Não"
+        mei_origem = "Não localizado"
+        mei_cnpj = ""
+        mei_razao = ""
+        mei_fantasia = ""
+        mei_situacao = ""
+        mei_abertura = ""
+        mei_logradouro = ""
+        mei_numero = ""
+        mei_bairro = ""
+        mei_cep = ""
         tel1_doc = ""
         em_doc = ""
         cpf_identificado_doc = ""
         dist_calc, reg_calc = (None, "Não aplicável")
+
         if mei_rf_rec is not None:
-            t1 = clean_val(mei_rf_rec.get('TELEFONE_1', ''))
-            tel1_doc = t1
+            possui_mei = "Sim"
+            mei_origem = "Receita Federal CNPJ Aberto (Municipal)"
+            mei_cnpj = clean_val(mei_rf_rec.get('CNPJ', ''))
+            mei_razao = clean_val(mei_rf_rec.get('RAZAO_SOCIAL', ''))
+            mei_fantasia = clean_val(mei_rf_rec.get('NOME_FANTASIA', ''))
+            mei_situacao = clean_val(mei_rf_rec.get('SITUACAO_CADASTRAL', ''))
+            mei_abertura = clean_val(mei_rf_rec.get('DATA_INICIO_ATIVIDADE', ''))
+            mei_logradouro = clean_val(mei_rf_rec.get('LOGRADOURO', ''))
+            mei_numero = clean_val(mei_rf_rec.get('NUMERO', ''))
+            mei_bairro = clean_val(mei_rf_rec.get('BAIRRO', ''))
+            mei_cep = clean_val(mei_rf_rec.get('CEP', ''))
+            tel1_doc = clean_val(mei_rf_rec.get('TELEFONE_1', ''))
             em_doc = clean_val(mei_rf_rec.get('CORREIO_ELETRONICO', ''))
             cpf_raw = clean_val(mei_rf_rec.get('CPF_EXTRAIDO', ''))
             if cpf_raw:
                 cpf_identificado_doc = format_cpf(cpf_raw)
             dist_calc, reg_calc = get_mei_geo_info(mei_cep, mei_bairro)
+        elif mei_geral_rec is not None:
+            possui_mei = "Sim"
+            mei_origem = "Receita Federal MEI Geral (SP)"
+            mei_cnpj = clean_val(mei_geral_rec.get('MEI_CNPJ', ''))
+            mei_razao = clean_val(mei_geral_rec.get('MEI_Razao_Social', ''))
+            mei_fantasia = ""
+            mei_situacao = clean_val(mei_geral_rec.get('MEI_Situacao_Cadastral', ''))
+            mei_abertura = clean_val(mei_geral_rec.get('MEI_Data_Inicio', ''))
+            mei_logradouro = clean_val(mei_geral_rec.get('MEI_Logradouro', ''))
+            mei_numero = clean_val(mei_geral_rec.get('MEI_Numero', ''))
+            mei_bairro = clean_val(mei_geral_rec.get('MEI_Bairro', ''))
+            mei_cep = clean_val(mei_geral_rec.get('MEI_CEP', ''))
+            tel1_doc = clean_val(mei_geral_rec.get('Telefone_Principal', ''))
+            em_doc = clean_val(mei_geral_rec.get('Email', ''))
+            cpf_raw = clean_val(mei_geral_rec.get('MEI_CPF_Extraido', ''))
+            if cpf_raw:
+                cpf_identificado_doc = format_cpf(cpf_raw)
+            dist_calc, reg_calc = get_mei_geo_info(mei_cep, mei_bairro)
+
+        if not tel1_doc and mei_geral_rec is not None:
+            t1 = clean_val(mei_geral_rec.get('Telefone_Principal', ''))
+            if t1:
+                tel1_doc = t1
+            if not em_doc:
+                em_doc = clean_val(mei_geral_rec.get('Email', ''))
+
+        fmt_t1_doc, wpp_t1_doc, tipo_t1_doc = normalize_and_format_phone("", tel1_doc)
+        if fmt_t1_doc:
+            tel1_doc = fmt_t1_doc
+        whatsapp_ativo_doc = "Sim (WhatsApp Provável)" if tipo_t1_doc.startswith("Celular") else ("Não (Fixo)" if tel1_doc else "Não verificado")
 
         mei_distancia_doc = f"{dist_calc:.2f}".replace('.', ',') if dist_calc is not None else ""
         mei_regiao_macro_doc = reg_calc
@@ -1131,6 +1295,14 @@ def build_master():
             tipo_ato=tipo_ato
         )
 
+        bases_doc = ["Diário Oficial 2026"]
+        if mei_rf_rec is not None:
+            bases_doc.append("MEI Receita Federal (CNAE SP)")
+        elif mei_geral_rec is not None:
+            bases_doc.append("MEI Receita Federal Geral (SP)")
+        if ponto_sort_rec is not None:
+            bases_doc.append("Sorteio de Pontos DTP")
+
         master_rows.append({
             'ID_Master': id_master,
             'Nome_Completo': nome_motorista,
@@ -1168,7 +1340,7 @@ def build_master():
             'MEI_Regiao_Macro': mei_regiao_macro_doc,
             'Telefone_Celular_1': tel1_doc,
             'Telefone_Celular_2': "",
-            'WhatsApp_Ativo': "Não verificado",
+            'WhatsApp_Ativo': whatsapp_ativo_doc,
             'Email_Principal': em_doc,
             'Bairro_Residencial': mei_bairro,
             'CEP': mei_cep,
@@ -1214,7 +1386,7 @@ def build_master():
             'Link_Pesquisa_DOC_SP': link_doc,
             'Link_Pesquisa_SEI_PMSP': link_sei,
             'Origem_Principal': origem_principal,
-            'Bases_Identificadas': "Diário Oficial 2026" + (" | MEI Receita Federal" if mei_rf_rec is not None else "") + (" | Sorteio de Pontos DTP" if ponto_sort_rec is not None else ""),
+            'Bases_Identificadas': " | ".join(bases_doc),
             'Possui_Publicacao_DOC_2026': "Sim",
             'DOC_Data_Publicacao': clean_val(r.get('data_publicacao', '')),
             'DOC_Tipo_Ato': tipo_ato,

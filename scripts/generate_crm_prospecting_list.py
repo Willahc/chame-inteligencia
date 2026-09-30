@@ -221,11 +221,25 @@ def main():
         link_whatsapp_direto = f"https://wa.me/55{tel_principal}" if eh_celular else ""
         link_whatsapp_pronto = f"https://wa.me/55{tel_principal}?text={msg_encoded}" if eh_celular else ""
         
+        # Endereço MEI formatado com fallback
+        end_mei = "—"
+        if rf_match and rf_match.get('logradouro'):
+            end_mei = f"{rf_match.get('logradouro', '')}, {rf_match.get('numero', '')}".strip(', ')
+        elif row.get('MEI_Logradouro') and str(row.get('MEI_Logradouro')).strip() not in ['', '—', 'nan']:
+            num_str = f", {row.get('MEI_Numero')}" if str(row.get('MEI_Numero')).strip() not in ['', '—', 'nan'] else ""
+            end_mei = f"{row.get('MEI_Logradouro')}{num_str}".strip()
+
+        cpf_final = format_cpf(cpf_val) if cpf_val else str(row.get('CPF_Identificado', '—'))
+        if not cpf_final or str(cpf_final).strip() in ['nan', 'None', '']:
+            cpf_final = "—"
+
+        cep_final = rf_match.get('cep', '') if rf_match and rf_match.get('cep') else (row.get('MEI_CEP') or row.get('CEP', '—'))
+
         # Montar registro para CRM com funil operacional
         crm_record = {
             'ID_Master': row.get('ID_Master', ''),
             'Nome_Motorista': row.get('Nome_Completo', ''),
-            'CPF_Completo': format_cpf(cpf_val) if cpf_val else str(row.get('CPF_Identificado', '—')),
+            'CPF_Completo': cpf_final,
             'Telefone_Principal': format_phone(tel_principal),
             'Telefone_Secundario': format_phone(t2_clean) if len(t2_clean) >= 8 else "—",
             'Link_WhatsApp_Mensagem_Pronta': link_whatsapp_pronto,
@@ -243,7 +257,7 @@ def main():
             'Edital_Descricao': row.get('Edital_Descricao', ''),
             'Categoria_Veiculo': row.get('Categoria_Veiculo', ''),
             'Processo_SEI_DTP': row.get('Processo_SEI_DTP', '—'),
-            'Publicacao_DOC': row.get('Publicacao_DOC_Possui', '—'),
+            'Publicacao_DOC': row.get('Possui_Publicacao_DOC_2026', '—'),
             'Exigencia_Veiculo_DTP': row.get('Exigencia_Veiculo_DTP', '—'),
             'Modelos_Homologados_Recomendados': row.get('Modelos_Homologados_Recomendados', '—'),
             'Score_Chame_Taxi': row.get('Score_Chame_Taxi', 50),
@@ -252,8 +266,8 @@ def main():
             'Regiao_Macro': row.get('MEI_Regiao_Macro', '—'),
             'Script_Comercial_Sugerido': build_pitch(row),
             'Bairro_Atuacao': rf_match.get('bairro', '') if rf_match and rf_match.get('bairro') else row.get('MEI_Bairro', 'São Paulo'),
-            'Endereco_MEI': f"{rf_match.get('logradouro', '')}, {rf_match.get('numero', '')}" if rf_match and rf_match.get('logradouro') else "—",
-            'CEP': rf_match.get('cep', '') if rf_match and rf_match.get('cep') else row.get('CEP', '—'),
+            'Endereco_MEI': end_mei,
+            'CEP': cep_final,
             'CNPJ_MEI': rf_match.get('cnpj', '') if rf_match and rf_match.get('cnpj') else row.get('MEI_CNPJ', '—'),
             'Razao_Social_MEI': rf_match.get('razao_social', '') if rf_match and rf_match.get('razao_social') else row.get('MEI_Razao_Social', '—'),
             'Cadastro_Condutax': row.get('Cadastro_DTP_Condutax', '—'),
