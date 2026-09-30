@@ -51,9 +51,16 @@ def format_cpf(digits):
 def format_phone(tel):
     t = re.sub(r'\D', '', str(tel))
     if len(t) == 10:
+        if t[2] in '6789':  # Celular móvel histórico sem o 9º dígito
+            t = t[:2] + '9' + t[2:]
+            return f"({t[:2]}) {t[2:7]}-{t[7:]}"
         return f"({t[:2]}) {t[2:6]}-{t[6:]}"
     elif len(t) == 11:
         return f"({t[:2]}) {t[2:7]}-{t[7:]}"
+    elif len(t) == 8:
+        if t[0] in '6789':
+            return f"(11) 9{t[:4]}-{t[4:]}"
+        return f"(11) {t[:4]}-{t[4:]}"
     return str(tel)
 
 import urllib.parse
@@ -200,12 +207,19 @@ def main():
             continue
             
         # Determinar canal WhatsApp preferencial e mensagem personalizada pronta
-        tel_principal = t1_clean if len(t1_clean) >= 10 else t2_clean
+        tel_principal = t1_clean if len(t1_clean) >= 8 else t2_clean
+        if len(tel_principal) == 8:
+            tel_principal = '11' + tel_principal
+        if len(tel_principal) == 10 and tel_principal[2] in '6789':
+            tel_principal = tel_principal[:2] + '9' + tel_principal[2:]
+
         pri_nome = format_first_name(row.get('Nome_Completo', ''))
         msg_texto, msg_encoded = build_whatsapp_message(row, pri_nome)
         
-        link_whatsapp_direto = f"https://wa.me/55{tel_principal}" if len(tel_principal) in [10, 11] else ""
-        link_whatsapp_pronto = f"https://wa.me/55{tel_principal}?text={msg_encoded}" if len(tel_principal) in [10, 11] else ""
+        # Só gera link wa.me para celulares válidos (11 dígitos começando com 9)
+        eh_celular = len(tel_principal) == 11 and tel_principal[2] == '9'
+        link_whatsapp_direto = f"https://wa.me/55{tel_principal}" if eh_celular else ""
+        link_whatsapp_pronto = f"https://wa.me/55{tel_principal}?text={msg_encoded}" if eh_celular else ""
         
         # Montar registro para CRM com funil operacional
         crm_record = {

@@ -2,6 +2,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.tmp
+*.bak
 *.pbf
 .DS_Store
 Thumbs.db

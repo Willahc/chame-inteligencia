@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 scripts/extract_taxistas_cnae_receita.py
-Extrator de estabelecimentos de taxi por CNAE (dados abertos da Receita Federal).
+Extrator de estabelecimentos de taxi e transporte de passageiros por CNAE (dados abertos da Receita Federal).
 
 Objetivo:
   Baixar os dados abertos do CNPJ (Receita Federal) e extrair os
-  estabelecimentos de servico de taxi registrados no municipio de Sao Paulo,
-  classificando cada registro pelo CNAE e pela natureza juridica.
+  estabelecimentos de servico de taxi e transporte rodoviario de passageiros
+  registrados no municipio de Sao Paulo e em toda a Regiao Metropolitana de
+  Sao Paulo (RMSP - 39 municipios), classificando cada registro pelo CNAE e
+  pela natureza juridica (MEI / LTDA).
 
 Fontes (publicas, sem autenticacao):
   Corte mensal da Receita Federal, espelho CDN:
@@ -15,10 +17,8 @@ Fontes (publicas, sem autenticacao):
     https://arquivos.receitafederal.gov.br/index.php/s/YggdBLfdninEJX9
 
 Criterio de extracao:
-  municipio == codigo IBGE do municipio alvo (padrao 7107 = SAO PAULO/SP)
-  E CNAE de taxi presente como principal (campo 11) ou secundario (campo 12).
-
-Nao faz geocodificacao, matching, contato, perfilamento ou publicacao.
+  municipio in municipios_alvo (padrao RMSP: 40 codigos TOM incluindo Sao Paulo e 39 cidades vizinhas)
+  E CNAE presente como principal (campo 11) ou secundario (campo 12).
 """
 
 import argparse
@@ -38,15 +38,61 @@ MIRROR = 'https://dados-abertos-rf-cnpj.casadosdados.com.br/arquivos'
 # O espelho rejeita o User-Agent padrao do urllib com HTTP 403.
 USER_AGENT = 'Mapeamento-TaxiSP/1.0 (projeto de dados publicos; contato: locally)'
 
-# CNAEs da familia taxi/transporte de passageiros. O nucleo e 4923001.
+# Tabela TOM (Tabela de Orgaos e Municipios da Receita Federal / SERPRO) da RMSP
+RMSP_MUNICIPIOS = {
+    '7107': 'SAO PAULO',
+    '6477': 'GUARULHOS',
+    '6789': 'OSASCO',
+    '7057': 'SANTO ANDRE',
+    '0516': 'SANTO ANDRE',
+    '7075': 'SAO BERNARDO DO CAMPO',
+    '7077': 'SAO CAETANO DO SUL',
+    '6377': 'DIADEMA',
+    '7157': 'TABOAO DA SERRA',
+    '6213': 'BARUERI',
+    '6313': 'CARAPICUIBA',
+    '6689': 'MAUA',
+    '6361': 'COTIA',
+    '6713': 'MOGI DAS CRUZES',
+    '7151': 'SUZANO',
+    '6545': 'ITAPECERICA DA SERRA',
+    '6401': 'EMBU DAS ARTES',
+    '6403': 'EMBU-GUACU',
+    '7047': 'SANTANA DE PARNAIBA',
+    '6563': 'ITAQUAQUECETUBA',
+    '6415': 'FERRAZ DE VASCONCELOS',
+    '6897': 'POA',
+    '6429': 'FRANCO DA ROCHA',
+    '6427': 'FRANCISCO MORATO',
+    '6281': 'CAIEIRAS',
+    '6285': 'CAJAMAR',
+    '6177': 'ARUJA',
+    '7037': 'SANTA ISABEL',
+    '9689': 'SANTA ISABEL',
+    '6967': 'RIBEIRAO PIRES',
+    '6983': 'RIO GRANDE DA SERRA',
+    '6601': 'JANDIRA',
+    '6551': 'ITAPEVI',
+    '7273': 'VARGEM GRANDE PAULISTA',
+    '6883': 'PIRAPORA DO BOM JESUS',
+    '6625': 'JUQUITIBA',
+    '5447': 'SAO LOURENCO DA SERRA',
+    '7001': 'SALESOPOLIS',
+    '6467': 'GUARAREMA',
+    '6671': 'MAIRIPORA'
+}
+
+# CNAEs da familia taxi e transporte de passageiros (incluindo motoristas de aplicativo/fretamento)
 CNAE_TAXI = {
     '4923001': 'Servico de taxi',
     '4923002': 'Transporte de passageiros - locacao de automoveis com motorista',
     '5229001': 'Apoio ao transporte por taxi, inclusive centrais de chamada',
+    '4929799': 'Outros transportes rodoviarios de passageiros (app / fretamento)',
+    '4929701': 'Organizacao de excursoes em veiculos rodoviarios proprios',
+    '4929702': 'Transporte rodoviario coletivo de passageiros fretamento'
 }
-# 5112901 (taxi aereo) e' deliberadamente excluido: nao e transporte terrestre.
 
-# Naturezas juridicas relevantes (tabela Naturezas.zip, codigo de 4 digitos).
+# Naturezas juridicas relevantes
 NATUREZA_MEI = '2135'   # Empresario (Individual)
 NATUREZA_LTDA = '2062'  # Sociedade Empresaria Limitada
 
@@ -132,99 +178,80 @@ def Abrir_zip(path):
 
 
 def dividir(bline):
-    """Divide uma linha em campos, removendo as aspas envolventes.
-
-    O layout da RFB nao e estavel entre cortes: o corte 2026-09-14 vem com todos
-    os campos entre aspas, enquanto cortes anteriores vem sem aspas. Um split
-    simples deixa o aspeto residuo ('"7107"') e quebra a comparacao de codigo,
-    o que zera silenciosamente o filtro. Normalizamos aqui.
-    """
+    """Divide uma linha em campos, removendo as aspas envolventes."""
     campos = bline.rstrip(b'\r\n').decode('latin-1').split(';')
     return [c[1:-1] if len(c) >= 2 and c[0] == '"' and c[-1] == '"' else c for c in campos]
 
 
-def varrer_estabelecimentos(caminhos, municipio, cnaes_alvo, log):
+def varrer_estabelecimentos_arquivo(caminho, municipios_alvo, cnaes_alvo, vistos, marcas, log):
     """Filtra estabelecimentos do municipio alvo cujo CNAE principal ou secundario
-    pertence a familia taxi. Leitura em streaming, sem extrair o CSV do disco."""
+    pertence a familia taxi/transporte. Leitura em streaming."""
     est = []
-    vistos = set()
-    marcas = tuple(c.encode('ascii') for c in cnaes_alvo)
-    total = 0
-    for caminho in caminhos:
-        nome = Path(caminho).name
-        zf, fh = Abrir_zip(caminho)
-        n_linhas = n_hit = 0
-        with fh:
-            for bline in fh:
-                n_linhas += 1
-                if not any(m in bline for m in marcas):
-                    continue
-                parts = dividir(bline)
-                if len(parts) != 30:
-                    continue
-                if parts[20] != municipio:
-                    continue
-                chave = parts[0] + parts[1]
-                if chave in vistos:
-                    continue
-                secundarias = set(parts[12].split(',')) if parts[12] else set()
-                principais = [c for c in cnaes_alvo if c in secundarias]
-                if parts[11] in cnaes_alvo:
-                    principais.insert(0, parts[11])
-                if not principais:
-                    continue
-                vistos.add(chave)
-                reg = dict(zip(COLUNAS_ESTAB, parts))
-                reg['CNAES_TAXI_ENCONTRADOS'] = ','.join(principais)
-                reg['_cnpj_basico'] = parts[0]
-                est.append(reg)
-                n_hit += 1
-        zf.close()
-        total += n_linhas
-        log.append((nome, n_linhas, n_hit))
-        print(f'    {nome}: {n_linhas:>12,} linhas -> {n_hit} taxi', flush=True)
-    print(f'    total varrido: {total:,} estabelecimentos')
+    nome = Path(caminho).name
+    zf, fh = Abrir_zip(caminho)
+    n_linhas = n_hit = 0
+    with fh:
+        for bline in fh:
+            n_linhas += 1
+            if not any(m in bline for m in marcas):
+                continue
+            parts = dividir(bline)
+            if len(parts) != 30:
+                continue
+            if parts[20] not in municipios_alvo:
+                continue
+            chave = parts[0] + parts[1]
+            if chave in vistos:
+                continue
+            secundarias = set(parts[12].split(',')) if parts[12] else set()
+            principais = [c for c in cnaes_alvo if c in secundarias]
+            if parts[11] in cnaes_alvo:
+                principais.insert(0, parts[11])
+            if not principais:
+                continue
+            vistos.add(chave)
+            reg = dict(zip(COLUNAS_ESTAB, parts))
+            reg['CNAES_TAXI_ENCONTRADOS'] = ','.join(principais)
+            reg['_cnpj_basico'] = parts[0]
+            est.append(reg)
+            n_hit += 1
+    zf.close()
+    log.append((nome, n_linhas, n_hit))
+    print(f'    {nome}: {n_linhas:>12,} linhas -> {n_hit} taxi/app match', flush=True)
     return est
 
 
-def varrer_empresas(caminhos, basicos, log):
-    """Busca razao social e natureza juridica apenas para os CNPJ bases coletados."""
-    achados = {}
-    for caminho in caminhos:
-        nome = Path(caminho).name
-        zf, fh = Abrir_zip(caminho)
-        n_linhas = 0
-        with fh:
-            for bline in fh:
-                n_linhas += 1
-                parts = dividir(bline)
-                if len(parts) < 7:
-                    continue
-                base = parts[0]
-                if base in basicos and base not in achados:
-                    achados[base] = dict(zip(COLUNAS_EMP, parts))
-        zf.close()
-        log.append((nome, n_linhas, len(achados)))
-        print(f'    {nome}: {n_linhas:>12,} linhas -> {len(achados)}/', flush=True)
+def varrer_empresas_arquivo(caminho, basicos, achados, log):
+    """Busca razao social e natureza juridica para os CNPJ bases coletados."""
+    nome = Path(caminho).name
+    zf, fh = Abrir_zip(caminho)
+    n_linhas = 0
+    n_novos = 0
+    with fh:
+        for bline in fh:
+            n_linhas += 1
+            parts = dividir(bline)
+            if len(parts) < 7:
+                continue
+            base = parts[0]
+            if base in basicos and base not in achados:
+                achados[base] = dict(zip(COLUNAS_EMP, parts))
+                n_novos += 1
+    zf.close()
+    log.append((nome, n_linhas, len(achados)))
+    print(f'    {nome}: {n_linhas:>12,} linhas -> +{n_novos} empresas (total: {len(achados)}/{len(basicos)})', flush=True)
     return achados
 
 
 def formatar_cnpj(basico, ordem, dv):
-    """Monta o CNPJ na notacao oficial: 00.000.000/0000-00.
-
-    O CNPJ e' a concatenacao de CNPJ_BASICO (8) + CNPJ_ORDEM (4) + CNPJ_DV (2).
-    A pontuacao oficial divide o basico em 2.000.000 e mantem a ordem e o DV
-    apos a barra, portanto nao se pode resumir a ordem para '/0001'.
-    """
+    """Monta o CNPJ na notacao oficial: 00.000.000/0000-00."""
     b, o, d = str(basico).zfill(8), str(ordem).zfill(4), str(dv).zfill(2)
     return f'{b[:2]}.{b[2:5]}.{b[5:8]}/{o}-{d}'
 
 
 def formatar_cep(cep):
-    cep = str(cep).strip()
-    if len(cep) == 8:
-        return f'{cep[:5]}-{cep[5:]}'
-    return cep
+    cep = str(cep).strip().zfill(8)
+    return f'{cep[:5]}-{cep[5:]}' if len(cep) == 8 and cep.isdigit() else cep
 
 
 def formatar_data(d):
@@ -233,13 +260,7 @@ def formatar_data(d):
 
 
 def mascarar_nome(nome):
-    """Iniciais + sobrenome, para a versao publica sem identificacao direta.
-
-    A razao social de um Empresario Individual e o nome civil do titular, entao
-    e' dado pessoal e precisa ser minimizado. A razao social de LTDA e demais
-    PJ e' registro publico de pessoa juridica e nao e' dado pessoal: mantem-la
-    e o que torna a versao publica util para analise economica do setor.
-    """
+    """Iniciais + sobrenome, para a versao publica sem identificacao direta."""
     partes = [p for p in str(nome).split() if p]
     if not partes:
         return ''
@@ -249,23 +270,31 @@ def mascarar_nome(nome):
 
 
 def main():
-    ap = argparse.ArgumentParser(description='Extrai estabelecimentos de taxi por CNAE (SP) da Receita Federal')
+    ap = argparse.ArgumentParser(description='Extrai estabelecimentos de taxi e transportes (SP/RMSP) da Receita Federal')
     ap.add_argument('--corte', help='Corte mensal (ex: 2026-09-14). Padrao: mais recente.')
-    ap.add_argument('--municipio', default='7107', help='Codigo IBGE do municipio. Padrao 7107 = SAO PAULO/SP')
-    ap.add_argument('--nome-municipio', default='SAO PAULO')
+    ap.add_argument('--municipio', default='RMSP', help='Codigo IBGE/TOM do municipio ou "RMSP" para toda a Grande SP')
+    ap.add_argument('--nome-municipio', default='RMSP (Sao Paulo + 39 municipios)')
     ap.add_argument('--cnaes', default=','.join(CNAE_TAXI), help='CNAEs alvo, separados por virgula')
+    ap.add_argument('--particoes', default='0,1,2,3,4,5,6,7,8,9', help='Indices das particoes de 0 a 9 a processar')
     ap.add_argument('--workdir', default=os.environ.get('TEMP', '.') + r'\cnpj_rfb')
-    ap.add_argument('--manter-zip', action='store_true', help='Nao apaga os ZIPs apos o processamento')
+    ap.add_argument('--manter-zip', action='store_true', help='Nao apaga os ZIPs apos o processamento de cada particao')
     ap.add_argument('--saida-dir', default='data/processed')
     ap.add_argument('--log-dir', default='logs')
     args = ap.parse_args()
 
     cnaes_alvo = [c.strip() for c in args.cnaes.split(',') if c.strip()]
+    particoes_idx = [int(p.strip()) for p in args.particoes.split(',') if p.strip()]
+
+    if args.municipio.upper() == 'RMSP':
+        municipios_alvo = set(RMSP_MUNICIPIOS.keys())
+    else:
+        municipios_alvo = {m.strip() for m in args.municipio.split(',') if m.strip()}
+
     work = Path(args.workdir)
     work.mkdir(parents=True, exist_ok=True)
 
     print('=' * 74)
-    print('Extracao de taxi por CNAE - Dados Abertos do CNPJ (Receita Federal)')
+    print('Extracao de taxi e transportes por CNAE - Dados Abertos do CNPJ (RFB)')
     print('=' * 74)
 
     if args.corte:
@@ -275,36 +304,46 @@ def main():
         corte = cortes[0].strip('/')
         print(f'Cortes disponiveis: {cortes[0]} .. {cortes[-1]} ({len(cortes)} meses)')
     url = f'{MIRROR}/{corte}/'
-    print(f'Corte: {corte}\nMunicipio: {args.nome_municipio} (codigo {args.municipio})')
-    print(f'CNAEs: {", ".join(cnaes_alvo)}\nFonte: {url}\n')
+    print(f'Corte: {corte}\nMunicipios: {len(municipios_alvo)} selecionados ({args.nome_municipio})')
+    print(f'CNAEs: {", ".join(cnaes_alvo)}\nParticoes: {particoes_idx}\nFonte: {url}\n')
 
     manifesto = []
     est_log, emp_log = [], []
 
-    # 1) Estabelecimentos
-    print('[1/4] Baixando e varrendo Estabelecimentos (10 particoes)...')
-    zips_est = []
-    for i in range(10):
+    # 1) Estabelecimentos (em streaming partition-by-partition para economizar espaco em disco)
+    print(f'[1/4] Baixando e varrendo Estabelecimentos ({len(particoes_idx)} particoes)...')
+    est = []
+    vistos = set()
+    marcas = tuple(c.encode('ascii') for c in cnaes_alvo)
+
+    for i in particoes_idx:
         arq = f'Estabelecimentos{i}.zip'
         p = baixar(f'{url}{arq}', work / arq)
         manifesto.append((arq, p.stat().st_size, sha256(p), 'bruto', 'RFB/CNPJ'))
-        zips_est.append(p)
+        est_part = varrer_estabelecimentos_arquivo(p, municipios_alvo, cnaes_alvo, vistos, marcas, est_log)
+        est.extend(est_part)
+        if not args.manter_zip:
+            p.unlink(missing_ok=True)
 
-    est = varrer_estabelecimentos(zips_est, args.municipio, cnaes_alvo, est_log)
-    print(f'  => {len(est)} estabelecimentos de taxi em {args.nome_municipio}')
+    print(f'  => Total estabelecimentos coletados: {len(est):,}')
 
     # 2) Empresas (razao social + natureza juridica)
     print('\n[2/4] Baixando e varrendo Empresas para razao social e natureza juridica...')
     basicos = {r['_cnpj_basico'] for r in est}
-    zips_emp = []
-    for i in range(10):
+    emp = {}
+
+    for i in particoes_idx:
         arq = f'Empresas{i}.zip'
         p = baixar(f'{url}{arq}', work / arq)
         manifesto.append((arq, p.stat().st_size, sha256(p), 'bruto', 'RFB/CNPJ'))
-        zips_emp.append(p)
+        varrer_empresas_arquivo(p, basicos, emp, emp_log)
+        if not args.manter_zip:
+            p.unlink(missing_ok=True)
+        if len(emp) >= len(basicos):
+            print(f'  => 100% das razoes sociais localizadas antecipadamente na particao {i}!')
+            break
 
-    emp = varrer_empresas(zips_emp, basicos, emp_log)
-    print(f'  => {len(emp)}/{len(basicos)} razoes sociais localizadas')
+    print(f'  => {len(emp):,}/{len(basicos):,} razoes sociais localizadas')
 
     # 3) Monta o CSV
     print('\n[3/4] Montando o CSV...')
@@ -327,6 +366,7 @@ def main():
         ddd2 = r.get('DDD_2', '').strip()
         fone1 = r.get('TELEFONE_1', '').strip()
         fone2 = r.get('TELEFONE_2', '').strip()
+        nome_mun = RMSP_MUNICIPIOS.get(r.get('MUNICIPIO', ''), r.get('MUNICIPIO', 'SAO PAULO'))
         linhas.append({
             'CNPJ': formatar_cnpj(r['CNPJ_BASICO'], r['CNPJ_ORDEM'], r['CNPJ_DV']),
             'RAZAO_SOCIAL': e.get('RAZAO_SOCIAL', ''),
@@ -350,7 +390,7 @@ def main():
             'COMPLEMENTO': r['COMPLEMENTO'],
             'BAIRRO': r['BAIRRO'],
             'CEP': formatar_cep(r['CEP']),
-            'MUNICIPIO': args.nome_municipio,
+            'MUNICIPIO': nome_mun,
             'UF': r['UF'],
             'TELEFONE_1': f'({ddd1}) {fone1}' if fone1 else '',
             'TELEFONE_2': f'({ddd2}) {fone2}' if fone2 else '',
@@ -361,16 +401,24 @@ def main():
 
     Path(args.saida_dir).mkdir(parents=True, exist_ok=True)
     saida = Path(args.saida_dir) / f'taxistas_sp_cnae_receita_{corte}.csv'
+
+    # Se ja existir um arquivo previo, faz backup antes de salvar
+    if saida.exists():
+        backup_path = saida.with_suffix('.csv.bak')
+        try:
+            import shutil
+            shutil.copy2(saida, backup_path)
+            print(f'  Backup criado: {backup_path}')
+        except Exception:
+            pass
+
     with open(saida, 'w', newline='', encoding='utf-8-sig') as fh:
         w = csv.DictWriter(fh, fieldnames=cabecalho, delimiter=';')
         w.writeheader()
         w.writerows(linhas)
-    print(f'  CSV completo: {saida} ({len(linhas)} linhas)')
+    print(f'  CSV completo: {saida} ({len(linhas):,} linhas)')
 
     # 4) Versao publica minimizada (LGPD) + manifesto
-    # Retira contato direto (telefone, e-mail) e o endereco fino. A razao social
-    # so e minimizada quando o registro e' Empresario Individual, porque nesse
-    # caso ela reproduz o nome civil do titular; para LTDA e registro publico.
     pub_cab = [c for c in cabecalho if c not in
                ('RAZAO_SOCIAL', 'NOME_FANTASIA', 'TELEFONE_1', 'TELEFONE_2',
                 'CORREIO_ELETRONICO', 'LOGRADOURO', 'NUMERO', 'COMPLEMENTO', 'CEP')]
@@ -396,24 +444,17 @@ def main():
             w.writerow([nome, size, digest, tipo, fonte, corte, url + nome])
     print(f'  manifesto: {man}')
 
-    if not args.manter_zip:
-        print('\n[4/4] Removendo ZIPs do workdir (use --manter-zip para preservar)...')
-        for p in zips_est + zips_emp:
-            p.unlink(missing_ok=True)
-
     mei = sum(1 for d in linhas if d['EH_EMPRESARIO_INDIVIDUAL_MEI'] == 'SIM')
     ativos = sum(1 for d in linhas if d['SITUACAO_CADASTRAL'] == 'Ativa')
     prin = sum(1 for d in linhas if d['CNAE_FISCAL_PRINCIPAL'] == '4923001')
     print('\n' + '=' * 74)
-    print(f'RESULTADO  municipio={args.nome_municipio}  corte={corte}')
-    print(f'  estabelecimentos taxi ........... {len(linhas)}')
-    print(f'  CNAE 4923001 como principal ...... {prin}')
-    print(f'  Empresario Individual (2135) .... {mei}')
-    print(f'  situacao cadastral Ativa ......... {ativos}')
+    print(f'RESULTADO  municipios={args.nome_municipio}  corte={corte}')
+    print(f'  estabelecimentos coletados ....... {len(linhas):,}')
+    print(f'  CNAE 4923001 como principal ...... {prin:,}')
+    print(f'  Empresario Individual (2135) .... {mei:,}')
+    print(f'  situacao cadastral Ativa ......... {ativos:,}')
     print(f'  arquivo ......................... {saida}')
     print('=' * 74)
-    print('\nRessalva: CNPJ com CNAE de taxi NAO comprova Condutax valido no DTP/PMSP.')
-    print('Verificar elegibilidade na fonte municipal antes de qualquer uso.')
 
 
 if __name__ == '__main__':

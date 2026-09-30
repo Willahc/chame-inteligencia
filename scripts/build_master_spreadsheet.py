@@ -759,6 +759,16 @@ def build_master():
         ponto_lat = ""
         ponto_lon = ""
 
+        # Se o ponto não veio informado na base principal, checa sorteio histórico de pontos
+        if not ponto_num and ponto_sort_rec is not None:
+            sort_p = clean_val(ponto_sort_rec.get('numero_ponto', ''))
+            if sort_p:
+                ponto_num = sort_p
+                if clean_val(ponto_sort_rec.get('status_ponto', '')) == 'CONTEMPLADO':
+                    vinculo_ponto = 'Ponto Privativo Vinculado (Sorteio DTP)'
+                elif not vinculo_ponto or vinculo_ponto == 'Ponto Livre / Sem Ponto Privativo':
+                    vinculo_ponto = 'Ponto Livre (Tentou Sorteio de Ponto)'
+
         ponto_dig = norm_digits(ponto_num)
         if ponto_dig and ponto_dig in pontos_map:
             p_info = pontos_map[ponto_dig]
@@ -767,6 +777,12 @@ def build_master():
             ponto_saldo = clean_val(p_info.get('saldo', ''))
             ponto_lat = clean_val(p_info.get('latitude', ''))
             ponto_lon = clean_val(p_info.get('longitude', ''))
+            if not ponto_tel:
+                ponto_tel = clean_val(p_info.get('telefone_ponto', ''))
+            if not ponto_end:
+                ponto_end = clean_val(p_info.get('endereco', ''))
+            if not ponto_reg:
+                ponto_reg = clean_val(p_info.get('regiao', ''))
 
         sit_final = clean_val(row.get('Situacao_Final', ''))
         if sit_final in ['CONTEMPLADO', 'CONTEMPLADO (JUDICIAL)']:
@@ -987,6 +1003,37 @@ def build_master():
             sort_ranking_ponto = clean_val(ponto_sort_rec.get('ranking_ponto', ''))
             sort_tp = clean_val(ponto_sort_rec.get('termo_permissao', ''))
 
+        vinculo_ponto_doc = "Ponto Livre / Sem Ponto Privativo"
+        ponto_num_doc = ""
+        ponto_end_doc = ""
+        ponto_reg_doc = ""
+        ponto_subp_doc = ""
+        ponto_cap_doc = ""
+        ponto_sal_doc = ""
+        ponto_tel_doc = ""
+        ponto_lat_doc = ""
+        ponto_lon_doc = ""
+
+        if ponto_sort_rec is not None:
+            sort_p = clean_val(ponto_sort_rec.get('numero_ponto', ''))
+            if sort_p:
+                ponto_num_doc = sort_p
+                if clean_val(ponto_sort_rec.get('status_ponto', '')) == 'CONTEMPLADO':
+                    vinculo_ponto_doc = 'Ponto Privativo Vinculado (Sorteio DTP)'
+                else:
+                    vinculo_ponto_doc = 'Ponto Livre (Tentou Sorteio de Ponto)'
+                p_dig = norm_digits(sort_p)
+                if p_dig and p_dig in pontos_map:
+                    p_info = pontos_map[p_dig]
+                    ponto_end_doc = clean_val(p_info.get('endereco', ''))
+                    ponto_reg_doc = clean_val(p_info.get('regiao', ''))
+                    ponto_subp_doc = clean_val(p_info.get('subprefeitura', ''))
+                    ponto_cap_doc = clean_val(p_info.get('capacidade', ''))
+                    ponto_sal_doc = clean_val(p_info.get('saldo', ''))
+                    ponto_lat_doc = clean_val(p_info.get('latitude', ''))
+                    ponto_lon_doc = clean_val(p_info.get('longitude', ''))
+                    ponto_tel_doc = clean_val(p_info.get('telefone_ponto', ''))
+
         tipo_ato = clean_val(r.get('tipo_ato', ''))
         cat_veic = clean_val(r.get('categoria', 'Táxi Comum'))
         doc_alv = clean_val(r.get('alvara_num', ''))
@@ -1072,7 +1119,7 @@ def build_master():
             pos_fila_num=None,
             dist_km=dist_calc,
             regiao_macro=mei_regiao_macro_doc,
-            vinculo_ponto="Ponto Livre",
+            vinculo_ponto=vinculo_ponto_doc,
             tel1=tel1_doc,
             tel2="",
             cpf=cpf_identificado_doc,
@@ -1152,16 +1199,16 @@ def build_master():
             'Justificativa_Score': just_doc,
             'Segmento_Comercial': f"Regularização / {tipo_ato}",
             'Acao_Comercial_Recomendada': acao_com,
-            'Vinculo_Ponto_Privativo': "Ponto Livre / Sem Ponto Privativo",
-            'Ponto_Numero': "",
-            'Ponto_Endereco': "",
-            'Ponto_Regiao': "",
-            'Ponto_Subprefeitura': "",
-            'Ponto_Capacidade_Vagas': "",
-            'Ponto_Saldo_Vagas': "",
-            'Ponto_Telefone': "",
-            'Ponto_Latitude': "",
-            'Ponto_Longitude': "",
+            'Vinculo_Ponto_Privativo': vinculo_ponto_doc,
+            'Ponto_Numero': ponto_num_doc,
+            'Ponto_Endereco': ponto_end_doc,
+            'Ponto_Regiao': ponto_reg_doc,
+            'Ponto_Subprefeitura': ponto_subp_doc,
+            'Ponto_Capacidade_Vagas': ponto_cap_doc,
+            'Ponto_Saldo_Vagas': ponto_sal_doc,
+            'Ponto_Telefone': ponto_tel_doc,
+            'Ponto_Latitude': ponto_lat_doc,
+            'Ponto_Longitude': ponto_lon_doc,
             'Chave_Busca_Bureau_Pessoa': chave_bureau,
             'Query_Busca_Google_DTP': query_google,
             'Link_Pesquisa_DOC_SP': link_doc,
