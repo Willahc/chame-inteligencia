@@ -443,6 +443,7 @@ def build_master():
     path_plano = r'Novos Alvarás 2026\plano_prospeccao_territorial_taxistas_2026.csv'
     path_osm_sem_dtp = r'data\processed\osm_pontos_sem_dtp.csv'
     path_meis_gerais = r'data\processed\meis_gerais_taxistas_sp_enriquecidos.csv'
+    path_socios = r'data\processed\socios_taxistas_sp_enriquecidos.csv'
 
     print("Carregando bases do projeto...")
     alv = pd.read_csv(path_alv, sep=';', encoding='utf-8-sig', low_memory=False)
@@ -509,6 +510,22 @@ def build_master():
             if m_nome and m_nome not in meis_gerais_name_map:
                 meis_gerais_name_map[m_nome] = r_dict
         print(f"-> MEIs Gerais da Receita Federal (SP) carregados: {len(meis_gerais_map):,} registros.")
+
+    # 2.2 Indexando Sócios e Administradores (QSA Receita Federal - SP)
+    print("\nIndexando Quadro de Sócios e Administradores (QSA Receita Federal SP)...")
+    socios_map = {}
+    socios_name_map = {}
+    if os.path.exists(path_socios):
+        df_soc = pd.read_csv(path_socios, sep=';', encoding='utf-8-sig', low_memory=False)
+        for _, r in df_soc.iterrows():
+            s_id = clean_val(r.get('ID_Master', ''))
+            s_nome = norm_name(r.get('Nome_Motorista', ''))
+            r_dict = r.to_dict()
+            if s_id:
+                socios_map[s_id] = r_dict
+            if s_nome and s_nome not in socios_name_map:
+                socios_name_map[s_nome] = r_dict
+        print(f"-> Sócios da Receita Federal (SP) carregados: {len(socios_map):,} motoristas.")
 
     # 3. Indexando tabelas auxiliares
     print("\nIndexando tabelas auxiliares...")
@@ -609,6 +626,7 @@ def build_master():
         id_master = f"MST-ALV-{idx+1:05d}"
         origem_principal = "Sorteio de Alvarás 2026"
         mei_geral_rec = meis_gerais_map.get(id_master) or meis_gerais_name_map.get(nome_norm)
+        socio_rec = socios_map.get(id_master) or socios_name_map.get(nome_norm)
 
         bases_presentes = ["Alvarás 2026"]
         if lay_rec is not None:
@@ -621,6 +639,8 @@ def build_master():
             bases_presentes.append("MEI Receita Federal (CNAE SP)")
         elif mei_geral_rec is not None:
             bases_presentes.append("MEI Receita Federal Geral (SP)")
+        if socio_rec is not None:
+            bases_presentes.append("Quadro de Sócios RFB (SP)")
         if do_rec is not None or (doc_cached_list and len(doc_cached_list) > 0):
             bases_presentes.append("Diário Oficial 2026")
         if ponto_sort_rec is not None or clean_val(row.get('Vinculo_Ponto_Privativo', '')) != "Ponto Livre / Sem Ponto Privativo":
@@ -786,6 +806,65 @@ def build_master():
                 email_principal = clean_val(mei_geral_rec.get('Email', ''))
             if not status_enriq.startswith("Enriquecido"):
                 status_enriq = "Enriquecido (Receita Federal MEI Geral SP)"
+
+        # Enriquecimento com Quadro de Sócios e Administradores (QSA Receita Federal SP)
+        if socio_rec is not None:
+            s_cnpj = clean_val(socio_rec.get('Empresa_CNPJ', ''))
+            s_fantasia = clean_val(socio_rec.get('Empresa_Nome_Fantasia', ''))
+            s_qualif = clean_val(socio_rec.get('Socio_Qualificacao', ''))
+            s_sit = clean_val(socio_rec.get('Empresa_Situacao_Cadastral', ''))
+            s_abertura = clean_val(socio_rec.get('Empresa_Data_Inicio', ''))
+            s_bairro = clean_val(socio_rec.get('Empresa_Bairro', ''))
+            s_cep = clean_val(socio_rec.get('Empresa_CEP', ''))
+            s_logr = clean_val(socio_rec.get('Empresa_Logradouro', ''))
+            s_num = clean_val(socio_rec.get('Empresa_Numero', ''))
+            s_tel1 = clean_val(socio_rec.get('Telefone_Principal', ''))
+            s_tel2 = clean_val(socio_rec.get('Telefone_Secundario', ''))
+            s_email = clean_val(socio_rec.get('Email', ''))
+            s_tipo = clean_val(socio_rec.get('Tipo_Telefone', ''))
+
+            # Se ainda não tinha MEI/PJ identificado, preenche com os dados da empresa onde é sócio
+            if possui_mei == "Não":
+                possui_mei = f"Sim ({s_qualif})"
+                mei_origem = "Receita Federal QSA (Sócio/Administrador SP)"
+                mei_cnpj = s_cnpj
+                mei_fantasia = s_fantasia
+                mei_situacao = s_sit
+                mei_abertura = s_abertura
+                mei_logradouro = s_logr
+                mei_numero = s_num
+                mei_bairro = s_bairro
+                mei_cep = s_cep
+                dist_calc, reg_calc = get_mei_geo_info(s_cep, s_bairro)
+                if dist_calc is not None:
+                    mei_distancia = f"{dist_calc:.2f}".replace('.', ',')
+                mei_regiao_macro = reg_calc
+
+            # Telefone: se não tinha telefone, recebe os dados de contato do QSA
+            if not tel_1:
+                tel_1 = s_tel1
+                if s_tel2 and not tel_2:
+                    tel_2 = s_tel2
+                if not status_enriq.startswith("Enriquecido"):
+                    status_enriq = "Enriquecido (QSA Receita Federal SP)"
+            else:
+                # Se já tinha telefone, verifica se era fixo e se o QSA traz um celular para promover
+                fmt_curr, _, tipo_curr = normalize_and_format_phone("", tel_1)
+                if not tipo_curr.startswith("Celular") and s_tipo.startswith("Celular"):
+                    if not tel_2:
+                        tel_2 = tel_1
+                    tel_1 = s_tel1
+                    if not status_enriq.startswith("Enriquecido"):
+                        status_enriq = "Enriquecido (QSA Receita Federal SP - Celular)"
+                elif not tel_2 and s_tel1 and s_tel1 != tel_1:
+                    tel_2 = s_tel1
+
+            if not email_principal and s_email:
+                email_principal = s_email
+            if not bairro_res and s_bairro:
+                bairro_res = s_bairro
+            if not cep and s_cep:
+                cep = s_cep
 
         # Normalização e formatação de telefones + verificação de celular
         fmt_t1, wpp_t1, tipo_t1 = normalize_and_format_phone("", tel_1)
