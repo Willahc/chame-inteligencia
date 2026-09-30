@@ -445,6 +445,8 @@ def build_master():
     path_meis_gerais = r'data\processed\meis_gerais_taxistas_sp_enriquecidos.csv'
     path_socios = r'data\processed\socios_taxistas_sp_enriquecidos.csv'
     path_nacional = r'data\processed\nacional_taxistas_enriquecidos.csv'
+    path_fonetico = r'data\processed\fonetico_taxistas_enriquecidos.csv'
+
 
     print("Carregando bases do projeto...")
     alv = pd.read_csv(path_alv, sep=';', encoding='utf-8-sig', low_memory=False)
@@ -543,6 +545,23 @@ def build_master():
             if n_nome and n_nome not in nac_name_map:
                 nac_name_map[n_nome] = r_dict
         print(f"-> Contatos nacionais da Receita Federal carregados: {len(nac_map):,} motoristas.")
+
+    # 2.4 Indexando Dados Fonéticos/Canônicos da Receita Federal (MEI e Sócios)
+    print("\nIndexando base fonética/canônica da Receita Federal...")
+    fon_map = {}
+    fon_name_map = {}
+    if os.path.exists(path_fonetico):
+        df_fon = pd.read_csv(path_fonetico, sep=';', encoding='utf-8-sig', low_memory=False)
+        for _, r in df_fon.iterrows():
+            f_id = clean_val(r.get('ID_Master', ''))
+            f_nome = norm_name(r.get('Nome_Motorista', ''))
+            r_dict = r.to_dict()
+            if f_id:
+                fon_map[f_id] = r_dict
+            if f_nome and f_nome not in fon_name_map:
+                fon_name_map[f_nome] = r_dict
+        print(f"-> Contatos fonéticos/canônicos carregados: {len(fon_map):,} motoristas.")
+
 
     # 3. Indexando tabelas auxiliares
     print("\nIndexando tabelas auxiliares...")
@@ -645,6 +664,7 @@ def build_master():
         mei_geral_rec = meis_gerais_map.get(id_master) or meis_gerais_name_map.get(nome_norm)
         socio_rec = socios_map.get(id_master) or socios_name_map.get(nome_norm)
         nac_rec = nac_map.get(id_master) or nac_name_map.get(nome_norm)
+        fon_rec = fon_map.get(id_master) or fon_name_map.get(nome_norm)
 
         bases_presentes = ["Alvarás 2026"]
         if lay_rec is not None:
@@ -661,6 +681,9 @@ def build_master():
             bases_presentes.append("Quadro de Sócios RFB (SP)")
         if nac_rec is not None:
             bases_presentes.append(f"Receita Federal ({nac_rec.get('Empresa_UF', 'BR')})")
+        if fon_rec is not None:
+            bases_presentes.append("Receita Federal (Fonética)")
+
         if do_rec is not None or (doc_cached_list and len(doc_cached_list) > 0):
             bases_presentes.append("Diário Oficial 2026")
         if ponto_sort_rec is not None or clean_val(row.get('Vinculo_Ponto_Privativo', '')) != "Ponto Livre / Sem Ponto Privativo":
@@ -939,6 +962,62 @@ def build_master():
                 bairro_res = f"{n_bairro} ({n_uf})" if n_uf != 'SP' else n_bairro
             if not cep and n_cep:
                 cep = n_cep
+
+        # Enriquecimento Fonético / Canônico da Receita Federal
+        if fon_rec is not None:
+            f_cnpj = clean_val(fon_rec.get('Empresa_CNPJ', ''))
+            f_fantasia = clean_val(fon_rec.get('Empresa_Nome_Fantasia', ''))
+            f_sit = clean_val(fon_rec.get('Empresa_Situacao_Cadastral', ''))
+            f_bairro = clean_val(fon_rec.get('Empresa_Bairro', ''))
+            f_cep = clean_val(fon_rec.get('Empresa_CEP', ''))
+            f_logr = clean_val(fon_rec.get('Empresa_Logradouro', ''))
+            f_num = clean_val(fon_rec.get('Empresa_Numero', ''))
+            f_tel1 = clean_val(fon_rec.get('Telefone_Principal', ''))
+            f_tel2 = clean_val(fon_rec.get('Telefone_Secundario', ''))
+            f_email = clean_val(fon_rec.get('Email', ''))
+            f_tipo = clean_val(fon_rec.get('Tipo_Telefone', ''))
+            f_orig = clean_val(fon_rec.get('Origem_Enriquecimento', 'Fonético'))
+
+            if possui_mei == "Não":
+                possui_mei = "Sim (MEI/PJ)"
+                mei_origem = f"Receita Federal ({f_orig})"
+                mei_cnpj = f_cnpj
+                mei_razao = clean_val(fon_rec.get('Empresa_Razao_Social', ''))
+                mei_fantasia = f_fantasia
+                mei_situacao = f_sit
+                mei_logradouro = f_logr
+                mei_numero = f_num
+                mei_bairro = f_bairro
+                mei_cep = f_cep
+                dist_calc, reg_calc = get_mei_geo_info(f_cep, f_bairro)
+                if dist_calc is not None:
+                    mei_distancia = f"{dist_calc:.2f}".replace('.', ',')
+                mei_regiao_macro = reg_calc
+
+            if not tel_1:
+                tel_1 = f_tel1
+                if f_tel2 and not tel_2:
+                    tel_2 = f_tel2
+                if not status_enriq.startswith("Enriquecido"):
+                    status_enriq = f"Enriquecido ({f_orig})"
+            else:
+                fmt_curr, _, tipo_curr = normalize_and_format_phone("", tel_1)
+                if not tipo_curr.startswith("Celular") and f_tipo.startswith("Celular"):
+                    if not tel_2:
+                        tel_2 = tel_1
+                    tel_1 = f_tel1
+                    if not status_enriq.startswith("Enriquecido"):
+                        status_enriq = f"Enriquecido ({f_orig} - Celular)"
+                elif not tel_2 and f_tel1 and f_tel1 != tel_1:
+                    tel_2 = f_tel1
+
+            if not email_principal and f_email:
+                email_principal = f_email
+            if not bairro_res and f_bairro:
+                bairro_res = f_bairro
+            if not cep and f_cep:
+                cep = f_cep
+
 
         # Normalização e formatação de telefones + verificação de celular
         fmt_t1, wpp_t1, tipo_t1 = normalize_and_format_phone("", tel_1)

@@ -236,10 +236,16 @@ def main():
         pri_nome = format_first_name(row.get('Nome_Completo', ''))
         msg_texto, msg_encoded = build_whatsapp_message(row, pri_nome)
         
-        # Só gera link wa.me para celulares válidos (11 dígitos começando com 9)
+        # Identificação de celular vs fixo
         eh_celular = len(tel_principal) == 11 and tel_principal[2] == '9'
-        link_whatsapp_direto = f"https://wa.me/55{tel_principal}" if eh_celular else ""
-        link_whatsapp_pronto = f"https://wa.me/55{tel_principal}?text={msg_encoded}" if eh_celular else ""
+        eh_fixo = len(tel_principal) == 10 and tel_principal[2] in '2345'
+        
+        tipo_contato_tel = "Celular (WhatsApp Provável)" if eh_celular else ("Fixo Comercial (WhatsApp Business Possível)" if eh_fixo else "Outro")
+        canal_recomendado = "WhatsApp Celular" if eh_celular else ("Ligação Voz + Teste WhatsApp Business" if eh_fixo else "Ligação de Voz")
+
+        # Gera link wa.me tanto para celulares quanto para fixos comerciais (permite teste WhatsApp Business em 1 clique)
+        link_whatsapp_direto = f"https://wa.me/55{tel_principal}" if (eh_celular or eh_fixo) else ""
+        link_whatsapp_pronto = f"https://wa.me/55{tel_principal}?text={msg_encoded}" if (eh_celular or eh_fixo) else ""
         
         # Endereço MEI formatado com fallback
         end_mei = "—"
@@ -261,6 +267,8 @@ def main():
             'Nome_Motorista': row.get('Nome_Completo', ''),
             'CPF_Completo': cpf_final,
             'Telefone_Principal': format_phone(tel_principal),
+            'Tipo_Telefone_Principal': tipo_contato_tel,
+            'Canal_Recomendado': canal_recomendado,
             'Telefone_Secundario': format_phone(t2_clean) if len(t2_clean) >= 8 else "—",
             'Link_WhatsApp_Mensagem_Pronta': link_whatsapp_pronto,
             'Link_Direto_WhatsApp': link_whatsapp_direto,
@@ -273,6 +281,7 @@ def main():
             'Historico_Observacoes': "",
             'Email': rf_match.get('email', '') if rf_match and rf_match.get('email') else row.get('Email_Principal', '—'),
             'Status_Alvara_2026': row.get('Status_Sorteio_2026', ''),
+
             'Edital_Numero': row.get('Edital_Numero', ''),
             'Edital_Descricao': row.get('Edital_Descricao', ''),
             'Categoria_Veiculo': row.get('Categoria_Veiculo', ''),
