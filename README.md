@@ -105,4 +105,38 @@ Seis frentes novas, todas com download idempotente, SHA-256 e licença registrad
 - **Geocodificação dos pontos sem OSM** (`scripts/geocode_dtp_sem_osm.py`): dos **926** pontos do Gate 5 sem par no OSM, **736** receberam coordenada de logradouro via Nominatim (`data/processed/dtp_pontos_sem_osm_geo.csv`); cobertura de coordenadas do DTP sobe de **21,99% para 83,99%**. O pareamento DTP ↔ OSM do Gate 5 **permanece em 21,99%** — geocodificação própria não é correspondência OSM (`data/processed/cobertura_gate5_geocodificacao.json`).
 - **Acidentes por subprefeitura** (`scripts/build_acidentes_por_subprefeitura.py`): 12 meses do pacote `eventos-de-sinistro` (Detran-SP/Infosiga) recortados pelo `cod_ibge` 3550308 e localizados dentro dos 32 polígonos oficiais do GeoSampa — **44.522 eventos** no município (1.010 fatais, 6.403 atropelamentos), gerando `data/processed/acidentes_sp_por_subprefeitura_2025-09_2026-08.csv` e `data/processed/acidentes_sp_mensal_2025-09_2026-08.csv`. **Limitação**: 34,7% dos eventos não trazem latitude/longitude e 2,0% caem fora dos polígonos; os eventos sem coordenada ficam no balcão `Sem coordenada` e não são distribuídos territorialmente.
 
+### Rodada de Enriquecimento e Inteligência Comercial de 30/09/2026
+
+Marco completo de expansão de cobertura telefônica, auditoria de WhatsApp Business, mineração OSINT e cruzamento com cooperativas de SP:
+
+1. **Quadro de Sócios e Administradores (QSA - RFB SP)** (`scripts/enrich_socios_receita.py`):
+   - Varredura de 10 partições da Receita Federal cruzando sócios e administradores de empresas em SP.
+   - Resgatou 4.148 vínculos societários com telefones e celulares qualificados.
+2. **Expansão Interestadual / Nacional da RFB** (`scripts/enrich_nacional_receita.py`):
+   - Localizou 780 motoristas da capital paulista com cadastros MEI/LTDA ativos em outros estados (MG, RJ, PR, SC, RS, GO, DF, BA, etc.), integrando novos contatos diretos.
+3. **Caminho 1 — Enriquecimento Fonético / Ortográfico** (`scripts/enrich_fonetico_receita.py`):
+   - Normalização canônica brasileira para variações clássicas de grafia (`SOUZA`/`SOUSA`, `LUIZ`/`LUIS`, `MATEUS`/`MATHEUS`, `WALTER`/`VALTER`, consoantes dobradas).
+   - Filtro anti-dummy rigoroso para eliminar números fictícios (`00000000`, `11111111`, etc.).
+   - Resgatou 117 motoristas, incluindo 8 Contemplados Titulares de 2026.
+4. **Caminho 2 — Auditoria de WhatsApp Business em Linhas Fixas** (`scripts/audit_whatsapp_business_fixo.py`):
+   - Estruturou as **4.975 linhas fixas comerciais** com links diretos `https://wa.me/5511...` para teste de 1 clique pelo time de SDR.
+   - Fila de auditoria operacional exportada (`auditoria_whatsapp_fixo_pendente.csv`), priorizando 595 Contemplados Titulares com linha fixa comercial.
+5. **Caminho 3 — Mineração OSINT de Servidores e Processos SEI** (`scripts/enrich_servidores_pmsp.py`):
+   - Mapeou 79 Contemplados Titulares sem telefone diretamente no Diário Oficial e Sistema Eletrônico de Informações (SEI) da PMSP.
+   - Identificou as lotações municipais (SMT/DTP, SME, SMSUB, SMS, SPTrans, SMSU/GCM) e processos ativos de transferência de alvará no DTP Pari, fornecendo contatos institucionais.
+6. **Caminho 4 — Cruzamento com Cooperativas de Rádio-Táxi de SP** (`scripts/cross_cooperativas_radio_taxi.py`):
+   - Cruzou os 16.863 motoristas e 2.096 pontos com as sedes das grandes centrais (Chame Táxi Butantã, Coopertax, Vermelho e Branco, Guarucoop, Central Rádio Táxi).
+   - Mapeou 2.495 motoristas no raio de influência da Chame Táxi (Zona Oeste) e identificou os motoristas de "Ponto Livre / Órfãos" com dependência crítica de aplicativo e rádio.
+7. **Empacotamento e Portabilidade para Nova Máquina** (`scripts/generate_gmail_package.py`):
+   - Gerou o pacote otimizado `projeto_taxistas_sp_2026_gmail.zip` (**14,23 MB**, perfeitamente compatível com o limite de 25 MB do Gmail).
+   - Documentou o processo completo em `INSTRUCOES_NOVA_MAQUINA.md` para restauração em 3 passos simples.
+8. **Balanço Final de Cobertura de Contatos**:
+   - **Total com Telefone Válido**: **12.210 (72,4% da base)** (+2.678 contatos resgatados no dia).
+   - **Total com Celular / WhatsApp Ativo**: **7.235 (42,9% da base)** (+2.926 novos WhatsApps resgatados no dia).
+   - **Apenas Linha Fixa (Voz / WhatsApp Business)**: **4.975 (29,5%)**.
+   - **Leads Qualificados no CRM Operacional**: **12.236 motoristas**.
+   - **Contemplados Titulares com Telefone**: **1.528 (71,4%)**.
+   - **Conformidade LGPD**: 100% verificado (`python scripts/privacy.py check` com 0 violações em 58 arquivos).
+
+
 
