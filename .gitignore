@@ -34,3 +34,11 @@ mapa_interativo_pontos_taxi_sp.html
 # --- Brutos de volume (rebaixáveis; sha256 fica no manifesto em logs/) ----
 data/raw/detran/
 data/raw/infosiga/
+data/raw/tse/
+*.zip
+
+# --- Bases locais com PII derivadas do TSE e campo ------------------------
+data/processed/taxistas_candidatos_tse_*.csv
+Novos Alvarás 2026/taxistas_candidatos_tse_*.xlsx
+Novos Alvarás 2026/pontos_taxis_avulsos_com_telefone_osm.xlsx
+

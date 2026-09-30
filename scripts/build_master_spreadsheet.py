@@ -68,6 +68,12 @@ def clean_mei_thorough(s):
 def clean_mei_name(s):
     return clean_mei_thorough(s)
 
+def strip_prep(s):
+    if not isinstance(s, str):
+        return ""
+    t = re.sub(r'\b(DE|DA|DO|DOS|DAS|E)\b', '', s)
+    return " ".join(t.split())
+
 def format_cpf(digits):
     d = re.sub(r'\D', '', str(digits))
     if len(d) == 11:
@@ -387,6 +393,7 @@ def build_master():
     # 2. Indexando dados da Receita Federal (MEIs com e sem sufixo)
     print("\nIndexando base do CNPJ da Receita Federal para cruzamento...")
     rf_map = {}
+    rf_map_no_prep = {}
     cpf_pattern = re.compile(r'\b(\d{11})\b')
     if os.path.exists(path_rf):
         df_rf = pd.read_csv(path_rf, sep=';', encoding='utf-8-sig', low_memory=False)
@@ -403,9 +410,13 @@ def build_master():
             r_data['CPF_EXTRAIDO'] = m.group(1) if m else ""
 
             for k in [c1, c2, n1, n2]:
-                if k and len(k.split()) >= 2 and k not in rf_map:
-                    rf_map[k] = r_data
-        print(f"-> CNPJs da Receita Federal mapeados (Razão + Fantasia): {len(rf_map):,} empresas.")
+                if k and len(k.split()) >= 2:
+                    if k not in rf_map:
+                        rf_map[k] = r_data
+                    k_no_prep = strip_prep(k)
+                    if len(k_no_prep.split()) >= 2 and k_no_prep not in rf_map_no_prep:
+                        rf_map_no_prep[k_no_prep] = r_data
+        print(f"-> CNPJs da Receita Federal mapeados (Razão + Fantasia): {len(rf_map):,} exatos | {len(rf_map_no_prep):,} sem preposição.")
 
     # 3. Indexando tabelas auxiliares
     print("\nIndexando tabelas auxiliares...")
@@ -493,6 +504,10 @@ def build_master():
         rnk_rec = ranking_map.get(lk_key)
         mei_bt_rec = meis_butanta_map.get(nome_norm)
         mei_rf_rec = rf_map.get(nome_norm) if mei_bt_rec is None else None
+        if mei_rf_rec is None and mei_bt_rec is None and nome_norm:
+            cand_no_prep = strip_prep(nome_norm)
+            if len(cand_no_prep.split()) >= 2:
+                mei_rf_rec = rf_map_no_prep.get(cand_no_prep)
         do_rec = do_by_name.get(nome_norm)
         if do_rec is None and condutax_dig:
             do_rec = do_by_condutax.get(condutax_dig)
@@ -667,7 +682,14 @@ def build_master():
         elif doc_cached_list and isinstance(doc_cached_list, list) and len(doc_cached_list) > 0:
             dtp_acts = [x for x in doc_cached_list if x.get('is_dtp')]
             chosen_act = dtp_acts[0] if dtp_acts else doc_cached_list[0]
-            possui_doc = "Sim (Consulta DOC)"
+            if dtp_acts:
+                possui_doc = "Sim (DTP / Táxi)"
+                if not status_enriq.startswith("Enriquecido"):
+                    status_enriq = "Enriquecido (Processo DTP/SEI Táxi)"
+            else:
+                possui_doc = "Sim (Outros Atos PMSP)"
+                if not status_enriq.startswith("Enriquecido"):
+                    status_enriq = "Enriquecido (Atos Gerais DOC)"
             doc_data_pub = clean_val(chosen_act.get('data_publicacao', ''))
             doc_tipo_ato = clean_val(chosen_act.get('assunto', ''))
             doc_status = clean_val(chosen_act.get('status', ''))
@@ -675,8 +697,6 @@ def build_master():
             doc_resumo = clean_val(chosen_act.get('resumo', ''))
             if chosen_act.get('processo_sei') and not proc_sei_dtp:
                 proc_sei_dtp = chosen_act.get('processo_sei')
-            if not status_enriq.startswith("Enriquecido"):
-                status_enriq = "Enriquecido (Despacho DOC Encontrado)"
 
         # Histórico de Sorteio de Pontos / Alvará e Termo de Permissão
         part_sort_pontos = "Sim" if ponto_sort_rec is not None else ("Sim" if "Tentou Sorteio" in clean_val(row.get('Vinculo_Ponto_Privativo', '')) else "Não")
