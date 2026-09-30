@@ -444,6 +444,7 @@ def build_master():
     path_osm_sem_dtp = r'data\processed\osm_pontos_sem_dtp.csv'
     path_meis_gerais = r'data\processed\meis_gerais_taxistas_sp_enriquecidos.csv'
     path_socios = r'data\processed\socios_taxistas_sp_enriquecidos.csv'
+    path_nacional = r'data\processed\nacional_taxistas_enriquecidos.csv'
 
     print("Carregando bases do projeto...")
     alv = pd.read_csv(path_alv, sep=';', encoding='utf-8-sig', low_memory=False)
@@ -526,6 +527,22 @@ def build_master():
             if s_nome and s_nome not in socios_name_map:
                 socios_name_map[s_nome] = r_dict
         print(f"-> Sócios da Receita Federal (SP) carregados: {len(socios_map):,} motoristas.")
+
+    # 2.3 Indexando Dados Nacionais da Receita Federal (outros estados)
+    print("\nIndexando base nacional da Receita Federal (todos os estados)...")
+    nac_map = {}
+    nac_name_map = {}
+    if os.path.exists(path_nacional):
+        df_nac = pd.read_csv(path_nacional, sep=';', encoding='utf-8-sig', low_memory=False)
+        for _, r in df_nac.iterrows():
+            n_id = clean_val(r.get('ID_Master', ''))
+            n_nome = norm_name(r.get('Nome_Motorista', ''))
+            r_dict = r.to_dict()
+            if n_id:
+                nac_map[n_id] = r_dict
+            if n_nome and n_nome not in nac_name_map:
+                nac_name_map[n_nome] = r_dict
+        print(f"-> Contatos nacionais da Receita Federal carregados: {len(nac_map):,} motoristas.")
 
     # 3. Indexando tabelas auxiliares
     print("\nIndexando tabelas auxiliares...")
@@ -627,6 +644,7 @@ def build_master():
         origem_principal = "Sorteio de Alvarás 2026"
         mei_geral_rec = meis_gerais_map.get(id_master) or meis_gerais_name_map.get(nome_norm)
         socio_rec = socios_map.get(id_master) or socios_name_map.get(nome_norm)
+        nac_rec = nac_map.get(id_master) or nac_name_map.get(nome_norm)
 
         bases_presentes = ["Alvarás 2026"]
         if lay_rec is not None:
@@ -641,6 +659,8 @@ def build_master():
             bases_presentes.append("MEI Receita Federal Geral (SP)")
         if socio_rec is not None:
             bases_presentes.append("Quadro de Sócios RFB (SP)")
+        if nac_rec is not None:
+            bases_presentes.append(f"Receita Federal ({nac_rec.get('Empresa_UF', 'BR')})")
         if do_rec is not None or (doc_cached_list and len(doc_cached_list) > 0):
             bases_presentes.append("Diário Oficial 2026")
         if ponto_sort_rec is not None or clean_val(row.get('Vinculo_Ponto_Privativo', '')) != "Ponto Livre / Sem Ponto Privativo":
@@ -865,6 +885,60 @@ def build_master():
                 bairro_res = s_bairro
             if not cep and s_cep:
                 cep = s_cep
+
+        # Enriquecimento com Base Nacional da Receita Federal (outros estados)
+        if nac_rec is not None:
+            n_cnpj = clean_val(nac_rec.get('Empresa_CNPJ', ''))
+            n_fantasia = clean_val(nac_rec.get('Empresa_Nome_Fantasia', ''))
+            n_qualif = clean_val(nac_rec.get('Socio_Qualificacao', ''))
+            n_sit = clean_val(nac_rec.get('Empresa_Situacao_Cadastral', ''))
+            n_abertura = clean_val(nac_rec.get('Empresa_Data_Inicio', ''))
+            n_bairro = clean_val(nac_rec.get('Empresa_Bairro', ''))
+            n_cep = clean_val(nac_rec.get('Empresa_CEP', ''))
+            n_logr = clean_val(nac_rec.get('Empresa_Logradouro', ''))
+            n_num = clean_val(nac_rec.get('Empresa_Numero', ''))
+            n_tel1 = clean_val(nac_rec.get('Telefone_Principal', ''))
+            n_tel2 = clean_val(nac_rec.get('Telefone_Secundario', ''))
+            n_email = clean_val(nac_rec.get('Email', ''))
+            n_tipo = clean_val(nac_rec.get('Tipo_Telefone', ''))
+            n_uf = clean_val(nac_rec.get('Empresa_UF', ''))
+            n_orig = clean_val(nac_rec.get('Origem_Cadastro', 'Nacional'))
+
+            if possui_mei == "Não":
+                possui_mei = f"Sim ({n_qualif})"
+                mei_origem = f"Receita Federal ({n_uf} - {n_orig})"
+                mei_cnpj = n_cnpj
+                mei_fantasia = n_fantasia
+                mei_situacao = n_sit
+                mei_abertura = n_abertura
+                mei_logradouro = n_logr
+                mei_numero = n_num
+                mei_bairro = n_bairro
+                mei_cep = n_cep
+
+            if not tel_1:
+                tel_1 = n_tel1
+                if n_tel2 and not tel_2:
+                    tel_2 = n_tel2
+                if not status_enriq.startswith("Enriquecido"):
+                    status_enriq = f"Enriquecido (Receita Federal {n_uf})"
+            else:
+                fmt_curr, _, tipo_curr = normalize_and_format_phone("", tel_1)
+                if not tipo_curr.startswith("Celular") and n_tipo.startswith("Celular"):
+                    if not tel_2:
+                        tel_2 = tel_1
+                    tel_1 = n_tel1
+                    if not status_enriq.startswith("Enriquecido"):
+                        status_enriq = f"Enriquecido (Receita Federal {n_uf} - Celular)"
+                elif not tel_2 and n_tel1 and n_tel1 != tel_1:
+                    tel_2 = n_tel1
+
+            if not email_principal and n_email:
+                email_principal = n_email
+            if not bairro_res and n_bairro:
+                bairro_res = f"{n_bairro} ({n_uf})" if n_uf != 'SP' else n_bairro
+            if not cep and n_cep:
+                cep = n_cep
 
         # Normalização e formatação de telefones + verificação de celular
         fmt_t1, wpp_t1, tipo_t1 = normalize_and_format_phone("", tel_1)
