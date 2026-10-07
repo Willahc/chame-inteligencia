@@ -138,9 +138,9 @@ def generate_corporate_dashboard():
     print(f"-> Grandes Empresas carregadas: {len(emp_records)}")
 
     all_clients = hosp_records + emp_records
-    json_clients = json.dumps(all_clients, ensure_ascii=False)
-    json_hosp = json.dumps(hosp_records, ensure_ascii=False)
-    json_emp = json.dumps(emp_records, ensure_ascii=False)
+    json_clients = json.dumps(all_clients, ensure_ascii=False, separators=(',', ':'))
+    json_hosp = json.dumps(hosp_records, ensure_ascii=False, separators=(',', ':'))
+    json_emp = json.dumps(emp_records, ensure_ascii=False, separators=(',', ':'))
 
     html_template = """<!DOCTYPE html>
 <html lang="pt-BR">
@@ -191,17 +191,16 @@ def generate_corporate_dashboard():
     .nav-tab:not(.is-active):hover{background:rgba(255,255,255,.08);color:#fff;}
     .nav-tab.is-active{font-weight:700;box-shadow:0 1px 2px rgba(2,6,23,.35);}
 
-    /* ===== Cards / KPIs ===== */
-    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1);}
-    .kpi{padding:.95rem 1.05rem 1rem;position:relative;overflow:hidden;transition:box-shadow .15s ease,border-color .15s ease;}
-    .kpi:hover{box-shadow:0 2px 4px rgba(16,24,40,.06), 0 14px 34px -18px rgba(16,24,40,.22);border-color:#dde1e6;}
-    .kpi::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;pointer-events:none;
-      background:linear-gradient(90deg,var(--accent) 0%,rgba(0,0,0,0) 75%);opacity:.9;}
-    .eyebrow{font-size:.6875rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);}
-    .kpi > span.eyebrow{display:block;padding-right:2.5rem;}
-    .kpi-value{font-size:1.625rem;font-weight:800;line-height:1.08;letter-spacing:-.025em;color:var(--ink);
-      font-variant-numeric:tabular-nums;margin-top:.3rem;}
-    .section-title{font-size:.6875rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#475569;}
+    /* ===== Cards / KPIs (Minimalist Executive / Neutral SaaS) ===== */
+    .card{background:#ffffff;border:1px solid #e2e8f0;border-radius:var(--r-lg);box-shadow:0 1px 2px 0 rgba(0,0,0,.03);transition:border-color .15s ease,box-shadow .15s ease;}
+    .kpi{padding:1.15rem 1.25rem 1.1rem;position:relative;background:#ffffff;border:1px solid #e2e8f0;border-radius:var(--r-lg);box-shadow:0 1px 2px 0 rgba(0,0,0,.03);transition:border-color .15s ease,box-shadow .15s ease;display:flex;flex-direction:column;justify-content:space-between;}
+    .kpi:hover{border-color:#cbd5e1;box-shadow:0 4px 12px -2px rgba(0,0,0,.05);}
+    .eyebrow{font-size:.6875rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#64748b;line-height:1.2;}
+    .kpi > span.eyebrow{display:block;}
+    .kpi-value{font-size:1.625rem;font-weight:700;line-height:1.15;letter-spacing:-.02em;color:#0f172a;font-variant-numeric:tabular-nums;margin-top:.4rem;margin-bottom:.15rem;}
+    .kpi-sub{font-size:.6875rem;color:#64748b;font-weight:500;display:flex;align-items:center;gap:.35rem;margin-top:auto;padding-top:.45rem;border-top:1px solid #f8fafc;}
+    .kpi-icon{width:2rem;height:2rem;border-radius:.375rem;background:#f8fafc;color:#64748b;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:.925rem;flex-shrink:0;}
+    .section-title{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#475569;}
 
     /* ===== Tabelas ===== */
     .tbl{border-collapse:collapse;font-size:.8125rem;color:var(--ink-2);}
@@ -247,12 +246,14 @@ def generate_corporate_dashboard():
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     #b2b-leaflet-map { height: calc(100vh - 250px); min-height: 560px; border-radius: var(--r-lg); z-index: 10; }
   
-    /* ===== Menu lateral ===== */
-    #shell{display:flex;min-height:100vh;width:100%;}
+    /* ===== Menu lateral & Responsividade ===== */
+    #shell{display:flex;min-height:100vh;width:100%;position:relative;}
     #sidebar{position:sticky;top:0;height:100vh;width:16.5rem;flex:0 0 16.5rem;overflow-y:auto;
       display:flex;flex-direction:column;gap:1.35rem;padding:1.15rem .85rem 1rem;
       background:linear-gradient(180deg,#0a101c 0%,#0e1626 55%,#0a101c 100%);
-      border-right:1px solid rgba(255,255,255,.07);z-index:60;}
+      border-right:1px solid rgba(255,255,255,.07);z-index:60;
+      transition:width .28s cubic-bezier(.4,0,.2,1), flex .28s cubic-bezier(.4,0,.2,1), padding .28s cubic-bezier(.4,0,.2,1), transform .28s cubic-bezier(.4,0,.2,1), opacity .2s ease;
+      will-change:width, transform;}
     #sidebar .brand{display:flex;align-items:center;gap:.65rem;padding:0 .35rem;min-width:0;}
     #sidebar .brand-name{font-size:.9375rem;font-weight:800;color:#fff;letter-spacing:-.01em;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     #sidebar .brand-sub{font-size:.5938rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8;margin-top:.2rem;}
@@ -263,26 +264,68 @@ def generate_corporate_dashboard():
     #sidebar .side-foot{margin-top:auto;font-size:.625rem;line-height:1.6;color:#64748b;padding:.85rem .65rem 0;border-top:1px solid rgba(255,255,255,.07);}
     #sidebar .side-foot-cta{margin-top:auto;padding-top:.85rem;border-top:1px solid rgba(255,255,255,.07);}
     #sidebar .side-foot-cta .btn{width:100%;}
-    @media (max-width:1100px){
-      #sidebar{width:4.5rem;flex-basis:4.5rem;padding:1rem .5rem;align-items:center;gap:1rem;}
-      #sidebar .brand-text,#sidebar .side-label,#sidebar .side-foot,#sidebar .side-foot-cta,#sidebar .nav-tab > span{display:none;}
-      #sidebar .nav-tab{width:2.85rem;justify-content:center;padding:0;gap:0;}
+
+    /* Estado Oculto / Tela Cheia no Desktop */
+    body.sidebar-collapsed #sidebar {
+      width: 0 !important;
+      flex: 0 0 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      border-right: none !important;
+      overflow: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    /* Mobile e Tablet (< 1024px): Off-canvas Drawer com Hamburguer */
+    @media (max-width: 1023px) {
+      #sidebar {
+        position: fixed !important;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        height: 100vh;
+        width: 17.5rem !important;
+        flex: 0 0 17.5rem !important;
+        z-index: 1000 !important;
+        transform: translateX(-100%);
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,.85);
+      }
+      #sidebar.mobile-open {
+        transform: translateX(0) !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+      }
+      body.sidebar-collapsed #sidebar {
+        width: 17.5rem !important;
+        flex: 0 0 17.5rem !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+      }
     }
   </style>
 </head>
 <body class="text-slate-800">
-<div id="shell" class="flex min-h-screen w-full">
+<div id="shell" class="flex min-h-screen w-full relative">
+
+  <!-- BACKDROP MOBILE -->
+  <div id="sidebar-backdrop" onclick="closeMobileSidebar()" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-[990] transition-opacity duration-300 hidden cursor-pointer"></div>
 
   <!-- MENU LATERAL -->
   <aside id="sidebar">
-    <div class="brand">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-500 flex items-center justify-center text-white font-black shadow-lg shadow-purple-500/20 text-xl">
+    <div class="brand justify-between">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-500 flex items-center justify-center text-white font-black shadow-lg shadow-purple-500/20 text-xl flex-shrink-0">
           <i class="ph-bold ph-buildings"></i>
         </div>
-      <div class="brand-text">
-        <div class="brand-name">Chame T&aacute;xi</div>
-        <div class="brand-sub">Central B2B</div>
+        <div class="brand-text">
+          <div class="brand-name">Chame T&aacute;xi</div>
+          <div class="brand-sub">Central B2B</div>
+        </div>
       </div>
+      <button onclick="closeMobileSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10" title="Fechar Menu">
+        <i class="ph-bold ph-x text-lg"></i>
+      </button>
     </div>
 
     <div>
@@ -314,15 +357,20 @@ def generate_corporate_dashboard():
   <div class="flex-1 min-w-0 flex flex-col">
 
 
-    <!-- TOP HEADER (SLIM) -->
-  <header id="topbar" class="bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 border-b border-slate-800 text-white sticky top-0 z-50 shadow-md">
+    <!-- TOP HEADER (SLIM) COM BOTÃO HAMBURGUER -->
+  <header id="topbar" class="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-50 shadow-sm">
     <div class="max-w-[1750px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
-      <div>
-        <div class="flex items-center space-x-2">
+      <div class="flex items-center space-x-2">
+        <button id="sidebar-toggle" onclick="toggleSidebar()" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white focus:outline-none transition-colors flex items-center justify-center cursor-pointer shadow-sm mr-1" title="Alternar Menu Lateral (Hamburguer)" aria-label="Menu Lateral">
+          <i class="ph-bold ph-list text-xl"></i>
+        </button>
+        <div>
+          <div class="flex items-center space-x-2">
             <h1 class="text-base sm:text-lg font-bold tracking-tight text-white leading-none">Chame Táxi: Central de Inteligência Comercial B2B</h1>
-            <span class="bg-purple-500/20 text-purple-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-purple-500/30 uppercase tracking-wider">Raio 5km Sede Butantã</span>
+            <span class="bg-slate-800 text-slate-300 text-[10px] font-medium px-2 py-0.5 rounded-full border border-slate-700 uppercase tracking-wider hidden sm:inline-block">Raio 5km Sede Butantã</span>
           </div>
-        <p class="text-xs text-slate-300 mt-0.5">190 Clientes Corporativos Mapeados &bull; 94 Polos Hospitalares &bull; 96 Grandes Empresas (100+)</p>
+          <p class="text-xs text-slate-400 mt-0.5">190 Clientes Corporativos Mapeados &bull; 94 Polos Hospitalares &bull; 96 Grandes Empresas (100+)</p>
+        </div>
       </div>
     </div>
   </header>
@@ -335,69 +383,97 @@ def generate_corporate_dashboard():
     <!-- ===================================================================== -->
     <div id="tab-content-table" class="space-y-6">
       
-      <!-- CARDS DE METRICAS E KPI B2B -->
-      <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
-        <div class="card kpi flex flex-col justify-between">
-          <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="eyebrow">Prospects B2B</span>
-            <i class="ph-bold ph-buildings text-purple-600 text-base"></i>
+      <!-- CARDS DE METRICAS E KPI B2B (NEUTRAL EXECUTIVE) -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3.5">
+        <div class="card kpi group">
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Prospects B2B</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-buildings"></i>
+            </div>
           </div>
-          <div class="kpi-value tracking-tight">190</div>
-          <span class="text-[10px] text-purple-600 font-semibold mt-1">Raio 5.0 km Sede</span>
+          <div class="kpi-value">190</div>
+          <div class="kpi-sub">
+            <span class="truncate">Raio 5.0 km Sede</span>
+          </div>
         </div>
 
-        <div class="card kpi flex flex-col justify-between">
-          <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="eyebrow">Hospitais & Saúde</span>
-            <i class="ph-bold ph-first-aid text-rose-600 text-base"></i>
+        <div class="card kpi group">
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Hospitais & Saúde</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-first-aid"></i>
+            </div>
           </div>
-          <div class="kpi-value tracking-tight">94</div>
-          <span class="text-[10px] text-slate-500 mt-1">Tier A, Quat. & Clínicas</span>
+          <div class="kpi-value">94</div>
+          <div class="kpi-sub">
+            <span class="truncate">Tier A, Quat. & Clínicas</span>
+          </div>
         </div>
 
-        <div class="card kpi flex flex-col justify-between">
-          <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="eyebrow">Empresas (100+)</span>
-            <i class="ph-bold ph-briefcase text-blue-600 text-base"></i>
+        <div class="card kpi group">
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Empresas (100+)</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-briefcase"></i>
+            </div>
           </div>
-          <div class="kpi-value tracking-tight">96</div>
-          <span class="text-[10px] text-slate-500 mt-1">Sedes Corporativas</span>
+          <div class="kpi-value">96</div>
+          <div class="kpi-sub">
+            <span class="truncate">Sedes Corporativas</span>
+          </div>
         </div>
 
-        <div class="card kpi flex flex-col justify-between">
-          <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="eyebrow">Alta Vulnerabilidade</span>
-            <i class="ph-bold ph-flame text-red-500 text-base"></i>
+        <div class="card kpi group">
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Alta Vulnerabilidade</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-flame"></i>
+            </div>
           </div>
-          <div class="kpi-value tracking-tight">85</div>
-          <span class="text-[10px] text-red-600 font-semibold mt-1">Contratos Frágeis</span>
+          <div class="kpi-value">85</div>
+          <div class="kpi-sub">
+            <span class="truncate">Contratos Frágeis</span>
+          </div>
         </div>
 
-        <div class="card kpi flex flex-col justify-between">
-          <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="eyebrow">Potencial Mensal</span>
-            <i class="ph-bold ph-currency-dollar text-emerald-600 text-base"></i>
+        <div class="card kpi group">
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Potencial Mensal</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-currency-dollar"></i>
+            </div>
           </div>
-          <div class="kpi-value tracking-tight">R$ 3.83M</div>
-          <span class="text-[10px] text-slate-500 mt-1">~103.500 corridas/mês</span>
+          <div class="kpi-value">R$ 3.83M</div>
+          <div class="kpi-sub">
+            <span class="truncate">~103.500 corridas/mês</span>
+          </div>
         </div>
 
-        <div class="card kpi flex flex-col justify-between">
-          <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="eyebrow">Demanda Acessível</span>
-            <i class="ph-bold ph-wheelchair text-indigo-600 text-base"></i>
+        <div class="card kpi group">
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Demanda Acessível</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-wheelchair"></i>
+            </div>
           </div>
-          <div class="kpi-value tracking-tight">28</div>
-          <span class="text-[10px] text-indigo-600 font-semibold mt-1">Hospitais Reabilitação</span>
+          <div class="kpi-value">28</div>
+          <div class="kpi-sub">
+            <span class="truncate">Hospitais Reabilitação</span>
+          </div>
         </div>
 
-        <div class="card kpi flex flex-col justify-between">
-          <div class="flex items-center justify-between text-slate-500 mb-1">
-            <span class="eyebrow">Demanda ESG / Elét.</span>
-            <i class="ph-bold ph-leaf text-teal-600 text-base"></i>
+        <div class="card kpi group">
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Demanda ESG / Elét.</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-leaf"></i>
+            </div>
           </div>
-          <div class="kpi-value tracking-tight">32</div>
-          <span class="text-[10px] text-teal-600 font-semibold mt-1">Foco Edital 4 Híbrido</span>
+          <div class="kpi-value">32</div>
+          <div class="kpi-sub">
+            <span class="truncate">Foco Edital 4 Híbrido</span>
+          </div>
         </div>
       </section>
 
@@ -576,9 +652,9 @@ def generate_corporate_dashboard():
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         
         <!-- CARD 1: METODOLOGIA DE OUTBOUND B2B -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <div class="card p-5 space-y-3">
           <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
+            <div class="kpi-icon">
               <i class="ph-bold ph-target"></i>
             </div>
             <h3 class="font-bold text-slate-900 text-sm">Metodologia de Abordagem B2B</h3>
@@ -588,28 +664,28 @@ def generate_corporate_dashboard():
           </p>
           <ul class="text-xs text-slate-700 space-y-2">
             <li class="flex items-start gap-1.5">
-              <i class="ph-bold ph-check-circle text-emerald-600 text-sm shrink-0 mt-0.5"></i>
+              <i class="ph-bold ph-check-circle text-slate-500 text-sm shrink-0 mt-0.5"></i>
               <span><b>Fim do Custo Surpresa:</b> Eliminação total da tarifa dinâmica em dias de chuva e picos.</span>
             </li>
             <li class="flex items-start gap-1.5">
-              <i class="ph-bold ph-check-circle text-emerald-600 text-sm shrink-0 mt-0.5"></i>
+              <i class="ph-bold ph-check-circle text-slate-500 text-sm shrink-0 mt-0.5"></i>
               <span><b>Agilidade no Trânsito:</b> Liberação irrestrita nas pistas exclusivas e faixas de ônibus de SP.</span>
             </li>
             <li class="flex items-start gap-1.5">
-              <i class="ph-bold ph-check-circle text-emerald-600 text-sm shrink-0 mt-0.5"></i>
+              <i class="ph-bold ph-check-circle text-slate-500 text-sm shrink-0 mt-0.5"></i>
               <span><b>Atendimento Humano:</b> Faturamento consolidado quinzenal/mensal e central 24h dedicada.</span>
             </li>
             <li class="flex items-start gap-1.5">
-              <i class="ph-bold ph-check-circle text-emerald-600 text-sm shrink-0 mt-0.5"></i>
+              <i class="ph-bold ph-check-circle text-slate-500 text-sm shrink-0 mt-0.5"></i>
               <span><b>Frota Especializada:</b> Táxi Acessível (DTP) para pacientes e frotas elétricas/híbridas (ESG).</span>
             </li>
           </ul>
         </div>
 
         <!-- CARD 2: PADRÕES DE E-MAIL & SINTAXE -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <div class="card p-5 space-y-3">
           <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+            <div class="kpi-icon">
               <i class="ph-bold ph-envelope"></i>
             </div>
             <h3 class="font-bold text-slate-900 text-sm">Engenharia de E-mails Corporativos</h3>
@@ -619,11 +695,11 @@ def generate_corporate_dashboard():
           </p>
           <div class="space-y-2 text-xs">
             <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200 font-mono">
-              <span class="text-purple-700 font-bold block">{nome}.{sobrenome}@empresa.com.br</span>
+              <span class="text-slate-900 font-bold block">{nome}.{sobrenome}@empresa.com.br</span>
               <span class="text-[10px] text-slate-500 font-sans">Padrão dominante em 68% das empresas multinacionais e hospitais.</span>
             </div>
             <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200 font-mono">
-              <span class="text-indigo-700 font-bold block">{inicial_nome}{sobrenome}@empresa.com.br</span>
+              <span class="text-slate-900 font-bold block">{inicial_nome}{sobrenome}@empresa.com.br</span>
               <span class="text-[10px] text-slate-500 font-sans">Padrão em bancos, financeiras e fundações de saúde.</span>
             </div>
           </div>
@@ -633,9 +709,9 @@ def generate_corporate_dashboard():
         </div>
 
         <!-- CARD 3: HIERARQUIA DE DECISÃO -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <div class="card p-5 space-y-3">
           <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+            <div class="kpi-icon">
               <i class="ph-bold ph-users-three"></i>
             </div>
             <h3 class="font-bold text-slate-900 text-sm">Hierarquia dos Cargos Decisores</h3>
@@ -644,17 +720,17 @@ def generate_corporate_dashboard():
             Quem tem o poder da caneta para assinar e homologar o fornecedor de mobilidade corporativa:
           </p>
           <div class="space-y-1.5 text-xs">
-            <div class="flex items-center justify-between p-2 rounded bg-purple-50 text-purple-900 font-semibold">
+            <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 font-medium">
               <span>1. Gerente / Diretor de Suprimentos & Compras Indiretas</span>
-              <span class="text-[10px] bg-purple-200 px-1.5 py-0.5 rounded">Decisor Final</span>
+              <span class="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-semibold">Decisor Final</span>
             </div>
-            <div class="flex items-center justify-between p-2 rounded bg-blue-50 text-blue-900 font-semibold">
+            <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 font-medium">
               <span>2. Gerente de Facilities, Workplace & Serviços Gerais</span>
-              <span class="text-[10px] bg-blue-200 px-1.5 py-0.5 rounded">Gestor Contrato</span>
+              <span class="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-semibold">Gestor Contrato</span>
             </div>
-            <div class="flex items-center justify-between p-2 rounded bg-amber-50 text-amber-900 font-semibold">
+            <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 font-medium">
               <span>3. Business Partner de RH / Operações Médicas</span>
-              <span class="text-[10px] bg-amber-200 px-1.5 py-0.5 rounded">Influenciador</span>
+              <span class="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-semibold">Influenciador</span>
             </div>
           </div>
         </div>
@@ -671,26 +747,26 @@ def generate_corporate_dashboard():
   <div id="b2b-modal" class="fixed inset-0 z-[1000] bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5">
     <div class="bg-white w-full max-w-4xl max-h-[92vh] rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
       
-      <!-- MODAL HEADER -->
-      <div class="p-5 bg-gradient-to-r from-purple-950 via-slate-900 to-purple-950 text-white flex items-start justify-between border-b border-slate-800">
+      <!-- MODAL HEADER (NEUTRAL SLATE) -->
+      <div class="p-5 bg-slate-900 border-b border-slate-800 text-white flex items-start justify-between">
         <div class="flex items-center space-x-3.5">
-          <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-500 text-white font-black text-2xl flex items-center justify-center shadow-lg shadow-purple-500/20" id="b2b-modal-avatar">
+          <div class="w-11 h-11 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 font-bold text-xl flex items-center justify-center" id="b2b-modal-avatar">
             🏢
           </div>
           <div>
             <div class="flex flex-wrap items-center gap-2">
               <h3 class="text-base sm:text-lg font-bold text-white tracking-tight" id="b2b-modal-name">Nome do Prospect</h3>
-              <span id="b2b-modal-tier-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              <span id="b2b-modal-tier-badge" class="px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-700">
                 Tier A
               </span>
-              <span id="b2b-modal-score-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              <span id="b2b-modal-score-badge" class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-800 text-slate-300 border border-slate-700">
                 Score: 95 pts
               </span>
-              <span id="b2b-modal-vuln-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-500/20 text-red-300 border border-red-500/30">
+              <span id="b2b-modal-vuln-badge" class="px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-700">
                 Alta Vulnerabilidade
               </span>
             </div>
-            <p class="text-xs text-slate-300 mt-1" id="b2b-modal-subtitle">Segmento &bull; Endereço</p>
+            <p class="text-xs text-slate-400 mt-1" id="b2b-modal-subtitle">Segmento &bull; Endereço</p>
           </div>
         </div>
         <button onclick="closeB2BModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition">
@@ -705,130 +781,130 @@ def generate_corporate_dashboard():
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
           
           <!-- CARD 1: DIAGNÓSTICO DE MOBILIDADE ATUAL -->
-          <div class="p-3.5 rounded-xl bg-rose-50/50 border border-rose-200 space-y-2">
-            <span class="text-[10px] uppercase font-bold text-rose-800 tracking-wider flex items-center gap-1">
-              <i class="ph-bold ph-car text-sm"></i>
+          <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+            <span class="text-[10px] uppercase font-bold text-slate-700 tracking-wider flex items-center gap-1.5">
+              <i class="ph-bold ph-car text-slate-500 text-sm"></i>
               <span>Diagnóstico de Mobilidade & Fornecedor Atual</span>
             </span>
-            <div class="grid grid-cols-2 gap-2 pt-1 border-t border-rose-200/60">
+            <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-100">
               <div>
                 <span class="eyebrow">Fornecedor Atual</span>
-                <span id="b2b-modal-forn" class="font-bold text-slate-900">—</span>
+                <span id="b2b-modal-forn" class="font-bold text-slate-900 block">—</span>
               </div>
               <div>
                 <span class="eyebrow">Modelo de Operação</span>
-                <span id="b2b-modal-tipo-mob" class="font-semibold text-slate-800">—</span>
+                <span id="b2b-modal-tipo-mob" class="font-medium text-slate-800 block">—</span>
               </div>
             </div>
             <div>
-              <span class="text-[10px] font-bold text-rose-700 uppercase block">Principal Gargalo / Dor</span>
-              <p id="b2b-modal-dor" class="text-slate-800 italic mt-0.5 leading-snug">—</p>
+              <span class="eyebrow">Principal Gargalo / Dor</span>
+              <p id="b2b-modal-dor" class="text-slate-700 italic mt-0.5 leading-snug">—</p>
             </div>
-            <div class="grid grid-cols-2 gap-2 pt-1 border-t border-rose-200/60">
+            <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-100">
               <div>
                 <span class="eyebrow">Corridas Estimadas</span>
-                <span id="b2b-modal-corridas" class="font-bold text-slate-900">—</span>
+                <span id="b2b-modal-corridas" class="font-bold text-slate-900 block">—</span>
               </div>
               <div>
                 <span class="eyebrow">Potencial de Receita</span>
-                <span id="b2b-modal-rec" class="font-black text-emerald-600">—</span>
+                <span id="b2b-modal-rec" class="font-bold text-slate-900 block">—</span>
               </div>
             </div>
           </div>
 
           <!-- CARD 2: LOCALIZAÇÃO & LOGÍSTICA SEDE BUTANTÃ -->
-          <div class="p-3.5 rounded-xl bg-blue-50/50 border border-blue-200 space-y-2">
-            <span class="text-[10px] uppercase font-bold text-blue-800 tracking-wider flex items-center gap-1">
-              <i class="ph-bold ph-map-pin text-sm"></i>
-              <span>Localização & Proximidade Sede Butantã</span>
+          <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+            <span class="text-[10px] uppercase font-bold text-slate-700 tracking-wider flex items-center gap-1.5">
+              <i class="ph-bold ph-map-pin text-slate-500 text-sm"></i>
+              <span>Localização & Proximidade Sede ButantÃ</span>
             </span>
-            <div class="pt-1 border-t border-blue-200/60">
+            <div class="pt-1 border-t border-slate-100">
               <span class="eyebrow">Endereço Completo</span>
-              <span id="b2b-modal-end" class="font-bold text-slate-900 leading-snug block">—</span>
+              <span id="b2b-modal-end" class="font-medium text-slate-900 leading-snug block">—</span>
             </div>
             <div class="grid grid-cols-2 gap-2">
               <div>
                 <span class="eyebrow">Distância Sede</span>
-                <span id="b2b-modal-dist" class="font-bold text-blue-700">—</span>
+                <span id="b2b-modal-dist" class="font-bold text-slate-900 block">—</span>
               </div>
               <div>
                 <span class="eyebrow">Tempo de Deslocamento</span>
-                <span id="b2b-modal-tempo" class="font-bold text-slate-800">—</span>
+                <span id="b2b-modal-tempo" class="font-medium text-slate-800 block">—</span>
               </div>
             </div>
             <div>
               <span class="eyebrow">Ponto de Táxi DTP Próximo</span>
-              <span id="b2b-modal-ponto" class="font-semibold text-slate-800">—</span>
+              <span id="b2b-modal-ponto" class="font-medium text-slate-800 block">—</span>
             </div>
           </div>
 
         </div>
 
         <!-- CARD 3: DECISORES DE COMPRAS, SUPRIMENTOS & FACILITIES -->
-        <div class="p-3.5 rounded-xl bg-emerald-50/50 border border-emerald-200 space-y-2.5">
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2.5">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] uppercase font-bold text-emerald-800 tracking-wider flex items-center gap-1">
-              <i class="ph-bold ph-users text-sm"></i>
+            <span class="text-[10px] uppercase font-bold text-slate-700 tracking-wider flex items-center gap-1.5">
+              <i class="ph-bold ph-users text-slate-500 text-sm"></i>
               <span>Decisores de Contratação (Compras, Suprimentos & Facilities)</span>
             </span>
-            <span class="bg-emerald-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">Procurement B2B</span>
+            <span class="bg-slate-100 text-slate-700 border border-slate-200 text-[9px] font-semibold px-2 py-0.5 rounded-full">Procurement B2B</span>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-1 border-t border-emerald-200/60">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-1 border-t border-slate-100">
             <div>
               <span class="eyebrow">Área Decisora</span>
               <span id="b2b-modal-dec-area" class="font-bold text-slate-900 block">—</span>
             </div>
             <div>
               <span class="eyebrow">Cargos-Alvo Prioritários</span>
-              <span id="b2b-modal-dec-cargos" class="font-semibold text-slate-800 block">—</span>
+              <span id="b2b-modal-dec-cargos" class="font-medium text-slate-800 block">—</span>
             </div>
             <div>
               <span class="eyebrow">Liderança Mapeada / Canal</span>
-              <span id="b2b-modal-dec-lideres" class="font-bold text-indigo-700 block">—</span>
+              <span id="b2b-modal-dec-lideres" class="font-medium text-slate-800 block">—</span>
             </div>
           </div>
           
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-1.5 border-t border-emerald-200/60">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-1.5 border-t border-slate-100">
             <div>
               <span class="eyebrow">Padrão de E-mail Corporativo</span>
-              <span id="b2b-modal-email-padrao" class="font-mono text-[11px] font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-emerald-200 block">—</span>
+              <span id="b2b-modal-email-padrao" class="font-mono text-[11px] font-medium text-slate-800 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 block">—</span>
             </div>
             <div>
               <span class="eyebrow">E-mail Provável do Decisor / Canal</span>
-              <span id="b2b-modal-email-dec" class="font-mono text-[11px] font-bold text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-200 block">—</span>
+              <span id="b2b-modal-email-dec" class="font-mono text-[11px] font-medium text-slate-800 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 block">—</span>
             </div>
           </div>
         </div>
 
         <!-- CARD 4: BOTÕES DE AÇÃO RÁPIDA 1-CLIQUE -->
-        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
           <span class="text-[10px] uppercase font-bold text-slate-600 tracking-wider block">Ações Rápidas de Prospecção</span>
           <div class="flex flex-wrap gap-2">
-            <a id="b2b-modal-link-linkedin" href="#" target="_blank" class="btn bg-[#0a66c2] hover:bg-[#004182] text-white">
+            <a id="b2b-modal-link-linkedin" href="#" target="_blank" class="btn btn-dark">
               <i class="ph-bold ph-linkedin-logo"></i>
               <span>Buscar no LinkedIn Web ↗</span>
             </a>
-            <a id="b2b-modal-link-google" href="#" target="_blank" class="btn bg-slate-800 hover:bg-slate-700 text-white">
+            <a id="b2b-modal-link-google" href="#" target="_blank" class="btn btn-ghost">
               <i class="ph-bold ph-google-logo"></i>
-              <span>Ver Perfis no Google (Sem Login) ↗</span>
+              <span>Ver Perfis no Google ↗</span>
             </a>
-            <a id="b2b-modal-link-hunter" href="#" target="_blank" class="btn bg-[#e11d48] hover:bg-[#be123c] text-white">
+            <a id="b2b-modal-link-hunter" href="#" target="_blank" class="btn btn-ghost">
               <i class="ph-bold ph-target"></i>
-              <span>Hunter.io (E-mails do Domínio) ↗</span>
+              <span>Hunter.io (Domínio) ↗</span>
             </a>
-            <a id="b2b-modal-link-dork-email" href="#" target="_blank" class="btn bg-emerald-600 hover:bg-emerald-500 text-white">
+            <a id="b2b-modal-link-dork-email" href="#" target="_blank" class="btn btn-ghost">
               <i class="ph-bold ph-envelope"></i>
               <span>Google Dork E-mails ↗</span>
             </a>
-            <a id="b2b-modal-link-maps" href="#" target="_blank" class="btn bg-blue-600 hover:bg-blue-500 text-white">
+            <a id="b2b-modal-link-maps" href="#" target="_blank" class="btn btn-ghost">
               <i class="ph-bold ph-navigation-arrow"></i>
               <span>Rota Google Maps ↗</span>
             </a>
-            <button id="b2b-modal-btn-locate" onclick="locateCurrentB2BOnMap()" class="btn bg-amber-500 hover:bg-amber-400 text-slate-950">
+            <button id="b2b-modal-btn-locate" onclick="locateCurrentB2BOnMap()" class="btn btn-ghost">
               <i class="ph-bold ph-crosshair"></i>
               <span>Ver no Mapa GIS</span>
             </button>
-            <a id="b2b-modal-link-tel" href="#" class="btn bg-slate-200 hover:bg-slate-300 text-slate-800">
+            <a id="b2b-modal-link-tel" href="#" class="btn btn-ghost">
               <i class="ph-bold ph-phone"></i>
               <span id="b2b-modal-tel-txt">Ligar Central</span>
             </a>
@@ -836,30 +912,30 @@ def generate_corporate_dashboard():
         </div>
 
         <!-- CARD 5: SCRIPT DE ABORDAGEM PERSONALIZADO (INMAIL / EMAIL) -->
-        <div class="p-3.5 rounded-xl bg-amber-50/50 border border-amber-200 space-y-2">
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2.5">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] uppercase font-bold text-amber-800 tracking-wider flex items-center gap-1">
-              <i class="ph-bold ph-chat-text text-sm"></i>
+            <span class="text-[10px] uppercase font-bold text-slate-700 tracking-wider flex items-center gap-1.5">
+              <i class="ph-bold ph-chat-text text-slate-500 text-sm"></i>
               <span>Script Personalizado de Abordagem Comercial (InMail / Cold Email)</span>
             </span>
-            <button onclick="copyB2BScript()" class="btn bg-amber-500 hover:bg-amber-400 text-slate-950">
+            <button onclick="copyB2BScript()" class="btn btn-dark">
               <i class="ph-bold ph-copy"></i>
-              <span id="b2b-copy-script-btn-txt">Copiar Mensagem Pronta</span>
+              <span id="b2b-copy-script-btn-txt">Copiar Mensagem</span>
             </button>
           </div>
-          <p id="b2b-modal-script-text" class="text-slate-800 bg-white p-3 rounded-lg border border-amber-200 font-medium leading-relaxed select-all">
+          <p id="b2b-modal-script-text" class="text-slate-800 bg-slate-50 p-3 rounded-lg border border-slate-200 font-normal leading-relaxed select-all">
             Carregando script personalizado...
           </p>
         </div>
 
         <!-- CARD 6: GESTÃO DO LEAD CRM B2B (PERSISTÊNCIA LOCALSTORAGE) -->
-        <div class="p-3.5 rounded-xl bg-purple-50/50 border border-purple-200 space-y-2.5">
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2.5">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] uppercase font-bold text-purple-800 tracking-wider flex items-center gap-1">
-              <i class="ph-bold ph-kanban text-sm"></i>
+            <span class="text-[10px] uppercase font-bold text-slate-700 tracking-wider flex items-center gap-1.5">
+              <i class="ph-bold ph-kanban text-slate-500 text-sm"></i>
               <span>Gestão de Contato CRM B2B & Histórico</span>
             </span>
-            <span id="b2b-crm-saved-indicator" class="text-[10px] font-bold text-emerald-600 hidden">✓ Salvo localmente</span>
+            <span id="b2b-crm-saved-indicator" class="text-[10px] font-bold text-slate-600 hidden">✓ Salvo localmente</span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
@@ -877,8 +953,8 @@ def generate_corporate_dashboard():
             <div class="sm:col-span-2">
               <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Anotações do Contato / Próximos Passos</label>
               <div class="flex gap-2">
-                <input type="text" id="b2b-crm-notes" placeholder="Ex: Falou com Felipe no LinkedIn, reunião pré-agendada para quinta..." class="field flex-1 px-3 py-1.5 text-slate-800"/>
-                <button onclick="saveB2BCRM()" class="btn bg-purple-600 hover:bg-purple-500 text-white shrink-0">
+                <input type="text" id="b2b-crm-notes" placeholder="Ex: Falou com decisor no LinkedIn, reunião pré-agendada..." class="field flex-1 px-3 py-1.5 text-slate-800"/>
+                <button onclick="saveB2BCRM()" class="btn btn-dark shrink-0">
                   <i class="ph-bold ph-floppy-disk"></i>
                   <span>Salvar</span>
                 </button>
@@ -894,7 +970,7 @@ def generate_corporate_dashboard():
         <div class="flex items-center gap-2">
           <span class="text-[11px] text-slate-500" id="b2b-modal-footer-id">ID Prospect: CORP-000</span>
         </div>
-        <button onclick="closeB2BModal()" class="btn bg-slate-200 text-slate-800 hover:bg-slate-300">
+        <button onclick="closeB2BModal()" class="btn btn-ghost">
           Fechar Dossiê B2B
         </button>
       </div>
@@ -943,12 +1019,59 @@ def generate_corporate_dashboard():
       }
     };
 
+    // CONTROLE DE MENU LATERAL (HAMBURGUER & RESPONSIVIDADE)
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      if (window.innerWidth < 1024) {
+        if (sidebar && sidebar.classList.contains('mobile-open')) {
+          closeMobileSidebar();
+        } else {
+          openMobileSidebar();
+        }
+      } else {
+        const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+        try {
+          localStorage.setItem('sidebar_collapsed_b2b', isCollapsed ? 'true' : 'false');
+        } catch(e) {}
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+          if (typeof b2bMap !== 'undefined' && b2bMap) {
+            b2bMap.invalidateSize();
+          }
+        }, 300);
+      }
+    }
+
+    function openMobileSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      if (sidebar) sidebar.classList.add('mobile-open');
+      if (backdrop) backdrop.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeMobileSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+      if (backdrop) backdrop.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      try {
+        if (window.innerWidth >= 1024 && localStorage.getItem('sidebar_collapsed_b2b') === 'true') {
+          document.body.classList.add('sidebar-collapsed');
+        }
+      } catch(e) {}
       applyB2BFilters();
     });
 
     function switchB2BTab(tab) {
       currentB2BTab = tab;
+      if (window.innerWidth < 1024) {
+        closeMobileSidebar();
+      }
       
       const tabTable = document.getElementById('tab-content-table');
       const tabMap = document.getElementById('tab-content-map');
@@ -1084,33 +1207,33 @@ def generate_corporate_dashboard():
       pageData.forEach(item => {
         const isHosp = item.isHosp;
         const icon = isHosp ? '🏥' : '🏢';
-        const tierBadge = item.tier.includes('Tier A') ? 'bg-purple-100 text-purple-800 border-purple-200' : 'bg-amber-100 text-amber-800 border-amber-200';
-        const vulnBadge = item.mob_vuln === 'Alta' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200';
+        const tierBadge = 'bg-slate-100 text-slate-700 border-slate-200';
+        const vulnBadge = item.mob_vuln === 'Alta' ? 'bg-slate-100 text-slate-800 border-slate-300 font-semibold' : 'bg-slate-50 text-slate-600 border-slate-200';
 
         html += `
-          <tr class="hover:bg-purple-50/40 transition cursor-pointer group" onclick="openB2BModal('${item.id}')">
+          <tr class="hover:bg-slate-50 transition cursor-pointer group" onclick="openB2BModal('${item.id}')">
             <td class="py-2.5 px-3">
               <div class="flex items-center space-x-2.5">
-                <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-base shrink-0 ${isHosp ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700'}">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-base shrink-0 bg-slate-100 text-slate-600 border border-slate-200">
                   ${icon}
                 </div>
                 <div>
-                  <div class="font-bold text-slate-900 group-hover:text-purple-700 transition flex items-center gap-1.5">
+                  <div class="font-bold text-slate-900 group-hover:text-slate-700 transition flex items-center gap-1.5">
                     <span>${item.nome}</span>
-                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold border ${tierBadge}">${item.tier.split(' ')[0]} ${item.tier.split(' ')[1]}</span>
+                    <span class="px-1.5 py-0.5 rounded text-[9px] font-medium border ${tierBadge}">${item.tier.split(' ')[0]} ${item.tier.split(' ')[1]}</span>
                   </div>
-                  <div class="text-[10px] text-slate-400 font-mono">${item.id} &bull; Score: <b class="text-amber-600">${item.score} pts</b></div>
+                  <div class="text-[10px] text-slate-400 font-mono">${item.id} &bull; Score: <b class="text-slate-700">${item.score} pts</b></div>
                 </div>
               </div>
             </td>
 
             <td class="py-2.5 px-3">
-              <div class="font-semibold text-slate-800">${item.setor}</div>
+              <div class="font-medium text-slate-800">${item.setor}</div>
               <div class="text-[10px] text-slate-500">${item.bairro} &bull; ${item.colab ? item.colab + ' presencial' : (item.grupo || 'Saúde')}</div>
             </td>
 
             <td class="py-2.5 px-3 text-center whitespace-nowrap">
-              <span class="inline-block px-2 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+              <span class="inline-block px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
                 ${item.dist} km
               </span>
               <span class="block text-[9px] text-slate-400 mt-0.5">~${item.tempo} min</span>
@@ -1119,49 +1242,49 @@ def generate_corporate_dashboard():
             <td class="py-2.5 px-3 max-w-[220px]">
               <div class="flex items-center gap-1">
                 <span class="text-[10px] text-slate-500 font-medium">Fornecedor:</span>
-                <span class="font-bold text-slate-800 text-[11px]">${item.mob_forn}</span>
+                <span class="font-semibold text-slate-800 text-[11px]">${item.mob_forn}</span>
               </div>
-              <div class="text-[10px] text-rose-700 font-medium line-clamp-1 italic mt-0.5" title="${item.mob_dor}">
+              <div class="text-[10px] text-slate-600 font-normal line-clamp-1 italic mt-0.5" title="${item.mob_dor}">
                 "${item.mob_dor}"
               </div>
             </td>
 
             <td class="py-2.5 px-3 text-center">
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${vulnBadge}">
+              <span class="px-2 py-0.5 rounded-full text-[10px] border ${vulnBadge}">
                 ${item.mob_vuln}
               </span>
             </td>
 
             <td class="py-2.5 px-3">
-              <div class="font-black text-emerald-600 text-xs">${item.mob_rec.split('(')[0]}</div>
+              <div class="font-bold text-slate-900 text-xs">${item.mob_rec.split('(')[0]}</div>
               <div class="text-[9px] text-slate-500">${item.corridas.split(' ')[0]} corr/mês</div>
             </td>
 
             <td class="py-2.5 px-3 max-w-[200px]">
-              <div class="font-semibold text-slate-800 line-clamp-1" title="${item.dec_cargos}">
+              <div class="font-medium text-slate-800 line-clamp-1" title="${item.dec_cargos}">
                 ${item.dec_cargos.split('|')[0] || item.dec_area}
               </div>
-              <div class="text-[10px] font-mono text-emerald-700 line-clamp-1" title="${item.email_dec || item.email_inst}">
+              <div class="text-[10px] font-mono text-slate-600 line-clamp-1" title="${item.email_dec || item.email_inst}">
                 ${item.email_dec ? item.email_dec.split(';')[0] : (item.email_dom ? `@${item.email_dom}` : '—')}
               </div>
             </td>
 
             <td class="py-2.5 px-3 text-center whitespace-nowrap" onclick="event.stopPropagation()">
               <div class="flex items-center justify-center gap-1">
-                <button onclick="openB2BModal('${item.id}')" title="Abrir Dossiê 360°" class="p-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs shadow-sm transition">
+                <button onclick="openB2BModal('${item.id}')" title="Abrir Dossiê 360°" class="p-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs shadow-sm transition">
                   <i class="ph-bold ph-files"></i>
                 </button>
                 ${item.dec_linkedin ? `
-                  <a href="${item.dec_linkedin}" target="_blank" title="Buscar no LinkedIn Web" class="p-1.5 bg-[#0a66c2] hover:bg-[#004182] text-white rounded-lg text-xs shadow-sm transition">
+                  <a href="${item.dec_linkedin}" target="_blank" title="Buscar no LinkedIn Web" class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-lg text-xs shadow-sm transition">
                     <i class="ph-bold ph-linkedin-logo"></i>
                   </a>
                 ` : ''}
                 ${item.dec_google ? `
-                  <a href="${item.dec_google}" target="_blank" title="Ver Perfis do LinkedIn no Google (Sem Login)" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs shadow-sm transition">
+                  <a href="${item.dec_google}" target="_blank" title="Ver Perfis do LinkedIn no Google (Sem Login)" class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-lg text-xs shadow-sm transition">
                     <i class="ph-bold ph-google-logo"></i>
                   </a>
                 ` : ''}
-                <button onclick="locateB2BOnMap(${item.lat}, ${item.lon}, '${item.id}')" title="Localizar no Mapa GIS" class="p-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs shadow-sm transition">
+                <button onclick="locateB2BOnMap(${item.lat}, ${item.lon}, '${item.id}')" title="Localizar no Mapa GIS" class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-lg text-xs shadow-sm transition">
                   <i class="ph-bold ph-map-pin"></i>
                 </button>
               </div>

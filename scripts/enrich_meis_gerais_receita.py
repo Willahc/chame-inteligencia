@@ -378,7 +378,7 @@ def main():
     print(f'  -> Base Completa Local: {saida_completa} ({len(df_res):,} linhas)')
 
     # Versão pública minimizada (LGPD)
-    pub_cols = [c for c in df_res.columns if c not in ('Telefone_Principal', 'Telefone_Secundario', 'Link_WhatsApp', 'Email', 'MEI_Logradouro', 'MEI_Numero', 'MEI_Complemento', 'MEI_CEP')]
+    pub_cols = [c for c in df_res.columns if c not in ('Telefone_Principal', 'Telefone_Secundario', 'Link_WhatsApp', 'Email', 'MEI_Logradouro', 'MEI_Numero', 'MEI_Complemento', 'MEI_CEP', 'MEI_CPF_Extraido')]
     df_pub = df_res[pub_cols].copy()
     df_pub['MEI_Razao_Social_Publica'] = df_pub['MEI_Razao_Social'].apply(mascarar_nome)
     df_pub.drop(columns=['MEI_Razao_Social'], inplace=True, errors='ignore')

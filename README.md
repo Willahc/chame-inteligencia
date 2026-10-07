@@ -31,7 +31,7 @@ python scripts/run_pipeline.py --only match,metricas,privacidade
 python scripts/run_pipeline.py --all                    # tudo, exceto os estágios de rede pesada
 python scripts/run_pipeline.py --all --include-manual   # inclui RFB, DOC, Nominatim e Overpass
 python scripts/privacy.py check                         # deve terminar com 0 violações
-python scripts/test_doc_scraper.py                      # testes unitários
+python scripts/run_tests.py                             # suíte completa de testes unitários
 ```
 
 Cada estágio declara as entradas de que precisa; se faltarem, é pulado com aviso (`--strict` transforma pulo em falha) e a execução para na primeira falha (`--keep-going` para continuar). Consulte `docs/inventario.md` para a auditoria, limitações e próxima ação recomendada.

@@ -418,27 +418,31 @@ def generate_dashboard():
     cobertura_pct = round(acid_local / acid_total * 100, 1) if acid_total else 0.0
     kpis_abertos = [
         {"label": "Licenças de Táxi (SGTP)", "valor": _br(sgtp_total), "icone": "ph-id-card",
-         "bg": "bg-sky-50", "txt": "text-sky-600", "sub": f"{sgtp_rotulo} | SMT/DTP"},
+         "sub": f"{sgtp_rotulo} | SMT/DTP"},
         {"label": "Frota Ativa (Estado SP)", "valor": _br(frota_estado), "icone": "ph-car",
-         "bg": "bg-blue-50", "txt": "text-blue-600", "sub": f"{frota_periodo} | capital {_br(frota_capital)}"},
+         "sub": f"{frota_periodo} | capital {_br(frota_capital)}"},
         {"label": "PJ de Táxi Ativas", "valor": _br(pj_total), "icone": "ph-buildings",
-         "bg": "bg-purple-50", "txt": "text-purple-600", "sub": "Receita Federal | CNAE táxi"},
+         "sub": "Receita Federal | CNAE táxi"},
         {"label": "Sinistros no Município", "valor": _br(acid_total), "icone": "ph-warning",
-         "bg": "bg-rose-50", "txt": "text-rose-600", "sub": f"{acid_periodo} | {_br(acid_fatais)} fatais"},
+         "sub": f"{acid_periodo} | {_br(acid_fatais)} fatais"},
         {"label": "Vítimas Taxistas", "valor": _br(vit_taxista), "icone": "ph-steering-wheel",
-         "bg": "bg-amber-50", "txt": "text-amber-600", "sub": f"12 meses | {vit_fatais} fatal(is) | Infosiga"},
+         "sub": f"12 meses | {vit_fatais} fatal(is) | Infosiga"},
         {"label": "Sinistros Geolocalizados", "valor": f"{cobertura_pct}%".replace('.', ','), "icone": "ph-map-pin",
-         "bg": "bg-emerald-50", "txt": "text-emerald-600", "sub": f"{_br(acid_local)} de {_br(acid_total)} com coordenada"},
+         "sub": f"{_br(acid_local)} de {_br(acid_total)} com coordenada"},
     ]
 
     kpis_html = ''.join(
         '        <div class="card kpi group">\n'
-        f'          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg {k["bg"]} {k["txt"]} flex items-center justify-center text-lg">\n'
-        f'            <i class="ph-bold {k["icone"]}"></i>\n'
+        '          <div class="flex items-center justify-between gap-2">\n'
+        f'            <span class="eyebrow truncate">{k["label"]}</span>\n'
+        f'            <div class="kpi-icon">\n'
+        f'              <i class="ph-bold {k["icone"]}"></i>\n'
+        '            </div>\n'
         '          </div>\n'
-        f'          <span class="eyebrow">{k["label"]}</span>\n'
-        f'          <div class="kpi-value mt-1">{k["valor"]}</div>\n'
-        f'          <div class="text-[11px] text-slate-500 mt-0.5">{k["sub"]}</div>\n'
+        f'          <div class="kpi-value">{k["valor"]}</div>\n'
+        '          <div class="kpi-sub">\n'
+        f'            <span class="truncate">{k["sub"]}</span>\n'
+        '          </div>\n'
         '        </div>\n'
         for k in kpis_abertos)
 
@@ -456,15 +460,15 @@ def generate_dashboard():
     print(f"Dados abertos carregados: SGTP {sgtp_total} licenças | frota {frota_estado} | "
           f"PJ {pj_total} | sinistros {acid_total} | vítimas taxista {vit_taxista}.")
 
-    json_data = json.dumps(records, ensure_ascii=False)
-    json_stats = json.dumps(edital_stats, ensure_ascii=False)
-    json_tiers = json.dumps(tier_counts, ensure_ascii=False)
-    json_pontos = json.dumps(top_pontos, ensure_ascii=False)
-    json_decadas = json.dumps(decadas_counts, ensure_ascii=False)
-    json_crm = json.dumps(crm_records, ensure_ascii=False)
-    json_map_pontos = json.dumps(pontos_records, ensure_ascii=False)
-    json_hospitais = json.dumps(hosp_records, ensure_ascii=False)
-    json_empresas = json.dumps(emp_records, ensure_ascii=False)
+    json_data = json.dumps(records, ensure_ascii=False, separators=(',', ':'))
+    json_stats = json.dumps(edital_stats, ensure_ascii=False, separators=(',', ':'))
+    json_tiers = json.dumps(tier_counts, ensure_ascii=False, separators=(',', ':'))
+    json_pontos = json.dumps(top_pontos, ensure_ascii=False, separators=(',', ':'))
+    json_decadas = json.dumps(decadas_counts, ensure_ascii=False, separators=(',', ':'))
+    json_crm = json.dumps(crm_records, ensure_ascii=False, separators=(',', ':'))
+    json_map_pontos = json.dumps(pontos_records, ensure_ascii=False, separators=(',', ':'))
+    json_hospitais = json.dumps(hosp_records, ensure_ascii=False, separators=(',', ':'))
+    json_empresas = json.dumps(emp_records, ensure_ascii=False, separators=(',', ':'))
     json_abertos = json.dumps({
         "sub_labels": [t["sub"] for t in acid_top],
         "sub_sinistros": [t["sin"] for t in acid_top],
@@ -473,7 +477,7 @@ def generate_dashboard():
         "mes_sinistros": [m["sin"] for m in acid_mes_series],
         "mes_fatais": [m["fatais"] for m in acid_mes_series],
         "mes_atrop": [m["atrop"] for m in acid_mes_series],
-    }, ensure_ascii=False)
+    }, ensure_ascii=False, separators=(',', ':'))
 
     print("Montando aplicação HTML com os 3 módulos (Base Mestre, CRM WhatsApp e Mapa GIS)...")
 
@@ -526,17 +530,16 @@ def generate_dashboard():
     .nav-tab:not(.is-active):hover{background:rgba(255,255,255,.08);color:#fff;}
     .nav-tab.is-active{font-weight:700;box-shadow:0 1px 2px rgba(2,6,23,.35);}
 
-    /* ===== Cards / KPIs ===== */
-    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1);}
-    .kpi{padding:.95rem 1.05rem 1rem;position:relative;overflow:hidden;transition:box-shadow .15s ease,border-color .15s ease;}
-    .kpi:hover{box-shadow:0 2px 4px rgba(16,24,40,.06), 0 14px 34px -18px rgba(16,24,40,.22);border-color:#dde1e6;}
-    .kpi::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;pointer-events:none;
-      background:linear-gradient(90deg,var(--accent) 0%,rgba(0,0,0,0) 75%);opacity:.9;}
-    .eyebrow{font-size:.6875rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);}
-    .kpi > span.eyebrow{display:block;padding-right:2.5rem;}
-    .kpi-value{font-size:1.625rem;font-weight:800;line-height:1.08;letter-spacing:-.025em;color:var(--ink);
-      font-variant-numeric:tabular-nums;margin-top:.3rem;}
-    .section-title{font-size:.6875rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#475569;}
+    /* ===== Cards / KPIs (Minimalist Executive / Neutral SaaS) ===== */
+    .card{background:#ffffff;border:1px solid #e2e8f0;border-radius:var(--r-lg);box-shadow:0 1px 2px 0 rgba(0,0,0,.03);transition:border-color .15s ease,box-shadow .15s ease;}
+    .kpi{padding:1.15rem 1.25rem 1.1rem;position:relative;background:#ffffff;border:1px solid #e2e8f0;border-radius:var(--r-lg);box-shadow:0 1px 2px 0 rgba(0,0,0,.03);transition:border-color .15s ease,box-shadow .15s ease;display:flex;flex-direction:column;justify-content:space-between;}
+    .kpi:hover{border-color:#cbd5e1;box-shadow:0 4px 12px -2px rgba(0,0,0,.05);}
+    .eyebrow{font-size:.6875rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#64748b;line-height:1.2;}
+    .kpi > span.eyebrow{display:block;}
+    .kpi-value{font-size:1.625rem;font-weight:700;line-height:1.15;letter-spacing:-.02em;color:#0f172a;font-variant-numeric:tabular-nums;margin-top:.4rem;margin-bottom:.15rem;}
+    .kpi-sub{font-size:.6875rem;color:#64748b;font-weight:500;display:flex;align-items:center;gap:.35rem;margin-top:auto;padding-top:.45rem;border-top:1px solid #f8fafc;}
+    .kpi-icon{width:2rem;height:2rem;border-radius:.375rem;background:#f8fafc;color:#64748b;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:.925rem;flex-shrink:0;}
+    .section-title{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#475569;}
 
     /* ===== Tabelas ===== */
     .tbl{border-collapse:collapse;font-size:.8125rem;color:var(--ink-2);}
@@ -587,12 +590,14 @@ def generate_dashboard():
       #dossier-print-container { position: absolute; left: 0; top: 0; width: 100%; }
     }
   
-    /* ===== Menu lateral ===== */
-    #shell{display:flex;min-height:100vh;width:100%;}
+    /* ===== Menu lateral & Responsividade ===== */
+    #shell{display:flex;min-height:100vh;width:100%;position:relative;}
     #sidebar{position:sticky;top:0;height:100vh;width:16.5rem;flex:0 0 16.5rem;overflow-y:auto;
       display:flex;flex-direction:column;gap:1.35rem;padding:1.15rem .85rem 1rem;
       background:linear-gradient(180deg,#0a101c 0%,#0e1626 55%,#0a101c 100%);
-      border-right:1px solid rgba(255,255,255,.07);z-index:60;}
+      border-right:1px solid rgba(255,255,255,.07);z-index:60;
+      transition:width .28s cubic-bezier(.4,0,.2,1), flex .28s cubic-bezier(.4,0,.2,1), padding .28s cubic-bezier(.4,0,.2,1), transform .28s cubic-bezier(.4,0,.2,1), opacity .2s ease;
+      will-change:width, transform;}
     #sidebar .brand{display:flex;align-items:center;gap:.65rem;padding:0 .35rem;min-width:0;}
     #sidebar .brand-name{font-size:.9375rem;font-weight:800;color:#fff;letter-spacing:-.01em;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     #sidebar .brand-sub{font-size:.5938rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8;margin-top:.2rem;}
@@ -603,26 +608,68 @@ def generate_dashboard():
     #sidebar .side-foot{margin-top:auto;font-size:.625rem;line-height:1.6;color:#64748b;padding:.85rem .65rem 0;border-top:1px solid rgba(255,255,255,.07);}
     #sidebar .side-foot-cta{margin-top:auto;padding-top:.85rem;border-top:1px solid rgba(255,255,255,.07);}
     #sidebar .side-foot-cta .btn{width:100%;}
-    @media (max-width:1100px){
-      #sidebar{width:4.5rem;flex-basis:4.5rem;padding:1rem .5rem;align-items:center;gap:1rem;}
-      #sidebar .brand-text,#sidebar .side-label,#sidebar .side-foot,#sidebar .side-foot-cta,#sidebar .nav-tab > span{display:none;}
-      #sidebar .nav-tab{width:2.85rem;justify-content:center;padding:0;gap:0;}
+
+    /* Estado Oculto / Tela Cheia no Desktop */
+    body.sidebar-collapsed #sidebar {
+      width: 0 !important;
+      flex: 0 0 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      border-right: none !important;
+      overflow: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    /* Mobile e Tablet (< 1024px): Off-canvas Drawer com Hamburguer */
+    @media (max-width: 1023px) {
+      #sidebar {
+        position: fixed !important;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        height: 100vh;
+        width: 17.5rem !important;
+        flex: 0 0 17.5rem !important;
+        z-index: 1000 !important;
+        transform: translateX(-100%);
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,.85);
+      }
+      #sidebar.mobile-open {
+        transform: translateX(0) !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+      }
+      body.sidebar-collapsed #sidebar {
+        width: 17.5rem !important;
+        flex: 0 0 17.5rem !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+      }
     }
   </style>
 </head>
 <body class="text-slate-800">
-<div id="shell" class="flex min-h-screen w-full">
+<div id="shell" class="flex min-h-screen w-full relative">
+
+  <!-- BACKDROP MOBILE -->
+  <div id="sidebar-backdrop" onclick="closeMobileSidebar()" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-[990] transition-opacity duration-300 hidden cursor-pointer"></div>
 
   <!-- MENU LATERAL -->
   <aside id="sidebar">
-    <div class="brand">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-amber-500/20 text-xl">
+    <div class="brand justify-between">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-amber-500/20 text-xl flex-shrink-0">
           <i class="ph-bold ph-taxi"></i>
         </div>
-      <div class="brand-text">
-        <div class="brand-name">Chame T&aacute;xi</div>
-        <div class="brand-sub">Central 2026</div>
+        <div class="brand-text">
+          <div class="brand-name">Chame T&aacute;xi</div>
+          <div class="brand-sub">Central 2026</div>
+        </div>
       </div>
+      <button onclick="closeMobileSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10" title="Fechar Menu">
+        <i class="ph-bold ph-x text-lg"></i>
+      </button>
     </div>
 
     <div>
@@ -656,13 +703,16 @@ def generate_dashboard():
   <div class="flex-1 min-w-0 flex flex-col">
 
 
-    <!-- TOP HEADER (SLIM) -->
+    <!-- TOP HEADER (SLIM) COM BOTÃO HAMBURGUER -->
   <header id="topbar" class="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-50 shadow-md">
     <div class="max-w-[1750px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center space-x-2">
+        <button id="sidebar-toggle" onclick="toggleSidebar()" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white focus:outline-none transition-colors flex items-center justify-center cursor-pointer shadow-sm mr-1" title="Alternar Menu Lateral (Hamburguer)" aria-label="Menu Lateral">
+          <i class="ph-bold ph-list text-xl"></i>
+        </button>
         <div class="flex items-center space-x-2">
             <h1 class="text-base sm:text-lg font-bold tracking-tight text-white leading-none">Chame Táxi: Central Integrada de Inteligência & CRM 2026</h1>
-            <span class="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30 uppercase tracking-wider">Enterprise Suite</span>
+            <span class="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30 uppercase tracking-wider hidden sm:inline-block">Enterprise Suite</span>
           </div>
       </div>
 <!-- GLOBAL QUICK ACTIONS -->
@@ -688,68 +738,96 @@ def generate_dashboard():
     <div id="tab-content-master" class="space-y-6">
       
       <!-- EXECUTIVE KPI CARDS -->
-      <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3.5">
+      <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3.5">
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-users-four"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Base Mestre Total</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-users-four"></i>
+            </div>
           </div>
-          <span class="eyebrow">Base Mestre Total</span>
-          <div class="kpi-value mt-1">16.863</div>
-          <div class="text-[11px] text-slate-500 mt-0.5">16.783 Alv + 80 DOC</div>
+          <div class="kpi-value">16.863</div>
+          <div class="kpi-sub">
+            <span class="truncate">16.783 Alv + 80 DOC</span>
+          </div>
         </div>
 
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-certificate"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Contemplados 2026</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-certificate"></i>
+            </div>
           </div>
-          <span class="eyebrow">Contemplados 2026</span>
-          <div class="kpi-value mt-1">2.140</div>
-          <div class="text-[11px] text-emerald-700 font-medium mt-0.5">1.802 Comum + 338 Acess.</div>
+          <div class="kpi-value">2.140</div>
+          <div class="kpi-sub">
+            <span class="truncate">1.802 Comum + 338 Acess.</span>
+          </div>
         </div>
 
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-hourglass-high"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Suplentes Prioritários</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-hourglass-high"></i>
+            </div>
           </div>
-          <span class="eyebrow">Suplentes Prioritários</span>
-          <div class="kpi-value mt-1">370</div>
-          <div class="text-[11px] text-amber-700 font-medium mt-0.5">Top Margem Desistência</div>
+          <div class="kpi-value">370</div>
+          <div class="kpi-sub">
+            <span class="truncate">Top Margem Desistência</span>
+          </div>
         </div>
 
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-target"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Tier 1 Comercial</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-target"></i>
+            </div>
           </div>
-          <span class="eyebrow">Tier 1 Comercial</span>
-          <div class="kpi-value mt-1">161</div>
-          <div class="text-[11px] text-rose-700 font-medium mt-0.5">Score &ge; 80 (VIP Conversão)</div>
+          <div class="kpi-value">161</div>
+          <div class="kpi-sub">
+            <span class="truncate">Score &ge; 80 (VIP Conversão)</span>
+          </div>
         </div>
 
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-phone-call"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Telefones Validados</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-phone-call"></i>
+            </div>
           </div>
-          <span class="eyebrow">Telefones Validados</span>
-          <div class="kpi-value mt-1">2.423</div>
-          <div class="text-[11px] text-indigo-700 font-medium mt-0.5">2.425 MEIs Cadastrados</div>
+          <div class="kpi-value">2.423</div>
+          <div class="kpi-sub">
+            <span class="truncate">2.425 MEIs Cadastrados</span>
+          </div>
         </div>
 
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-cyan-50 text-cyan-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-identification-card"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">CPFs Completos</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-identification-card"></i>
+            </div>
           </div>
-          <span class="eyebrow">CPFs Completos</span>
-          <div class="kpi-value mt-1">914</div>
-          <div class="text-[11px] text-cyan-700 font-medium mt-0.5">2.391 Fila Ativa CRM</div>
+          <div class="kpi-value">914</div>
+          <div class="kpi-sub">
+            <span class="truncate">2.391 Fila Ativa CRM</span>
+          </div>
         </div>
 
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-newspaper"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Processos SEI / DOC</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-newspaper"></i>
+            </div>
           </div>
-          <span class="eyebrow">Processos SEI / DOC</span>
-          <div class="kpi-value mt-1">646</div>
-          <div class="text-[11px] text-purple-700 font-medium mt-0.5">100% Contemplados DOC</div>
+          <div class="kpi-value">646</div>
+          <div class="kpi-sub">
+            <span class="truncate">100% Contemplados DOC</span>
+          </div>
         </div>
       </section>
 
@@ -1235,66 +1313,91 @@ __LINHAS_ABERTOS__
       <!-- EXECUTIVE KPI CARDS -->
       <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3.5">
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-buildings"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Total Prospects B2B</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-buildings"></i>
+            </div>
           </div>
-          <span class="eyebrow">Total Prospects B2B</span>
-          <div class="kpi-value mt-1">190</div>
-          <div class="text-[11px] text-purple-600 font-semibold mt-0.5">Raio 5 km Butantã</div>
+          <div class="kpi-value">190</div>
+          <div class="kpi-sub">
+            <span class="truncate">Raio 5 km Butantã</span>
+          </div>
         </div>
 
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-first-aid"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Polos de Saúde</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-first-aid"></i>
+            </div>
           </div>
-          <span class="eyebrow">Polos de Saúde</span>
-          <div class="kpi-value mt-1">94</div>
-          <div class="text-[11px] text-slate-500 mt-0.5">20 Quaternários Tier A</div>
+          <div class="kpi-value">94</div>
+          <div class="kpi-sub">
+            <span class="truncate">20 Quaternários Tier A</span>
+          </div>
         </div>
 
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-briefcase"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Empresas 100+</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-briefcase"></i>
+            </div>
           </div>
-          <span class="eyebrow">Empresas 100+</span>
-          <div class="kpi-value mt-1">96</div>
-          <div class="text-[11px] text-slate-500 mt-0.5">Grandes Sedes Presenciais</div>
+          <div class="kpi-value">96</div>
+          <div class="kpi-sub">
+            <span class="truncate">Grandes Sedes Presenciais</span>
+          </div>
         </div>
 
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-fire"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Alta Vulnerabilidade</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-fire"></i>
+            </div>
           </div>
-          <span class="eyebrow">Alta Vulnerabilidade</span>
-          <div class="kpi-value mt-1">85</div>
-          <div class="text-[11px] text-red-700 font-semibold mt-0.5">Substituição Imediata (44.7%)</div>
+          <div class="kpi-value">85</div>
+          <div class="kpi-sub">
+            <span class="truncate">Substituição Imediata (44.7%)</span>
+          </div>
         </div>
 
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-currency-circle-dollar"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Receita Estimada</span>
+            <div class="kpi-value">R$ 3.83M</div>
           </div>
-          <span class="eyebrow">Receita Mensal Estimada</span>
-          <div class="text-xl font-black text-emerald-600 mt-1">R$ 3.83M</div>
-          <div class="text-[11px] text-slate-500 mt-0.5">Contratos B2B Faturados</div>
+          <div class="kpi-sub">
+            <span class="truncate">Contratos B2B Faturados</span>
+          </div>
         </div>
 
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-wheelchair"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Foco Acessível</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-wheelchair"></i>
+            </div>
           </div>
-          <span class="eyebrow">Foco Táxi Acessível</span>
-          <div class="kpi-value mt-1">28</div>
-          <div class="text-[11px] text-slate-500 mt-0.5">Desospitalização & PcD</div>
+          <div class="kpi-value">28</div>
+          <div class="kpi-sub">
+            <span class="truncate">Desospitalização & PcD</span>
+          </div>
         </div>
 
         <div class="card kpi group">
-          <div class="absolute right-3 top-3 w-8 h-8 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center text-lg">
-            <i class="ph-bold ph-leaf"></i>
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Frota Elétrica ESG</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-leaf"></i>
+            </div>
           </div>
-          <span class="eyebrow">Frota Elétrica ESG</span>
-          <div class="kpi-value mt-1">32</div>
-          <div class="text-[11px] text-slate-500 mt-0.5">Edital 4 (Descarbonização)</div>
+          <div class="kpi-value">32</div>
+          <div class="kpi-sub">
+            <span class="truncate">Edital 4 (Descarbonização)</span>
+          </div>
         </div>
       </section>
 
@@ -1439,18 +1542,18 @@ __LINHAS_ABERTOS__
     <div class="bg-white w-full max-w-4xl max-h-[92vh] rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150" id="dossier-print-container">
       
       <!-- MODAL HEADER -->
-      <div class="p-5 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white flex items-start justify-between border-b border-slate-800">
+      <div class="p-5 bg-slate-900 text-white flex items-start justify-between border-b border-slate-800">
         <div class="flex items-center space-x-3.5">
-          <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 font-black text-xl flex items-center justify-center shadow-lg shadow-amber-500/20" id="modal-avatar">
+          <div class="w-11 h-11 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xl flex items-center justify-center" id="modal-avatar">
             CT
           </div>
           <div>
             <div class="flex flex-wrap items-center gap-2">
               <h3 class="text-base sm:text-lg font-bold text-white tracking-tight" id="modal-name">Nome do Motorista</h3>
-              <span id="modal-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              <span id="modal-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-700">
                 Contemplado
               </span>
-              <span id="modal-supl-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30 hidden">
+              <span id="modal-supl-badge" class="px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-700 hidden">
                 Suplente Alta Probabilidade
               </span>
             </div>
@@ -1474,7 +1577,7 @@ __LINHAS_ABERTOS__
         <!-- CARD 1: STATUS, SCORE & SUCESSO -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Score Chame Táxi</span>
+            <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Score Chame Táxi</span>
             <div class="flex items-baseline gap-2">
               <span id="modal-score" class="kpi-value">—</span>
               <span id="modal-tier" class="text-[10px] font-bold text-slate-500">Sem Score</span>
@@ -1483,34 +1586,34 @@ __LINHAS_ABERTOS__
           </div>
 
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Classificação no Edital</span>
+            <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Classificação no Edital</span>
             <div class="text-xl font-bold text-slate-900" id="modal-rank">Posição —</div>
             <p id="modal-fila" class="text-[11px] text-slate-500 mt-1">Fila de Espera: 0</p>
           </div>
 
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Senioridade DTP</span>
+            <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Senioridade DTP</span>
             <div class="text-xl font-bold text-slate-900" id="modal-tempo">— anos</div>
             <p id="modal-safra" class="text-[11px] text-slate-500 mt-1">Safra: Não informada</p>
           </div>
         </div>
 
         <!-- CARD 2: PREVISÃO DE CHAMAMENTO & SUPLÊNCIA (SE APLICÁVEL) -->
-        <div id="modal-supl-container" class="p-3.5 rounded-xl bg-purple-50 border border-purple-200 text-purple-900 hidden">
-          <div class="flex items-center gap-1.5 font-bold text-xs text-purple-950 mb-1">
-            <i class="ph-bold ph-hourglass-high text-purple-600 text-sm"></i>
+        <div id="modal-supl-container" class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 hidden">
+          <div class="flex items-center gap-1.5 font-bold text-xs text-slate-900 mb-1">
+            <i class="ph-bold ph-hourglass-high text-slate-600 text-sm"></i>
             <span>Inteligência de Suplência & Fila de Espera DTP</span>
           </div>
-          <p id="modal-supl-previsao" class="text-xs leading-relaxed text-purple-950 font-medium">—</p>
+          <p id="modal-supl-previsao" class="text-xs leading-relaxed text-slate-700 font-medium">—</p>
         </div>
 
         <!-- CARD 3: AÇÃO COMERCIAL RECOMENDADA -->
-        <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900">
-          <div class="flex items-center gap-1.5 font-bold text-xs text-amber-950 mb-1">
-            <i class="ph-bold ph-lightbulb text-amber-600 text-sm"></i>
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800">
+          <div class="flex items-center gap-1.5 font-bold text-xs text-slate-900 mb-1">
+            <i class="ph-bold ph-lightbulb text-slate-600 text-sm"></i>
             <span>Estratégia de Captação Chame Táxi</span>
           </div>
-          <p id="modal-acao" class="text-xs leading-relaxed text-amber-950 font-medium">Nenhuma ação recomendada.</p>
+          <p id="modal-acao" class="text-xs leading-relaxed text-slate-700 font-medium">Nenhuma ação recomendada.</p>
         </div>
 
         <!-- CARD 4: REQUISITOS REGULATÓRIOS DO VEÍCULO (DTP) -->
@@ -1589,24 +1692,24 @@ __LINHAS_ABERTOS__
 
         <!-- CARD 7: PROCESSO SEI, DOC & PONTO DE TÁXI -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div class="p-3 rounded-xl bg-purple-50/50 border border-purple-200">
-            <span class="text-[10px] uppercase font-bold text-purple-700 block mb-1">Processo SEI / Diário Oficial</span>
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Processo SEI / Diário Oficial</span>
             <div class="space-y-1">
               <p class="font-bold text-slate-900" id="modal-sei-proc">Processo: —</p>
               <p class="text-[11px] text-slate-600" id="modal-doc-resumo">Sem publicações recentes no DOC</p>
               <div class="pt-1.5 flex gap-2">
-                <a id="modal-link-sei" href="#" target="_blank" class="text-[10px] font-bold text-purple-700 hover:underline flex items-center gap-0.5">
+                <a id="modal-link-sei" href="#" target="_blank" class="text-[10px] font-semibold text-slate-800 hover:text-slate-950 hover:underline flex items-center gap-0.5">
                   <i class="ph-bold ph-arrow-square-out"></i> Pesquisar SEI PMSP
                 </a>
-                <a id="modal-link-doc" href="#" target="_blank" class="text-[10px] font-bold text-cyan-700 hover:underline flex items-center gap-0.5">
+                <a id="modal-link-doc" href="#" target="_blank" class="text-[10px] font-semibold text-slate-800 hover:text-slate-950 hover:underline flex items-center gap-0.5">
                   <i class="ph-bold ph-newspaper"></i> Abrir Diário Oficial
                 </a>
               </div>
             </div>
           </div>
 
-          <div class="p-3 rounded-xl bg-sky-50/50 border border-sky-200">
-            <span class="text-[10px] uppercase font-bold text-sky-700 block mb-1">Ponto de Táxi Oficial</span>
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Ponto de Táxi Oficial</span>
             <div class="space-y-1">
               <p class="font-bold text-slate-900" id="modal-ponto-end">Ponto Livre / Sem Ponto Privativo</p>
               <p class="text-[11px] text-slate-600" id="modal-ponto-meta">Vagas: — | Saldo: —</p>
@@ -1912,7 +2015,51 @@ __LINHAS_ABERTOS__
     const CHAME_LAT = -23.5715;
     const CHAME_LON = -46.7082;
 
+    // CONTROLE DE MENU LATERAL (HAMBURGUER & RESPONSIVIDADE)
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      if (window.innerWidth < 1024) {
+        if (sidebar && sidebar.classList.contains('mobile-open')) {
+          closeMobileSidebar();
+        } else {
+          openMobileSidebar();
+        }
+      } else {
+        const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+        try {
+          localStorage.setItem('sidebar_collapsed', isCollapsed ? 'true' : 'false');
+        } catch(e) {}
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+          if (leafletMapInstance) {
+            leafletMapInstance.invalidateSize();
+          }
+        }, 300);
+      }
+    }
+
+    function openMobileSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      if (sidebar) sidebar.classList.add('mobile-open');
+      if (backdrop) backdrop.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeMobileSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+      if (backdrop) backdrop.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      try {
+        if (window.innerWidth >= 1024 && localStorage.getItem('sidebar_collapsed') === 'true') {
+          document.body.classList.add('sidebar-collapsed');
+        }
+      } catch(e) {}
       initCharts();
       applyFilters();
       applyCRMFilters();
@@ -1923,6 +2070,9 @@ __LINHAS_ABERTOS__
     // TROCA DE ABAS PRINCIPAIS
     function switchMainTab(tab) {
       currentMainTab = tab;
+      if (window.innerWidth < 1024) {
+        closeMobileSidebar();
+      }
       
       const tabMaster = document.getElementById('tab-content-master');
       const tabCRM = document.getElementById('tab-content-crm');

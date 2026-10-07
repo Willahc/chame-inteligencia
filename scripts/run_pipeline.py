@@ -159,8 +159,8 @@ STAGES: list[Stage] = [
     # --- Qualidade ----------------------------------------------------------
     Stage("privacidade", "Verifica que nenhum dado pessoal está versionado",
           ["privacy.py", "check"], "qualidade"),
-    Stage("testes", "Roda os testes unitários do repositório",
-          ["test_doc_scraper.py"], "qualidade"),
+    Stage("testes", "Roda a suíte completa de testes unitários do repositório",
+          ["run_tests.py"], "qualidade"),
 ]
 
 

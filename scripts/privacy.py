@@ -37,8 +37,9 @@ PRIVATE_DIR = ROOT / "data" / "private"
 # Colunas que NUNCA podem ser versionadas (dado pessoal identificado ou
 # diretamente identificável de pessoa natural).
 PII_PATTERNS: list[re.Pattern[str]] = [
-    re.compile(r"^CPF", re.I),
-    re.compile(r"Telefone_Celular|Telefone_Principal|Telefone_Secundario", re.I),
+    re.compile(r"(?:^|_)CPF", re.I),
+    re.compile(r"Telefone_Celular|Telefone_Principal|Telefone_Secundario|Telefone_Residencial", re.I),
+    re.compile(r"(?:^|_)Celular(?:$|_|\d)", re.I),
     re.compile(r"^Telefone_[12]$", re.I),
     re.compile(r"^DDD_?1$", re.I),
     re.compile(r"Telefones_Motoristas|Telefone_Motorista", re.I),
@@ -48,10 +49,7 @@ PII_PATTERNS: list[re.Pattern[str]] = [
     re.compile(r"Chave_Busca|Query_Busca", re.I),
     re.compile(r"Nascimento|^Idade_Minima_Estimada$", re.I),
     re.compile(r"^Genero$", re.I),
-    re.compile(
-        r"WhatsApp_Ativo|WhatsApp_Provavel|Link_.*WhatsApp|Texto_Mensagem_WhatsApp",
-        re.I,
-    ),
+    re.compile(r"WhatsApp", re.I),
 ]
 
 # Colunas pessoais adicionais, válidas apenas para arquivos específicos.
@@ -66,6 +64,7 @@ EXTRA_PII_BY_FILE: dict[str, list[str]] = {
 CONTENT_PATTERNS: dict[str, re.Pattern[str]] = {
     "cpf_formatado": re.compile(r"\b\d{3}\.\d{3}\.\d{3}-\d{2}\b"),
     "link_whatsapp_pessoal": re.compile(r"wa\.me/5?5?\d{10,13}"),
+    "link_api_whatsapp": re.compile(r"api\.whatsapp\.com/send\?phone=5?5?\d{10,11}"),
 }
 
 # Pastas fora do escopo da verificação: scripts (citam nomes de coluna por

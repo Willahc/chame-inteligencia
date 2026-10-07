@@ -15,7 +15,7 @@ Este pacote contém todo o código-fonte, dados processados, inteligência estra
    - Arquivo: `planilha_mestre_taxistas_sp_2026.csv`
    - Todos os **16.863 motoristas** com **99 colunas** de atributos consolidados.
 4. **Todos os Scripts do Pipeline (`scripts/`)**:
-   - 44 scripts Python para mineração, enriquecimento fonético, auditoria de WhatsApp fixo, cruzamento territorial e geração de relatórios.
+   - 47 scripts Python para mineração, enriquecimento fonético, auditoria de WhatsApp fixo, cruzamento territorial, geração de relatórios e suíte de testes unitários.
 5. **Dossiês e Bases Processadas (`data/processed/`)**:
    - Enriquecimentos fonéticos, servidores públicos municipais (SEI/DOC), histórico de sorteios, polos CFC/DTP e cadastros.
 
