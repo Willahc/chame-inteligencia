@@ -61,6 +61,14 @@ class PipelineCoreTests(unittest.TestCase):
         self.assertEqual(format_cpf("12345"), "")
         self.assertEqual(format_cpf(""), "")
 
+    def test_cooperativas_haversine(self):
+        from build_cooperativas_sp_dataset import haversine
+        # Distance to self is 0
+        self.assertEqual(haversine(-23.5714, -46.7081, -23.5714, -46.7081), 0.0)
+        # Distance to Campinas (~80-95km)
+        d_campinas = haversine(-23.5714, -46.7081, -22.9099, -47.0626)
+        self.assertTrue(75.0 < d_campinas < 100.0)
+
 
 if __name__ == "__main__":
     unittest.main()

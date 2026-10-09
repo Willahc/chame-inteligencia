@@ -1873,12 +1873,15 @@ def build_master():
     if df_emp_export is not None:
         sheets_to_export.append(('15_Empresas_Corp_100_Mais_5km', df_emp_export))
 
+    df_coops_export = _ler_aberto(r'data\processed\cooperativas_taxi_estado_sp.csv')
+
     abas_abertos = [
         ('16_Licencas_SGTP_Taxi', df_sgtp, 'Licenças de táxi (SGTP/SMT), Jan-Mai/2026'),
         ('17_Frota_Ativa_Por_Municipio', df_frota, 'Frota ativa do Detran-SP por município (ago/2026)'),
         ('18_Sinistros_Vitimas_Taxistas', df_sin_tax, 'Vítimas taxistas em sinistros (Infosiga), 12 meses'),
         ('19_Acidentes_Por_Subprefeitura', df_acid_sub, 'Sinistros por subprefeitura, set/2025-ago/2026'),
         ('20_Acidentes_SP_Mensal', df_acid_mes, 'Sinistros no município, série mensal'),
+        ('21_Cooperativas_Taxi_SP', df_coops_export, 'Mapeamento consolidado das 143 cooperativas de táxi do Estado de SP'),
     ]
     for nome_aba, df_aba, desc_aba in abas_abertos:
         if df_aba is not None:

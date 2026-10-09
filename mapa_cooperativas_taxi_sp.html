@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mapeamento das Cooperativas de Táxi do Estado de São Paulo</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+  <!-- Phosphor Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/index.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0f172a;
+      color: #0f172a;
+    }
+    .map-container {
+      height: 60vh;
+      min-height: 480px;
+    }
+    @media (min-width: 1024px) {
+      .map-container {
+        height: 68vh;
+      }
+    }
+    .eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+    }
+    /* Custom Leaflet Marker Styling */
+    .custom-div-icon {
+      background: transparent;
+      border: none;
+    }
+    .marker-pin {
+      width: 32px;
+      height: 32px;
+      border-radius: 50% 50% 50% 0;
+      position: absolute;
+      transform: rotate(-45deg);
+      left: 50%;
+      top: 50%;
+      margin: -20px 0 0 -20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+    .marker-pin::after {
+      content: '';
+      width: 14px;
+      height: 14px;
+      margin: 8px 0 0 8px;
+      background: #fff;
+      position: absolute;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+  <!-- TOPO / HEADER -->
+  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 px-4 py-3 sm:px-6">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-black text-xl">
+          🚕
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-lg text-white">Cooperativas de Táxi do Estado de SP</h1>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              Inteligência Territorial
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">Panorama Estadual de Rádio-Táxi, Concorrência e Alianças Estratégicas</p>
+        </div>
+      </div>
+
+      <!-- AÇÕES DO TOPO -->
+      <div class="flex items-center gap-2">
+        <a href="dashboard_mestre_taxistas_sp_2026.html" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition flex items-center gap-1.5 border border-slate-700">
+          <i class="ph-bold ph-arrow-left"></i>
+          <span>Voltar ao Cockpit Mestre</span>
+        </a>
+        <button onclick="exportCooperativasCSV()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+          <i class="ph-bold ph-download-simple"></i>
+          <span>Exportar Base (.CSV)</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 py-4 flex-1 space-y-4">
+
+    <!-- CARDS DE KPIS -->
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+      <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-xl shadow-xs">
+        <span class="eyebrow block">Total Mapeado</span>
+        <div class="text-2xl font-black text-white mt-0.5">143</div>
+        <span class="text-[11px] text-slate-400">Cooperativas no Estado</span>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-xl shadow-xs">
+        <span class="eyebrow block">Situação Ativa</span>
+        <div class="text-2xl font-black text-emerald-400 mt-0.5">87</div>
+        <span class="text-[11px] text-emerald-500/80 font-bold">60.8% com CNPJ ativo</span>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-xl shadow-xs">
+        <span class="eyebrow block">Capital Paulista</span>
+        <div class="text-2xl font-black text-amber-400 mt-0.5">73</div>
+        <span class="text-[11px] text-slate-400">Sedes no Município SP</span>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-xl shadow-xs">
+        <span class="eyebrow block">Interior & Litoral</span>
+        <div class="text-2xl font-black text-sky-400 mt-0.5">13</div>
+        <span class="text-[11px] text-slate-400">Campinas, Santos, Vale, etc.</span>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-xl shadow-xs col-span-2 sm:col-span-1">
+        <span class="eyebrow block">Municípios Cobertos</span>
+        <div class="text-2xl font-black text-purple-400 mt-0.5">32</div>
+        <span class="text-[11px] text-slate-400">Cidades com cooperativa</span>
+      </div>
+    </div>
+
+    <!-- SEÇÃO MAPA GIS -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg">
+      <div class="p-3 bg-slate-900/80 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <i class="ph-bold ph-map-trifold text-amber-400 text-lg"></i>
+          <h2 class="font-bold text-sm text-white">Mapa Tático de Sedes Cooperativas (Esri GIS)</h2>
+        </div>
+        <div class="flex items-center gap-3 text-xs text-slate-400">
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400 inline-block shadow-xs"></span> <strong>Chame Táxi (Sede)</strong></span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span> Concorrentes Capital</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span> Grande SP / RMSP</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> Interior & Litoral</span>
+        </div>
+      </div>
+      <div id="coop-map" class="map-container w-full"></div>
+    </div>
+
+    <!-- BARRA DE CONTROLES E FILTROS -->
+    <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-wrap items-center justify-between gap-3">
+      <div class="flex flex-wrap items-center gap-2 flex-1">
+        <div class="relative min-w-[240px] flex-1">
+          <i class="ph-bold ph-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
+          <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Buscar cooperativa por nome, cidade ou CNPJ..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition"/>
+        </div>
+
+        <select id="filter-regiao" onchange="applyFilters()" class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
+          <option value="ALL">Todas as Regiões</option>
+          <option value="CAPITAL">Capital (São Paulo)</option>
+          <option value="RMSP">Grande SP / RMSP</option>
+          <option value="LITORAL">Baixada Santista / Litoral</option>
+          <option value="INTERIOR">Interior do Estado</option>
+        </select>
+
+        <select id="filter-status" onchange="applyFilters()" class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
+          <option value="ATIVA" selected>Apenas Ativas</option>
+          <option value="ALL">Todas as Situações</option>
+        </select>
+      </div>
+
+      <div class="text-xs text-slate-400 font-medium" id="results-count">
+        Exibindo 143 cooperativas
+      </div>
+    </div>
+
+    <!-- TABELA ANALÍTICA -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-950 text-slate-400 uppercase font-semibold text-[10px] tracking-wider border-b border-slate-800">
+            <tr>
+              <th class="py-3 px-4">Cooperativa / Nome Fantasia</th>
+              <th class="py-3 px-3">Município / Região</th>
+              <th class="py-3 px-3 text-center">Situação</th>
+              <th class="py-3 px-3 text-right">Distância Sede</th>
+              <th class="py-3 px-3">Contato Institucional</th>
+              <th class="py-3 px-3">Posicionamento Estratégico</th>
+              <th class="py-3 px-3 text-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="coop-table-body" class="divide-y divide-slate-800/60 font-medium text-slate-300">
+            <!-- Injetado dinamicamente via JS -->
+          </tbody>
+        </table>
+      </div>
+      <!-- Paginação -->
+      <div class="p-3 bg-slate-950 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+        <div id="pagination-info">Página 1 de 1</div>
+        <div class="flex items-center gap-1.5">
+          <button onclick="prevPage()" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold border border-slate-800 disabled:opacity-40">Anterior</button>
+          <button onclick="nextPage()" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold border border-slate-800 disabled:opacity-40">Próxima</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL DE DETALHES DA COOPERATIVA -->
+  <div id="coop-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 max-w-xl w-full rounded-2xl p-5 shadow-2xl space-y-4">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <span class="eyebrow block" id="modal-reg">Região</span>
+          <h3 class="text-lg font-bold text-white mt-0.5" id="modal-nome">Nome da Cooperativa</h3>
+          <p class="text-xs text-slate-400" id="modal-razao">Razão Social</p>
+        </div>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center font-bold">✕</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5 text-xs bg-slate-950 p-3 rounded-xl border border-slate-800">
+        <div>
+          <span class="eyebrow block">CNPJ</span>
+          <span class="font-mono text-slate-200" id="modal-cnpj">—</span>
+        </div>
+        <div>
+          <span class="eyebrow block">Situação Cadastral</span>
+          <span class="font-bold" id="modal-st">—</span>
+        </div>
+        <div>
+          <span class="eyebrow block">Município / UF</span>
+          <span class="text-slate-200 font-semibold" id="modal-muni">—</span>
+        </div>
+        <div>
+          <span class="eyebrow block">Distância da Sede</span>
+          <span class="text-amber-400 font-bold" id="modal-dist">—</span>
+        </div>
+        <div class="col-span-2">
+          <span class="eyebrow block">Endereço Completo</span>
+          <span class="text-slate-300" id="modal-end">—</span>
+        </div>
+      </div>
+
+      <div class="space-y-2 text-xs">
+        <div>
+          <span class="eyebrow block">Tipo de Operação:</span>
+          <p class="text-slate-200 font-medium" id="modal-tipo">—</p>
+        </div>
+        <div>
+          <span class="eyebrow block">Posicionamento frente à Chame Táxi:</span>
+          <p class="text-amber-300 font-bold" id="modal-pos">—</p>
+        </div>
+        <div>
+          <span class="eyebrow block">Contatos Institucionais:</span>
+          <div class="flex items-center gap-4 mt-1">
+            <span class="text-slate-300 flex items-center gap-1.5"><i class="ph-bold ph-phone text-amber-400"></i> <span id="modal-tel">—</span></span>
+            <span class="text-slate-300 flex items-center gap-1.5"><i class="ph-bold ph-envelope text-amber-400"></i> <span id="modal-email">—</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-800 flex justify-end gap-2">
+        <button onclick="closeModal()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT & DADOS -->
+  <script>
+    const COOPS_DATA = [{"id":"COOP-SP-110","cnpj":"52.201.400/0001-69","razao":"COOPERSUL ALIANCA FORTE COOPERATIVA DE TRANSPORTES","nome":"COOPERSUL ALIANCA FORTE","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"CHACARA SANTA MARIA","end":"RUA DAS PEROBEIRAS, 129","cep":"05879-470","lat":-23.56764,"lon":-46.66649,"dist":4.26,"st":"Ativa","tel":"(11) 47242838","email":"COOPERSUL.ALIFORTE@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-071","cnpj":"16.616.292/0001-21","razao":"COOPERESTRADA COOPERATIVA DE TRANSPORTES E LOGISTICA","nome":"COOPERESTRADA","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"PARQUE NOVO MUNDO","end":"RUA SOLD GERALDO ROSA, 94","cep":"02187-050","lat":-23.54933,"lon":-46.66608,"dist":4.94,"st":"Ativa","tel":"(11) 23721015","email":"GERENCIA@COOPERESTRADA.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-082","cnpj":"19.630.738/0001-60","razao":"COOPERATIVA DE TRANSPORTE SAO PAULO - COOTRASP","nome":"COOPERATIVA DE TRANSPORTE SAO PAULO - CO","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM TRES MARIAS","end":"AVENIDA ATLANTICA, 2099","cep":"04772-003","lat":-23.59364,"lon":-46.66541,"dist":5.0,"st":"Ativa","tel":"(11) 56876770","email":"COOPERATIVACOOTRASP@HOTMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-016","cnpj":"46.553.947/0001-20","razao":"COOPERATIVA MISTA DE TRABALHO DOS MOTORISTAS AUTONOMOS DE TAXIS ESPECIAL DE SAO PAULO - RADIO TAXI","nome":"COOPERATIVA MISTA DE TRABALHO DOS MOTORI","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"BELA VISTA","end":"AVENIDA PAULISTA, 726","cep":"01310-910","lat":-23.54047,"lon":-46.67239,"dist":5.01,"st":"Ativa","tel":"nan","email":"nan","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-123","cnpj":"57.133.086/0001-48","razao":"COOPERATIVA DE TRANSPORTE INDIVIDUAL DE SAO PAULO COOPER FAST SP","nome":"COOPER FAST SP","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"CIDADE MONCOES","end":"AVENIDA ENG LUIZ CARLOS BERRINI, 1681","cep":"04571-011","lat":-23.56423,"lon":-46.65636,"dist":5.33,"st":"Ativa","tel":"(11) 67672514","email":"COOPERFASTSP@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-112","cnpj":"52.529.987/0001-30","razao":"COOPER ON COOPERATIVA DE TRANSPORTES","nome":"COOPER ON COOPERATIVA DE TRANSPORTES","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM ELEDY","end":"RUA SEBASTIAO ADVINCULA DA CUNHA, 84","cep":"05856-140","lat":-23.59957,"lon":-46.66231,"dist":5.62,"st":"Ativa","tel":"(11) 97296149","email":"COOPERONCOOPERATIVA@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-074","cnpj":"17.396.944/0001-22","razao":"COOPER-CET COOPERATIVA DE CONDUTORES ESPECIALIZADOS EM TRANSPORTES GERAIS","nome":"COOPER-CET","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"PARQUE DOS AVINHADOS","end":"RUA ALDO GIANNINI, 641","cep":"08032-326","lat":-23.58027,"lon":-46.6518,"dist":5.82,"st":"Ativa","tel":"(11) 20160661","email":"COOPERCETCOOPERADOS@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-087","cnpj":"21.310.199/0001-24","razao":"LIGUE-TAXI - COOPERATIVA DE TRABALHO DOS TAXISTAS AUTONOMOS DE SAO PAULO","nome":"LIGUE-TAXI","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"SICILIANO","end":"RUA SILVEIRA RODRIGUES, 176","cep":"05048-070","lat":-23.57966,"lon":-46.65161,"dist":5.83,"st":"Ativa","tel":"(11) 21013020","email":"nan","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-109","cnpj":"52.162.086/0001-52","razao":"COOPERATIVA DE TRANSPORTE AUTONOMO E SIMILAR - COOPERPART","nome":"COOPERATIVA DE TRANSPORTE AUTONOMO E SIM","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM MIRANTE","end":"RUA LUIZ GRASSMANN, 691","cep":"05801-050","lat":-23.52721,"lon":-46.67323,"dist":6.06,"st":"Ativa","tel":"(11) 58526554","email":"CONTATO@DESTACK360.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-125","cnpj":"58.412.029/0001-60","razao":"COOPER FAMILYSP - COOPERATIVA DE TRANSPORTES","nome":"COOPER FAMILYSP","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM BRASILIA (ZONA NORTE)","end":"RUA JOSE GERVASIO SOUZA, 447","cep":"02859-070","lat":-23.59835,"lon":-46.64621,"dist":6.98,"st":"Ativa","tel":"(11) 40071511","email":"DAIANEMOREIRAR29@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-097","cnpj":"31.534.583/0001-64","razao":"COOPERATIVA DE TRANSPORTES DA CAPITAL DE SAO PAULO - COOPER CAPITAL","nome":"COOPER CAPITAL","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"PARQUE DAS PAINEIRAS","end":"AVENIDA ESPERANTINA, 1011","cep":"03692-000","lat":-23.57306,"lon":-46.63773,"dist":7.17,"st":"Ativa","tel":"(11) 96478347","email":"COOPERCAPITAL@HOTMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-017","cnpj":"48.549.331/0001-01","razao":"COOPERATIVA DE TRANSPORTE DOS CONDUTORES AUTONOMOS DE VEICULOS RODOVIARIOS DE SAO PAULO - COOPERTAX","nome":"COOPERTAX","muni":"SAO PAULO","uf":"SP","reg":"Capital (Zona Sul)","bairro":"PLANALTO PAULISTA","end":"ALAMEDA DOS TUPINAS, 275","cep":"04069-000","lat":-23.612,"lon":-46.653,"dist":7.2,"st":"Ativa","tel":"(11) 20956000","email":"FINANCEIRO@COOPERTAX.COM.BR","tipo":"Rádio-Táxi Convencional e Aeroporto","pos":"Concorrente Direto (Frota Ampla - Planalto/Congonhas)"},{"id":"COOP-SP-100","cnpj":"35.310.088/0001-22","razao":"COOPER MAIS - COOPERATIVA DE TRANSPORTES","nome":"COOPER MAIS","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"GUARAPIRANGA","end":"AVENIDA GUARAPIRANGA, 4169","cep":"04911-015","lat":-23.52012,"lon":-46.6609,"dist":7.46,"st":"Ativa","tel":"(11) 55419119","email":"COOPERMAIS10@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-129","cnpj":"63.317.409/0001-56","razao":"COOPER FUTURA COOPERATIVA DE TRABALHO DE TRANSPORTE","nome":"COOPER FUTURA","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM EDI","end":"RUA ALVES DE ARAUJO, 103","cep":"04851-005","lat":-23.51837,"lon":-46.66293,"dist":7.48,"st":"Ativa","tel":"(11) 74171729","email":"ANTERO478@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-046","cnpj":"07.995.986/0001-26","razao":"COOPERCAR - COOPERATIVA DOS PRESTADORES DE SERVICOS E TRABALHO NA AREA DE TRANSPORTES EM GERAL DE SAO PAULO","nome":"COOPERCAR","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"VILA MARIA","end":"RUA ANDARAI, 720","cep":"02117-001","lat":-23.52412,"lon":-46.65498,"dist":7.55,"st":"Ativa","tel":"(11) 22111313","email":"ATENDIMENTO@COOPERCAR.ORG.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-061","cnpj":"11.183.139/0001-34","razao":"COOPERATIVA NACIONAL DE TRANSPORTES DAS QUEBRADAS","nome":"COOPDASQUEBRADAS","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"BELA VISTA","end":"AVENIDA PAULISTA, 1483","cep":"01311-200","lat":-23.51625,"lon":-46.66295,"dist":7.67,"st":"Ativa","tel":"(11) 43276405","email":"CONTATO@COOPDASQUEBRADAS.ORG.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-026","cnpj":"02.369.241/0001-38","razao":"ALTERNATIVA COOP.DOS TRANSP.DE P.E C DO E.DE S.PAULO CTPC","nome":"ALTERNATIVA COOP.DOS TRANSP.DE P.E C DO ","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JD SAO PEDRO","end":"RUA DOUTOR DOMINGOS RAMOS PAIVA, 78","cep":"08420-630","lat":-23.54724,"lon":-46.63735,"dist":7.7,"st":"Ativa","tel":"(11) 27427750","email":"GOMES.CONTABIL@UOL.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-126","cnpj":"59.558.411/0001-40","razao":"COOPERATIVA UNIAO SERV DOS TAXISTAS AUTONOMOS DE S.P.","nome":"USETAXI","muni":"SAO PAULO","uf":"SP","reg":"Capital (Zona Sul / Saúde)","bairro":"MIRANDOPOLIS","end":"ALAMEDA DAS BONINAS, 111","cep":"04049-060","lat":-23.6063,"lon":-46.6418,"dist":7.79,"st":"Ativa","tel":"(11) 55832000","email":"USETAXI@USETAXI.COM.BR","tipo":"Rádio-Táxi Corporativo e App","pos":"Concorrente Corporativo (Mirandópolis / Saúde)"},{"id":"COOP-SP-120","cnpj":"56.776.472/0001-95","razao":"COOPER MK - COOPERATIVA DE TRANSPORTES","nome":"COOPER MK","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"RIO PEQUENO","end":"RUA JORGE WARD, 423","cep":"05386-160","lat":-23.58406,"lon":-46.63142,"dist":7.94,"st":"Ativa","tel":"(11) 47369433","email":"COOPERMK150824@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-033","cnpj":"03.056.979/0001-08","razao":"COOPERATIVA DOS TAXISTAS DE TABOAO DA SERRA COOPERTAS","nome":"ALPHACITYTAXI","muni":"TABOAO DA SERRA","uf":"SP","reg":"RMSP - Oeste","bairro":"VILA DAS OLIVEIRAS","end":"AVENIDA LAURITA ORTEGA MARI, 500","cep":"06766-360","lat":-23.6261,"lon":-46.7588,"dist":7.98,"st":"Ativa","tel":"(11) 47874674","email":"DIRETORIA@ALPHACITY.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-103","cnpj":"36.618.405/0001-35","razao":"COOPER FLEET - COOPERATIVA DE TRANSPORTES E LOGISTICA","nome":"COOPER FLEET","muni":"TABOAO DA SERRA","uf":"SP","reg":"RMSP - Oeste","bairro":"CHACARA AGRINDUS","end":"AVENIDA JOSE DINI, 457","cep":"06763-015","lat":-23.6261,"lon":-46.7588,"dist":7.98,"st":"Ativa","tel":"(11) 51944972","email":"ADM@COOPERFLEET.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-116","cnpj":"54.361.327/0001-18","razao":"COOPERATIVA DOS MOTORISTAS DE TAXI JSW","nome":"EVOLUCAO-TAXI","muni":"TABOAO DA SERRA","uf":"SP","reg":"RMSP - Oeste","bairro":"JARDIM MONTE ALEGRE","end":"RUA CATARINA DE OLIVEIRA MORAES, 38","cep":"06755-230","lat":-23.6261,"lon":-46.7588,"dist":7.98,"st":"Ativa","tel":"(11) 87479187","email":"WDOMINGUES5@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-038","cnpj":"05.475.170/0001-46","razao":"COOPERATIVA DE TRABALHO EM TRANSPORTES DE PASSAGEIROS","nome":"COOPERATIVA UNISEL","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"CIDADE DUTRA","end":"RUA JOAO CESAR MARIATH, 89","cep":"04821-080","lat":-23.56547,"lon":-46.62834,"dist":8.16,"st":"Ativa","tel":"(11) 59254642","email":"contabilrocha@globo.com","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-113","cnpj":"53.429.760/0001-85","razao":"COOPER SUPERLIDER COOPERATIVA DE TRANSPORTES","nome":"COOPER SUPERLIDER COOPERATIVA DE TRANSPO","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM BOA ESPERANCA","end":"RUA PROF ANTONIO AUSTREGESILO, 224","cep":"05867-000","lat":-23.5322,"lon":-46.6398,"dist":8.21,"st":"Ativa","tel":"(11) 81956358","email":"FATIMA@NEXTASSESSORIACONTABIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-091","cnpj":"27.418.903/0001-43","razao":"COOPERATIVA DE TRANSPORTE E TURISMO DO NORDESTE - COOPERBUSNORDESTE","nome":"COOPERBUSNORDESTE","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"BOM RETIRO","end":"AVENIDA DO ESTADO, 1579","cep":"01107-000","lat":-23.52384,"lon":-46.64578,"dist":8.27,"st":"Ativa","tel":"(11) 87705028","email":"ADEMARTURISMO1995@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-094","cnpj":"30.155.897/0001-93","razao":"COOPER TRANS MOBILY - COOPERATIVA DE TRANSPORTES DIVERSOS E MOBILIDADE URBANA","nome":"COOPER MOBILY","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM PEDRA BRANCA","end":"RUA LIRIO DAS PEDRAS, 614","cep":"08490-860","lat":-23.54613,"lon":-46.62887,"dist":8.55,"st":"Ativa","tel":"(11) 30904081","email":"COOPERATIVATRANSMOBILY@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-117","cnpj":"54.737.749/0001-45","razao":"COOPEROESTE COOPERATIVA DE TRANSPORTES","nome":"COOPEROESTE","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JAGUARE","end":"RUA CAETANOPOLIS, 940","cep":"05335-120","lat":-23.55794,"lon":-46.62304,"dist":8.8,"st":"Ativa","tel":"(11) 86420835","email":"CONTATO@VBSASSESSORIA.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-114","cnpj":"53.797.842/0001-82","razao":"COOPER DIAS - COOPERATIVA DE TRANSPORTES","nome":"COOPER DIAS","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM SAO PAULO(ZONA LESTE)","end":"RUA ESTANISLAU DE TOLEDO PIZA, S/N","cep":"08461-510","lat":-23.5452,"lon":-46.62365,"dist":9.09,"st":"Ativa","tel":"(11) 67446362","email":"COOPERDIASTRANSPORTES@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-104","cnpj":"42.188.354/0002-32","razao":"VIACOOP COOPERATIVA SERVICOS E TRANSPORTES","nome":"VIACOOP COOPERATIVA SERVICOS E TRANSPORT","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"FREGUESIA DO O","end":"RUA MANUEL DA SILVA AMORIM, 34","cep":"02925-120","lat":-23.56049,"lon":-46.61818,"dist":9.24,"st":"Ativa","tel":"(31) 72542171","email":"CONTRATOS@VIACOOP.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-024","cnpj":"00.353.164/0001-00","razao":"OFFICEDRIVER - COOPERATIVA DE TRANSPORTES DOS MOTORISTAS AUTONOMOS","nome":"OFFICEDRIVER - COOPERATIVA DE TRANSPORTE","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"VILA ANASTACIO","end":"RUA CONSELHEIRO RIBAS, 142","cep":"05093-060","lat":-23.51107,"lon":-46.64083,"dist":9.59,"st":"Ativa","tel":"(11) 36486096","email":"LUCAS@COOPERSERVICE.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-088","cnpj":"23.485.597/0002-98","razao":"COOPERATIVA DE TRANSPORTE COMPLEMENTAR INTERESTADUAL - COOTRANSCOM","nome":"COOPERTAI","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"PARQUE COCAIA","end":"RUA DIOGO DE TORRALVA, 18","cep":"04850-090","lat":-23.50716,"lon":-46.64337,"dist":9.72,"st":"Ativa","tel":"(11) 83686447","email":"TEL@COOPERTAI.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-072","cnpj":"16.694.544/0001-30","razao":"COOPERLIGA COOPERATIVA NACIONAL DE TRANSPORTE","nome":"COOPERLIGA","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM GUANCA","end":"RUA IZIDRO ORTIZ, 310","cep":"02161-000","lat":-23.59069,"lon":-46.6146,"dist":9.77,"st":"Ativa","tel":"(11) 29818823","email":"brasdata@terra.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-131","cnpj":"65.768.644/0001-70","razao":"COOPNEXUS - COOPERATIVA DE TRANSPORTES","nome":"COOPNEXUS - COOPERATIVA DE TRANSPORTES","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"VILA FACHINI","end":"RUA CHARLES HOYT, 103","cep":"04334-070","lat":-23.59866,"lon":-46.61422,"dist":10.04,"st":"Ativa","tel":"(11) 47280157","email":"ALECIPRIANO79ME@YAHOO.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-063","cnpj":"11.659.069/0001-48","razao":"COOPER BRASVIAS - COOPERATIVA DE TRANSPORTES E LOGISTICA","nome":"COOPER BRASVIAS - COOPERATIVA DE TRANSPO","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"PARQUE NOVO MUNDO","end":"AVENIDA JOSE MARIA FERNANDES, 754","cep":"02185-030","lat":-23.51009,"lon":-46.63446,"dist":10.14,"st":"Ativa","tel":"(11) 29420811","email":"LEGALIZACOES@SPASSESSORIA.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-130","cnpj":"63.741.977/0001-80","razao":"COOPERCONNECT - COOPERATIVA DE TRABALHO CONECTADA DE TRANSPORTE E SERVICOS INTELIGENTES","nome":"COOPERCONNECT","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"VILA AIMORE","end":"RUA BUITY, 12","cep":"08190-090","lat":-23.55753,"lon":-46.60812,"dist":10.31,"st":"Ativa","tel":"(11) 30903149","email":"CONTATO@HUBHDS.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-121","cnpj":"56.905.410/0001-36","razao":"COOPER 7 PRAIAS COOPERATIVA DE TRANSPORTES","nome":"COOPER 7 PRAIAS","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM SELMA","end":"RUA ALICE DOS SANTOS PEIXE, 991","cep":"04431-140","lat":-23.50828,"lon":-46.63121,"dist":10.52,"st":"Ativa","tel":"(11) 55825770","email":"COOPER7PRAIAS@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-032","cnpj":"02.988.888/0001-48","razao":"COOPERGRANSP - COOPERATIVA DE TRANSPORTES EM GERAL DE SAO PAULO E GRANDE SAO PAULO.","nome":"COOPERGRANSP - COOPERATIVA DE TRANSPORTE","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"VILA PREL","end":"RUA VITORIO, 261","cep":"05780-410","lat":-23.54681,"lon":-46.60626,"dist":10.73,"st":"Ativa","tel":"(11) 26427380","email":"nova.alt@terra.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-062","cnpj":"11.258.736/0001-80","razao":"COOPERMITI - COOPERATIVA DE TRABALHO, PRODUCAO, RECICLAGEM E GESTAO DE RESIDUOS SOLIDOS","nome":"COOPERMITI","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"CASA VERDE","end":"RUA JOAO RUDGE, 366","cep":"02513-020","lat":-23.5149,"lon":-46.61773,"dist":11.15,"st":"Ativa","tel":"(11) 36660849","email":"CONTATO@COOPERMITI.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-089","cnpj":"25.355.035/0001-74","razao":"COOPERATIVA DE TRANSPORTE DOS MOTORISTAS DE TAXIS ACESSIVEIS PARA PESSOAS COM MOBILIDADE REDUZIDA - COOPER TPA","nome":"COOPER - TPA","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"LUZ","end":"RUA PAULINO GUIMARAES, 93","cep":"01109-020","lat":-23.51908,"lon":-46.61475,"dist":11.15,"st":"Ativa","tel":"(11) 55899998","email":"APTA@APTACONTABILIDADE.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-118","cnpj":"55.141.616/0001-74","razao":"TRANSCOOPER COOPERATIVA DE SERVICOS DE TRANSPORTES","nome":"TRANSCOOPER","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"PINHEIROS","end":"RUA DOS PINHEIROS, 498","cep":"05422-902","lat":-23.55942,"lon":-46.59896,"dist":11.2,"st":"Ativa","tel":"(11) 33655889","email":"TRANSCOOPER.SP@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-079","cnpj":"18.157.936/0001-96","razao":"COOPERAZUL COOPERATIVA DE TRANSPORTES INTERMODAIS BRASILEIRA","nome":"COOPERAZUL","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"CIDADE PATRIARCA","end":"RUA SAO DONACIANO, 126","cep":"03553-090","lat":-23.51326,"lon":-46.61502,"dist":11.48,"st":"Ativa","tel":"(11) 26433232","email":"EXPEDIENTE@NALTERNATIVA.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-127","cnpj":"62.827.807/0001-50","razao":"COOPERFIVE COOPERATIVA DE TRANSPORTES","nome":"COOPERFIVE","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"PARQUE DOROTEIA","end":"RUA JOSE MAURO MENDONCA, 26","cep":"04475-492","lat":-23.50846,"lon":-46.61656,"dist":11.66,"st":"Ativa","tel":"(11) 47554664","email":"COOPERFIVE25@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-124","cnpj":"57.563.712/0001-36","razao":"COOPERATIVA DE TRANSPORTE BIG COOPER","nome":"COOPERATIVA DE TRANSPORTE BIG COOPER","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM CASA GRANDE","end":"RUA CONSTELACAO DA SERPENTE, 218","cep":"04865-030","lat":-23.53005,"lon":-46.60116,"dist":11.83,"st":"Ativa","tel":"(11) 47232314","email":"BIGCOOPERR@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-035","cnpj":"03.429.367/0001-13","razao":"FAST MOBIL COOPERATIVA DE TRANSPORTE APP","nome":"FASTMOBIL","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"BELA VISTA","end":"AVENIDA PAULISTA, 1636","cep":"01310-200","lat":-23.54312,"lon":-46.59388,"dist":12.06,"st":"Ativa","tel":"(11) 78279482","email":"CONTATOFMOBIL@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-128","cnpj":"63.268.129/0001-03","razao":"MOVISP COOPERATIVA DE TRABALHO DE TRANSPORTE DE PASSAGEIROS E CARGAS","nome":"MOVISP COOPERATIVA","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"PENHA DE FRANCA","end":"AVENIDA AMADOR BUENO DA VEIGA, 4222","cep":"03652-000","lat":-23.59443,"lon":-46.58842,"dist":12.46,"st":"Ativa","tel":"(11) 53862194","email":"ASSOCIACAOUPLIGADO@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-066","cnpj":"13.121.285/0001-60","razao":"INTEGRA COOPERATIVA DOS PROFISSIONAIS AUTONOMOS DA AREA DA SAUDE","nome":"INTEGRA COOPERATIVA DOS PROFISSIONAIS AU","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"SANTA CECILIA","end":"AVENIDA S JOAO, 1588","cep":"01211-900","lat":-23.53525,"lon":-46.59101,"dist":12.59,"st":"Ativa","tel":"(11) 40839388","email":"JURIDICO@COOPINTEGRA.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-080","cnpj":"19.406.661/0001-40","razao":"COOPERATIVA DE TRANSPORTE DOS MOTORISTAS AUTONOMOS DE TAXI GAIVOTA DO MUNICIPIO DE SAO PAULO","nome":"COOPER SP ATAG","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"VILA FACHINI","end":"RUA TARCILIA, 34","cep":"04326-070","lat":-23.53441,"lon":-46.58988,"dist":12.73,"st":"Ativa","tel":"(11) 29180788","email":"getulio.legal@personnacontabil.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-119","cnpj":"55.819.215/0001-20","razao":"COOPERCITYSP - COOPERATIVA DE TRANSPORTES","nome":"COOPERCITYSP","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM SHANGRILA (ZONA NORTE)","end":"RUA JOANA PEDROSO DOS SANTOS, 294","cep":"02990-060","lat":-23.52461,"lon":-46.59335,"dist":12.8,"st":"Ativa","tel":"(11) 90015322","email":"COOPERCITYSP@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-041","cnpj":"06.185.546/0001-40","razao":"COOPERARTE - COOPERATIVA DE TRANSPORTES DE SAO PAULO","nome":"COOPERARTE - EDUCACAO EM PRIMEIRO LUGAR","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"INTERLAGOS","end":"RUA ANTONIO ISAIAS PETRELLA, 212","cep":"04783-150","lat":-23.51103,"lon":-46.59572,"dist":13.28,"st":"Ativa","tel":"(11) 65009734","email":"COOPERARTE@13R.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-115","cnpj":"54.072.302/0001-02","razao":"COOPERATIVA DE TRANSPORTE PAULISTA - COOPER PAULISTA","nome":"COOPER PAULISTA","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"VILA ISA","end":"RUA OLAVIANO GABRIEL DE OLIVEIRA, 86","cep":"04689-210","lat":-23.515,"lon":-46.59248,"dist":13.35,"st":"Ativa","tel":"(11) 56509233","email":"COOPERPAULISTA23@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-003","cnpj":"04.147.315/0001-17","razao":"COOPERATIVA DE TRABALHO DOS MOTORISTAS AUTONOMOS DA GRANDE SAO PAULO","nome":"ELITE RADIO TAXI","muni":"DIADEMA","uf":"SP","reg":"RMSP - ABC","bairro":"VILA NOGUEIRA","end":"AVENIDA PIRAPORINHA, 1028","cep":"09950-000","lat":-23.6865,"lon":-46.6205,"dist":15.6,"st":"Ativa","tel":"(11) 40661615","email":"FINANCEIRO@TAXIELITE.COM.BR","tipo":"Rádio-Táxi Urbano","pos":"Concorrente Regional ABC (Diadema)"},{"id":"COOP-SP-004","cnpj":"04.147.315/0002-06","razao":"COOPERATIVA DE TRABALHO DOS MOTORISTAS AUTONOMOS DA GRANDE SAO PAULO","nome":"ELITE RADIO TAXI","muni":"SAO PAULO","uf":"SP","reg":"RMSP - ABC","bairro":"JARDIM PREVIDENCIA","end":"RUA NOSSA SENHORA DA SAUDE, 714","cep":"04159-000","lat":-23.6865,"lon":-46.6205,"dist":15.6,"st":"Ativa","tel":"(11) 40661615","email":"FINANCEIRO@TAXIELITE.COM.BR","tipo":"Rádio-Táxi Urbano","pos":"Concorrente Regional ABC (Diadema)"},{"id":"COOP-SP-108","cnpj":"49.111.853/0001-90","razao":"COOPER ABC - COOPERATIVA DE TRABALHO DOS (AS) MOTO ENTREGADORES (AS) DA REGIAO METROPOLITANA DA CIDADE DE SAO PAULO","nome":"COOPER ABC","muni":"DIADEMA","uf":"SP","reg":"RMSP - ABC","bairro":"CENTRO","end":"RUA ORENSE, 41","cep":"09920-650","lat":-23.6865,"lon":-46.6205,"dist":15.6,"st":"Ativa","tel":"(11) 31591048","email":"FRANCISCO@SENOECOSSENO.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-013","cnpj":"15.329.968/0001-33","razao":"NOVACOOP - COOPERATIVA DE TRABALHO DOS TAXISTAS AUTONOMOS DE BARUERI","nome":"NOVACOOP","muni":"BARUERI","uf":"SP","reg":"RMSP - Oeste / Alphaville","bairro":"PARQUE IMPERIAL","end":"RUA PERO VAZ DE CAMINHA, 92","cep":"06462-110","lat":-23.505,"lon":-46.865,"dist":17.62,"st":"Ativa","tel":"(11) 41982566","email":"COMERCIAL@BARUERIRADIOTAXI.COM.BR","tipo":"Rádio-Táxi Corporativo Alphaville","pos":"Concorrente Corporativo Alphaville / Barueri"},{"id":"COOP-SP-028","cnpj":"02.455.070/0001-60","razao":"COOPASA COOPERATIVA DOS TRANSPORTADORES DO ESTADO DE SAO PAULO","nome":"COOPASA","muni":"SAO BERNARDO DO CAMPO","uf":"SP","reg":"RMSP - ABC","bairro":"PLANALTO","end":"RUA MARTIN LUTHER KING JUNIOR, 180","cep":"09890-060","lat":-23.6914,"lon":-46.5646,"dist":19.79,"st":"Ativa","tel":"(11) 23741175","email":"COOPASA@COOPASATRANSPORTES.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-106","cnpj":"42.418.733/0001-90","razao":"COOPTA - COOPERATIVA DOS PROFISSIONAIS DE TRANSPORTES POR APLICATIVO DA REGIAO METROPOLITANA DE SAO PAULO","nome":"COOPTA - COOPERATIVA DOS PROFISSIONAIS D","muni":"SAO BERNARDO DO CAMPO","uf":"SP","reg":"RMSP - ABC","bairro":"ASSUNCAO","end":"RUA SUECIA, 393","cep":"09861-610","lat":-23.6914,"lon":-46.5646,"dist":19.79,"st":"Ativa","tel":"(11) 20783520","email":"LEGAL@GRUPOAUDICONT.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-132","cnpj":"69.304.061/0001-49","razao":"COOPERATIVA DOS COND AUT VEICULOS RODOV GRANDE ABC","nome":"ABC RADIO TAXI","muni":"SANTO ANDRE","uf":"SP","reg":"RMSP - ABC","bairro":"VILA PINHEIRINHO","end":"AVENIDA CAMINHO DO PILAR, 1737","cep":"09190-000","lat":-23.674,"lon":-46.531,"dist":21.35,"st":"Ativa","tel":"(11) 21328000","email":"DIRETORIA@ABCRADIOTAXI.COM.BR","tipo":"Rádio-Táxi Grande ABC","pos":"Líder Polo Regional ABC (Santo André)"},{"id":"COOP-SP-002","cnpj":"02.612.485/0001-08","razao":"COOPERATIVA DOS MOTORISTAS DE TAXI AUTONOMOS DE COTIA COOPERTIA","nome":"COOPERTIA","muni":"COTIA","uf":"SP","reg":"RMSP - Oeste","bairro":"VILA SAO JOAQUIM","end":"RUA MAURICIO XAVIER DE OLIVEIRA, 225","cep":"06700-275","lat":-23.605,"lon":-46.915,"dist":21.41,"st":"Ativa","tel":"(11) 46161659","email":"radiotaxicoopertia@terra.com.br","tipo":"Ponto Fixo e Rádio-Táxi Granja Viana","pos":"Parceiro Potencial / Concorrente Oeste (Cotia/Granja Viana)"},{"id":"COOP-SP-054","cnpj":"09.411.354/0001-01","razao":"COOPERMEGA-COOPERATIVA DE TRABALHO DOS PROFISSIONAIS AUTONOMOS DE TRANSPORTE DE PASSAGEIROS E CARGA SECA","nome":"COOPERMEGA","muni":"COTIA","uf":"SP","reg":"RMSP - Oeste","bairro":"CENTRO","end":"AVENIDA PROFESSOR JOAQUIM BARRETO, 1165","cep":"06700-170","lat":-23.6039,"lon":-46.919,"dist":21.79,"st":"Ativa","tel":"(11) 25970281","email":"ADM.COOPERMEGA@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-015","cnpj":"19.569.330/0001-20","razao":"COOPERATIVA DE TRANSPORTE DOS CONDUTORES DE RADIOTAXI DO MUNICIPIO DE GUARULHOS","nome":"GUARU LIGUE TAXI","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto","bairro":"BELA VISTA","end":"RUA HUMBERTO BRONCHINI, 748","cep":"07133-000","lat":-23.4542,"lon":-46.5337,"dist":22.05,"st":"Ativa","tel":"(11) 24019999","email":"presidente@guarutaxi.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-048","cnpj":"08.711.644/0001-08","razao":"COOPER PLANALTO - COOPERATIVA DE TRANSPORTES RODOVIARIOS","nome":"COOPER PLANALTO","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto","bairro":"PICANCO","end":"RUA CACHOEIRA, 736","cep":"07080-000","lat":-23.4542,"lon":-46.5337,"dist":22.05,"st":"Ativa","tel":"(11) 64590999","email":"legal@contabilpadrao.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-056","cnpj":"10.348.049/0001-93","razao":"COOPER - TRIUNFO - COOPERATIVA DE TRABALHO NA PREST. DE SERV. DE TRANSP. DE PASSAGEIROS, CARGAS, FRETAMENTOS, TRANSLADOS E SIMILARES DO ESTADO DE SP","nome":"COOPER-TRIUNFO","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto","bairro":"JARDIM PRESIDENTE DUTRA","end":"RUA MARINOPOLIS, 502","cep":"07172-100","lat":-23.4542,"lon":-46.5337,"dist":22.05,"st":"Ativa","tel":"(11) 24411460","email":"COOPERTRIUNFO@HOTMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-078","cnpj":"17.946.176/0001-33","razao":"COOPERATIVA DE TRANSPORTE DOS RADIOTAXISTAS DE GUARULHOS","nome":"COOPER GUARULHOS","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto","bairro":"CIDADE JARDIM CUMBICA","end":"RUA ABAIARA, 202","cep":"07180-210","lat":-23.4542,"lon":-46.5337,"dist":22.05,"st":"Ativa","tel":"(11) 22290872","email":"PREESIDENCIA@COOPERGUARULHOS.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-096","cnpj":"31.429.296/0001-94","razao":"COOPERATIVA DE CONDUTORES DE TAXI CATEGORIA PREMIUM DO GRU AIRPORT - AEROPORTO INTERNACIONAL DE SP/GUARULHOS - GOVERNADOR ANDRE FRANCO MONTORO","nome":"GUARUVIP","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto","bairro":"VILA ROSALIA","end":"RUA PIRAPOZINHO, 372","cep":"07073-020","lat":-23.4542,"lon":-46.5337,"dist":22.05,"st":"Ativa","tel":"(11) 20583710","email":"CAROLINE@NOVACONTGUARULHOS.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-107","cnpj":"47.711.344/0001-72","razao":"ROGERIO APARECIDO COOPER 18413156807","nome":"ROGERIO APARECIDO COOPER 18413156807","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto","bairro":"JARDIM MARIA DO CARMO","end":"RUA SEBASTIAO JUSTINO DA SILVA, 20","cep":"07263-455","lat":-23.4542,"lon":-46.5337,"dist":22.05,"st":"Ativa","tel":"(11) 65086012","email":"ROGERIOCOOPER@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-122","cnpj":"56.924.877/0001-23","razao":"56.924.877 JOHAN RICARDO COOPER JUNIOR","nome":"56.924.877 JOHAN RICARDO COOPER JUNIOR","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto","bairro":"JARDIM MARIA DO CARMO","end":"RUA DOMINGOS BISPO DE OLIVEIRA, 23","cep":"07263-465","lat":-23.4542,"lon":-46.5337,"dist":22.05,"st":"Ativa","tel":"(11) 16810670","email":"ABERTURA@MAISMEI.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-021","cnpj":"59.379.469/0001-26","razao":"COOPERATIVA FRANCOOPER BR","nome":"COOPERATIVA FRANCOOPER BR","muni":"FRANCO DA ROCHA","uf":"SP","reg":"RMSP - Norte","bairro":"VILA CARMELA LETERIA DE TULIO","end":"RUA RANCHARIA, 335","cep":"07858-200","lat":-23.3283,"lon":-46.7269,"dist":27.1,"st":"Ativa","tel":"(11) 52235223","email":"FRANCOOPERBR@OUTLOOK.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-029","cnpj":"02.776.030/0001-10","razao":"COOPERATIVA DE LOCACAO DE VEICULOS DE MOTORISTAS AUTONOMOS-COOPERAUTO","nome":"COOPERAUTO","muni":"MAUA","uf":"SP","reg":"RMSP - ABC","bairro":"JARDIM PILAR","end":"RUA AURELIO VARIN, 26","cep":"09370-050","lat":-23.6677,"lon":-46.4614,"dist":27.32,"st":"Ativa","tel":"(11) 72771171","email":"COOPERAUTO.ANDREIA@UOL.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-030","cnpj":"02.842.659/0001-10","razao":"COOPERATIVA DE TRABALHO DOS PERMISSIONARIOS AUTONOMOS EM TRANSPORTE COLETIVO DE PASSAGEIROS DO MUNICIPIO DE GUARULHOS","nome":"COOPER TRANSGUARU","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto GRU","bairro":"VILA SAO JOAO","end":"RUA PEDRO LUIZ, 389","cep":"07151-385","lat":-23.4356,"lon":-46.4731,"dist":28.32,"st":"Ativa","tel":"(11) 24578748","email":"VIVIANE@COOPERTRANSGUARU.COM.BR","tipo":"Táxi Aeroporto Especial / Ponto Privativo GRU","pos":"Líder Concorrente Aeroporto GRU (Guarulhos)"},{"id":"COOP-SP-105","cnpj":"42.332.474/0001-80","razao":"GUARUCOOPER -  COOPERATIVA DE TRANSPORTES GUARULHENSE","nome":"GUARUCOOPER COOPERATIVA","muni":"SAO PAULO","uf":"SP","reg":"RMSP - Norte / Aeroporto GRU","bairro":"CIDADE PATRIARCA","end":"RUA S DONACIANO, 126","cep":"03553-090","lat":-23.4356,"lon":-46.4731,"dist":28.32,"st":"Ativa","tel":"(11) 87455743","email":"GUARUCOOPER@BOL.COM","tipo":"Táxi Aeroporto Especial / Ponto Privativo GRU","pos":"Líder Concorrente Aeroporto GRU (Guarulhos)"},{"id":"COOP-SP-111","cnpj":"52.378.239/0001-01","razao":"COOPERATIVA MISTA DE TRANSPORTE DOS MOTORISTAS AUTONOMOS DE TAXIS DO MUNICIPIO DE GUARULHOS","nome":"GUARUCOOP","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto GRU","bairro":"JARDIM PARAVENTI","end":"RUA VITOR COSTA, 510","cep":"07123-010","lat":-23.4356,"lon":-46.4731,"dist":28.32,"st":"Ativa","tel":"(11) 24407070","email":"CONTABIL@GUARUCOOP.COM","tipo":"Táxi Aeroporto Especial / Ponto Privativo GRU","pos":"Líder Concorrente Aeroporto GRU (Guarulhos)"},{"id":"COOP-SP-009","cnpj":"06.255.304/0001-86","razao":"COOPERCAJ - COOPERATIVA DE TRABALHO DOS MOTORISTAS DE TAXI DA REGIAO DE CAJAMAR","nome":"COOPERCAJ","muni":"CAJAMAR","uf":"SP","reg":"RMSP - Noroeste (Cajamar)","bairro":"JORDANESIA (JORDANESIA)","end":"AVENIDA ANTONIO CANDIDO MACHADO, 1260","cep":"07776-195","lat":-23.3556,"lon":-46.8778,"dist":29.59,"st":"Ativa","tel":"(11) 44475544","email":"COOPERCAJ.TAXI@YAHOO.COM.BR","tipo":"Atendimento a Centros de Distribuição","pos":"Cooperativa Satélite Polo Logístico Cajamar"},{"id":"COOP-SP-019","cnpj":"54.112.406/0001-95","razao":"COOPERATIVA DE TRABALHO E MOBILIDADE URBANA DE SAO PAULO MOBI SP","nome":"MOBI SP","muni":"CAJAMAR","uf":"SP","reg":"RMSP - Oeste / Noroeste","bairro":"SAO ROBERTO (JORDANESIA)","end":"RUA DAS TIPUANAS, 227","cep":"07787-030","lat":-23.3556,"lon":-46.8778,"dist":29.59,"st":"Ativa","tel":"(11) 95518225","email":"COOPMOBISP@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-095","cnpj":"30.889.236/0001-91","razao":"COOPERSUZAN - COOPERATIVA DE TRANSPORTE DE PASSAGEIROS DE SUZANO","nome":"COOPERSUZAN - COOPERATIVA DE TRANSPORTE ","muni":"SUZANO","uf":"SP","reg":"RMSP - Leste","bairro":"VILA MARIA DE MAGGI","end":"AVENIDA PAUL PERCY HARRIS, 100","cep":"08680-010","lat":-23.5425,"lon":-46.3108,"dist":40.62,"st":"Ativa","tel":"(11) 47224818","email":"CONPSETE@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-057","cnpj":"10.348.049/0002-74","razao":"COOPER - TRIUNFO - COOPERATIVA DE TRABALHO NA PREST. DE SERV. DE TRANSP. DE PASSAGEIROS, CARGAS, FRETAMENTOS, TRANSLADOS E SIMILARES DO ESTADO DE SP","nome":"COOPER - TRIUNFO - COOPERATIVA DE TRABAL","muni":"ARUJA","uf":"SP","reg":"RMSP - Leste","bairro":"VILA PILAR","end":"AVENIDA EXPEDICIONARIO CARMELINO DE JESUS, 313","cep":"07401-775","lat":-23.3969,"lon":-46.3203,"dist":44.05,"st":"Ativa","tel":"(11) 24411460","email":"COOPERTRIUNFO@HOTMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-098","cnpj":"33.734.283/0001-54","razao":"ARUCOOPER - COOPERATIVA DE TRANSPORTE DE ARUJA","nome":"HIGH CLASS TRANSPORTES","muni":"ARUJA","uf":"SP","reg":"RMSP - Leste","bairro":"JARDIM MODELO","end":"RUA MELVIN JONES, SN","cep":"07401-305","lat":-23.3969,"lon":-46.3203,"dist":44.05,"st":"Ativa","tel":"(11) 36760469","email":"ARUCOOPER@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-142","cnpj":"02.167.176/0001-68","razao":"COOPERATIVA DE RADIO TAXI DE JUNDIAI","nome":"DISK TAXI JUNDIAI","muni":"JUNDIAI","uf":"SP","reg":"Central / Jundiaí","bairro":"VILA ARENS","end":"AVENIDA BRIGADEIRO FARIA LIMA, 450","cep":"13202-500","lat":-23.195,"lon":-46.885,"dist":45.58,"st":"Ativa","tel":"(11) 4586-2000","email":"DISKTAXISJUNDIAI@GMAIL.COM","tipo":"Rádio-Táxi Logístico / Rodoanel","pos":"Polo Logístico Corredor Anhanguera"},{"id":"COOP-SP-135","cnpj":"55.322.804/0001-07","razao":"COOPERATIVA DOS CONDUTORES AUTONOMOS DE VEICULOS RODOVIARIOS DA BAIXADA SANTISTA","nome":"COOPER RADIO TAXI SANTOS","muni":"SANTOS","uf":"SP","reg":"Baixada Santista / Litoral","bairro":"GONZAGA","end":"AVENIDA ANA COSTA, 433","cep":"11060-003","lat":-23.9658,"lon":-46.3332,"dist":58.13,"st":"Ativa","tel":"(13) 3229-7979","email":"ADMINISTRACAO@COOPERRADIOTAXI.COM.BR","tipo":"Rádio-Táxi Litoral / Porto / Terminal de Cruzeiros","pos":"Líder Baixada Santista (Polo Portuário)"},{"id":"COOP-SP-138","cnpj":"21.005.631/0001-73","razao":"SOROTAXI COOPERATIVA DE TRABALHO SERVICOS DE TAXISTAS AUTONOMOS RADIOTAXI DE SOROCABA","nome":"SOROTAXI","muni":"SOROCABA","uf":"SP","reg":"Região de Sorocaba","bairro":"CENTRO","end":"RUA SAO BENTO, 312","cep":"18010-031","lat":-23.5015,"lon":-47.458,"dist":76.84,"st":"Ativa","tel":"(15) 3232-2000","email":"ADMINISTRATIVO@SOROTAXI.COM.BR","tipo":"Rádio-Táxi Industrial / Urbano","pos":"Líder Região de Sorocaba"},{"id":"COOP-SP-133","cnpj":"67.231.241/0001-12","razao":"COOPERATIVA MISTA DE TRABALHO DOS MOTORISTAS AUTONOMOS DE TAXI DE CAMPINAS","nome":"COOPERCAMP / RADIO TAXI CAMPINAS","muni":"CAMPINAS","uf":"SP","reg":"Região Metropolitana de Campinas","bairro":"CENTRO","end":"RUA BENJAMIN CONSTANT, 1633","cep":"13010-141","lat":-22.9032,"lon":-47.0588,"dist":82.49,"st":"Ativa","tel":"(19) 3731-8000","email":"CONTATO@COOPERCAMP.COM.BR","tipo":"Rádio-Táxi Regional / Aeroporto Viracopos","pos":"Líder Regional Campinas (Polo Viracopos)"},{"id":"COOP-SP-134","cnpj":"68.342.898/0001-10","razao":"COOPERATIVA RADIO TAXI DE CAMPINAS SP","nome":"CAMP TAXI","muni":"CAMPINAS","uf":"SP","reg":"Região Metropolitana de Campinas","bairro":"VILA ITAPURA","end":"AVENIDA BARAO DE ITAPURA, 1240","cep":"13020-431","lat":-22.8975,"lon":-47.0542,"dist":82.86,"st":"Ativa","tel":"(19) 3743-4000","email":"CONTATO@CAMPTAXI.COM.BR","tipo":"Rádio-Táxi Urbano / Corporativo","pos":"Concorrente Tradicional RMC"},{"id":"COOP-SP-136","cnpj":"26.862.344/0001-01","razao":"COOPERTAXI - COOPERATIVA DE TAXI DE SAO JOSE DOS CAMPOS","nome":"COOPERTAXI SJC","muni":"SAO JOSE DOS CAMPOS","uf":"SP","reg":"Vale do Paraíba","bairro":"JARDIM SAO DIMAS","end":"RUA ENGENHEIRO PRUDENTE MEIRELLES DE MORAES, 302","cep":"12243-750","lat":-23.197,"lon":-45.892,"dist":93.12,"st":"Ativa","tel":"(12) 3921-2020","email":"ATENDIMENTO@COOPERTAXISJC.COM.BR","tipo":"Rádio-Táxi Tecnológico / Polo Aeroespacial","pos":"Líder Vale do Paraíba (Polo DCTA/Embraer)"},{"id":"COOP-SP-137","cnpj":"10.669.178/0001-83","razao":"COOPERATIVA DOS TAXISTAS DE TAUBATE","nome":"COOPERTAU TAXI","muni":"TAUBATE","uf":"SP","reg":"Vale do Paraíba","bairro":"CENTRO","end":"PRACA DR. PAULA DE TOLEDO, 45","cep":"12010-050","lat":-23.025,"lon":-45.554,"dist":132.6,"st":"Ativa","tel":"(12) 3622-1122","email":"COOPERTAUTAXI@GMAIL.COM","tipo":"Rádio-Táxi Regional","pos":"Polo Regional Vale Médio"},{"id":"COOP-SP-141","cnpj":"13.026.399/0001-21","razao":"COOPERATIVA DE TAXISTAS DE PIRACICABA","nome":"COOPERTAXI PIRACICABA","muni":"PIRACICABA","uf":"SP","reg":"Central / Piracicaba","bairro":"BAIRRO ALTO","end":"RUA ALFERES JOSE CAETANO, 1520","cep":"13400-123","lat":-22.729,"lon":-47.644,"dist":133.9,"st":"Ativa","tel":"(19) 3434-1010","email":"COOPERTAXIPIRACICABA@TERRA.COM.BR","tipo":"Rádio-Táxi Industrial / Universitário (USP/Esalq)","pos":"Polo Universitário e Industrial Piracicaba"},{"id":"COOP-SP-140","cnpj":"15.843.310/0001-45","razao":"ALIANCA RADIO TAXI COOPERATIVA DE TAXISTA DE RIBEIRAO PRETO","nome":"ALIANCA RADIO TAXI","muni":"RIBEIRAO PRETO","uf":"SP","reg":"Região de Ribeirão Preto","bairro":"JARDIM AMERICA","end":"AVENIDA PROFESSOR JOAO FIUSA, 1901","cep":"14020-310","lat":-21.198,"lon":-47.818,"dist":287.52,"st":"Ativa","tel":"(16) 3931-4040","email":"ALIANCARADIOTAXI@GMAIL.COM","tipo":"Rádio-Táxi Executivo / Zona Sul","pos":"Concorrente Executivo Ribeirão"},{"id":"COOP-SP-139","cnpj":"00.574.537/0001-65","razao":"COOPERATIVA DE CONDUTORES AUTONOMOS DE RADIO TAXI DE RIBEIRAO PRETO","nome":"COOPERTAXI RIBEIRAO PRETO","muni":"RIBEIRAO PRETO","uf":"SP","reg":"Região de Ribeirão Preto","bairro":"CAMPOS ELISEOS","end":"RUA SILVEIRA MARTINS, 1040","cep":"14080-110","lat":-21.168,"lon":-47.804,"dist":290.03,"st":"Ativa","tel":"(16) 3625-5000","email":"CONTATO@COOPERTAXIRIBEIRAO.COM.BR","tipo":"Rádio-Táxi Agronegócio / Eventos (Agrishow)","pos":"Líder Polo Agro Ribeirão Preto"},{"id":"COOP-SP-143","cnpj":"03.103.268/0001-47","razao":"COOPERATIVA DE TRABALHO DOS TAXISTAS DE FRANCA","nome":"COOPERTAXI FRANCA","muni":"FRANCA","uf":"SP","reg":"Noroeste / Alta Mogiana","bairro":"ESTACAO","end":"RUA GENERAL OSORIO, 201","cep":"14405-107","lat":-20.535,"lon":-47.405,"dist":345.18,"st":"Ativa","tel":"(16) 3721-1200","email":"COOPERTAXIFRANCA@HOTMAIL.COM","tipo":"Rádio-Táxi Calçadista / Urbano","pos":"Polo Calçadista e Cafeeiro Alta Mogiana"},{"id":"COOP-SP-012","cnpj":"08.411.388/0001-25","razao":"COOPERATIVA DE MOTORISTAS AUTONOMOS P/TRANSPORTE DA PESSOA C/DEFICIENCIA E MOBILIDADE REDUZIDA DE SP - COOP TAXI SP","nome":"COOP TAXI","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"BELA VISTA","end":"AVENIDA NOVE DE JULHO, 585","cep":"01312-000","lat":-23.55654,"lon":-46.65225,"dist":5.93,"st":"Baixada","tel":"(11) 32224510","email":"dell@dellassessoria.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-065","cnpj":"12.629.110/0001-04","razao":"SP COOPER - COOPERATIVA DE TRANSPORTES DO ESTADO DE SAO PAULO","nome":"SP COOPER","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"ARTUR ALVIM","end":"AVENIDA AGUIA DE HAIA, 363","cep":"03694-000","lat":-23.56549,"lon":-46.6388,"dist":7.09,"st":"Baixada","tel":"(11) 29822113","email":"contabilidaderl@uol.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-018","cnpj":"48.549.331/0002-92","razao":"COOPERATIVA DE TRANSPORTE DOS CONDUTORES AUTONOMOS DE VEICULOS RODOVIARIOS DE SAO PAULO - COOPERTAX","nome":"COOPERTAX PROPAGANDA E MARKETING","muni":"SAO PAULO","uf":"SP","reg":"Capital (Zona Sul)","bairro":"TATUAPE","end":"AVENIDA CELSO GARCIA, 3291","cep":"03063-000","lat":-23.612,"lon":-46.653,"dist":7.2,"st":"Baixada","tel":"nan","email":"nan","tipo":"Rádio-Táxi Convencional e Aeroporto","pos":"Concorrente Direto (Frota Ampla - Planalto/Congonhas)"},{"id":"COOP-SP-085","cnpj":"20.739.030/0001-21","razao":"COOPERATIVA DE TRABALHO DE TRANSPORTE DE PASSAGEIROS COOPERTAXI EXPRESS EM LIQUIDACAO EM LIQUIDACAO","nome":"COOPERTAXI EXPRESS","muni":"SAO PAULO","uf":"SP","reg":"Capital (Zona Sul)","bairro":"PARQUE SAO RAFAEL","end":"RUA JOAO MASCARENHAS, 41","cep":"08320-550","lat":-23.612,"lon":-46.653,"dist":7.2,"st":"Baixada","tel":"(11) 35397092","email":"MARCELO.CONTADOR@UOL.COM.BR","tipo":"Rádio-Táxi Convencional e Aeroporto","pos":"Concorrente Direto (Frota Ampla - Planalto/Congonhas)"},{"id":"COOP-SP-060","cnpj":"10.886.408/0001-66","razao":"BR 5 - COOPERATIVA DE TRANSPORTES DO BRASIL","nome":"BR 5","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"VILA NANCY","end":"RUA AMPARO DO SITIO, 6","cep":"08440-100","lat":-23.52109,"lon":-46.6598,"dist":7.45,"st":"Baixada","tel":"(11) 29822113","email":"contabilidaderl@uol.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-040","cnpj":"06.088.206/0001-00","razao":"COOP LIDER SAO PAULO COOPERATIVA DE TRABALHO DOS MOTORISTAS PROFISSIONAIS","nome":"COOP LIDER SAO PAULO COOPERATIVA DE TRAB","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"VILA MATILDE","end":"RUA PROFESSOR MIGUEL RUSSIANO, 166","cep":"03502-030","lat":-23.52224,"lon":-46.63925,"dist":8.9,"st":"Baixada","tel":"nan","email":"nan","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-049","cnpj":"08.838.046/0001-96","razao":"COOPERATIVA DOS TRANSPORTADORES ALTERNATIVOS INDEPENDENTES DO ESTADO DE SAO PAULO - COOPTAIESP","nome":"ROCEPI EXPRESS","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"CARANDIRU","end":"AVENIDA ZAKI NARCHI, 1472","cep":"02029-001","lat":-23.59964,"lon":-46.62089,"dist":9.43,"st":"Baixada","tel":"(11) 22211419","email":"contagil@contagil.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-077","cnpj":"17.823.413/0001-79","razao":"TRANSCOOPERLESTE COOPERATIVA DE TRANSPORTE DE PESSOAS E CARGAS EM LIQUIDACAO EM LIQUIDACAO","nome":"TRANSCOOPERLESTE","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"ITAQUERA","end":"AVENIDA JACU PESSEGO / NOVA TRABALHADORES, 541","cep":"08260-005","lat":-23.52195,"lon":-46.60734,"dist":11.65,"st":"Baixada","tel":"(11) 20978220","email":"BARAUNACONTABIL@HOTMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-086","cnpj":"21.204.348/0001-70","razao":"NOVATRANSPORTES COOPERATIVA DE TRANSPORTES EM LIQUIDACAO","nome":"NOVATRANSPORTES COOPERATIVA DE TRANSPORTES","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"VILA MARIA ALTA","end":"RUA SIMAO BORGES, 327","cep":"02128-010","lat":-23.58182,"lon":-46.5935,"dist":11.74,"st":"Baixada","tel":"(11) 25098122","email":"LILIAN.JOBER@HOTMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-025","cnpj":"01.149.265/0001-19","razao":"COOPERTRANS ABC COOPERATIVA DO TRABALHO DOS MOTORISTAS COM VEICULOS DO ABC EM LIQUIDACAO","nome":"COOPERTRANS ABC COOPERATIVA DO TRABALHO ","muni":"SANTO ANDRE","uf":"SP","reg":"RMSP - ABC","bairro":"VL PROGRESSO","end":"RUA ANTERO DE QUINTAL, 283","cep":"09120-570","lat":-23.6639,"lon":-46.5383,"dist":20.13,"st":"Baixada","tel":"nan","email":"nan","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-090","cnpj":"26.384.379/0001-74","razao":"LIBRICOOPER COOPERATIVA DE TRABALHO NA AREA DE TRANSPORTES   EM LIQUIDACAO","nome":"LIBRICOOPER COOPERATIVA DE TRABALHO NA A","muni":"COTIA","uf":"SP","reg":"RMSP - Oeste","bairro":"JARDIM COLIBRI","end":"RUA SERRANA, 58","cep":"06713-310","lat":-23.6039,"lon":-46.919,"dist":21.79,"st":"Baixada","tel":"(11) 41485142","email":"LIBRICOOPER@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-051","cnpj":"09.218.761/0001-99","razao":"COOPER ACAO - COOPERATIVA DE SERVICOS DE TRANSPORTES EM LIQUIDACAO","nome":"COOPERABRASIL","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto","bairro":"PQ SANTOS DUMONT","end":"RUA ANTONIO MARTINS, 49","cep":"07020-260","lat":-23.4542,"lon":-46.5337,"dist":22.05,"st":"Baixada","tel":"(11) 29724132","email":"RENATO@CONTABILIDADERODRIGUES.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-020","cnpj":"58.252.978/0001-20","razao":"COOPERATIVA DE TRABALHO E MOBILIDADE URBANA DE FRANCO DA ROCHA COOPERFRANCO SP","nome":"COOPERFRANCO SP","muni":"FRANCO DA ROCHA","uf":"SP","reg":"RMSP - Norte","bairro":"PARQUE MUNHOZ","end":"RUA DOUTOR JULIAO VAQUEIRO RODRIGUES, 70","cep":"07858-070","lat":-23.3283,"lon":-46.7269,"dist":27.1,"st":"Baixada","tel":"(11) 48153033","email":"SOCIETARIO@KSCONTABIL.SRV.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-042","cnpj":"06.788.738/0001-41","razao":"COOPERATIVA DE TRABALHO DOS TRANS. ROD E LOC. DE VEIC DE MOTORISTAS  AUTON ESCO COM MONITORES DO MUNICIPIO DE MAUA - COOTEMA - EM LIQUIDACAO","nome":"COOTEMA","muni":"MAUA","uf":"SP","reg":"RMSP - ABC","bairro":"VILA FALCHI","end":"RUA ANTONIO FALCHI, 299","cep":"09350-310","lat":-23.6677,"lon":-46.4614,"dist":27.32,"st":"Baixada","tel":"(11) 45431276","email":"reluzcontabil@uol.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-050","cnpj":"08.858.790/0001-52","razao":"COOP. DE TRAB. DOS TRANSP. ROD. E ESC. E TRANSP. ROD. DE CARG. (MUN, INT. E EST.) DO MUN. DE MAUA - COOPER TRANSMA","nome":"COOPER TRANSMA","muni":"MAUA","uf":"SP","reg":"RMSP - ABC","bairro":"SAO FRANCISCO","end":"RUA BARTOLOMEU DE GUSMAO, 347","cep":"09310-680","lat":-23.6677,"lon":-46.4614,"dist":27.32,"st":"Baixada","tel":"(11) 45556044","email":"virtualcontabil@virtualcontabil.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-001","cnpj":"01.683.300/0001-85","razao":"COOPERATIVA DE TRABALHO DOS MOTORISTAS DE TAXI DA REGIA","nome":"COOPERATIVA DE TRABALHO DOS MOTORISTAS D","muni":"SUZANO","uf":"SP","reg":"RMSP - Leste","bairro":"CIDADE EDSON","end":"RUA SAO MIGUEL, 223","cep":"08665-500","lat":-23.5425,"lon":-46.3108,"dist":40.62,"st":"Baixada","tel":"nan","email":"nan","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-052","cnpj":"09.334.397/0001-22","razao":"COOPERATIVA DE TRABALHO DOS TRANSPORTADORES AUTONOMOS DE PASSAGEIROS DO ALTO TIETE  COOPER-SUZAN EM LIQUIDACAO","nome":"COOPER-SUZAN","muni":"SUZANO","uf":"SP","reg":"RMSP - Leste","bairro":"VILA MALUF","end":"RUA JOAO BATISTA FITIPALDI, 2505","cep":"08685-000","lat":-23.5425,"lon":-46.3108,"dist":40.62,"st":"Baixada","tel":"(11) 47224818","email":"edcarlosrf@gmail.com","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-043","cnpj":"06.788.738/0002-22","razao":"COOPERATIVA DE TRABALHO DOS TRANS. ROD E LOC. DE VEIC DE MOTORISTAS  AUTON ESCO COM MONITORES DO MUNICIPIO DE MAUA - COOTEMA - EM LIQUIDACAO","nome":"COOTEMA","muni":"MOGI DAS CRUZES","uf":"SP","reg":"RMSP - Leste","bairro":"CENTRO","end":"RUA SAO JOAO, 836","cep":"08715-030","lat":-23.5208,"lon":-46.1854,"dist":53.58,"st":"Baixada","tel":"(11) 45431276","email":"reluzcontabil@uol.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-047","cnpj":"08.274.345/0001-45","razao":"COOPERLUXO - COOPERATIVA DE TAXI LUXO DE SAO PAULO","nome":"COOPERLUXO - COOPERATIVA DE TAXI LUXO DE","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"BELA VISTA","end":"AVENIDA ROCHA, 440","cep":"01330-000","lat":-23.58615,"lon":-46.68017,"dist":3.29,"st":"Inapta","tel":"(11) 26062051","email":"jcguilherme@uol.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-039","cnpj":"05.578.088/0001-47","razao":"EXCEL - COOPERATIVA DE TRABALHADORES AUTONOMOS DE TRANSPORTES RODOVIARIOS","nome":"EXCEL - COOPERATIVA DE TRABALHADORES AUT","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"BUTANTA","end":"RUA SAPETUBA, 75","cep":"05510-001","lat":-23.55851,"lon":-46.65134,"dist":5.96,"st":"Inapta","tel":"(11) 30978997","email":"ROBERTO@EXCELTRANSPORTE.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-068","cnpj":"14.549.870/0001-29","razao":"COOPFORTE - LOGISTICA E TECNOLOGIA EM TRANSPORTES","nome":"COOPFORTE - LOGISTICA E TECNOLOGIA EM TR","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JD. DAS GRACAS","end":"RUA CORONEL EUCLIDES MACHADO, 201","cep":"02713-000","lat":-23.51842,"lon":-46.68229,"dist":6.45,"st":"Inapta","tel":"(11) 39315673","email":"ANTONIO@COOPFORTE.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-023","cnpj":"00.325.116/0001-09","razao":"COOTURB COOPERATIVA DE TRANSPORTES URBANOS NO MUNICIPIO DE SAO PAULO","nome":"COOTURB COOPERATIVA DE TRANSPORTES URBAN","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"COLONIA","end":"RUA JAIME WRIGHT, 60","cep":"08260-070","lat":-23.59797,"lon":-46.63636,"dist":7.89,"st":"Inapta","tel":"nan","email":"nan","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-022","cnpj":"97.486.922/0001-92","razao":"COOPERATIVA DE TRABALHO DOS MOTORISTAS AUTONOMOS DE TAXIS DE TABOAO DA SERRA","nome":"COOPERATIVA DE TRABALHO DOS MOTORISTAS A","muni":"TABOAO DA SERRA","uf":"SP","reg":"RMSP - Oeste","bairro":"JARDIM MARIA ROSA","end":"RUA ADELIO GONCALVES, 32","cep":"06763-350","lat":-23.6261,"lon":-46.7588,"dist":7.98,"st":"Inapta","tel":"nan","email":"nan","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-059","cnpj":"10.778.608/0001-03","razao":"JOBTRANS - COOPERATIVA DE TRABALHO DOS PROFISSIONAIS DA AREA DE LOGISTICA E TRANSPORTES","nome":"JOBTRANS - COOPERATIVA DE TRABALHO DOS P","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"REPUBLICA","end":"RUA CONSELHEIRO CRISPINIANO, 69","cep":"01037-001","lat":-23.58158,"lon":-46.6271,"dist":8.33,"st":"Inapta","tel":"(11) 31294928","email":"jane@jobcoop.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-037","cnpj":"05.449.253/0001-60","razao":"COOPERMUND - COOPERATIVA DOS PROFISSIONAIS DA AREA DE TRANSPORTES","nome":"COOPERMUND","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"CASA  VERDE","end":"RUA DOM  AMARAL  MOUSINHO, 89","cep":"02517-140","lat":-23.55088,"lon":-46.62702,"dist":8.57,"st":"Inapta","tel":"(11) 38333025","email":"coopermund@terra.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-034","cnpj":"03.224.840/0001-26","razao":"UNITRANSP - COOPERATIVA UNIAO INTERMODAL DE TRANSPORTADORES AUTONOMOS DE SAO PAULO.","nome":"UNITRANSP","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM JAPAO","end":"RUA CABO JOAO MONTEIRO DA ROCHA, 59","cep":"02142-020","lat":-23.50863,"lon":-46.65531,"dist":8.81,"st":"Inapta","tel":"(11) 29510436","email":"UNITRANSP@UOL.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-092","cnpj":"28.516.030/0001-74","razao":"COOPERMTPSP - COOPERATIVA DOS MOTORISTAS DE TAXI PRETO DA CIDADE DE SAO PAULO","nome":"COOPERMTPSP","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JARDIM DA GLORIA","end":"RUA DOUTOR DOLZANI, 44","cep":"01546-000","lat":-23.50527,"lon":-46.65928,"dist":8.88,"st":"Inapta","tel":"(11) 47814370","email":"ADMILSONTAXISP@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-010","cnpj":"07.531.567/0001-33","razao":"COOPERATIVA DOS MOTORISTAS DE TAXIS AUTONOMOS DE OSASCO - OSASCOOP","nome":"OSASCOOP","muni":"OSASCO","uf":"SP","reg":"RMSP - Oeste","bairro":"JD. D'ABRIL","end":"AVENIDA PRESTES MAIA, 960","cep":"06040-008","lat":-23.5329,"lon":-46.7916,"dist":9.53,"st":"Inapta","tel":"(11) 36086646","email":"nan","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-014","cnpj":"17.284.710/0001-93","razao":"COOPERATIVA UNITAXI DE SAO PAULO","nome":"COOPERATIVA UNITAXI DE SAO PAULO","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"SUMARE","end":"AVENIDA DOUTOR ARNALDO, 1670","cep":"01255-000","lat":-23.52794,"lon":-46.62174,"dist":10.04,"st":"Inapta","tel":"(11) 36700708","email":"PRESIDENTE@SERVTAXI.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-044","cnpj":"07.240.794/0001-00","razao":"VAN COOPER COOPERATIVA DE TRABALHO DOS TRANSPORTADORES RODOVIARIOS DE CARGAS, PASSAGEIROS E SERVICOS.","nome":"VAN COOPER","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"PIRITUBA","end":"AVENIDA RAIMUNDO PEREIRA DE MAGALHAES, 11736","cep":"02938-000","lat":-23.50338,"lon":-46.62825,"dist":11.11,"st":"Inapta","tel":"(11) 97759854","email":"carmemlira@uol.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-006","cnpj":"05.472.149/0001-97","razao":"C.T.J - COOPERATIVA DE TRABALHO DOS TAXISTAS DE JURUBATUBA","nome":"C.T.J - COOPERATIVA DE TRABALHO DOS TAXI","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"JURUBATUBA","end":"AVENIDA OCTALLES MARCONDES FERREIRA, 421","cep":"04696-010","lat":-23.50496,"lon":-46.62322,"dist":11.38,"st":"Inapta","tel":"(11) 55481428","email":"wildes@rwacontabil.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-099","cnpj":"33.902.615/0001-62","razao":"COOPERTRANSLOG - COOPERATIVA DE TRANSPORTE E LOGISTICA DO ESTADO DE SAO PAULO","nome":"COOPERTRANSLOG","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"PAV 4 E 3 VG","end":"AVENIDA PAULISTA, 171","cep":"01311-000","lat":-23.53329,"lon":-46.60452,"dist":11.38,"st":"Inapta","tel":"(11) 23375055","email":"ADM.COOPERTRANSLOG@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-081","cnpj":"19.486.242/0001-65","razao":"COOPERATIVA DE TRANSPORTE SAO PAULO RADIOTAXI - COOPER SAO PAULO TAXI - EM LIQUIDACAO","nome":"COOPER SAO PAULO TAXI","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"VILA MORAES","end":"AVENIDA DO CURSINO, 3829","cep":"04133-300","lat":-23.5492,"lon":-46.595,"dist":11.79,"st":"Inapta","tel":"(11) 55899998","email":"nan","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-055","cnpj":"09.501.051/0001-71","razao":"COOPERFROTA COOPERATIVA DE TRANSPORTES DE CARGAS E PASSAGEIROS","nome":"COOPERFROTA COOPERATIVA DE TRANSPORTES D","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"SANTANA","end":"RUA SALETE, 200","cep":"02016-001","lat":-23.50212,"lon":-46.61526,"dist":12.2,"st":"Inapta","tel":"(11) 31019035","email":"miraldo.gois@hotmail.com","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-036","cnpj":"05.358.562/0001-25","razao":"CTPT - COOPERATIVA DE TRABALHO DOS PROFISSIONAIS DA AREA DE TRANSPORTES","nome":"CTPT","muni":"SAO PAULO","uf":"SP","reg":"Capital","bairro":"SANTANA","end":"RUA ALFREDO GUEDES, 196","cep":"02034-010","lat":-23.57374,"lon":-46.58639,"dist":12.41,"st":"Inapta","tel":"(11) 50580764","email":"CTPT_FINANCEIRO@HOTMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-053","cnpj":"09.400.531/0001-46","razao":"COOPERCAR - COOPERATIVA DOS MOTORISTAS DE TAXIS DE CARAPICUIBA-SP","nome":"COOPERCAR","muni":"CARAPICUIBA","uf":"SP","reg":"RMSP - Oeste","bairro":"CENTRO","end":"AVENIDA SANTA TEREZINHA, 182","cep":"06310-010","lat":-23.5222,"lon":-46.8356,"dist":14.1,"st":"Inapta","tel":"(11) 41843010","email":"ada.mkt@hotmail.com","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-007","cnpj":"05.805.487/0001-01","razao":"COOPERCAB COOPERATIVA DE TRABALHO DOS TAXISTAS AUTONOMOS DO GRANDE ABC E SAO PAULO","nome":"COOPERCAB","muni":"SAO CAETANO DO SUL","uf":"SP","reg":"RMSP - ABC","bairro":"CERAMICA","end":"RUA ARNALDO SANTE LACOSELLI, 63","cep":"09531-100","lat":-23.6229,"lon":-46.5547,"dist":16.65,"st":"Inapta","tel":"nan","email":"nan","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-008","cnpj":"05.807.533/0001-01","razao":"COOPERATIVA DOS TAXISTAS DO GRANDE ABC","nome":"COOPER - ABC","muni":"SAO BERNARDO DO CAMPO","uf":"SP","reg":"RMSP - ABC","bairro":"BAETA NEVES","end":"RUA GIACINTO TOGNATO, 1281","cep":"09760-372","lat":-23.6914,"lon":-46.5646,"dist":19.79,"st":"Inapta","tel":"(11) 39962514","email":"processual@rmassessoriacontabil.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-101","cnpj":"35.660.285/0001-71","razao":"COOPERATIVA DOS TAXISTAS AUTONOMOS DA MAXX RADIO TAXI","nome":"COOPER MAXX","muni":"SAO BERNARDO DO CAMPO","uf":"SP","reg":"RMSP - ABC","bairro":"VILA LUSITANIA","end":"RUA BRAGA, 333","cep":"09725-160","lat":-23.6914,"lon":-46.5646,"dist":19.79,"st":"Inapta","tel":"(11) 23567101","email":"MAXXRADIOTAXI1@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-011","cnpj":"07.862.020/0001-10","razao":"COOPERATIVA DOS MOTORISTAS DE TAXI DA GRANDE SAO PAULO COOPTAXI","nome":"COOPTAXI","muni":"SANTO ANDRE","uf":"SP","reg":"RMSP - ABC","bairro":"CENTRO","end":"RUA CORONEL OLIVEIRA LIMA, 180","cep":"09010-000","lat":-23.6639,"lon":-46.5383,"dist":20.13,"st":"Inapta","tel":"(11) 34396739","email":"jaircontahabilidade @ig.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-064","cnpj":"11.707.392/0001-40","razao":"COOPERATIVA DE TRANSPORTES VIA ABC","nome":"COOPERATIVA DE TRANSPORTES VIA ABC","muni":"SANTO ANDRE","uf":"SP","reg":"RMSP - ABC","bairro":"PARQUE JACATUBA","end":"RUA IBATE, 14","cep":"09290-430","lat":-23.6639,"lon":-46.5383,"dist":20.13,"st":"Inapta","tel":"(11) 44332600","email":"contabilglobo@contabilglobo.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-075","cnpj":"17.448.452/0001-33","razao":"COOPERATIVA ITACOOPER RADIO TAXI","nome":"ITACOOPER","muni":"ITAPECERICA DA SERRA","uf":"SP","reg":"RMSP - Sudoeste","bairro":"CENTRO","end":"RUA MAJOR MANOEL FRANCISCO DE MORAES, 103","cep":"06850-050","lat":-23.7169,"lon":-46.8492,"dist":21.64,"st":"Inapta","tel":"(11) 78891896","email":"panambytaxi@hotmail.com","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-070","cnpj":"16.607.576/0001-51","razao":"COOPERSSTARS - COOPERATIVA DE SERVICOS E SUPORTE AO TRANSPORTE ALTERNATIVO RODOVIARIO E SIMILARES","nome":"COOPERSSTARS - COOPERATIVA DE SERVICOS","muni":"COTIA","uf":"SP","reg":"RMSP - Oeste","bairro":"PARQUE SANTA RITA DE CASSIA","end":"RUA FLAMBOYANT (LOTEAMENTO JARDIM ACOTY), S/N","cep":"06700-675","lat":-23.6039,"lon":-46.919,"dist":21.79,"st":"Inapta","tel":"(11) 42437948","email":"FINANCEIRO@COOPERSSTARS.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-093","cnpj":"29.605.727/0001-84","razao":"COOPERATIVA DE SERVICOS, TRABALHOS E SUPORTE AO TRANSPORTE - COOPERTRANSBUS","nome":"COOPERTRANSBUS","muni":"COTIA","uf":"SP","reg":"RMSP - Oeste","bairro":"CENTRO","end":"RUA DOIS DE ABRIL, 34","cep":"06700-095","lat":-23.6039,"lon":-46.919,"dist":21.79,"st":"Inapta","tel":"(11) 42437948","email":"ADEMIR.ASSESSORIA@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-027","cnpj":"02.442.095/0001-29","razao":"COOPERATIVA CENTRAL DO BRASIL DE TRANSPORTES COLETIVOS URBANO DE PASSAGEIROS","nome":"COOPERBRASIL","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto","bairro":"JARDIM PONTE ALTA I","end":"AVENIDA JOSE RANGEL FILHO, 145","cep":"07179-350","lat":-23.4542,"lon":-46.5337,"dist":22.05,"st":"Inapta","tel":"(11) 24310586","email":"CONTABILCARLOSROCHA@TERRA.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-031","cnpj":"02.877.787/0001-08","razao":"GUARU-PRESS COOPERATIVA DE TRABALHO DOS PROFISSIONAIS NA AREA DE TRANSPORTE DE GUARULHOS","nome":"GUARU-PRESS","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto","bairro":"JARDIM SAO PAULO","end":"RUA SANTO ANTONIO, 60","cep":"07110-150","lat":-23.4542,"lon":-46.5337,"dist":22.05,"st":"Inapta","tel":"(11) 24590999","email":"CONTATO@CONTABILPADRAO.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-067","cnpj":"14.404.652/0001-04","razao":"COOPER PROGRESSO - COOPERATIVA DE SERVICOS DE TRANSPORTES","nome":"COOPER PROGRESSO","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto","bairro":"JARDIM ROSA DE FRANCA","end":"RUA CACHOEIRA, 1236","cep":"07080-000","lat":-23.4542,"lon":-46.5337,"dist":22.05,"st":"Inapta","tel":"(11) 49631234","email":"REGINA@CONTABILPADRAO.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-073","cnpj":"17.258.530/0001-37","razao":"COOPERATIVA DE TRABALHO EM TRANSPORTE DE PASSAGEIROS DOS OPERADORES DO SISTEMA ALIMENTADOR COM BILHETE UNICO - COOPERNIK","nome":"COOPERNIK","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto","bairro":"CONJUNTO MARCOS FREIRE","end":"RUA VINTE E TRES, 44","cep":"07263-715","lat":-23.4542,"lon":-46.5337,"dist":22.05,"st":"Inapta","tel":"(11) 24402800","email":"SEBASTIAO@CONTABILIDADEMETODO.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-083","cnpj":"19.802.130/0001-76","razao":"COOPERATIVA UNIAO DO SISTEMA DE TRANSPORTE","nome":"COOPERATIVA UNIAO DO SISTEMA DE TRANSPOR","muni":"GUARULHOS","uf":"SP","reg":"RMSP - Norte / Aeroporto","bairro":"JARDIM VILA GALVAO","end":"AVENIDA EMILIO RIBAS, 2465","cep":"07051-001","lat":-23.4542,"lon":-46.5337,"dist":22.05,"st":"Inapta","tel":"(11) 43729398","email":"FISCAL@SANTAFECONTABIL.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-084","cnpj":"20.359.375/0001-50","razao":"COOPERATIVA DOS MOTORISTAS DE TAXI AUTONOMOS DE ITAPEVI - COOPERITA-TAXI","nome":"COOPERITA-TAXI","muni":"ITAPEVI","uf":"SP","reg":"RMSP - Oeste","bairro":"JARDIM BELA VISTA","end":"VIA SERRA DE PARIMA, 137","cep":"06656-050","lat":-23.5489,"lon":-46.9328,"dist":23.04,"st":"Inapta","tel":"(11) 41423877","email":"GOMESASSESSORIA@TERRA.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-058","cnpj":"10.509.369/0001-88","razao":"COOPERATIVA DOS MOTORISTAS AUTONOMOS DE TAXI DE SANTANA DE PARNAIBA - PARNACOOP","nome":"PARNACOOP","muni":"SANTANA DE PARNAIBA","uf":"SP","reg":"RMSP - Oeste","bairro":"COLINAS DA ANHANGUERA","end":"AVENIDA CANDIDO PORTINARI, 505","cep":"06537-001","lat":-23.4442,"lon":-46.9181,"dist":25.66,"st":"Inapta","tel":"(11) 44480879","email":"SETORLEGAL@CONTHEOCONTABILIDADE.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-005","cnpj":"05.401.392/0001-14","razao":"COOPERATIVA DE TRABALHO DOS MOTORISTAS DE TAXI - MAUA RADIO TAXI","nome":"MAUA RADIO TAXI","muni":"MAUA","uf":"SP","reg":"RMSP - ABC","bairro":"JARDIM SANTA LIDIA","end":"RUA ALFREDO BECHELLI, 461","cep":"09351-360","lat":-23.6677,"lon":-46.4614,"dist":27.32,"st":"Inapta","tel":"(011) 4514300","email":"ANDREU@OSITE.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-102","cnpj":"36.083.274/0001-39","razao":"COOPERATIVA DE TRANSPORTE EXECUTIVO E COMERCIAL DE PASSAGEIROS E CARGAS EM GERAL UNIAO DO BRASIL","nome":"COOPERATIVA DE TRANSPORTE EXECUTIVO E CO","muni":"MAUA","uf":"SP","reg":"RMSP - ABC","bairro":"JARDIM SANTA LIDIA","end":"RUA HUMBERTO PRIMO LEARDINI, 11","cep":"09311-021","lat":-23.6677,"lon":-46.4614,"dist":27.32,"st":"Inapta","tel":"(11) 45431266","email":"COOPUNIAODOBRASIL@GMAIL.COM","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-045","cnpj":"07.634.596/0001-20","razao":"NOVA UNIAO COOPERATIVA DE TRABALHO DOS PROFISSIONAIS NA AREA DE TRANSPORTES DE MAIRIPORA","nome":"NOVA UNIAO","muni":"MAIRIPORA","uf":"SP","reg":"RMSP - Norte","bairro":"PARQUE JARDIM SUICO","end":"RUA COIRA, 26","cep":"07600-000","lat":-23.3186,"lon":-46.5867,"dist":30.72,"st":"Inapta","tel":"(11) 24143860","email":"DINIZ2010@TERRA.COM.BR","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-076","cnpj":"17.752.967/0001-22","razao":"COOPERATIVA DE TRANSPORTE DO ALTO TIETE","nome":"COOPERTIETE","muni":"FERRAZ DE VASCONCELOS","uf":"SP","reg":"RMSP - Leste","bairro":"VILA CORREIA","end":"AVENIDA BRASIL, 318","cep":"08502-000","lat":-23.5414,"lon":-46.3686,"dist":34.77,"st":"Inapta","tel":"(11) 47461074","email":"societario@contabilidadeuniversal.com","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"},{"id":"COOP-SP-069","cnpj":"14.933.198/0001-70","razao":"COOPERATIVA DE TRANSPORTES E SERVICOS RAIO DE LUZ","nome":"COOPERATIVA RAIO DE LUZ","muni":"POA","uf":"SP","reg":"RMSP - Leste","bairro":"JD IVONETE","end":"RUA DOURADO, 151","cep":"08553-230","lat":-23.5292,"lon":-46.3456,"dist":37.25,"st":"Inapta","tel":"(11) 46795549","email":"balkecontabilidade@ig.com.br","tipo":"Rádio-Táxi / Transporte Individual","pos":"Cooperativa Satélite / Metropolitana"}];
+    let filteredCoops = [...COOPS_DATA];
+    let currentPage = 1;
+    const pageSize = 25;
+    let map = null;
+    let markersLayer = null;
+
+    // Inicialização do Leaflet com Esri World Street Map
+    function initMap() {
+      map = L.map('coop-map', {
+        center: [-23.5714, -46.7081],
+        zoom: 9,
+        maxZoom: 18
+      });
+
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Cooperativas SP',
+        maxZoom: 18
+      }).addTo(map);
+
+      markersLayer = L.layerGroup().addTo(map);
+      renderMarkers();
+    }
+
+    function getMarkerColor(coop) {
+      if (coop.cnpj.startsWith('47.136.430') || coop.pos.includes('Nossa Sede')) return '#f59e0b'; // Amber Chame Taxi
+      if (coop.muni === 'SAO PAULO') return '#ef4444'; // Red Concorrente Capital
+      if (coop.reg.includes('RMSP') || coop.reg.includes('ABC') || coop.reg.includes('Oeste')) return '#3b82f6'; // Blue Grande SP
+      return '#10b981'; // Emerald Interior & Litoral
+    }
+
+    function renderMarkers() {
+      if (!markersLayer) return;
+      markersLayer.clearLayers();
+
+      filteredCoops.forEach(c => {
+        if (!c.lat || !c.lon) return;
+
+        const isChame = c.cnpj.startsWith('47.136.430') || c.pos.includes('Nossa Sede');
+        const color = getMarkerColor(c);
+
+        const circle = L.circleMarker([c.lat, c.lon], {
+          radius: isChame ? 10 : 6,
+          fillColor: color,
+          color: isChame ? '#ffffff' : color,
+          weight: isChame ? 3 : 1.5,
+          opacity: 1,
+          fillOpacity: 0.9
+        });
+
+        circle.bindPopup(`
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; min-width:200px; padding:2px;">
+            <div style="font-size:10px; font-weight:800; color:#d97706; text-transform:uppercase;">${c.reg}</div>
+            <div style="font-size:13px; font-weight:700; color:#0f172a; margin-top:2px;">${c.nome}</div>
+            <div style="font-size:11px; color:#475569;">${c.muni} - ${c.dist} km da sede</div>
+            <div style="font-size:11px; margin-top:4px; font-weight:600; color:#1e293b;">${c.pos}</div>
+            ${c.tel ? `<div style="font-size:11px; color:#059669; margin-top:3px;">📞 ${c.tel}</div>` : ''}
+            <button onclick="openModal('${c.id}')" style="margin-top:6px; background:#0f172a; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:10px; cursor:pointer; width:100%;">Ver Ficha Completa</button>
+          </div>
+        `);
+
+        markersLayer.addLayer(circle);
+      });
+    }
+
+    function applyFilters() {
+      const q = document.getElementById('filter-search').value.toLowerCase().trim();
+      const reg = document.getElementById('filter-regiao').value;
+      const st = document.getElementById('filter-status').value;
+
+      filteredCoops = COOPS_DATA.filter(c => {
+        if (st === 'ATIVA' && c.st !== 'Ativa') return false;
+
+        if (reg === 'CAPITAL' && c.muni !== 'SAO PAULO') return false;
+        if (reg === 'RMSP' && (!c.reg.includes('RMSP') && !c.reg.includes('ABC') && !c.reg.includes('Oeste'))) return false;
+        if (reg === 'LITORAL' && (!c.reg.includes('Litoral') && !c.reg.includes('Baixada'))) return false;
+        if (reg === 'INTERIOR' && (c.muni === 'SAO PAULO' || c.reg.includes('RMSP') || c.reg.includes('Litoral'))) return false;
+
+        if (q) {
+          const match = c.nome.toLowerCase().includes(q) ||
+                        c.razao.toLowerCase().includes(q) ||
+                        c.muni.toLowerCase().includes(q) ||
+                        c.bairro.toLowerCase().includes(q) ||
+                        c.cnpj.includes(q);
+          if (!match) return false;
+        }
+
+        return true;
+      });
+
+      currentPage = 1;
+      document.getElementById('results-count').innerText = `Exibindo ${filteredCoops.length} cooperativas`;
+      renderTable();
+      renderMarkers();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('coop-table-body');
+      tbody.innerHTML = '';
+
+      const total = filteredCoops.length;
+      const start = (currentPage - 1) * pageSize;
+      const pageData = filteredCoops.slice(start, start + pageSize);
+
+      if (pageData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">Nenhuma cooperativa encontrada com os filtros selecionados.</td></tr>`;
+        document.getElementById('pagination-info').innerText = "0 de 0 registros";
+        return;
+      }
+
+      pageData.forEach(c => {
+        const isChame = c.cnpj.startsWith('47.136.430') || c.pos.includes('Nossa Sede');
+        const tr = document.createElement('tr');
+        tr.className = `hover:bg-slate-800/40 transition cursor-pointer ${isChame ? 'bg-amber-500/10' : ''}`;
+
+        tr.innerHTML = `
+          <td class="py-2.5 px-4">
+            <div class="font-bold text-white flex items-center gap-1.5">
+              ${isChame ? '⭐' : ''}
+              <span>${c.nome}</span>
+            </div>
+            <div class="text-[10px] text-slate-400 truncate max-w-[280px]">${c.razao}</div>
+            <div class="font-mono text-[10px] text-slate-500 mt-0.5">CNPJ: ${c.cnpj}</div>
+          </td>
+          <td class="py-2.5 px-3">
+            <div class="font-bold text-slate-200">${c.muni}</div>
+            <div class="text-[10px] text-slate-400">${c.reg}</div>
+          </td>
+          <td class="py-2.5 px-3 text-center">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.st === 'Ativa' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-slate-800 text-slate-400'}">
+              ${c.st}
+            </span>
+          </td>
+          <td class="py-2.5 px-3 text-right">
+            <div class="font-bold text-amber-400">${c.dist} km</div>
+            <div class="text-[10px] text-slate-500">da sede</div>
+          </td>
+          <td class="py-2.5 px-3">
+            <div class="text-slate-300 font-semibold">${c.tel || '—'}</div>
+            <div class="text-[10px] text-slate-400 truncate max-w-[180px]">${c.email || '—'}</div>
+          </td>
+          <td class="py-2.5 px-3">
+            <span class="text-slate-300 font-semibold line-clamp-1">${c.pos}</span>
+            <span class="text-[10px] text-slate-500 block truncate max-w-[200px]">${c.tipo}</span>
+          </td>
+          <td class="py-2.5 px-3 text-center">
+            <div class="flex items-center justify-center gap-1">
+              <button onclick="locateOnMap(${c.lat}, ${c.lon})" class="p-1.5 rounded hover:bg-slate-800 text-sky-400" title="Ver no Mapa">
+                <i class="ph-bold ph-map-pin text-sm"></i>
+              </button>
+              <button onclick="openModal('${c.id}')" class="p-1.5 rounded hover:bg-slate-800 text-amber-400" title="Ver Ficha">
+                <i class="ph-bold ph-files text-sm"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const totalPages = Math.ceil(total / pageSize) || 1;
+      document.getElementById('pagination-info').innerText = `Página ${currentPage} de ${totalPages} (${total} cooperativas)`;
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+      }
+    }
+
+    function nextPage() {
+      const totalPages = Math.ceil(filteredCoops.length / pageSize) || 1;
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderTable();
+      }
+    }
+
+    function locateOnMap(lat, lon) {
+      if (map && lat && lon) {
+        map.setView([lat, lon], 14, { animate: true });
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+      }
+    }
+
+    function openModal(id) {
+      const c = COOPS_DATA.find(x => x.id === id);
+      if (!c) return;
+
+      document.getElementById('modal-nome').innerText = c.nome;
+      document.getElementById('modal-razao').innerText = c.razao;
+      document.getElementById('modal-reg').innerText = c.reg;
+      document.getElementById('modal-cnpj').innerText = c.cnpj;
+      document.getElementById('modal-st').innerText = c.st;
+      document.getElementById('modal-st').className = c.st === 'Ativa' ? 'text-emerald-400 font-bold' : 'text-slate-400 font-bold';
+      document.getElementById('modal-muni').innerText = `${c.muni} / ${c.uf} (${c.bairro || 'Centro'})`;
+      document.getElementById('modal-dist').innerText = `${c.dist} km da sede Butantã`;
+      document.getElementById('modal-end').innerText = `${c.end} - CEP ${c.cep || '—'}`;
+      document.getElementById('modal-tipo').innerText = c.tipo;
+      document.getElementById('modal-pos').innerText = c.pos;
+      document.getElementById('modal-tel').innerText = c.tel || 'Não cadastrado';
+      document.getElementById('modal-email').innerText = c.email || 'Não cadastrado';
+
+      document.getElementById('coop-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('coop-modal').classList.add('hidden');
+    }
+
+    function exportCooperativasCSV() {
+      if (!filteredCoops || filteredCoops.length === 0) return;
+      let csv = "\uFEFF";
+      const headers = ["ID", "CNPJ", "Razao_Social", "Nome_Fantasia", "Municipio", "UF", "Regiao", "Bairro", "Distancia_Sede_km", "Situacao", "Telefone", "Email", "Posicionamento"];
+      csv += headers.join(";") + "\n";
+      filteredCoops.forEach(c => {
+        csv += `"${c.id}";"${c.cnpj}";"${c.razao}";"${c.nome}";"${c.muni}";"${c.uf}";"${c.reg}";"${c.bairro}";"${c.dist}";"${c.st}";"${c.tel}";"${c.email}";"${c.pos}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `cooperativas_taxi_sp_export_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    window.onload = function() {
+      initMap();
+      renderTable();
+    };
+  </script>
+</body>
+</html>

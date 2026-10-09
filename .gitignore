@@ -6,6 +6,7 @@ __pycache__/
 *.pbf
 .DS_Store
 Thumbs.db
+.agents/
 
 # --- Dados pessoais: mantidos locais, nunca versionados (LGPD) -------------
 # Gere a versão versionada com: python scripts/privacy.py public-master

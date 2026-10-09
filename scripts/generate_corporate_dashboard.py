@@ -15,7 +15,8 @@ def generate_corporate_dashboard():
     hosp_records = []
     if os.path.exists(hosp_path):
         hdf = pd.read_csv(hosp_path, sep=';', encoding='utf-8-sig', low_memory=False)
-        for _, hr in hdf.iterrows():
+        for r in hdf.itertuples(index=False):
+            hr = r._asdict()
             lat = hr.get('Latitude')
             lon = hr.get('Longitude')
             if pd.notna(lat) and pd.notna(lon):
@@ -78,7 +79,8 @@ def generate_corporate_dashboard():
     emp_records = []
     if os.path.exists(emp_path):
         edf = pd.read_csv(emp_path, sep=';', encoding='utf-8-sig', low_memory=False)
-        for _, er in edf.iterrows():
+        for r in edf.itertuples(index=False):
+            er = r._asdict()
             lat = er.get('Latitude')
             lon = er.get('Longitude')
             if pd.notna(lat) and pd.notna(lon):
@@ -146,7 +148,7 @@ def generate_corporate_dashboard():
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Portal de Inteligência Comercial B2B: Clientes & Hospitais 5km - Chame Táxi</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -170,12 +172,26 @@ def generate_corporate_dashboard():
       --sh-1:0 1px 2px rgba(16,24,40,.05), 0 6px 18px -12px rgba(16,24,40,.14);
       --sh-focus:0 0 0 3px var(--accent-ring);
     }
+    html, body {
+      overflow-x: hidden !important;
+      width: 100%;
+      max-width: 100vw;
+      -webkit-tap-highlight-color: transparent;
+    }
     body{font-family:'Plus Jakarta Sans',ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
       background-color:var(--canvas);color:var(--ink);
       -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;}
+    *{touch-action:manipulation;}
     ::selection{background:#ddd6fe;color:#0f172a;}
     :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
     @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+
+    /* Safe Area para Android e iOS */
+    .safe-area-bottom {
+      padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
     /* ===== Topbar ===== */
     #topbar{background:linear-gradient(115deg,#0a101c 0%,#101828 55%,#0a101c 100%);}
@@ -247,7 +263,7 @@ def generate_corporate_dashboard():
     #b2b-leaflet-map { height: calc(100vh - 250px); min-height: 560px; border-radius: var(--r-lg); z-index: 10; }
   
     /* ===== Menu lateral & Responsividade ===== */
-    #shell{display:flex;min-height:100vh;width:100%;position:relative;}
+    #shell{display:flex;min-height:100vh;width:100%;max-width:100vw;position:relative;overflow-x:hidden;}
     #sidebar{position:sticky;top:0;height:100vh;width:16.5rem;flex:0 0 16.5rem;overflow-y:auto;
       display:flex;flex-direction:column;gap:1.35rem;padding:1.15rem .85rem 1rem;
       background:linear-gradient(180deg,#0a101c 0%,#0e1626 55%,#0a101c 100%);
@@ -301,6 +317,51 @@ def generate_corporate_dashboard():
         flex: 0 0 17.5rem !important;
         opacity: 1 !important;
         pointer-events: auto !important;
+      }
+    }
+
+    /* Otimizações Específicas para Celular (< 768px - Android / iOS) */
+    @media (max-width: 768px) {
+      #b2b-leaflet-map {
+        height: 380px !important;
+        min-height: 320px !important;
+      }
+      .kpi {
+        padding: 0.75rem 0.85rem !important;
+      }
+      .kpi-value {
+        font-size: 1.25rem !important;
+        margin-top: 0.2rem !important;
+        margin-bottom: 0.1rem !important;
+      }
+      .eyebrow {
+        font-size: 0.625rem !important;
+      }
+      .kpi-sub {
+        font-size: 0.625rem !important;
+        padding-top: 0.35rem !important;
+      }
+      .kpi-icon {
+        width: 1.65rem !important;
+        height: 1.65rem !important;
+        font-size: 0.8rem !important;
+      }
+      /* Previne zoom automático do Chrome Android ao focar em inputs */
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+      .btn {
+        min-height: 2.15rem;
+      }
+      /* Modal em tela cheia suave no celular */
+      #b2b-modal > div {
+        max-width: 100vw !important;
+        max-height: 100dvh !important;
+        height: 100dvh !important;
+        border-radius: 0 !important;
+      }
+      #topbar h1 {
+        font-size: 0.875rem !important;
       }
     }
   </style>
@@ -384,7 +445,7 @@ def generate_corporate_dashboard():
     <div id="tab-content-table" class="space-y-6">
       
       <!-- CARDS DE METRICAS E KPI B2B (NEUTRAL EXECUTIVE) -->
-      <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3.5">
+      <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3.5">
         <div class="card kpi group">
           <div class="flex items-center justify-between gap-2">
             <span class="eyebrow truncate">Prospects B2B</span>
@@ -563,7 +624,17 @@ def generate_corporate_dashboard():
           <div class="flex items-center gap-2">
             <span class="font-bold text-slate-800" id="b2b-results-count">Exibindo 0 clientes</span>
             <span class="text-slate-400">|</span>
-            <span class="text-slate-500">Clique em qualquer linha para abrir o <b>Dossiê Completo B2B</b></span>
+            <!-- SELETOR DE MODO B2B (CARDS NO CELULAR / TABELA) -->
+            <div class="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 flex-shrink-0">
+              <button id="view-mode-cards-b2b" onclick="setB2BViewMode('cards')" class="px-2.5 py-1 rounded text-xs font-bold transition flex items-center gap-1 bg-white text-slate-900 shadow-sm" title="Visualização em Cards (Recomendada para Celular)">
+                <i class="ph-bold ph-squares-four"></i>
+                <span>Cards</span>
+              </button>
+              <button id="view-mode-table-b2b" onclick="setB2BViewMode('table')" class="px-2.5 py-1 rounded text-xs font-semibold transition flex items-center gap-1 text-slate-500 hover:text-slate-900" title="Visualização em Tabela">
+                <i class="ph-bold ph-table"></i>
+                <span>Tabela</span>
+              </button>
+            </div>
           </div>
           <div class="flex items-center gap-2">
             <span class="text-slate-500 text-[11px]">Itens por página:</span>
@@ -576,7 +647,12 @@ def generate_corporate_dashboard():
           </div>
         </div>
 
-        <div class="overflow-x-auto custom-scrollbar">
+        <!-- MODO CARDS (PARA CELULAR) -->
+        <div id="b2b-cards-wrapper" class="space-y-2.5 p-3 hidden">
+          <!-- Renderizado via JavaScript no celular -->
+        </div>
+
+        <div id="b2b-table-wrapper" class="overflow-x-auto custom-scrollbar">
           <table class="tbl w-full text-left">
             <thead>
               <tr class="bg-slate-100 text-slate-700 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
@@ -639,6 +715,11 @@ def generate_corporate_dashboard():
 
       <!-- MAPA CONTAINER -->
       <div class="card p-2 relative">
+        <!-- BOTAO DE CONTROLE DE ROLAGEM NO CELULAR -->
+        <button id="b2b-map-scroll-lock-btn" onclick="toggleB2BMapScrollLock()" class="absolute top-4 right-4 z-[500] bg-white/95 text-slate-800 text-xs px-2.5 py-1.5 rounded-lg shadow-md border border-slate-300 font-bold flex items-center gap-1.5 lg:hidden">
+          <i class="ph-bold ph-lock-key" id="b2b-map-lock-icon"></i>
+          <span id="b2b-map-lock-text">Rolagem Página (Travar Mapa)</span>
+        </button>
         <div id="b2b-leaflet-map"></div>
       </div>
 
@@ -978,6 +1059,26 @@ def generate_corporate_dashboard():
     </div>
   </div>
 
+  <!-- BARRA DE NAVEGAÇÃO INFERIOR PARA CELULAR / ANDROID -->
+  <nav id="mobile-bottom-nav-b2b" class="fixed bottom-0 inset-x-0 z-[800] bg-slate-900/95 backdrop-blur-md border-t border-slate-800 flex items-stretch justify-around py-1 px-1 lg:hidden shadow-2xl safe-area-bottom">
+    <button onclick="switchB2BTab('table')" id="mob-nav-table" class="flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-purple-400 font-bold transition text-xs bg-slate-800/80">
+      <i class="ph-bold ph-table text-xl mb-0.5"></i>
+      <span class="text-[10px] leading-tight">1. Clientes</span>
+    </button>
+    <button onclick="switchB2BTab('map')" id="mob-nav-map" class="flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs">
+      <i class="ph-bold ph-map-pin text-xl mb-0.5 text-sky-400"></i>
+      <span class="text-[10px] leading-tight">2. Mapa B2B</span>
+    </button>
+    <button onclick="switchB2BTab('intel')" id="mob-nav-intel" class="flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs">
+      <i class="ph-bold ph-lightning text-xl mb-0.5 text-amber-400"></i>
+      <span class="text-[10px] leading-tight">3. Decisores</span>
+    </button>
+    <a href="dashboard_mestre_taxistas_sp_2026.html" class="flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-amber-400 font-semibold transition text-xs">
+      <i class="ph-bold ph-taxi text-xl mb-0.5 text-amber-400"></i>
+      <span class="text-[10px] leading-tight">Taxistas</span>
+    </a>
+  </nav>
+
   <!-- SCRIPT & DADOS JAVASCRIPT -->
   <script>
     const ALL_B2B_CLIENTS = __ALL_CLIENTS_PLACEHOLDER__;
@@ -992,6 +1093,10 @@ def generate_corporate_dashboard():
     let currentB2BPage = 1;
     let b2bPageSize = 25;
     let currentB2BModalId = null;
+
+    // Estados de modo de visualização (Cards no Mobile / Tabela no Desktop)
+    let b2bViewMode = (window.innerWidth < 768) ? 'cards' : 'table';
+    let b2bMapScrollLocked = (window.innerWidth < 1024);
 
     let b2bMapInstance = null;
     let b2bTileLayer = null;
@@ -1035,8 +1140,8 @@ def generate_corporate_dashboard():
         } catch(e) {}
         setTimeout(() => {
           window.dispatchEvent(new Event('resize'));
-          if (typeof b2bMap !== 'undefined' && b2bMap) {
-            b2bMap.invalidateSize();
+          if (typeof b2bMapInstance !== 'undefined' && b2bMapInstance) {
+            b2bMapInstance.invalidateSize();
           }
         }, 300);
       }
@@ -1058,12 +1163,54 @@ def generate_corporate_dashboard():
       document.body.classList.remove('overflow-hidden');
     }
 
+    // ALTERNAR MODO CARDS VS TABELA B2B
+    function setB2BViewMode(mode) {
+      b2bViewMode = mode;
+      updateB2BViewModeUI(mode);
+      renderB2BTable();
+    }
+
+    function updateB2BViewModeUI(mode) {
+      const btnCards = document.getElementById('view-mode-cards-b2b');
+      const btnTable = document.getElementById('view-mode-table-b2b');
+      if (btnCards && btnTable) {
+        if (mode === 'cards') {
+          btnCards.className = "px-2.5 py-1 rounded text-xs font-bold transition flex items-center gap-1 bg-white text-slate-900 shadow-sm";
+          btnTable.className = "px-2.5 py-1 rounded text-xs font-semibold transition flex items-center gap-1 text-slate-500 hover:text-slate-900";
+        } else {
+          btnTable.className = "px-2.5 py-1 rounded text-xs font-bold transition flex items-center gap-1 bg-white text-slate-900 shadow-sm";
+          btnCards.className = "px-2.5 py-1 rounded text-xs font-semibold transition flex items-center gap-1 text-slate-500 hover:text-slate-900";
+        }
+      }
+    }
+
+    // TRAVAR/DESTRAVAR ROLAGEM DO MAPA NO CELULAR
+    function toggleB2BMapScrollLock() {
+      if (!b2bMapInstance) return;
+      b2bMapScrollLocked = !b2bMapScrollLocked;
+      const btnText = document.getElementById('b2b-map-lock-text');
+      const btnIcon = document.getElementById('b2b-map-lock-icon');
+
+      if (b2bMapScrollLocked) {
+        b2bMapInstance.dragging.disable();
+        b2bMapInstance.touchZoom.disable();
+        if (btnText) btnText.innerText = 'Rolagem Página (Travar Mapa)';
+        if (btnIcon) btnIcon.className = 'ph-bold ph-lock-key';
+      } else {
+        b2bMapInstance.dragging.enable();
+        b2bMapInstance.touchZoom.enable();
+        if (btnText) btnText.innerText = 'Interagir com o Mapa (Arrastar)';
+        if (btnIcon) btnIcon.className = 'ph-bold ph-hand-pointing';
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       try {
         if (window.innerWidth >= 1024 && localStorage.getItem('sidebar_collapsed_b2b') === 'true') {
           document.body.classList.add('sidebar-collapsed');
         }
       } catch(e) {}
+      updateB2BViewModeUI(b2bViewMode);
       applyB2BFilters();
     });
 
@@ -1089,16 +1236,28 @@ def generate_corporate_dashboard():
       btnMap.className="nav-tab text-slate-300 hover:text-white";
       btnIntel.className="nav-tab text-slate-300 hover:text-white";
 
+      // Atualiza Bottom Nav para celular
+      const mobTable = document.getElementById('mob-nav-table');
+      const mobMap = document.getElementById('mob-nav-map');
+      const mobIntel = document.getElementById('mob-nav-intel');
+
+      if (mobTable) mobTable.className = "flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs";
+      if (mobMap) mobMap.className = "flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs";
+      if (mobIntel) mobIntel.className = "flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs";
+
       if (tab === 'table') {
         tabTable.classList.remove('hidden');
         btnTable.className="nav-tab is-active bg-purple-600 text-white";
+        if (mobTable) mobTable.className = "flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-purple-400 font-bold transition text-xs bg-slate-800/80";
       } else if (tab === 'map') {
         tabMap.classList.remove('hidden');
         btnMap.className="nav-tab is-active bg-purple-600 text-white";
+        if (mobMap) mobMap.className = "flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-purple-400 font-bold transition text-xs bg-slate-800/80";
         initB2BMap();
       } else if (tab === 'intel') {
         tabIntel.classList.remove('hidden');
         btnIntel.className="nav-tab is-active bg-purple-600 text-white";
+        if (mobIntel) mobIntel.className = "flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-purple-400 font-bold transition text-xs bg-slate-800/80";
       }
     }
 
@@ -1180,7 +1339,20 @@ def generate_corporate_dashboard():
 
     function renderB2BTable() {
       const tbody = document.getElementById('b2b-table-body');
+      const cardsWrapper = document.getElementById('b2b-cards-wrapper');
+      const tableWrapper = document.getElementById('b2b-table-wrapper');
       if (!tbody) return;
+
+      tbody.innerHTML = '';
+      if (cardsWrapper) cardsWrapper.innerHTML = '';
+
+      if (b2bViewMode === 'cards') {
+        if (cardsWrapper) cardsWrapper.classList.remove('hidden');
+        if (tableWrapper) tableWrapper.classList.add('hidden');
+      } else {
+        if (cardsWrapper) cardsWrapper.classList.add('hidden');
+        if (tableWrapper) tableWrapper.classList.remove('hidden');
+      }
 
       const resultsCount = document.getElementById('b2b-results-count');
       if (resultsCount) {
@@ -1200,6 +1372,14 @@ def generate_corporate_dashboard():
             </td>
           </tr>
         `;
+        if (cardsWrapper) {
+          cardsWrapper.innerHTML = `
+            <div class="text-center py-10 text-slate-500 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+              <i class="ph-bold ph-buildings text-3xl mb-2 block text-slate-300"></i>
+              Nenhum cliente corporativo encontrado com os filtros selecionados.
+            </div>
+          `;
+        }
         return;
       }
 
@@ -1208,7 +1388,78 @@ def generate_corporate_dashboard():
         const isHosp = item.isHosp;
         const icon = isHosp ? '🏥' : '🏢';
         const tierBadge = 'bg-slate-100 text-slate-700 border-slate-200';
-        const vulnBadge = item.mob_vuln === 'Alta' ? 'bg-slate-100 text-slate-800 border-slate-300 font-semibold' : 'bg-slate-50 text-slate-600 border-slate-200';
+        const vulnBadge = item.mob_vuln === 'Alta' ? 'bg-red-50 text-red-700 border-red-200 font-semibold' : 'bg-amber-50 text-amber-700 border-amber-200';
+
+        // MODO CARDS (Mobile touch friendly para B2B)
+        if (cardsWrapper) {
+          const card = document.createElement('div');
+          card.className = "bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs space-y-2.5 active:bg-purple-50/30 transition";
+          card.onclick = (e) => {
+            if (!e.target.closest('button') && !e.target.closest('a')) {
+              openB2BModal(item.id);
+            }
+          };
+
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-start gap-2.5 min-w-0 flex-1">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-base shrink-0 ${isHosp ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700'}">
+                  ${icon}
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-sm leading-snug line-clamp-1">${item.nome}</div>
+                  <div class="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
+                    <span>${item.bairro}</span>
+                    <span>•</span>
+                    <span class="text-indigo-700 font-bold">${item.dist} km sede</span>
+                  </div>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${tierBadge}">${item.tier.split(' ')[0]} ${item.tier.split(' ')[1]}</span>
+                <div class="text-[10px] font-bold text-amber-600 mt-0.5">${item.score} pts</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+              <div>
+                <span class="eyebrow block">Mobilidade Atual</span>
+                <span class="font-bold text-[11px] text-slate-800 line-clamp-1">${item.mob_forn}</span>
+                <span class="text-[9px] font-bold text-red-600">Vuln: ${item.mob_vuln}</span>
+              </div>
+              <div>
+                <span class="eyebrow block">Potencial Receita</span>
+                <span class="font-bold text-emerald-700 text-[11px]">${item.mob_rec.split('(')[0]}</span>
+                <span class="text-[10px] text-slate-500 block">${item.corridas.split(' ')[0]} corr/mês</span>
+              </div>
+              <div class="col-span-2 pt-1 border-t border-slate-200/60">
+                <span class="eyebrow block">Dor / Gargalo:</span>
+                <span class="text-[11px] text-rose-700 italic line-clamp-2">"${item.mob_dor}"</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 pt-1 border-t border-slate-100">
+              <button onclick="openB2BModal('${item.id}')" class="flex-1 btn bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 text-xs rounded-lg shadow-sm flex items-center justify-center gap-1">
+                <i class="ph-bold ph-files text-sm"></i>
+                <span>Dossiê 360°</span>
+              </button>
+              ${item.dec_linkedin ? `
+                <a href="${item.dec_linkedin}" target="_blank" onclick="event.stopPropagation()" class="btn bg-[#0a66c2] hover:bg-[#004182] text-white font-bold px-2.5 py-2 text-xs rounded-lg shadow-sm" title="LinkedIn">
+                  <i class="ph-bold ph-linkedin-logo text-sm"></i>
+                </a>
+              ` : ''}
+              ${item.dec_google ? `
+                <a href="${item.dec_google}" target="_blank" onclick="event.stopPropagation()" class="btn bg-slate-800 hover:bg-slate-700 text-white font-bold px-2.5 py-2 text-xs rounded-lg shadow-sm" title="Google Dork">
+                  <i class="ph-bold ph-google-logo text-sm"></i>
+                </a>
+              ` : ''}
+              <button onclick="locateB2BOnMap(${item.lat}, ${item.lon}, '${item.id}')" class="btn bg-sky-600 hover:bg-sky-500 text-white font-bold px-2.5 py-2 text-xs rounded-lg shadow-sm" title="Ver no Mapa">
+                <i class="ph-bold ph-map-pin text-sm"></i>
+              </button>
+            </div>
+          `;
+          cardsWrapper.appendChild(card);
+        }
 
         html += `
           <tr class="hover:bg-slate-50 transition cursor-pointer group" onclick="openB2BModal('${item.id}')">
@@ -1602,6 +1853,12 @@ def generate_corporate_dashboard():
 
       renderHospMarkersMap(HOSPITAIS_DATA);
       renderEmpMarkersMap(EMPRESAS_DATA);
+
+      // Desativa dragging e touchZoom se b2bMapScrollLocked for true no mobile
+      if (b2bMapScrollLocked) {
+        b2bMapInstance.dragging.disable();
+        b2bMapInstance.touchZoom.disable();
+      }
 
       setTimeout(() => { b2bMapInstance.invalidateSize(); }, 250);
     }

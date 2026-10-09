@@ -128,8 +128,13 @@ STAGES: list[Stage] = [
     Stage("mapa-limpo", "Injeta MEIs/polos e limpa o HTML do mapa",
           ["build_clean_master_map.py"], "mapa",
           requires=["data/processed/mapa_interativo_pontos_taxi_sp.html", MEIS]),
+    Stage("mapa-cooperativas", "Gera o mapa interativo das cooperativas de SP",
+          ["generate_mapa_cooperativas_sp.py"], "mapa",
+          requires=["data/processed/cooperativas_taxi_estado_sp.csv"]),
 
     # --- Consolidação -------------------------------------------------------
+    Stage("cooperativas-sp", "Mapeia as cooperativas de táxi do Estado de SP",
+          ["build_cooperativas_sp_dataset.py"], "consolidacao"),
     Stage("maestre", "Consolida a Planilha Mestre (CSV + XLSX com 15 abas)",
           ["build_master_spreadsheet.py"], "consolidacao",
           requires=[

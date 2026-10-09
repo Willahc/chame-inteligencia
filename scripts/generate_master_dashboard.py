@@ -79,74 +79,66 @@ def generate_dashboard():
 
     print("Formatando registros da Base Mestre para o navegador...")
     records = []
-    for _, r in df.iterrows():
+    for r in df.itertuples(index=False):
+        d = r._asdict()
+        ed_val = d.get('Edital_Numero')
+        ed_int = int(ed_val) if pd.notna(ed_val) and str(ed_val).replace('.0','').isdigit() else 0
+        rdef_val = d.get('Classificacao_Definitiva')
+        rdef_int = int(rdef_val) if pd.notna(rdef_val) and str(rdef_val).replace('.0','').isdigit() else None
+        rnf_val = d.get('Posicao_Sorteio_NF')
+        rnf_int = int(rnf_val) if pd.notna(rnf_val) and str(rnf_val).replace('.0','').isdigit() else None
+        fila_val = d.get('Posicao_Fila_Espera')
+        fila_int = int(fila_val) if pd.notna(fila_val) and str(fila_val).replace('.0','').isdigit() else 0
+        anos_val = d.get('Tempo_Servico_Anos')
+        anos_flt = float(anos_val) if pd.notna(anos_val) and str(anos_val).replace('.','',1).isdigit() else None
+        score_val = d.get('Score_Chame_Taxi')
+        score_int = int(score_val) if pd.notna(score_val) and str(score_val).replace('.0','').isdigit() else None
+
         records.append({
-            "id": str(r.get('ID_Master', '')),
-            "orig": str(r.get('Origem_Principal', '')),
-            "bases": str(r.get('Bases_Identificadas', '')),
-            "nom": str(r.get('Nome_Completo', '')),
-            "nom_limpo": str(r.get('Nome_Limpo_Sem_Acento', '')),
-            "gen": str(r.get('Genero', '')),
-            "cad": str(r.get('Cadastro_DTP_Condutax', '') if pd.notna(r.get('Cadastro_DTP_Condutax')) else ''),
-            "prt": str(r.get('Numero_Protocolo_Inscricao', '') if pd.notna(r.get('Numero_Protocolo_Inscricao')) else ''),
-            "sei": str(r.get('Processo_SEI_DTP', '') if pd.notna(r.get('Processo_SEI_DTP')) else ''),
-            "cpf": str(r.get('CPF_Identificado', '') if pd.notna(r.get('CPF_Identificado')) else ''),
-            "st": str(r.get('Status_Sorteio_2026', '')),
-            "ed": int(r.get('Edital_Numero')) if pd.notna(r.get('Edital_Numero')) and str(r.get('Edital_Numero')).replace('.0','').isdigit() else 0,
-            "ed_desc": str(r.get('Edital_Descricao', '') if pd.notna(r.get('Edital_Descricao')) else ''),
-            "cat": str(r.get('Categoria_Veiculo', '') if pd.notna(r.get('Categoria_Veiculo')) else ''),
-            "mod": str(r.get('Modalidade_Cota', '') if pd.notna(r.get('Modalidade_Cota')) else ''),
-            "rdef": int(r.get('Classificacao_Definitiva')) if pd.notna(r.get('Classificacao_Definitiva')) and str(r.get('Classificacao_Definitiva')).replace('.0','').isdigit() else None,
-            "rnf": int(r.get('Posicao_Sorteio_NF')) if pd.notna(r.get('Posicao_Sorteio_NF')) and str(r.get('Posicao_Sorteio_NF')).replace('.0','').isdigit() else None,
-            "fila": int(r.get('Posicao_Fila_Espera')) if pd.notna(r.get('Posicao_Fila_Espera')) and str(r.get('Posicao_Fila_Espera')).replace('.0','').isdigit() else 0,
-            "supl": str(r.get('Classificacao_Suplencia_Fila', '') if pd.notna(r.get('Classificacao_Suplencia_Fila')) else ''),
-            "prev_supl": str(r.get('Previsao_Convocacao_Suplente', '') if pd.notna(r.get('Previsao_Convocacao_Suplente')) else ''),
-            "desist_est": str(r.get('Estimativa_Desistencias_Edital', '') if pd.notna(r.get('Estimativa_Desistencias_Edital')) else ''),
-            "anos": float(r.get('Tempo_Servico_Anos')) if pd.notna(r.get('Tempo_Servico_Anos')) and str(r.get('Tempo_Servico_Anos')).replace('.','',1).isdigit() else None,
-            "dec": str(r.get('Decada_Entrada_Praca', '') if pd.notna(r.get('Decada_Entrada_Praca')) else ''),
-            "safra": str(r.get('Safra_Cadastro_DTP', '') if pd.notna(r.get('Safra_Cadastro_DTP')) else ''),
-            "score": int(r.get('Score_Chame_Taxi')) if pd.notna(r.get('Score_Chame_Taxi')) and str(r.get('Score_Chame_Taxi')).replace('.0','').isdigit() else None,
-            "tier": str(r.get('Tier_Prioridade_Comercial', '')),
-            "just_sc": str(r.get('Justificativa_Score', '') if pd.notna(r.get('Justificativa_Score')) else ''),
-            "seg": str(r.get('Segmento_Comercial', '') if pd.notna(r.get('Segmento_Comercial')) else ''),
-            "acao": str(r.get('Acao_Comercial_Recomendada', '') if pd.notna(r.get('Acao_Comercial_Recomendada')) else ''),
-            "pto_st": str(r.get('Vinculo_Ponto_Privativo', '') if pd.notna(r.get('Vinculo_Ponto_Privativo')) else ''),
-            "pto_num": str(r.get('Ponto_Numero', '') if pd.notna(r.get('Ponto_Numero')) and str(r.get('Ponto_Numero')) != '—' else ''),
-            "pto_end": str(r.get('Ponto_Endereco', '') if pd.notna(r.get('Ponto_Endereco')) and str(r.get('Ponto_Endereco')) != '—' else ''),
-            "pto_reg": str(r.get('Ponto_Regiao', '') if pd.notna(r.get('Ponto_Regiao')) and str(r.get('Ponto_Regiao')) != '—' else ''),
-            "pto_sub": str(r.get('Ponto_Subprefeitura', '') if pd.notna(r.get('Ponto_Subprefeitura')) else ''),
-            "pto_cap": str(r.get('Ponto_Capacidade_Vagas', '') if pd.notna(r.get('Ponto_Capacidade_Vagas')) else ''),
-            "pto_saldo": str(r.get('Ponto_Saldo_Vagas', '') if pd.notna(r.get('Ponto_Saldo_Vagas')) else ''),
-            "pto_tel": str(r.get('Ponto_Telefone', '') if pd.notna(r.get('Ponto_Telefone')) and str(r.get('Ponto_Telefone')) != '—' else ''),
-            "tel1": str(r.get('Telefone_Celular_1', '') if pd.notna(r.get('Telefone_Celular_1')) else ''),
-            "tel2": str(r.get('Telefone_Celular_2', '') if pd.notna(r.get('Telefone_Celular_2')) else ''),
-            "wpp": str(r.get('WhatsApp_Ativo', 'Não verificado') if pd.notna(r.get('WhatsApp_Ativo')) else 'Não verificado'),
-            "email": str(r.get('Email_Principal', '') if pd.notna(r.get('Email_Principal')) else ''),
-            "bairro": str(r.get('Bairro_Residencial', '') if pd.notna(r.get('Bairro_Residencial')) else ''),
-            "cep": str(r.get('CEP', '') if pd.notna(r.get('CEP')) else ''),
-            "status_enriq": str(r.get('Status_Enriquecimento', '')),
-            "mei": str(r.get('Possui_MEI_Ativo', 'Não')),
-            "cnpj": str(r.get('MEI_CNPJ', '') if pd.notna(r.get('MEI_CNPJ')) else ''),
-            "razao": str(r.get('MEI_Razao_Social', '') if pd.notna(r.get('MEI_Razao_Social')) else ''),
-            "fantasia": str(r.get('MEI_Nome_Fantasia', '') if pd.notna(r.get('MEI_Nome_Fantasia')) else ''),
-            "mei_abertura": str(r.get('MEI_Data_Abertura', '') if pd.notna(r.get('MEI_Data_Abertura')) else ''),
-            "mei_dist": str(r.get('MEI_Distancia_Sede_Chame_Taxi_km', '') if pd.notna(r.get('MEI_Distancia_Sede_Chame_Taxi_km')) else ''),
-            "mei_reg": str(r.get('MEI_Regiao_Macro', '') if pd.notna(r.get('MEI_Regiao_Macro')) else ''),
-            "veic_exig": str(r.get('Exigencia_Veiculo_DTP', '') if pd.notna(r.get('Exigencia_Veiculo_DTP')) else ''),
-            "veic_mod": str(r.get('Modelos_Homologados_Recomendados', '') if pd.notna(r.get('Modelos_Homologados_Recomendados')) else ''),
-            "veic_prazo": str(r.get('Prazo_Estimado_Vistoria_DTP', '') if pd.notna(r.get('Prazo_Estimado_Vistoria_DTP')) else ''),
-            "doc": str(r.get('Possui_Publicacao_DOC_2026', 'Não')),
-            "doc_data": str(r.get('DOC_Data_Publicacao', '') if pd.notna(r.get('DOC_Data_Publicacao')) else ''),
-            "doc_ato": str(r.get('DOC_Tipo_Ato', '') if pd.notna(r.get('DOC_Tipo_Ato')) else ''),
-            "doc_cat": str(r.get('DOC_Categoria_Veiculo', '') if pd.notna(r.get('DOC_Categoria_Veiculo')) else ''),
-            "doc_st": str(r.get('DOC_Status_Despacho', '') if pd.notna(r.get('DOC_Status_Despacho')) else ''),
-            "doc_ced": str(r.get('DOC_Cedente_Anterior', '') if pd.notna(r.get('DOC_Cedente_Anterior')) else ''),
-            "doc_alv": str(r.get('DOC_Alvara_Numero', '') if pd.notna(r.get('DOC_Alvara_Numero')) else ''),
-            "doc_url": str(r.get('DOC_URL_Publicacao', '') if pd.notna(r.get('DOC_URL_Publicacao')) else ''),
-            "doc_resumo": str(r.get('DOC_Resumo_Texto', '') if pd.notna(r.get('DOC_Resumo_Texto')) else ''),
-            "sort_part": str(r.get('Participou_Sorteio_Pontos_2024', 'Não')),
-            "sort_alv": str(r.get('Sorteio_Pontos_Alvara_Historico', '') if pd.notna(r.get('Sorteio_Pontos_Alvara_Historico')) else ''),
-            "sort_st": str(r.get('Sorteio_Pontos_Status', '') if pd.notna(r.get('Sorteio_Pontos_Status')) else '')
+            "id": str(d.get('ID_Master', '')),
+            "orig": str(d.get('Origem_Principal', '')),
+            "nom": str(d.get('Nome_Completo', '')),
+            "nom_limpo": str(d.get('Nome_Limpo_Sem_Acento', '')),
+            "gen": str(d.get('Genero', '')),
+            "cad": str(d.get('Cadastro_DTP_Condutax', '')) if pd.notna(d.get('Cadastro_DTP_Condutax')) else '',
+            "prt": str(d.get('Numero_Protocolo_Inscricao', '')) if pd.notna(d.get('Numero_Protocolo_Inscricao')) else '',
+            "sei": str(d.get('Processo_SEI_DTP', '')) if pd.notna(d.get('Processo_SEI_DTP')) else '',
+            "cpf": str(d.get('CPF_Identificado', '')) if pd.notna(d.get('CPF_Identificado')) else '',
+            "st": str(d.get('Status_Sorteio_2026', '')),
+            "ed": ed_int,
+            "ed_desc": str(d.get('Edital_Descricao', '')) if pd.notna(d.get('Edital_Descricao')) else '',
+            "cat": str(d.get('Categoria_Veiculo', '')) if pd.notna(d.get('Categoria_Veiculo')) else '',
+            "mod": str(d.get('Modalidade_Cota', '')) if pd.notna(d.get('Modalidade_Cota')) else '',
+            "rdef": rdef_int,
+            "rnf": rnf_int,
+            "fila": fila_int,
+            "supl": str(d.get('Classificacao_Suplencia_Fila', '')) if pd.notna(d.get('Classificacao_Suplencia_Fila')) else '',
+            "prev_supl": str(d.get('Previsao_Convocacao_Suplente', '')) if pd.notna(d.get('Previsao_Convocacao_Suplente')) else '',
+            "anos": anos_flt,
+            "dec": str(d.get('Decada_Entrada_Praca', '')) if pd.notna(d.get('Decada_Entrada_Praca')) else '',
+            "safra": str(d.get('Safra_Cadastro_DTP', '')) if pd.notna(d.get('Safra_Cadastro_DTP')) else '',
+            "score": score_int,
+            "tier": str(d.get('Tier_Prioridade_Comercial', '')),
+            "just_sc": str(d.get('Justificativa_Score', '')) if pd.notna(d.get('Justificativa_Score')) else '',
+            "acao": str(d.get('Acao_Comercial_Recomendada', '')) if pd.notna(d.get('Acao_Comercial_Recomendada')) else '',
+            "pto_st": str(d.get('Vinculo_Ponto_Privativo', '')) if pd.notna(d.get('Vinculo_Ponto_Privativo')) else '',
+            "pto_num": str(d.get('Ponto_Numero', '')) if pd.notna(d.get('Ponto_Numero')) and str(d.get('Ponto_Numero')) != '—' else '',
+            "pto_end": str(d.get('Ponto_Endereco', '')) if pd.notna(d.get('Ponto_Endereco')) and str(d.get('Ponto_Endereco')) != '—' else '',
+            "pto_cap": str(d.get('Ponto_Capacidade_Vagas', '')) if pd.notna(d.get('Ponto_Capacidade_Vagas')) else '',
+            "pto_saldo": str(d.get('Ponto_Saldo_Vagas', '')) if pd.notna(d.get('Ponto_Saldo_Vagas')) else '',
+            "pto_tel": str(d.get('Ponto_Telefone', '')) if pd.notna(d.get('Ponto_Telefone')) and str(d.get('Ponto_Telefone')) != '—' else '',
+            "tel1": str(d.get('Telefone_Celular_1', '')) if pd.notna(d.get('Telefone_Celular_1')) else '',
+            "wpp": str(d.get('WhatsApp_Ativo', 'Não verificado')) if pd.notna(d.get('WhatsApp_Ativo')) else 'Não verificado',
+            "email": str(d.get('Email_Principal', '')) if pd.notna(d.get('Email_Principal')) else '',
+            "bairro": str(d.get('Bairro_Residencial', '')) if pd.notna(d.get('Bairro_Residencial')) else '',
+            "cep": str(d.get('CEP', '')) if pd.notna(d.get('CEP')) else '',
+            "mei_dist": str(d.get('MEI_Distancia_Sede_Chame_Taxi_km', '')) if pd.notna(d.get('MEI_Distancia_Sede_Chame_Taxi_km')) else '',
+            "mei_reg": str(d.get('MEI_Regiao_Macro', '')) if pd.notna(d.get('MEI_Regiao_Macro')) else '',
+            "veic_exig": str(d.get('Exigencia_Veiculo_DTP', '')) if pd.notna(d.get('Exigencia_Veiculo_DTP')) else '',
+            "veic_mod": str(d.get('Modelos_Homologados_Recomendados', '')) if pd.notna(d.get('Modelos_Homologados_Recomendados')) else '',
+            "veic_prazo": str(d.get('Prazo_Estimado_Vistoria_DTP', '')) if pd.notna(d.get('Prazo_Estimado_Vistoria_DTP')) else '',
+            "doc": str(d.get('Possui_Publicacao_DOC_2026', 'Não')),
+            "doc_resumo": str(d.get('DOC_Resumo_Texto', '')) if pd.notna(d.get('DOC_Resumo_Texto')) else '',
         })
 
     # 2. Carregar Fila de Prospecção CRM (WhatsApp e Funil)
@@ -154,35 +146,24 @@ def generate_dashboard():
     crm_records = []
     if os.path.exists(crm_path):
         crm_df = pd.read_csv(crm_path, sep=';', encoding='utf-8-sig', low_memory=False)
-        for _, cr in crm_df.iterrows():
+        for r in crm_df.itertuples(index=False):
+            cr = r._asdict()
+            sc = cr.get('Score_Chame_Taxi')
+            sc_int = int(sc) if pd.notna(sc) and str(sc).replace('.0','').isdigit() else 50
             crm_records.append({
                 "id": str(cr.get('ID_Master', '')),
                 "nom": str(cr.get('Nome_Motorista', '')),
                 "cpf": str(cr.get('CPF_Completo', '—')),
                 "tel": str(cr.get('Telefone_Principal', '')),
-                "tel2": str(cr.get('Telefone_Secundario', '—')),
                 "wpp_url": str(cr.get('Link_WhatsApp_Mensagem_Pronta', '')),
-                "wpp_dir": str(cr.get('Link_Direto_WhatsApp', '')),
-                "msg_txt": str(cr.get('Texto_Mensagem_WhatsApp', '')),
-                "funil": str(cr.get('Status_Funil_CRM', '1 - Novo Lead')),
                 "status": str(cr.get('Status_Alvara_2026', '')),
                 "ed": str(cr.get('Edital_Numero', '')).replace('.0', ''),
-                "ed_desc": str(cr.get('Edital_Descricao', '')),
                 "cat": str(cr.get('Categoria_Veiculo', '')),
-                "veic_exig": str(cr.get('Exigencia_Veiculo_DTP', '—')),
-                "veic_mod": str(cr.get('Modelos_Homologados_Recomendados', '—')),
-                "score": int(cr.get('Score_Chame_Taxi', 50)) if pd.notna(cr.get('Score_Chame_Taxi')) and str(cr.get('Score_Chame_Taxi')).replace('.0','').isdigit() else 50,
+                "score": sc_int,
                 "tier": str(cr.get('Tier_Prioridade', 'Tier 2')),
                 "dist": str(cr.get('Distancia_Sede_Butanta_km', '—')),
                 "reg": str(cr.get('Regiao_Macro', '—')),
-                "pitch": str(cr.get('Script_Comercial_Sugerido', '')),
                 "bairro": str(cr.get('Bairro_Atuacao', '')),
-                "endereco": str(cr.get('Endereco_MEI', '')),
-                "cep": str(cr.get('CEP', '')),
-                "cnpj": str(cr.get('CNPJ_MEI', '')),
-                "razao": str(cr.get('Razao_Social_MEI', '')),
-                "sei": str(cr.get('Processo_SEI_DTP', '—')),
-                "ponto": str(cr.get('Ponto_Privativo', '—')),
             })
     print(f"CRM Leads carregados: {len(crm_records):,} contatos operacionais.")
 
@@ -191,7 +172,8 @@ def generate_dashboard():
     pontos_records = []
     if os.path.exists(roteiro_path):
         rot_df = pd.read_csv(roteiro_path, sep=';', encoding='utf-8-sig', low_memory=False)
-        for _, pr in rot_df.iterrows():
+        for r in rot_df.itertuples(index=False):
+            pr = r._asdict()
             lat = pr.get('latitude')
             lon = pr.get('longitude')
             if pd.notna(lat) and pd.notna(lon):
@@ -226,7 +208,8 @@ def generate_dashboard():
     hosp_records = []
     if os.path.exists(hosp_path):
         hdf = pd.read_csv(hosp_path, sep=';', encoding='utf-8-sig', low_memory=False)
-        for _, hr in hdf.iterrows():
+        for r in hdf.itertuples(index=False):
+            hr = r._asdict()
             lat = hr.get('Latitude')
             lon = hr.get('Longitude')
             if pd.notna(lat) and pd.notna(lon):
@@ -285,7 +268,8 @@ def generate_dashboard():
     emp_records = []
     if os.path.exists(emp_path):
         edf = pd.read_csv(emp_path, sep=';', encoding='utf-8-sig', low_memory=False)
-        for _, er in edf.iterrows():
+        for r in edf.itertuples(index=False):
+            er = r._asdict()
             lat = er.get('Latitude')
             lon = er.get('Longitude')
             if pd.notna(lat) and pd.notna(lon):
@@ -341,6 +325,50 @@ def generate_dashboard():
                     "site": str(er.get('Website_Corporativo', ''))
                 })
     print(f"Grandes Empresas Corporativas (100+ Colaboradores): {len(emp_records):,} locais.")
+
+    # 5.1 Carregar Cooperativas de Táxi do Estado de SP (143 Sedes Mapeadas)
+    coops_path = os.path.join('data', 'processed', 'cooperativas_taxi_estado_sp.csv')
+    if not os.path.exists(coops_path):
+        coops_path = os.path.join('Novos Alvarás 2026', 'cooperativas_taxi_estado_sp.csv')
+    coop_records = []
+    if os.path.exists(coops_path):
+        cdf = pd.read_csv(coops_path, sep=';', encoding='utf-8-sig', low_memory=False)
+        for r in cdf.itertuples(index=False):
+            cd = r._asdict()
+            lat = cd.get('Latitude')
+            lon = cd.get('Longitude')
+            try:
+                lat_f = float(lat) if pd.notna(lat) else 0.0
+                lon_f = float(lon) if pd.notna(lon) else 0.0
+            except Exception:
+                lat_f, lon_f = 0.0, 0.0
+            dist_val = cd.get('Distancia_Sede_Chame_km')
+            try:
+                dist_f = float(dist_val) if pd.notna(dist_val) else 0.0
+            except Exception:
+                dist_f = 0.0
+
+            coop_records.append({
+                "id": str(cd.get('ID_Cooperativa', '')),
+                "cnpj": str(cd.get('CNPJ', '')),
+                "razao": str(cd.get('Razao_Social', '')),
+                "nome": str(cd.get('Nome_Fantasia', '')),
+                "muni": str(cd.get('Municipio', '')),
+                "uf": str(cd.get('UF', 'SP')),
+                "reg": str(cd.get('Macrorregiao', '')),
+                "bairro": str(cd.get('Bairro', '')),
+                "end": f"{cd.get('Logradouro', '')}, {cd.get('Numero', '')}".strip(' ,'),
+                "cep": str(cd.get('CEP', '')),
+                "lat": lat_f,
+                "lon": lon_f,
+                "dist": dist_f,
+                "st": str(cd.get('Situacao_Cadastral', 'Ativa')),
+                "tel": str(cd.get('Telefone_Institucional', '')) if pd.notna(cd.get('Telefone_Institucional')) else '',
+                "email": str(cd.get('Email_Institucional', '')) if pd.notna(cd.get('Email_Institucional')) else '',
+                "tipo": str(cd.get('Tipo_Operacao', '')),
+                "pos": str(cd.get('Posicionamento_Chame_Taxi', ''))
+            })
+    print(f"Cooperativas de Táxi SP (143 Sedes Estaduais): {len(coop_records):,} entidades carregadas.")
 
     # 6. Dados abertos municipais e estaduais (SMT/SGTP, Detran-SP, Receita e Infosiga)
     def _ler_aberto(*caminhos):
@@ -469,6 +497,7 @@ def generate_dashboard():
     json_map_pontos = json.dumps(pontos_records, ensure_ascii=False, separators=(',', ':'))
     json_hospitais = json.dumps(hosp_records, ensure_ascii=False, separators=(',', ':'))
     json_empresas = json.dumps(emp_records, ensure_ascii=False, separators=(',', ':'))
+    json_coops = json.dumps(coop_records, ensure_ascii=False, separators=(',', ':'))
     json_abertos = json.dumps({
         "sub_labels": [t["sub"] for t in acid_top],
         "sub_sinistros": [t["sin"] for t in acid_top],
@@ -485,7 +514,7 @@ def generate_dashboard():
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Central de Inteligência & CRM Operacional: Taxistas SP 2026</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -509,12 +538,26 @@ def generate_dashboard():
       --sh-1:0 1px 2px rgba(16,24,40,.05), 0 6px 18px -12px rgba(16,24,40,.14);
       --sh-focus:0 0 0 3px var(--accent-ring);
     }
-    body{font-family:'Plus Jakarta Sans',ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    html, body{
+      overflow-x:hidden !important;
+      width:100%;
+      max-width:100vw;
+      font-family:'Plus Jakarta Sans',ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
       background-color:var(--canvas);color:var(--ink);
-      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;}
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;
+      -webkit-tap-highlight-color:transparent;
+    }
+    *{touch-action:manipulation;}
     ::selection{background:#fde68a;color:#0f172a;}
     :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
     @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+
+    /* Safe Area para Android e iOS */
+    .safe-area-bottom {
+      padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
     /* ===== Topbar ===== */
     #topbar{background:linear-gradient(115deg,#0a101c 0%,#101828 55%,#0a101c 100%);}
@@ -591,7 +634,7 @@ def generate_dashboard():
     }
   
     /* ===== Menu lateral & Responsividade ===== */
-    #shell{display:flex;min-height:100vh;width:100%;position:relative;}
+    #shell{display:flex;min-height:100vh;width:100%;max-width:100vw;position:relative;overflow-x:hidden;}
     #sidebar{position:sticky;top:0;height:100vh;width:16.5rem;flex:0 0 16.5rem;overflow-y:auto;
       display:flex;flex-direction:column;gap:1.35rem;padding:1.15rem .85rem 1rem;
       background:linear-gradient(180deg,#0a101c 0%,#0e1626 55%,#0a101c 100%);
@@ -647,6 +690,83 @@ def generate_dashboard():
         pointer-events: auto !important;
       }
     }
+
+    /* Otimizações Específicas para Celular & Tablets (Android / iOS) */
+    @media (max-width: 1023px) {
+      .safe-area-bottom {
+        padding-bottom: max(0.65rem, env(safe-area-inset-bottom));
+      }
+    }
+
+    @media (max-width: 768px) {
+      #leaflet-map {
+        height: 420px !important;
+        min-height: 340px !important;
+      }
+      .kpi {
+        padding: 0.75rem 0.85rem !important;
+        border-radius: 0.65rem !important;
+      }
+      .kpi-value {
+        font-size: 1.25rem !important;
+        margin-top: 0.2rem !important;
+        margin-bottom: 0.1rem !important;
+      }
+      .eyebrow {
+        font-size: 0.625rem !important;
+      }
+      .kpi-sub {
+        font-size: 0.625rem !important;
+        padding-top: 0.35rem !important;
+      }
+      .kpi-icon {
+        width: 1.65rem !important;
+        height: 1.65rem !important;
+        font-size: 0.8rem !important;
+      }
+      /* Previne zoom automático indesejado no Chrome Android / Safari ao focar em inputs */
+      input, select, textarea, .field {
+        font-size: 16px !important;
+      }
+      .btn {
+        min-height: 2.25rem;
+      }
+      /* Modal em tela cheia fluida para todos os 3 dossiês no celular */
+      #driver-modal > div, #corp-dossier-modal > div, #coop-dossier-modal > div {
+        max-width: 100vw !important;
+        width: 100vw !important;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+      }
+      #driver-modal, #corp-dossier-modal, #coop-dossier-modal {
+        padding: 0 !important;
+      }
+      /* Rolagem touch inercial nativa fluida */
+      .overflow-x-auto, .overflow-y-auto {
+        -webkit-overflow-scrolling: touch;
+      }
+      /* Otimização de toque para Android */
+      #mobile-bottom-nav button {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+    }
+
+    /* Telas compactas (Android 320px - 360px - Samsung Galaxy A, etc.) */
+    @media (max-width: 360px) {
+      #mobile-bottom-nav span {
+        font-size: 8px !important;
+      }
+      #mobile-bottom-nav i {
+        font-size: 16px !important;
+      }
+      .kpi-value {
+        font-size: 1.1rem !important;
+      }
+    }
   </style>
 </head>
 <body class="text-slate-800">
@@ -694,6 +814,11 @@ def generate_dashboard():
           <span>4. Clientes Corporativos B2B</span>
           <span class="ml-1 bg-purple-500/20 text-purple-300 px-1.5 py-0.2 rounded-full text-[10px]">190 Alvos</span>
         </button>
+        <button id="nav-btn-coops" onclick="switchMainTab('coops')" class="nav-tab text-slate-300 hover:text-white">
+          <i class="ph-bold ph-compass text-amber-400 text-sm"></i>
+          <span>5. Cooperativas Táxi SP</span>
+          <span class="ml-1 bg-amber-500/20 text-amber-300 px-1.5 py-0.2 rounded-full text-[10px]">143 Sedes</span>
+        </button>
       </div>
     </div>
 
@@ -705,40 +830,44 @@ def generate_dashboard():
 
     <!-- TOP HEADER (SLIM) COM BOTÃO HAMBURGUER -->
   <header id="topbar" class="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-50 shadow-md">
-    <div class="max-w-[1750px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
-      <div class="flex items-center space-x-2">
-        <button id="sidebar-toggle" onclick="toggleSidebar()" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white focus:outline-none transition-colors flex items-center justify-center cursor-pointer shadow-sm mr-1" title="Alternar Menu Lateral (Hamburguer)" aria-label="Menu Lateral">
-          <i class="ph-bold ph-list text-xl"></i>
+    <div class="max-w-[1750px] mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2">
+      <div class="flex items-center space-x-2 min-w-0">
+        <button id="sidebar-toggle" onclick="toggleSidebar()" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white focus:outline-none transition-colors flex items-center justify-center cursor-pointer shadow-sm flex-shrink-0" title="Alternar Menu Lateral (Hamburguer)" aria-label="Menu Lateral">
+          <i class="ph-bold ph-list text-lg sm:text-xl"></i>
         </button>
-        <div class="flex items-center space-x-2">
-            <h1 class="text-base sm:text-lg font-bold tracking-tight text-white leading-none">Chame Táxi: Central Integrada de Inteligência & CRM 2026</h1>
-            <span class="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30 uppercase tracking-wider hidden sm:inline-block">Enterprise Suite</span>
+        <div class="min-w-0">
+          <div class="flex items-center space-x-2">
+            <h1 class="text-sm sm:text-base md:text-lg font-bold tracking-tight text-white leading-tight truncate">Chame Táxi: Central 2026</h1>
+            <span class="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30 uppercase tracking-wider hidden sm:inline-block flex-shrink-0">Enterprise Suite</span>
           </div>
+          <p class="text-[10px] text-slate-400 font-medium sm:hidden truncate">Inteligência & CRM Operacional</p>
+        </div>
       </div>
-<!-- GLOBAL QUICK ACTIONS -->
-      <div class="flex items-center space-x-2 text-xs">
-        <div class="bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/10 text-slate-300 flex items-center space-x-1.5 hidden xl:flex">
+      <!-- GLOBAL QUICK ACTIONS -->
+      <div class="flex items-center space-x-2 text-xs flex-shrink-0">
+        <div class="bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/10 text-slate-300 items-center space-x-1.5 hidden xl:flex">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span>16.863 Motoristas | 99 Colunas</span>
         </div>
-        <button onclick="exportFilteredCSV()" class="btn btn-accent">
-          <i class="ph-bold ph-download-simple"></i>
-          <span>Exportar Dados</span>
+        <button onclick="exportFilteredCSV()" class="btn btn-accent btn-xs sm:btn-md py-1.5 px-2.5 sm:px-3 text-xs">
+          <i class="ph-bold ph-download-simple sm:mr-1"></i>
+          <span class="hidden sm:inline">Exportar Dados</span>
+          <span class="sm:hidden">Exportar</span>
         </button>
       </div>
     </div>
   </header>
 
   <!-- MAIN CONTAINER -->
-  <main class="flex-1 max-w-[1750px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-6">
+  <main class="flex-1 max-w-[1750px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-5 pb-24 lg:pb-8 space-y-4 sm:space-y-6">
 
     <!-- ===================================================================== -->
     <!-- TAB 1: BASE MESTRE UNIVERSAL & ANALYTICS                             -->
     <!-- ===================================================================== -->
-    <div id="tab-content-master" class="space-y-6">
+    <div id="tab-content-master" class="space-y-4 sm:space-y-6">
       
       <!-- EXECUTIVE KPI CARDS -->
-      <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3.5">
+      <section class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-2 sm:gap-3.5">
         <div class="card kpi group">
           <div class="flex items-center justify-between gap-2">
             <span class="eyebrow truncate">Base Mestre Total</span>
@@ -817,7 +946,7 @@ def generate_dashboard():
           </div>
         </div>
 
-        <div class="card kpi group">
+        <div class="card kpi group col-span-2 sm:col-span-1">
           <div class="flex items-center justify-between gap-2">
             <span class="eyebrow truncate">Processos SEI / DOC</span>
             <div class="kpi-icon">
@@ -868,40 +997,62 @@ def generate_dashboard():
 
       <!-- EXPLORER TABLE & FILTERS -->
       <section class="card overflow-hidden flex flex-col">
-        <div class="p-4 border-b border-slate-100 bg-white space-y-3">
-          <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="p-3 sm:p-4 border-b border-slate-100 bg-white space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
             <div>
               <h2 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
                 <i class="ph-bold ph-magnifying-glass text-amber-500"></i>
-                Explorador Unificado da Base Mestre de Taxistas
+                Explorador Unificado da Base Mestre
               </h2>
-              <p class="text-xs text-slate-500">Consulte qualquer um dos 16.863 motoristas por Nome, CPF, Condutax, SEI ou Telefone e abra o Dossiê 360°.</p>
+              <p class="text-xs text-slate-500 hidden sm:block">Consulte qualquer um dos 16.863 motoristas por Nome, CPF, Condutax, SEI ou Telefone e abra o Dossiê 360°.</p>
             </div>
-            <div class="flex items-center gap-2">
-              <button onclick="resetAllFilters()" class="btn btn-ghost">
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
+              <!-- SELETOR DE MODO (CARDS NO CELULAR / TABELA) -->
+              <div class="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+                <button id="view-mode-cards-master" onclick="setMasterViewMode('cards')" class="px-2.5 py-1 rounded text-xs font-bold transition flex items-center gap-1 bg-white text-slate-900 shadow-sm" title="Visualização em Cards (Recomendada para Celular)">
+                  <i class="ph-bold ph-squares-four"></i>
+                  <span>Cards</span>
+                </button>
+                <button id="view-mode-table-master" onclick="setMasterViewMode('table')" class="px-2.5 py-1 rounded text-xs font-semibold transition flex items-center gap-1 text-slate-500 hover:text-slate-900" title="Visualização em Tabela">
+                  <i class="ph-bold ph-table"></i>
+                  <span>Tabela</span>
+                </button>
+              </div>
+              <button onclick="toggleMobileFilters('master')" class="btn btn-ghost text-xs px-2.5 py-1 sm:hidden flex items-center gap-1">
+                <i class="ph-bold ph-faders"></i>
+                <span id="btn-toggle-filters-text-master">Filtros</span>
+              </button>
+              <button onclick="resetAllFilters()" class="btn btn-ghost text-xs px-2.5 py-1" title="Limpar Filtros">
                 <i class="ph-bold ph-arrow-counter-clockwise"></i>
-                <span>Limpar Filtros</span>
-              </button>
-              <button onclick="filterTier1()" class="btn text-rose-700 bg-rose-50 hover:bg-rose-100">
-                <i class="ph-bold ph-star"></i>
-                <span>Tier 1 VIP (50)</span>
-              </button>
-              <button onclick="filterSuplentes()" class="btn text-amber-800 bg-amber-50 hover:bg-amber-100">
-                <i class="ph-bold ph-hourglass-high"></i>
-                <span>Suplentes Top (370)</span>
-              </button>
-              <button onclick="filterMEIs()" class="btn text-indigo-700 bg-indigo-50 hover:bg-indigo-100">
-                <i class="ph-bold ph-phone"></i>
-                <span>Com Telefone (2.423)</span>
+                <span class="hidden sm:inline">Limpar</span>
               </button>
             </div>
           </div>
 
-          <!-- CONTROLES DE FILTRO -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2.5 pt-1">
+          <!-- BUSCA GERAL SEMPRE VISÍVEL -->
+          <div class="relative">
+            <input type="text" id="search-input" oninput="applyFilters()" placeholder="Buscar por Nome, CPF, Condutax, SEI ou Telefone..." class="field w-full pl-8 pr-3 py-2 text-sm sm:text-xs">
+            <i class="ph-bold ph-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-sm"></i>
+          </div>
+
+          <!-- FILTROS RÁPIDOS EM CARROSSEL TOUCH -->
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+            <button onclick="filterTier1()" class="flex-shrink-0 px-2.5 py-1 rounded-full text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 hover:bg-rose-100 flex items-center gap-1">
+              <i class="ph-bold ph-star text-rose-600"></i> Tier 1 VIP (50)
+            </button>
+            <button onclick="filterSuplentes()" class="flex-shrink-0 px-2.5 py-1 rounded-full text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 hover:bg-amber-100 flex items-center gap-1">
+              <i class="ph-bold ph-hourglass-high text-amber-600"></i> Suplentes (370)
+            </button>
+            <button onclick="filterMEIs()" class="flex-shrink-0 px-2.5 py-1 rounded-full text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 flex items-center gap-1">
+              <i class="ph-bold ph-phone text-indigo-600"></i> Com Telefone (2.4k)
+            </button>
+          </div>
+
+          <!-- PAINEL DE CONTROLES DE FILTRO (COLAPSÁVEL NO MOBILE, VISÍVEL NO DESKTOP) -->
+          <div id="filter-panel-master" class="hidden sm:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 pt-2 border-t border-slate-100">
             <div>
               <label class="eyebrow block mb-1">Edital / Categoria</label>
-              <select id="filter-edital" onchange="applyFilters()" class="field w-full px-2.5 py-1.5">
+              <select id="filter-edital" onchange="applyFilters()" class="field w-full px-2 py-1.5 text-xs">
                 <option value="ALL">Todos os Editais</option>
                 <option value="1">Edital 1 (PcD Comum)</option>
                 <option value="2">Edital 2 (Tempo Comum)</option>
@@ -911,74 +1062,71 @@ def generate_dashboard():
                 <option value="6">Edital 6 (PcD Acessível)</option>
                 <option value="7">Edital 7 (Tempo Acessível)</option>
                 <option value="8">Edital 8 (Ampla Acessível)</option>
-                <option value="DOC">Diário Oficial (Apenas DOC)</option>
+                <option value="DOC">Diário Oficial (DOC)</option>
               </select>
             </div>
 
             <div>
               <label class="eyebrow block mb-1">Situação / Alvará</label>
-              <select id="filter-status" onchange="applyFilters()" class="field w-full px-2.5 py-1.5">
+              <select id="filter-status" onchange="applyFilters()" class="field w-full px-2 py-1.5 text-xs">
                 <option value="ALL">Todas as Situações</option>
                 <option value="CONTEMPLADO">Contemplados (Titulares)</option>
                 <option value="SUPLENTE_ALTA">Suplente Alta Probabilidade</option>
                 <option value="ESPERA">Fila de Espera Geral</option>
-                <option value="INABILITADO">Inabilitados na Fase Doc</option>
+                <option value="INABILITADO">Inabilitados Fase Doc</option>
               </select>
             </div>
 
             <div>
               <label class="eyebrow block mb-1">Tier Prioridade</label>
-              <select id="filter-tier" onchange="applyFilters()" class="field w-full px-2.5 py-1.5">
+              <select id="filter-tier" onchange="applyFilters()" class="field w-full px-2 py-1.5 text-xs">
                 <option value="ALL">Todos os Tiers</option>
-                <option value="Tier 1">Tier 1 (Ultra Quente / Score &ge; 80) 🔥</option>
-                <option value="Tier 2">Tier 2 (Alta Receptividade / Score 65-79) ⭐</option>
-                <option value="Tier 3">Tier 3 (Oportunidade Tática / Score 50-64)</option>
-                <option value="Tier 4">Tier 4 (Base Ampla / Score &lt; 50)</option>
+                <option value="Tier 1">Tier 1 (VIP / Score &ge; 80) 🔥</option>
+                <option value="Tier 2">Tier 2 (Score 65-79) ⭐</option>
+                <option value="Tier 3">Tier 3 (Score 50-64)</option>
+                <option value="Tier 4">Tier 4 (Score &lt; 50)</option>
               </select>
             </div>
 
             <div>
               <label class="eyebrow block mb-1">Vínculo de Ponto</label>
-              <select id="filter-ponto" onchange="applyFilters()" class="field w-full px-2.5 py-1.5">
-                <option value="ALL">Todos os Tipos de Ponto</option>
-                <option value="VINCULADO">Ponto Privativo Vinculado</option>
-                <option value="SORTEIO">Tentou Sorteio de Ponto</option>
-                <option value="LIVRE">Ponto Livre (Sem Ponto)</option>
+              <select id="filter-ponto" onchange="applyFilters()" class="field w-full px-2 py-1.5 text-xs">
+                <option value="ALL">Todos os Pontos</option>
+                <option value="VINCULADO">Ponto Vinculado</option>
+                <option value="SORTEIO">Tentou Sorteio</option>
+                <option value="LIVRE">Ponto Livre</option>
               </select>
             </div>
 
             <div>
               <label class="eyebrow block mb-1">Contato / Telefone</label>
-              <select id="filter-contato" onchange="applyFilters()" class="field w-full px-2.5 py-1.5">
+              <select id="filter-contato" onchange="applyFilters()" class="field w-full px-2 py-1.5 text-xs">
                 <option value="ALL">Todos</option>
-                <option value="COM_TEL">Com Telefone Validado</option>
+                <option value="COM_TEL">Com Celular</option>
                 <option value="COM_CPF">Com CPF Completo</option>
-                <option value="COM_DOC">Com Processo SEI / DOC</option>
+                <option value="COM_DOC">Com Processo SEI</option>
               </select>
             </div>
 
             <div>
-              <label class="eyebrow block mb-1">Proximidade Butantã</label>
-              <select id="filter-distancia" onchange="applyFilters()" class="field w-full px-2.5 py-1.5">
-                <option value="ALL">Todas as Regiões</option>
-                <option value="5KM">Até 5 km da Sede (Hiperlocal)</option>
-                <option value="10KM">Até 10 km (Zona Oeste)</option>
-                <option value="15KM">Até 15 km da Sede</option>
+              <label class="eyebrow block mb-1">Distância Sede</label>
+              <select id="filter-distancia" onchange="applyFilters()" class="field w-full px-2 py-1.5 text-xs">
+                <option value="ALL">Todas Regiões</option>
+                <option value="5KM">&le; 5 km (Hiperlocal)</option>
+                <option value="10KM">&le; 10 km (Zona Oeste)</option>
+                <option value="15KM">&le; 15 km da Sede</option>
               </select>
-            </div>
-
-            <div>
-              <label class="eyebrow block mb-1">Busca Geral</label>
-              <div class="relative">
-                <input type="text" id="search-input" oninput="applyFilters()" placeholder="Nome, CPF, Condutax, SEI..." class="field w-full pl-7 pr-2.5 py-1.5">
-                <i class="ph-bold ph-magnifying-glass absolute left-2 top-2 text-slate-400 text-xs"></i>
-              </div>
             </div>
           </div>
         </div>
 
+        <!-- MODO CARDS (PARA CELULAR) -->
+        <div id="master-cards-wrapper" class="space-y-2.5 p-3 hidden">
+          <!-- Renderizado via JavaScript no celular -->
+        </div>
+
         <!-- TABELA DE RESULTADOS UNIVERSAL -->
-        <div class="overflow-x-auto custom-scrollbar flex-1">
+        <div id="master-table-wrapper" class="overflow-x-auto custom-scrollbar flex-1">
           <table class="tbl w-full text-left">
             <thead>
               <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 uppercase text-[10px] tracking-wider select-none">
@@ -1088,81 +1236,102 @@ __LINHAS_ABERTOS__
     <div id="tab-content-crm" class="hidden space-y-6">
       
       <!-- HEADER DO FUNIL CRM -->
-      <section class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-5 rounded-2xl border border-slate-700 shadow-md">
-        <div class="flex flex-wrap items-center justify-between gap-4">
+      <section class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-4 sm:p-5 rounded-2xl border border-slate-700 shadow-md">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div class="flex items-center gap-2">
-              <span class="p-2 bg-emerald-500/20 text-emerald-400 rounded-xl text-lg">
+              <span class="p-2 bg-emerald-500/20 text-emerald-400 rounded-xl text-lg flex-shrink-0">
                 <i class="ph-bold ph-whatsapp-logo"></i>
               </span>
-              <h2 class="text-lg font-bold">Fila de Prospecção Operacional & Funil WhatsApp</h2>
+              <h2 class="text-base sm:text-lg font-bold">Fila de Prospecção Operacional & Funil WhatsApp</h2>
             </div>
             <p class="text-xs text-slate-300 mt-1">2.391 motoristas qualificados com telefones e mensagens personalizadas prontas para disparo em 1 clique.</p>
           </div>
 
           <!-- CONTADORES DE FUNIL DINÂMICOS -->
-          <div class="flex flex-wrap items-center gap-2 text-xs">
-            <div class="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full md:w-auto text-xs">
+            <div class="bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-700 text-center sm:text-left">
               <span class="text-slate-400 block text-[9px] uppercase font-bold">Novos Leads</span>
-              <span id="crm-count-novos" class="text-sm font-black text-amber-400">0</span>
+              <span id="crm-count-novos" class="text-sm sm:text-base font-black text-amber-400">0</span>
             </div>
-            <div class="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
+            <div class="bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-700 text-center sm:text-left">
               <span class="text-slate-400 block text-[9px] uppercase font-bold">Contatados</span>
-              <span id="crm-count-contatados" class="text-sm font-black text-sky-400">0</span>
+              <span id="crm-count-contatados" class="text-sm sm:text-base font-black text-sky-400">0</span>
             </div>
-            <div class="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
-              <span class="text-slate-400 block text-[9px] uppercase font-bold">Visitas Agendadas</span>
-              <span id="crm-count-agendados" class="text-sm font-black text-purple-400">0</span>
+            <div class="bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-700 text-center sm:text-left">
+              <span class="text-slate-400 block text-[9px] uppercase font-bold">Agendados</span>
+              <span id="crm-count-agendados" class="text-sm sm:text-base font-black text-purple-400">0</span>
             </div>
-            <div class="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
-              <span class="text-slate-400 block text-[9px] uppercase font-bold">Filiados Cooperados</span>
-              <span id="crm-count-filiados" class="text-sm font-black text-emerald-400">0</span>
+            <div class="bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-700 text-center sm:text-left">
+              <span class="text-slate-400 block text-[9px] uppercase font-bold">Filiados</span>
+              <span id="crm-count-filiados" class="text-sm sm:text-base font-black text-emerald-400">0</span>
             </div>
           </div>
         </div>
       </section>
 
       <!-- BARRA DE FILTROS RÁPIDOS CRM -->
-      <section class="card p-4 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex flex-wrap items-center gap-2">
-          <button onclick="setCRMFilter('ALL')" id="crm-btn-all" class="btn bg-amber-500 text-slate-950">
-            Todos (2.391)
-          </button>
-          <button onclick="setCRMFilter('TIER1')" id="crm-btn-tier1" class="btn bg-rose-50 hover:bg-rose-100 text-rose-800">
-            <i class="ph-bold ph-fire text-rose-600"></i>
-            <span>Tier 1: Ultra Quente (Score &ge; 80) 🔥</span>
-          </button>
-          <button onclick="setCRMFilter('CONTEMPLADOS')" id="crm-btn-contemplados" class="btn btn-soft">
-            <i class="ph-bold ph-certificate text-emerald-600"></i>
-            <span>Contemplados VIP (302)</span>
-          </button>
-          <button onclick="setCRMFilter('BUTANTA')" id="crm-btn-butanta" class="btn btn-soft">
-            <i class="ph-bold ph-map-pin text-sky-600"></i>
-            <span>Zona Oeste / Butantã (622)</span>
-          </button>
-          <button onclick="setCRMFilter('ELETRICOS')" id="crm-btn-eletricos" class="btn btn-soft">
-            <i class="ph-bold ph-lightning text-amber-500"></i>
-            <span>Híbrido/Elétrico (Edital 4)</span>
-          </button>
-          <button onclick="setCRMFilter('MULHERES')" id="crm-btn-mulheres" class="btn btn-soft">
-            <i class="ph-bold ph-gender-female text-rose-500"></i>
-            <span>Mulheres Taxistas (Edital 3)</span>
-          </button>
-          <button onclick="setCRMFilter('SUPLENTES')" id="crm-btn-suplentes" class="btn btn-soft">
-            <i class="ph-bold ph-hourglass text-purple-600"></i>
-            <span>Suplentes Top (47)</span>
-          </button>
+      <section class="card p-3 sm:p-4 space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 no-scrollbar text-xs">
+            <!-- SELETOR DE MODO CRM (CARDS NO CELULAR / TABELA) -->
+            <div class="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 flex-shrink-0">
+              <button id="view-mode-cards-crm" onclick="setCRMViewMode('cards')" class="px-2.5 py-1 rounded text-xs font-bold transition flex items-center gap-1 bg-white text-slate-900 shadow-sm" title="Visualização em Cards (Recomendada para Celular)">
+                <i class="ph-bold ph-squares-four"></i>
+                <span>Cards</span>
+              </button>
+              <button id="view-mode-table-crm" onclick="setCRMViewMode('table')" class="px-2.5 py-1 rounded text-xs font-semibold transition flex items-center gap-1 text-slate-500 hover:text-slate-900" title="Visualização em Tabela">
+                <i class="ph-bold ph-table"></i>
+                <span>Tabela</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="relative w-full sm:w-72">
+            <input type="text" id="crm-search-input" oninput="applyCRMFilters()" placeholder="Buscar motorista no CRM..." class="field w-full pl-8 pr-3 py-2 text-sm sm:text-xs">
+            <i class="ph-bold ph-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-sm"></i>
+          </div>
         </div>
 
-        <div class="relative w-full sm:w-64">
-          <input type="text" id="crm-search-input" oninput="applyCRMFilters()" placeholder="Buscar motorista no CRM..." class="field w-full pl-7 pr-2.5 py-1.5">
-          <i class="ph-bold ph-magnifying-glass absolute left-2 top-2 text-slate-400 text-xs"></i>
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+          <button onclick="setCRMFilter('ALL')" id="crm-btn-all" class="btn bg-amber-500 text-slate-950 flex-shrink-0">
+            Todos (2.391)
+          </button>
+          <button onclick="setCRMFilter('TIER1')" id="crm-btn-tier1" class="btn bg-rose-50 hover:bg-rose-100 text-rose-800 flex-shrink-0">
+            <i class="ph-bold ph-fire text-rose-600"></i>
+            <span>Tier 1: VIP (&ge; 80) 🔥</span>
+          </button>
+          <button onclick="setCRMFilter('CONTEMPLADOS')" id="crm-btn-contemplados" class="btn btn-soft flex-shrink-0">
+            <i class="ph-bold ph-certificate text-emerald-600"></i>
+            <span>Contemplados (302)</span>
+          </button>
+          <button onclick="setCRMFilter('BUTANTA')" id="crm-btn-butanta" class="btn btn-soft flex-shrink-0">
+            <i class="ph-bold ph-map-pin text-sky-600"></i>
+            <span>Butantã / Oeste (622)</span>
+          </button>
+          <button onclick="setCRMFilter('ELETRICOS')" id="crm-btn-eletricos" class="btn btn-soft flex-shrink-0">
+            <i class="ph-bold ph-lightning text-amber-500"></i>
+            <span>Elétricos (Edital 4)</span>
+          </button>
+          <button onclick="setCRMFilter('MULHERES')" id="crm-btn-mulheres" class="btn btn-soft flex-shrink-0">
+            <i class="ph-bold ph-gender-female text-rose-500"></i>
+            <span>Mulheres (Edital 3)</span>
+          </button>
+          <button onclick="setCRMFilter('SUPLENTES')" id="crm-btn-suplentes" class="btn btn-soft flex-shrink-0">
+            <i class="ph-bold ph-hourglass text-purple-600"></i>
+            <span>Suplentes (47)</span>
+          </button>
         </div>
       </section>
 
-      <!-- TABELA OPERACIONAL CRM -->
+      <!-- TABELA & CARDS OPERACIONAIS CRM -->
       <section class="card overflow-hidden flex flex-col">
-        <div class="overflow-x-auto custom-scrollbar">
+        <!-- MODO CARDS (PARA CELULAR) -->
+        <div id="crm-cards-wrapper" class="space-y-2.5 p-3 hidden">
+          <!-- Renderizado via JavaScript no celular -->
+        </div>
+
+        <div id="crm-table-wrapper" class="overflow-x-auto custom-scrollbar flex-1">
           <table class="tbl w-full text-left">
             <thead>
               <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 uppercase text-[10px] tracking-wider select-none">
@@ -1221,7 +1390,8 @@ __LINHAS_ABERTOS__
           <div>
             <label class="eyebrow block mb-0.5">Filtrar Mapa & Rotas</label>
             <select id="map-route-filter" onchange="filterMapByRoute()" class="field px-2.5 py-1.5 font-semibold text-slate-700">
-              <option value="ALL">Todos os Pontos, Hospitais & Empresas</option>
+              <option value="ALL">Todos os Pontos, Hospitais, Empresas & Cooperativas</option>
+              <option value="COOPERATIVAS">🚕 Cooperativas de Táxi (Estado SP - 143 Sedes)</option>
               <option value="MOB_VULN_ALTA">🔥 Contratos Alta Vulnerabilidade (Substituição Imediata)</option>
               <option value="MOB_APPS">📱 Clientes Presos no Uber/99 (Ganho Faixa Ônibus SP)</option>
               <option value="MOB_DESP">♿ Hospitais com Demanda de Desospitalização Ágil</option>
@@ -1243,16 +1413,19 @@ __LINHAS_ABERTOS__
             </select>
           </div>
 
-          <div class="pt-3.5 flex items-center gap-2">
-            <button onclick="centerMapOnSede()" class="btn bg-amber-500 hover:bg-amber-400 text-slate-950">
+          <div class="pt-2 sm:pt-3.5 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 w-full flex-nowrap">
+            <button onclick="centerMapOnSede()" class="btn bg-amber-500 hover:bg-amber-400 text-slate-950 shrink-0">
               <i class="ph-bold ph-crosshair"></i>
               <span>Sede Butantã</span>
             </button>
-            <button id="btn-toggle-hospitais" onclick="toggleHospitalsLayer()" class="btn bg-rose-600 hover:bg-rose-500 text-white" title="Exibir ou ocultar os 94 hospitais e clínicas B2B no raio de 5 km">
+            <button id="btn-toggle-hospitais" onclick="toggleHospitalsLayer()" class="btn bg-rose-600 hover:bg-rose-500 text-white shrink-0" title="Exibir ou ocultar os 94 hospitais e clínicas B2B no raio de 5 km">
               <span>🏥 Hospitais 5km (94)</span>
             </button>
-            <button id="btn-toggle-empresas" onclick="toggleEmpresasLayer()" class="btn bg-blue-600 hover:bg-blue-500 text-white" title="Exibir ou ocultar as 96 grandes empresas e edifícios corporativos no raio de 5 km">
+            <button id="btn-toggle-empresas" onclick="toggleEmpresasLayer()" class="btn bg-blue-600 hover:bg-blue-500 text-white shrink-0" title="Exibir ou ocultar as 96 grandes empresas e edifícios corporativos no raio de 5 km">
               <span>🏢 Empresas 100+ (96)</span>
+            </button>
+            <button id="btn-toggle-cooperativas" onclick="toggleCooperativasLayer()" class="btn bg-amber-600 hover:bg-amber-500 text-white shrink-0" title="Exibir ou ocultar as 143 cooperativas de táxi do Estado de SP">
+              <span>🚕 Cooperativas SP (143)</span>
             </button>
           </div>
         </div>
@@ -1263,10 +1436,21 @@ __LINHAS_ABERTOS__
         
         <!-- CONTAINER DO MAPA LEAFLET -->
         <div class="card lg:col-span-3 p-2.5 relative">
+          <!-- BOTAO DE CONTROLE DE ROLAGEM NO CELULAR -->
+          <button id="map-scroll-lock-btn" onclick="toggleMapScrollLock()" class="absolute top-4 right-4 z-[500] bg-white/95 text-slate-800 text-xs px-2.5 py-1.5 rounded-lg shadow-md border border-slate-300 font-bold flex items-center gap-1.5 lg:hidden">
+            <i class="ph-bold ph-lock-key" id="map-lock-icon"></i>
+            <span id="map-lock-text">Rolagem Página (Travar Mapa)</span>
+          </button>
           <div id="leaflet-map"></div>
           
-          <!-- LEGENDA FLUTUANTE -->
-          <div class="absolute bottom-5 left-5 z-[500] bg-white/95 backdrop-blur-sm p-3 rounded-xl border border-slate-200 shadow-lg text-[11px] space-y-1.5 pointer-events-auto max-h-[300px] overflow-y-auto">
+          <!-- BOTAO TOGGLE LEGENDA MOBILE -->
+          <button id="btn-toggle-legend" onclick="toggleMapLegend()" class="absolute bottom-4 left-4 z-[500] bg-white/95 text-slate-800 text-xs px-2.5 py-1.5 rounded-lg shadow-md border border-slate-300 font-bold flex items-center gap-1.5 lg:hidden">
+            <i class="ph-bold ph-list-bullets"></i>
+            <span id="toggle-legend-text">Legenda</span>
+          </button>
+
+          <!-- LEGENDA FLUTUANTE (COLAPSÁVEL NO MOBILE / ABERTA NO DESKTOP) -->
+          <div id="map-floating-legend" class="absolute bottom-12 sm:bottom-5 left-4 sm:left-5 z-[500] bg-white/95 backdrop-blur-sm p-3 rounded-xl border border-slate-200 shadow-lg text-[11px] space-y-1.5 pointer-events-auto max-h-[240px] sm:max-h-[300px] overflow-y-auto hidden lg:block">
             <span class="font-bold text-slate-800 uppercase tracking-wider block text-[10px]">Legenda do Território</span>
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> <span>Rota 1: Butantã / Sede</span></div>
             <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span> <span>Rota 2: Pinheiros / Faria Lima</span></div>
@@ -1287,7 +1471,7 @@ __LINHAS_ABERTOS__
         </div>
 
         <!-- PAINEL LATERAL: PONTOS PRIORITÁRIOS DA ROTA -->
-        <div class="card p-4 flex flex-col h-[calc(100vh-240px)] min-h-[550px]">
+        <div class="card p-4 flex flex-col h-auto lg:h-[calc(100vh-240px)] max-h-[500px] lg:max-h-none min-h-[300px] lg:min-h-[550px]">
           <div class="pb-3 border-b border-slate-100 mb-2">
             <h3 class="font-bold text-xs text-slate-800 uppercase tracking-wider flex items-center justify-between">
               <span>Pontos Prioritários</span>
@@ -1367,8 +1551,11 @@ __LINHAS_ABERTOS__
         <div class="card kpi group">
           <div class="flex items-center justify-between gap-2">
             <span class="eyebrow truncate">Receita Estimada</span>
-            <div class="kpi-value">R$ 3.83M</div>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-currency-circle-dollar text-emerald-600"></i>
+            </div>
           </div>
+          <div class="kpi-value text-emerald-600">R$ 3.83M</div>
           <div class="kpi-sub">
             <span class="truncate">Contratos B2B Faturados</span>
           </div>
@@ -1387,7 +1574,7 @@ __LINHAS_ABERTOS__
           </div>
         </div>
 
-        <div class="card kpi group">
+        <div class="card kpi group col-span-2 sm:col-span-1">
           <div class="flex items-center justify-between gap-2">
             <span class="eyebrow truncate">Frota Elétrica ESG</span>
             <div class="kpi-icon">
@@ -1492,7 +1679,17 @@ __LINHAS_ABERTOS__
           <div class="flex items-center gap-2">
             <span class="font-bold text-slate-800" id="corp-results-count">Exibindo 0 clientes</span>
             <span class="text-slate-400">|</span>
-            <span class="text-slate-500">Clique em qualquer linha para abrir o <b>Dossiê Completo B2B</b></span>
+            <!-- SELETOR DE MODO CORP (CARDS NO CELULAR / TABELA) -->
+            <div class="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 flex-shrink-0">
+              <button id="view-mode-cards-corp" onclick="setCorpViewMode('cards')" class="px-2.5 py-1 rounded text-xs font-bold transition flex items-center gap-1 bg-white text-slate-900 shadow-sm" title="Visualização em Cards (Recomendada para Celular)">
+                <i class="ph-bold ph-squares-four"></i>
+                <span>Cards</span>
+              </button>
+              <button id="view-mode-table-corp" onclick="setCorpViewMode('table')" class="px-2.5 py-1 rounded text-xs font-semibold transition flex items-center gap-1 text-slate-500 hover:text-slate-900" title="Visualização em Tabela">
+                <i class="ph-bold ph-table"></i>
+                <span>Tabela</span>
+              </button>
+            </div>
           </div>
           <div class="flex items-center gap-2">
             <span class="text-slate-500 text-[11px]">Itens por página:</span>
@@ -1505,7 +1702,12 @@ __LINHAS_ABERTOS__
           </div>
         </div>
 
-        <div class="overflow-x-auto custom-scrollbar">
+        <!-- MODO CARDS (PARA CELULAR) -->
+        <div id="corp-cards-wrapper" class="space-y-2.5 p-3 hidden">
+          <!-- Renderizado via JavaScript no celular -->
+        </div>
+
+        <div id="corp-table-wrapper" class="overflow-x-auto custom-scrollbar">
           <table class="tbl w-full text-left">
             <thead>
               <tr class="bg-slate-100 text-slate-700 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
@@ -1533,46 +1735,202 @@ __LINHAS_ABERTOS__
 
     </div>
 
+    <!-- ===================================================================== -->
+    <!-- TAB 5: COOPERATIVAS DE TÁXI DO ESTADO DE SÃO PAULO (143 SEDES)        -->
+    <!-- ===================================================================== -->
+    <div id="tab-content-coops" class="space-y-6 hidden">
+      
+      <!-- EXECUTIVE KPI CARDS -->
+      <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5">
+        <div class="card kpi group">
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Total de Cooperativas</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-compass text-amber-500"></i>
+            </div>
+          </div>
+          <div class="kpi-value">143</div>
+          <div class="kpi-sub">
+            <span class="truncate">Estado de SP Mapeado</span>
+          </div>
+        </div>
+
+        <div class="card kpi group">
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Situação Ativa</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-check-circle text-emerald-500"></i>
+            </div>
+          </div>
+          <div class="kpi-value text-emerald-600">87</div>
+          <div class="kpi-sub">
+            <span class="truncate text-emerald-600 font-bold">60,8% CNPJ Regular Receita</span>
+          </div>
+        </div>
+
+        <div class="card kpi group">
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Capital Paulista</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-buildings text-rose-500"></i>
+            </div>
+          </div>
+          <div class="kpi-value">71</div>
+          <div class="kpi-sub">
+            <span class="truncate">Mercado Direto Capital</span>
+          </div>
+        </div>
+
+        <div class="card kpi group">
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Grande SP / RMSP</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-map-pin text-sky-500"></i>
+            </div>
+          </div>
+          <div class="kpi-value">61</div>
+          <div class="kpi-sub">
+            <span class="truncate">ABC, Guarulhos, Barueri</span>
+          </div>
+        </div>
+
+        <div class="card kpi group col-span-2 sm:col-span-1">
+          <div class="flex items-center justify-between gap-2">
+            <span class="eyebrow truncate">Interior & Litoral</span>
+            <div class="kpi-icon">
+              <i class="ph-bold ph-tree text-indigo-500"></i>
+            </div>
+          </div>
+          <div class="kpi-value">11</div>
+          <div class="kpi-sub">
+            <span class="truncate">Campinas, Santos, SJC, RP</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- BARRA DE CONTROLES, BUSCA & FILTROS -->
+      <section class="card p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2.5 flex-1 min-w-0">
+          <div class="relative flex-1 min-w-[200px] sm:min-w-[260px]">
+            <i class="ph-bold ph-magnifying-glass absolute left-3 top-2.5 text-slate-400"></i>
+            <input type="text" id="coop-filter-search" oninput="applyCoopFilters()" placeholder="Buscar cooperativa por nome, cidade ou CNPJ..." class="field w-full pl-9 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 font-medium"/>
+          </div>
+
+          <select id="coop-filter-regiao" onchange="applyCoopFilters()" class="field px-3 py-1.5 text-xs font-semibold text-slate-700">
+            <option value="ALL">Todas as Regiões (143)</option>
+            <option value="CAPITAL">Capital (São Paulo - 71)</option>
+            <option value="RMSP">Grande SP / RMSP (61)</option>
+            <option value="LITORAL">Baixada Santista / Litoral</option>
+            <option value="INTERIOR">Interior do Estado</option>
+          </select>
+
+          <select id="coop-filter-status" onchange="applyCoopFilters()" class="field px-3 py-1.5 text-xs font-semibold text-slate-700">
+            <option value="ATIVA" selected>Apenas Ativas (87)</option>
+            <option value="ALL">Todas as Situações</option>
+          </select>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+          <span class="text-xs text-slate-500 font-medium" id="coop-results-count">Exibindo 143 cooperativas</span>
+
+          <div class="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+            <button id="coop-view-cards-btn" onclick="setCoopViewMode('cards')" class="px-2.5 py-1 text-xs font-bold rounded-md bg-white text-slate-900 shadow-xs flex items-center gap-1">
+              <i class="ph-bold ph-squares-four"></i>
+              <span class="hidden sm:inline">Cards</span>
+            </button>
+            <button id="coop-view-table-btn" onclick="setCoopViewMode('table')" class="px-2.5 py-1 text-xs font-semibold rounded-md text-slate-500 hover:text-slate-800 flex items-center gap-1">
+              <i class="ph-bold ph-table"></i>
+              <span class="hidden sm:inline">Tabela</span>
+            </button>
+          </div>
+
+          <a href="mapa_cooperativas_taxi_sp.html" target="_blank" class="btn bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs" title="Abrir Mapa GIS em tela cheia">
+            <i class="ph-bold ph-arrow-square-out"></i>
+            <span class="hidden md:inline">Mapa GIS Tela Cheia</span>
+          </a>
+
+          <button onclick="exportCoopCSV()" class="btn bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs">
+            <i class="ph-bold ph-download-simple"></i>
+            <span>Exportar CSV</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- TABELA & CARDS RESPONSIVOS DE COOPERATIVAS -->
+      <section class="card overflow-hidden">
+        <!-- MODO CARDS (Touch / Mobile Friendly) -->
+        <div id="coop-cards-wrapper" class="p-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+          <!-- Injetado dinamicamente via JS -->
+        </div>
+
+        <!-- MODO TABELA (Desktop tradicional) -->
+        <div id="coop-table-wrapper" class="overflow-x-auto hidden">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="bg-slate-50 text-slate-500 uppercase font-semibold text-[10px] tracking-wider border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-3">Cooperativa / Nome Fantasia</th>
+                <th class="py-3 px-3">Município / Região</th>
+                <th class="py-3 px-3 text-center">Situação</th>
+                <th class="py-3 px-3 text-right">Distância Sede</th>
+                <th class="py-3 px-3">Contato Institucional</th>
+                <th class="py-3 px-3">Posicionamento Estratégico</th>
+                <th class="py-3 px-3 text-center">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="coop-table-body" class="divide-y divide-slate-100 font-medium text-slate-700">
+              <!-- Injetado dinamicamente via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- PAGINAÇÃO -->
+        <div class="p-3 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs" id="coop-pagination">
+          <!-- Controles de paginação dinâmicos -->
+        </div>
+      </section>
+
+    </div>
+
   </main>
 
   <!-- ===================================================================== -->
   <!-- MODAL / DOSSIÊ 360° DO MOTORISTA                                      -->
   <!-- ===================================================================== -->
-  <div id="driver-modal" class="fixed inset-0 z-[1000] bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5">
-    <div class="bg-white w-full max-w-4xl max-h-[92vh] rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150" id="dossier-print-container">
+  <div id="driver-modal" onclick="if(event.target === this) closeModal()" class="fixed inset-0 z-[1000] bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-0 sm:p-5">
+    <div class="bg-white w-full max-w-full sm:max-w-4xl h-full sm:h-auto max-h-[100dvh] sm:max-h-[92vh] rounded-none sm:rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150" id="dossier-print-container">
       
       <!-- MODAL HEADER -->
-      <div class="p-5 bg-slate-900 text-white flex items-start justify-between border-b border-slate-800">
-        <div class="flex items-center space-x-3.5">
-          <div class="w-11 h-11 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xl flex items-center justify-center" id="modal-avatar">
+      <div class="p-3.5 sm:p-5 bg-slate-900 text-white flex items-start justify-between border-b border-slate-800">
+        <div class="flex items-center space-x-3 min-w-0">
+          <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 font-bold text-lg sm:text-xl flex items-center justify-center shrink-0" id="modal-avatar">
             CT
           </div>
-          <div>
-            <div class="flex flex-wrap items-center gap-2">
-              <h3 class="text-base sm:text-lg font-bold text-white tracking-tight" id="modal-name">Nome do Motorista</h3>
-              <span id="modal-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-700">
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <h3 class="text-sm sm:text-lg font-bold text-white tracking-tight truncate" id="modal-name">Nome do Motorista</h3>
+              <span id="modal-status-badge" class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-medium uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-700">
                 Contemplado
               </span>
-              <span id="modal-supl-badge" class="px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-700 hidden">
+              <span id="modal-supl-badge" class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-medium uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-700 hidden">
                 Suplente Alta Probabilidade
               </span>
             </div>
-            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 mt-1">
+            <div class="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-0.5 text-[11px] sm:text-xs text-slate-400 mt-0.5">
               <span id="modal-cpf-top">CPF: —</span>
               <span>•</span>
               <span id="modal-condutax-top">Condutax: —</span>
-              <span>•</span>
-              <span id="modal-id-top">ID: —</span>
+              <span class="hidden sm:inline">•</span>
+              <span id="modal-id-top" class="hidden sm:inline">ID: —</span>
             </div>
           </div>
         </div>
-        <button onclick="closeModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition text-xl">
+        <button onclick="closeModal()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition text-2xl shrink-0" title="Fechar">
           <i class="ph-bold ph-x"></i>
         </button>
       </div>
 
       <!-- MODAL BODY (SCROLLABLE DOSSIÊ) -->
-      <div class="p-5 overflow-y-auto custom-scrollbar space-y-4 text-xs flex-1">
+      <div class="p-3.5 sm:p-5 overflow-y-auto custom-scrollbar space-y-3 sm:space-y-4 text-xs flex-1">
         
         <!-- CARD 1: STATUS, SCORE & SUCESSO -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -1721,18 +2079,18 @@ __LINHAS_ABERTOS__
       </div>
 
       <!-- MODAL FOOTER -->
-      <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-2">
-          <a id="modal-btn-wpp-ready" href="#" target="_blank" class="btn bg-emerald-600 hover:bg-emerald-500 text-white">
-            <i class="ph-bold ph-whatsapp-logo text-sm"></i>
-            <span>Disparar WhatsApp (Mensagem Pronta)</span>
+      <div class="p-3 sm:p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <a id="modal-btn-wpp-ready" href="#" target="_blank" class="flex-1 sm:flex-none btn bg-emerald-600 hover:bg-emerald-500 text-white py-2 font-bold justify-center text-xs">
+            <i class="ph-bold ph-whatsapp-logo text-base mr-1"></i>
+            <span>Disparar WhatsApp</span>
           </a>
-          <button onclick="window.print()" class="btn bg-slate-800 hover:bg-slate-700 text-white">
+          <button onclick="window.print()" class="btn bg-slate-800 hover:bg-slate-700 text-white hidden sm:inline-flex">
             <i class="ph-bold ph-printer"></i>
             <span>Imprimir Ficha Dossiê</span>
           </button>
         </div>
-        <button onclick="closeModal()" class="btn bg-slate-200 text-slate-800 hover:bg-slate-300">
+        <button onclick="closeModal()" class="btn bg-slate-200 text-slate-800 hover:bg-slate-300 w-full sm:w-auto">
           Fechar Dossiê
         </button>
       </div>
@@ -1743,38 +2101,38 @@ __LINHAS_ABERTOS__
   <!-- ===================================================================== -->
   <!-- MODAL / DOSSIÊ 360° DO CLIENTE CORPORATIVO B2B                        -->
   <!-- ===================================================================== -->
-  <div id="corp-dossier-modal" class="fixed inset-0 z-[1000] bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5">
-    <div class="bg-white w-full max-w-4xl max-h-[92vh] rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+  <div id="corp-dossier-modal" onclick="if(event.target === this) closeCorpModal()" class="fixed inset-0 z-[1000] bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-0 sm:p-5">
+    <div class="bg-white w-full max-w-full sm:max-w-4xl h-full sm:h-auto max-h-[100dvh] sm:max-h-[92vh] rounded-none sm:rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
       
       <!-- MODAL HEADER -->
-      <div class="p-5 bg-gradient-to-r from-purple-950 via-slate-900 to-purple-950 text-white flex items-start justify-between border-b border-slate-800">
-        <div class="flex items-center space-x-3.5">
-          <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-500 text-white font-black text-2xl flex items-center justify-center shadow-lg shadow-purple-500/20" id="corp-modal-avatar">
+      <div class="p-3.5 sm:p-5 bg-gradient-to-r from-purple-950 via-slate-900 to-purple-950 text-white flex items-start justify-between border-b border-slate-800">
+        <div class="flex items-center space-x-3 min-w-0">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-500 text-white font-black text-xl sm:text-2xl flex items-center justify-center shadow-lg shadow-purple-500/20 shrink-0" id="corp-modal-avatar">
             🏢
           </div>
-          <div>
-            <div class="flex flex-wrap items-center gap-2">
-              <h3 class="text-base sm:text-lg font-bold text-white tracking-tight" id="corp-modal-name">Nome do Prospect</h3>
-              <span id="corp-modal-tier-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30">
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <h3 class="text-sm sm:text-lg font-bold text-white tracking-tight truncate" id="corp-modal-name">Nome do Prospect</h3>
+              <span id="corp-modal-tier-badge" class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30">
                 Tier A
               </span>
-              <span id="corp-modal-score-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              <span id="corp-modal-score-badge" class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                 Score: 95 pts
               </span>
-              <span id="corp-modal-vuln-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-500/20 text-red-300 border border-red-500/30">
+              <span id="corp-modal-vuln-badge" class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-red-500/20 text-red-300 border border-red-500/30">
                 Alta Vulnerabilidade
               </span>
             </div>
-            <p class="text-xs text-slate-300 mt-1" id="corp-modal-subtitle">Segmento &bull; Endereço</p>
+            <p class="text-[11px] sm:text-xs text-slate-300 mt-0.5 truncate" id="corp-modal-subtitle">Segmento &bull; Endereço</p>
           </div>
         </div>
-        <button onclick="closeCorpModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition">
-          <i class="ph-bold ph-x text-base"></i>
+        <button onclick="closeCorpModal()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition text-2xl shrink-0" title="Fechar">
+          <i class="ph-bold ph-x"></i>
         </button>
       </div>
 
       <!-- MODAL BODY (SCROLLÁVEL) -->
-      <div class="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-4 text-xs">
+      <div class="p-3.5 sm:p-5 overflow-y-auto custom-scrollbar flex-1 space-y-3 sm:space-y-4 text-xs">
         
         <!-- GRID DE CARDS ESTRATÉGICOS -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
@@ -1965,17 +2323,187 @@ __LINHAS_ABERTOS__
       </div>
 
       <!-- MODAL FOOTER -->
-      <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+      <div class="p-3 sm:p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <div class="flex items-center gap-2">
           <span class="text-[11px] text-slate-500" id="corp-modal-footer-id">ID Prospect: CORP-000</span>
         </div>
-        <button onclick="closeCorpModal()" class="btn bg-slate-200 text-slate-800 hover:bg-slate-300">
+        <button onclick="closeCorpModal()" class="btn bg-slate-200 text-slate-800 hover:bg-slate-300 w-full sm:w-auto">
           Fechar Dossiê B2B
         </button>
       </div>
 
     </div>
   </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL / DOSSIÊ 360° DA COOPERATIVA DE TÁXI SP                         -->
+  <!-- ===================================================================== -->
+  <div id="coop-dossier-modal" onclick="if(event.target === this) closeCoopModal()" class="fixed inset-0 z-[1000] bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-0 sm:p-5">
+    <div class="bg-white w-full max-w-full sm:max-w-3xl h-full sm:h-auto max-h-[100dvh] sm:max-h-[90vh] rounded-none sm:rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- MODAL HEADER -->
+      <div class="p-3.5 sm:p-5 bg-gradient-to-r from-amber-950 via-slate-900 to-amber-950 text-white flex items-start justify-between border-b border-slate-800">
+        <div class="flex items-center space-x-3 min-w-0">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-600 text-slate-950 font-black text-xl sm:text-2xl flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0" id="coop-modal-avatar">
+            🚕
+          </div>
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <h3 class="text-sm sm:text-lg font-bold text-white tracking-tight truncate" id="coop-modal-nome">Nome da Cooperativa</h3>
+              <span id="coop-modal-st-badge" class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                Ativa
+              </span>
+              <span id="coop-modal-reg-badge" class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                Capital
+              </span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-300 mt-0.5 truncate" id="coop-modal-razao">Razão Social</p>
+          </div>
+        </div>
+        <button onclick="closeCoopModal()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition text-2xl shrink-0" title="Fechar">
+          <i class="ph-bold ph-x"></i>
+        </button>
+      </div>
+
+      <!-- MODAL BODY -->
+      <div class="p-3.5 sm:p-5 overflow-y-auto custom-scrollbar flex-1 space-y-3 sm:space-y-4 text-xs">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <!-- CARD 1: DADOS CADASTRAIS -->
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <span class="text-[10px] uppercase font-bold text-slate-600 tracking-wider flex items-center gap-1">
+              <i class="ph-bold ph-identification-card text-sm text-amber-600"></i>
+              <span>Dados Cadastrais & CNPJ</span>
+            </span>
+            <div class="space-y-1.5 pt-1 border-t border-slate-200">
+              <div>
+                <span class="eyebrow">CNPJ Receita Federal</span>
+                <span id="coop-modal-cnpj" class="font-mono font-bold text-slate-900 block">—</span>
+              </div>
+              <div>
+                <span class="eyebrow">Município / Estado</span>
+                <span id="coop-modal-muni" class="font-bold text-slate-800 block">—</span>
+              </div>
+              <div>
+                <span class="eyebrow">Endereço Completo</span>
+                <span id="coop-modal-end" class="font-semibold text-slate-700 leading-snug block">—</span>
+              </div>
+              <div>
+                <span class="eyebrow">CEP / Bairro</span>
+                <span id="coop-modal-cep" class="text-slate-600 block">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 2: POSICIONAMENTO E LOGÍSTICA -->
+          <div class="p-3.5 rounded-xl bg-amber-50/50 border border-amber-200 space-y-2">
+            <span class="text-[10px] uppercase font-bold text-amber-800 tracking-wider flex items-center gap-1">
+              <i class="ph-bold ph-compass text-sm text-amber-600"></i>
+              <span>Logística & Relação com a Chame Táxi</span>
+            </span>
+            <div class="space-y-1.5 pt-1 border-t border-amber-200/60">
+              <div>
+                <span class="eyebrow">Distância da Sede Vital Brasil (Butantã)</span>
+                <span id="coop-modal-dist" class="font-black text-amber-700 text-sm block">—</span>
+              </div>
+              <div>
+                <span class="eyebrow">Tipo de Operação</span>
+                <span id="coop-modal-tipo" class="font-bold text-slate-800 block">—</span>
+              </div>
+              <div>
+                <span class="eyebrow">Classificação Estratégica</span>
+                <span id="coop-modal-pos" class="font-bold text-indigo-700 leading-tight block">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: CONTATOS INSTITUCIONAIS -->
+        <div class="p-3.5 rounded-xl bg-emerald-50/50 border border-emerald-200 space-y-2">
+          <span class="text-[10px] uppercase font-bold text-emerald-800 tracking-wider flex items-center gap-1">
+            <i class="ph-bold ph-phone-call text-sm text-emerald-600"></i>
+            <span>Canais de Contato Institucional</span>
+          </span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-emerald-200/60">
+            <div>
+              <span class="eyebrow">Telefone Principal</span>
+              <span id="coop-modal-tel" class="font-bold text-slate-900 block">—</span>
+            </div>
+            <div>
+              <span class="eyebrow">E-mail Institucional</span>
+              <span id="coop-modal-email" class="font-mono text-emerald-700 block truncate">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4: AÇÕES RÁPIDAS -->
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+          <span class="text-[10px] uppercase font-bold text-slate-600 tracking-wider block">Ações Operacionais</span>
+          <div class="flex flex-wrap gap-2">
+            <button id="coop-modal-btn-locate" onclick="locateCurrentCoopOnMap()" class="btn bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold">
+              <i class="ph-bold ph-crosshair"></i>
+              <span>Ver no Mapa GIS</span>
+            </button>
+            <a id="coop-modal-link-maps" href="#" target="_blank" class="btn bg-blue-600 hover:bg-blue-500 text-white font-bold">
+              <i class="ph-bold ph-navigation-arrow"></i>
+              <span>Rota Google Maps ↗</span>
+            </a>
+            <a id="coop-modal-link-tel" href="#" class="btn bg-emerald-600 hover:bg-emerald-500 text-white font-bold">
+              <i class="ph-bold ph-phone"></i>
+              <span id="coop-modal-tel-txt">Ligar</span>
+            </a>
+            <a id="coop-modal-link-email" href="#" class="btn bg-slate-800 hover:bg-slate-700 text-white font-bold">
+              <i class="ph-bold ph-envelope"></i>
+              <span>Enviar E-mail</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MODAL FOOTER -->
+      <div class="p-3 sm:p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+        <span class="text-[11px] text-slate-500" id="coop-modal-footer-id">ID: COOP-SP-000</span>
+        <button onclick="closeCoopModal()" class="btn bg-slate-200 text-slate-800 hover:bg-slate-300">
+          Fechar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BARRA DE NAVEGAÇÃO INFERIOR PARA CELULAR / ANDROID -->
+  <nav id="mobile-bottom-nav" class="fixed bottom-0 inset-x-0 z-[800] bg-slate-900/95 backdrop-blur-md border-t border-slate-800 flex items-stretch justify-around py-1 px-1 lg:hidden shadow-2xl safe-area-bottom">
+    <button onclick="switchMainTab('master')" id="mob-nav-master" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-amber-400 font-bold transition text-xs active:scale-95">
+      <i class="ph-bold ph-table text-lg sm:text-xl mb-0.5"></i>
+      <span class="text-[9px] sm:text-[10px] leading-tight truncate text-center max-w-full">Base Mestre</span>
+    </button>
+    <button onclick="switchMainTab('crm')" id="mob-nav-crm" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs active:scale-95">
+      <div class="relative inline-flex items-center justify-center">
+        <i class="ph-bold ph-whatsapp-logo text-lg sm:text-xl mb-0.5 text-emerald-400"></i>
+        <span class="absolute -top-1 -right-2 bg-emerald-500 text-slate-950 font-black text-[8px] sm:text-[9px] px-1 rounded-full">2.4k</span>
+      </div>
+      <span class="text-[9px] sm:text-[10px] leading-tight truncate text-center max-w-full">CRM Zap</span>
+    </button>
+    <button onclick="switchMainTab('map')" id="mob-nav-map" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs active:scale-95">
+      <i class="ph-bold ph-map-pin text-lg sm:text-xl mb-0.5 text-sky-400"></i>
+      <span class="text-[9px] sm:text-[10px] leading-tight truncate text-center max-w-full">Mapa GIS</span>
+    </button>
+    <button onclick="switchMainTab('corp')" id="mob-nav-corp" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs active:scale-95">
+      <div class="relative inline-flex items-center justify-center">
+        <i class="ph-bold ph-buildings text-lg sm:text-xl mb-0.5 text-purple-400"></i>
+        <span class="absolute -top-1 -right-2 bg-purple-500 text-white font-bold text-[8px] sm:text-[9px] px-1 rounded-full">190</span>
+      </div>
+      <span class="text-[9px] sm:text-[10px] leading-tight truncate text-center max-w-full">B2B Corp</span>
+    </button>
+    <button onclick="switchMainTab('coops')" id="mob-nav-coops" class="flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs active:scale-95">
+      <div class="relative inline-flex items-center justify-center">
+        <i class="ph-bold ph-compass text-lg sm:text-xl mb-0.5 text-amber-400"></i>
+        <span class="absolute -top-1 -right-2 bg-amber-500 text-slate-950 font-bold text-[8px] sm:text-[9px] px-1 rounded-full">143</span>
+      </div>
+      <span class="text-[9px] sm:text-[10px] leading-tight truncate text-center max-w-full">Coops SP</span>
+    </button>
+  </nav>
 
   <!-- SCRIPT & DADOS EMBUTIDOS -->
   <script>
@@ -1987,6 +2515,7 @@ __LINHAS_ABERTOS__
     const ABERTOS = __ABERTOS_PLACEHOLDER__;
     const HOSPITAIS_5KM = __HOSPITAIS_PLACEHOLDER__;
     const EMPRESAS_5KM = __EMPRESAS_PLACEHOLDER__;
+    const COOPS_DATA = __COOPERATIVAS_PLACEHOLDER__;
 
     const ALL_CORP_CLIENTS = [
       ...HOSPITAIS_5KM.map(h => ({ ...h, isHosp: true, tipo_entidade: 'Hospital / Polo Saúde', setor: h.tipo || 'Hospital / Saúde' })),
@@ -2003,6 +2532,12 @@ __LINHAS_ABERTOS__
     const pageSize = 50;
     let corpPageSize = 25;
     let currentCorpModalId = null;
+
+    // Estados de modo de visualização (Cards no Mobile / Tabela no Desktop)
+    let masterViewMode = (window.innerWidth < 768) ? 'cards' : 'table';
+    let crmViewMode = (window.innerWidth < 768) ? 'cards' : 'table';
+    let corpViewMode = (window.innerWidth < 768) ? 'cards' : 'table';
+    let mapScrollLocked = (window.innerWidth < 1024); // no celular inicia travado para rolar a página com fluidez
 
     let leafletMapInstance = null;
     let mapMarkersLayer = null;
@@ -2054,20 +2589,104 @@ __LINHAS_ABERTOS__
       document.body.classList.remove('overflow-hidden');
     }
 
+    // ALTERNAR MODOS DE VISUALIZAÇÃO: CARDS VS TABELA
+    function setMasterViewMode(mode) {
+      masterViewMode = mode;
+      updateViewModeUI('master', mode);
+      renderMasterTable();
+    }
+
+    function setCRMViewMode(mode) {
+      crmViewMode = mode;
+      updateViewModeUI('crm', mode);
+      renderCRMTable();
+    }
+
+    function setCorpViewMode(mode) {
+      corpViewMode = mode;
+      updateViewModeUI('corp', mode);
+      renderCorpTable();
+    }
+
+    function updateViewModeUI(module, mode) {
+      const btnCards = document.getElementById(`view-mode-cards-${module}`);
+      const btnTable = document.getElementById(`view-mode-table-${module}`);
+      if (btnCards && btnTable) {
+        if (mode === 'cards') {
+          btnCards.className = "px-2.5 py-1 rounded text-xs font-bold transition flex items-center gap-1 bg-white text-slate-900 shadow-sm";
+          btnTable.className = "px-2.5 py-1 rounded text-xs font-semibold transition flex items-center gap-1 text-slate-500 hover:text-slate-900";
+        } else {
+          btnTable.className = "px-2.5 py-1 rounded text-xs font-bold transition flex items-center gap-1 bg-white text-slate-900 shadow-sm";
+          btnCards.className = "px-2.5 py-1 rounded text-xs font-semibold transition flex items-center gap-1 text-slate-500 hover:text-slate-900";
+        }
+      }
+    }
+
+    // ALTERNAR FILTROS COLAPSÁVEIS NO MOBILE
+    function toggleMobileFilters(module) {
+      const panel = document.getElementById(`filter-panel-${module}`);
+      const text = document.getElementById(`btn-toggle-filters-text-${module}`);
+      if (panel) {
+        panel.classList.toggle('hidden');
+        if (text) {
+          text.innerText = panel.classList.contains('hidden') ? 'Filtros' : 'Ocultar Filtros';
+        }
+      }
+    }
+
+    // TRAVAR/DESTRAVAR ROLAGEM DO MAPA NO CELULAR
+    let mapLegendVisible = (window.innerWidth >= 1024);
+    function toggleMapLegend() {
+      const leg = document.getElementById('map-floating-legend');
+      const txt = document.getElementById('toggle-legend-text');
+      if (!leg) return;
+      mapLegendVisible = !mapLegendVisible;
+      if (mapLegendVisible) {
+        leg.classList.remove('hidden');
+        if (txt) txt.innerText = 'Fechar Legenda';
+      } else {
+        leg.classList.add('hidden');
+        if (txt) txt.innerText = 'Legenda';
+      }
+    }
+
+    function toggleMapScrollLock() {
+      if (!leafletMapInstance) return;
+      mapScrollLocked = !mapScrollLocked;
+      const btnText = document.getElementById('map-lock-text');
+      const btnIcon = document.getElementById('map-lock-icon');
+
+      if (mapScrollLocked) {
+        leafletMapInstance.dragging.disable();
+        leafletMapInstance.touchZoom.disable();
+        if (btnText) btnText.innerText = 'Rolagem Página (Travar Mapa)';
+        if (btnIcon) btnIcon.className = 'ph-bold ph-lock-key';
+      } else {
+        leafletMapInstance.dragging.enable();
+        leafletMapInstance.touchZoom.enable();
+        if (btnText) btnText.innerText = 'Interagir com o Mapa (Arrastar)';
+        if (btnIcon) btnIcon.className = 'ph-bold ph-hand-pointing';
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       try {
         if (window.innerWidth >= 1024 && localStorage.getItem('sidebar_collapsed') === 'true') {
           document.body.classList.add('sidebar-collapsed');
         }
       } catch(e) {}
+      updateViewModeUI('master', masterViewMode);
+      updateViewModeUI('crm', crmViewMode);
+      updateViewModeUI('corp', corpViewMode);
       initCharts();
       applyFilters();
       applyCRMFilters();
       updateCRMStats();
       applyCorpFilters();
+      applyCoopFilters();
     });
 
-    // TROCA DE ABAS PRINCIPAIS
+    // TROCA DE ABAS PRINCIPAIS (COM ATUALIZAÇÃO DA BOTTOM NAV MOBILE)
     function switchMainTab(tab) {
       currentMainTab = tab;
       if (window.innerWidth < 1024) {
@@ -2078,37 +2697,64 @@ __LINHAS_ABERTOS__
       const tabCRM = document.getElementById('tab-content-crm');
       const tabMap = document.getElementById('tab-content-map');
       const tabCorp = document.getElementById('tab-content-corp');
+      const tabCoops = document.getElementById('tab-content-coops');
       
       const btnMaster = document.getElementById('nav-btn-master');
       const btnCRM = document.getElementById('nav-btn-crm');
       const btnMap = document.getElementById('nav-btn-map');
       const btnCorp = document.getElementById('nav-btn-corp');
+      const btnCoops = document.getElementById('nav-btn-coops');
 
       tabMaster.classList.add('hidden');
       tabCRM.classList.add('hidden');
       tabMap.classList.add('hidden');
       if (tabCorp) tabCorp.classList.add('hidden');
+      if (tabCoops) tabCoops.classList.add('hidden');
 
       btnMaster.className="nav-tab text-slate-300 hover:text-white";
       btnCRM.className="nav-tab text-slate-300 hover:text-white";
       btnMap.className="nav-tab text-slate-300 hover:text-white";
       if (btnCorp) btnCorp.className="nav-tab text-slate-300 hover:text-white";
+      if (btnCoops) btnCoops.className="nav-tab text-slate-300 hover:text-white";
+
+      // Atualiza Bottom Nav para celular
+      const mobMaster = document.getElementById('mob-nav-master');
+      const mobCRM = document.getElementById('mob-nav-crm');
+      const mobMap = document.getElementById('mob-nav-map');
+      const mobCorp = document.getElementById('mob-nav-corp');
+      const mobCoops = document.getElementById('mob-nav-coops');
+
+      if (mobMaster) mobMaster.className = "flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs";
+      if (mobCRM) mobCRM.className = "flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs relative";
+      if (mobMap) mobMap.className = "flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs";
+      if (mobCorp) mobCorp.className = "flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs relative";
+      if (mobCoops) mobCoops.className = "flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-slate-400 font-semibold transition text-xs relative";
 
       if (tab === 'master') {
         tabMaster.classList.remove('hidden');
         btnMaster.className="nav-tab is-active bg-amber-500 text-slate-950";
+        if (mobMaster) mobMaster.className = "flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-amber-400 font-bold transition text-xs bg-slate-800/80 active:scale-95";
       } else if (tab === 'crm') {
         tabCRM.classList.remove('hidden');
         btnCRM.className="nav-tab is-active bg-emerald-500 text-slate-950";
+        if (mobCRM) mobCRM.className = "flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-emerald-400 font-bold transition text-xs bg-slate-800/80 active:scale-95";
       } else if (tab === 'map') {
         tabMap.classList.remove('hidden');
         btnMap.className="nav-tab is-active bg-sky-500 text-slate-950";
+        if (mobMap) mobMap.className = "flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-sky-400 font-bold transition text-xs bg-slate-800/80 active:scale-95";
         initLeafletMap();
       } else if (tab === 'corp') {
         if (tabCorp) tabCorp.classList.remove('hidden');
         if (btnCorp) btnCorp.className="nav-tab is-active bg-purple-600 text-white";
+        if (mobCorp) mobCorp.className = "flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-purple-400 font-bold transition text-xs bg-slate-800/80 active:scale-95";
         applyCorpFilters();
+      } else if (tab === 'coops') {
+        if (tabCoops) tabCoops.classList.remove('hidden');
+        if (btnCoops) btnCoops.className="nav-tab is-active bg-amber-500 text-slate-950";
+        if (mobCoops) mobCoops.className = "flex-1 min-w-0 flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-amber-400 font-bold transition text-xs bg-slate-800/80 active:scale-95";
+        applyCoopFilters();
       }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // =========================================================================
@@ -2210,9 +2856,18 @@ __LINHAS_ABERTOS__
         mapMarkersLayer = L.layerGroup().addTo(leafletMapInstance);
         hospitalsMarkersLayer = L.layerGroup().addTo(leafletMapInstance);
         empresasMarkersLayer = L.layerGroup().addTo(leafletMapInstance);
+        cooperativasMarkersLayer = L.layerGroup().addTo(leafletMapInstance);
         renderMapPoints(MAP_PONTOS);
         renderHospitalMarkers(HOSPITAIS_5KM);
         renderEmpresasMarkers(EMPRESAS_5KM);
+        renderCooperativasMarkers(COOPS_DATA);
+
+        // Se estiver em tela pequena, desativa dragging e touchZoom por padrão para não travar a rolagem vertical
+        if (mapScrollLocked) {
+          leafletMapInstance.dragging.disable();
+          leafletMapInstance.touchZoom.disable();
+        }
+
         setTimeout(() => { if (leafletMapInstance) leafletMapInstance.invalidateSize(); }, 250);
       } catch (err) {
         console.error("Erro na inicialização do mapa Leaflet:", err);
@@ -2787,6 +3442,13 @@ __LINHAS_ABERTOS__
         const aces = HOSPITAIS_5KM.filter(h => h.acessivel === 'Alta' || h.acessivel === 'Crítica');
         renderHospitalMarkers(aces);
         renderHospitalsList(aces);
+      } else if (sel === 'COOPERATIVAS') {
+        if (mapMarkersLayer) mapMarkersLayer.clearLayers();
+        if (hospitalsMarkersLayer) hospitalsMarkersLayer.clearLayers();
+        if (empresasMarkersLayer) empresasMarkersLayer.clearLayers();
+        renderCooperativasMarkers(COOPS_DATA);
+        renderCooperativasList(COOPS_DATA);
+        if (leafletMapInstance) leafletMapInstance.setView([-23.5714, -46.7081], 10);
       } else {
         const filtered = MAP_PONTOS.filter(p => p.rota.includes(sel));
         renderMapPoints(filtered);
@@ -2889,7 +3551,18 @@ __LINHAS_ABERTOS__
 
     function renderCRMTable() {
       const tbody = document.getElementById('crm-table-body');
+      const cardsWrapper = document.getElementById('crm-cards-wrapper');
+      const tableWrapper = document.getElementById('crm-table-wrapper');
       tbody.innerHTML = '';
+      if (cardsWrapper) cardsWrapper.innerHTML = '';
+
+      if (crmViewMode === 'cards') {
+        if (cardsWrapper) cardsWrapper.classList.remove('hidden');
+        if (tableWrapper) tableWrapper.classList.add('hidden');
+      } else {
+        if (cardsWrapper) cardsWrapper.classList.add('hidden');
+        if (tableWrapper) tableWrapper.classList.remove('hidden');
+      }
 
       const total = filteredCRM.length;
       const start = (currentCRMPage - 1) * pageSize;
@@ -2897,16 +3570,84 @@ __LINHAS_ABERTOS__
 
       if (pageData.length === 0) {
         tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Nenhum motorista encontrado no CRM com os filtros aplicados.</td></tr>`;
+        if (cardsWrapper) {
+          cardsWrapper.innerHTML = `<div class="p-8 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">Nenhum motorista encontrado no CRM com os filtros aplicados.</div>`;
+        }
         document.getElementById('crm-pagination-info').innerText = "0 de 0 leads";
         return;
       }
 
       pageData.forEach(r => {
-        const tr = document.createElement('tr');
-        tr.className="hover:bg-slate-50/80 transition";
-
         const savedStatus = getLeadSavedStatus(r.id);
         const savedNote = getLeadSavedNote(r.id);
+
+        // MODO CARDS (Mobile touch friendly para prospecção no WhatsApp)
+        if (cardsWrapper) {
+          const card = document.createElement('div');
+          card.className = "bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs space-y-3";
+          
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="font-bold text-slate-900 text-sm leading-snug">${r.nom}</div>
+                <div class="text-[11px] text-slate-500 font-mono mt-0.5">CPF: ${r.cpf} &bull; ${r.bairro || 'SP'}</div>
+              </div>
+              <div class="text-right flex-shrink-0">
+                <span class="inline-block font-black text-xs px-2.5 py-0.5 rounded-full ${r.score >= 80 ? 'bg-rose-100 text-rose-700 ring-1 ring-rose-300' : (r.score >= 65 ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700')}">
+                  ${r.score} pts
+                </span>
+                <div class="text-[9px] font-bold ${r.score >= 80 ? 'text-rose-600' : (r.score >= 65 ? 'text-amber-600' : 'text-slate-500')} mt-0.5">
+                  ${r.score >= 80 ? '🥇 Tier 1' : (r.score >= 65 ? '🥈 Tier 2' : (r.score >= 50 ? '🥉 Tier 3' : 'Tier 4'))}
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-2 rounded-lg border border-slate-100">
+              <div>
+                <span class="eyebrow block">Status / Edital</span>
+                <span class="font-bold text-[11px] ${r.status.includes('CONTEMPLADO') ? 'text-emerald-700' : 'text-amber-700'}">
+                  ${r.ed ? 'Edital ' + r.ed : 'DOC'} &bull; ${r.status.includes('CONTEMPLADO') ? 'Contemplado' : 'Suplente'}
+                </span>
+              </div>
+              <div>
+                <span class="eyebrow block">Distância Sede</span>
+                <span class="font-bold text-indigo-700 text-[11px]">${r.dist !== '—' ? r.dist + ' km' : '—'}</span>
+              </div>
+            </div>
+
+            <!-- CONTROLES DO OPERADOR CRM NO MOBILE -->
+            <div class="space-y-1.5">
+              <label class="eyebrow block">Status do Funil:</label>
+              <select onchange="setLeadSavedStatus('${r.id}', this.value)" class="field w-full px-2.5 py-2 font-semibold text-xs text-slate-800 bg-white">
+                <option value="1 - Novo Lead" ${savedStatus.includes('1 - Novo') ? 'selected' : ''}>1 - Novo Lead</option>
+                <option value="2 - Tentativa de Contato" ${savedStatus.includes('2 - Tentativa') ? 'selected' : ''}>2 - Tentativa de Contato</option>
+                <option value="3 - Contatado / Conversando" ${savedStatus.includes('3 - Contatado') ? 'selected' : ''}>3 - Contatado / Conversando</option>
+                <option value="4 - Agendou Visita na Sede" ${savedStatus.includes('4 - Agendou') ? 'selected' : ''}>4 - Agendou Visita na Sede</option>
+                <option value="5 - Filiado Cooperado" ${savedStatus.includes('5 - Filiado') ? 'selected' : ''}>5 - Filiado Cooperado ⭐</option>
+                <option value="6 - Sem Interesse" ${savedStatus.includes('6 - Sem') ? 'selected' : ''}>6 - Sem Interesse</option>
+              </select>
+              <input type="text" value="${savedNote}" onchange="setLeadSavedNote('${r.id}', this.value)" placeholder="Anotação rápida..." class="field w-full px-2.5 py-1.5 text-xs">
+            </div>
+
+            <!-- AÇÕES TOUCH RÁPIDAS: WHATSAPP 1-TAP + DOSSIÊ -->
+            <div class="flex items-center gap-2 pt-1 border-t border-slate-100">
+              ${r.wpp_url ? `
+                <a href="${r.wpp_url}" target="_blank" onclick="setLeadSavedStatus('${r.id}', '3 - Contatado / Conversando'); renderCRMTable();" class="flex-1 btn bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 text-xs rounded-lg shadow-sm flex items-center justify-center gap-1.5">
+                  <i class="ph-bold ph-whatsapp-logo text-base"></i>
+                  <span>Chamar no WhatsApp</span>
+                </a>
+              ` : `<div class="flex-1 text-slate-400 text-xs py-2 text-center bg-slate-50 rounded-lg">Sem telefone</div>`}
+              <button onclick="openDriverModal('${r.id}')" class="btn btn-ghost px-3 py-2.5 text-xs font-bold rounded-lg" title="Ver Dossiê">
+                <i class="ph-bold ph-identification-card text-base"></i>
+              </button>
+            </div>
+          `;
+          cardsWrapper.appendChild(card);
+        }
+
+        // MODO TABELA (Desktop tradicional)
+        const tr = document.createElement('tr');
+        tr.className="hover:bg-slate-50/80 transition";
 
         tr.innerHTML = `
           <td class="py-2.5 px-3">
@@ -3049,7 +3790,18 @@ __LINHAS_ABERTOS__
 
     function renderMasterTable() {
       const tbody = document.getElementById('table-body');
+      const cardsWrapper = document.getElementById('master-cards-wrapper');
+      const tableWrapper = document.getElementById('master-table-wrapper');
       tbody.innerHTML = '';
+      if (cardsWrapper) cardsWrapper.innerHTML = '';
+
+      if (masterViewMode === 'cards') {
+        if (cardsWrapper) cardsWrapper.classList.remove('hidden');
+        if (tableWrapper) tableWrapper.classList.add('hidden');
+      } else {
+        if (cardsWrapper) cardsWrapper.classList.add('hidden');
+        if (tableWrapper) tableWrapper.classList.remove('hidden');
+      }
 
       const total = filteredMaster.length;
       const start = (currentMasterPage - 1) * pageSize;
@@ -3057,11 +3809,84 @@ __LINHAS_ABERTOS__
 
       if (pageData.length === 0) {
         tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Nenhum motorista encontrado com os filtros selecionados.</td></tr>`;
+        if (cardsWrapper) {
+          cardsWrapper.innerHTML = `<div class="p-8 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">Nenhum motorista encontrado com os filtros selecionados.</div>`;
+        }
         document.getElementById('pagination-info').innerText = "0 de 0 registros";
         return;
       }
 
       pageData.forEach(r => {
+        const isContemplado = r.st.includes('CONTEMPLADO');
+        const isSuplenteTop = r.supl.includes('Alta Probabilidade');
+
+        // MODO CARDS (Mobile touch friendly)
+        if (cardsWrapper) {
+          const card = document.createElement('div');
+          card.className = "bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs space-y-2.5 active:bg-amber-50/30 transition";
+          card.onclick = (e) => {
+            if (!e.target.closest('button') && !e.target.closest('a')) {
+              openDriverModal(r.id);
+            }
+          };
+
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="font-bold text-slate-900 text-sm leading-snug">${r.nom}</div>
+                <div class="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
+                  <span>${r.bairro || 'São Paulo'}</span>
+                  <span>•</span>
+                  <span class="font-mono text-emerald-700 font-bold">${r.cpf ? 'CPF ' + r.cpf : 'Sem CPF'}</span>
+                </div>
+              </div>
+              <div class="text-right flex-shrink-0">
+                ${r.score ? `
+                  <span class="inline-block font-black text-xs px-2.5 py-0.5 rounded-full ${r.score >= 80 ? 'bg-rose-100 text-rose-700 ring-1 ring-rose-300' : (r.score >= 65 ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700')}">
+                    ${r.score} pts
+                  </span>
+                ` : '<span class="text-slate-300 text-xs">—</span>'}
+                <div class="text-[9px] font-bold text-slate-500 mt-0.5">${r.tier || ''}</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-2 rounded-lg border border-slate-100">
+              <div>
+                <span class="eyebrow block">Status / Fila</span>
+                <span class="font-bold text-[11px] ${isContemplado ? 'text-emerald-700' : (isSuplenteTop ? 'text-purple-700' : 'text-slate-700')}">
+                  ${isContemplado ? 'CONTEMPLADO' : (isSuplenteTop ? 'Suplente (' + r.fila + 'º)' : r.st)}
+                </span>
+              </div>
+              <div>
+                <span class="eyebrow block">Edital / Veículo</span>
+                <span class="text-[11px] text-slate-800 font-medium truncate block">${r.ed ? 'Edital ' + r.ed : 'DOC'} &bull; ${r.cat || 'Táxi'}</span>
+              </div>
+              <div>
+                <span class="eyebrow block">Distância Sede</span>
+                <span class="font-bold text-indigo-700 text-[11px]">${r.mei_dist ? r.mei_dist + ' km' : '—'}</span>
+              </div>
+              <div>
+                <span class="eyebrow block">Processo SEI</span>
+                <span class="text-[11px] text-slate-600 font-mono truncate block">${r.sei || '—'}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 pt-1 border-t border-slate-100">
+              <button onclick="openDriverModal('${r.id}')" class="flex-1 btn bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2 text-xs rounded-lg shadow-sm">
+                <i class="ph-bold ph-identification-card text-sm"></i>
+                <span>Ver Dossiê 360°</span>
+              </button>
+              ${r.tel1 ? `
+                <a href="https://wa.me/55${r.tel1.replace(/\\D/g, '')}?text=Ol%C3%A1%20${encodeURIComponent(r.nom)}%2C%20tudo%20bem%3F%20Aqui%20%C3%A9%20da%20Cooperativa%20Chame%20T%C3%A1xi." target="_blank" onclick="event.stopPropagation()" class="btn bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 text-xs rounded-lg shadow-sm" title="WhatsApp">
+                  <i class="ph-bold ph-whatsapp-logo text-base"></i>
+                </a>
+              ` : ''}
+            </div>
+          `;
+          cardsWrapper.appendChild(card);
+        }
+
+        // MODO TABELA (Desktop tradicional)
         const tr = document.createElement('tr');
         tr.className="hover:bg-amber-50/40 transition cursor-pointer";
         tr.onclick = (e) => {
@@ -3069,9 +3894,6 @@ __LINHAS_ABERTOS__
             openDriverModal(r.id);
           }
         };
-
-        const isContemplado = r.st.includes('CONTEMPLADO');
-        const isSuplenteTop = r.supl.includes('Alta Probabilidade');
 
         tr.innerHTML = `
           <td class="py-2.5 px-3">
@@ -3245,10 +4067,12 @@ __LINHAS_ABERTOS__
       }
 
       document.getElementById('driver-modal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
     }
 
     function closeModal() {
       document.getElementById('driver-modal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
     }
 
     // =========================================================================
@@ -3334,7 +4158,20 @@ __LINHAS_ABERTOS__
 
     function renderCorpTable() {
       const tbody = document.getElementById('corp-table-body');
+      const cardsWrapper = document.getElementById('corp-cards-wrapper');
+      const tableWrapper = document.getElementById('corp-table-wrapper');
       if (!tbody) return;
+
+      tbody.innerHTML = '';
+      if (cardsWrapper) cardsWrapper.innerHTML = '';
+
+      if (corpViewMode === 'cards') {
+        if (cardsWrapper) cardsWrapper.classList.remove('hidden');
+        if (tableWrapper) tableWrapper.classList.add('hidden');
+      } else {
+        if (cardsWrapper) cardsWrapper.classList.add('hidden');
+        if (tableWrapper) tableWrapper.classList.remove('hidden');
+      }
 
       const resultsCount = document.getElementById('corp-results-count');
       if (resultsCount) {
@@ -3354,6 +4191,14 @@ __LINHAS_ABERTOS__
             </td>
           </tr>
         `;
+        if (cardsWrapper) {
+          cardsWrapper.innerHTML = `
+            <div class="text-center py-10 text-slate-500 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+              <i class="ph-bold ph-buildings text-3xl mb-2 block text-slate-300"></i>
+              Nenhum cliente corporativo encontrado com os filtros selecionados.
+            </div>
+          `;
+        }
         return;
       }
 
@@ -3361,9 +4206,79 @@ __LINHAS_ABERTOS__
       pageData.forEach(item => {
         const isHosp = item.isHosp;
         const icon = isHosp ? '🏥' : '🏢';
-        const badgeColor = isHosp ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-blue-50 text-blue-700 border-blue-200';
         const tierBadge = item.tier.includes('Tier A') ? 'bg-purple-100 text-purple-800 border-purple-200' : 'bg-amber-100 text-amber-800 border-amber-200';
         const vulnBadge = item.mob_vuln === 'Alta' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200';
+
+        // MODO CARDS (Mobile touch friendly para B2B)
+        if (cardsWrapper) {
+          const card = document.createElement('div');
+          card.className = "bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs space-y-2.5 active:bg-purple-50/30 transition";
+          card.onclick = (e) => {
+            if (!e.target.closest('button') && !e.target.closest('a')) {
+              openCorpModal(item.id);
+            }
+          };
+
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-start gap-2.5 min-w-0 flex-1">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-base shrink-0 ${isHosp ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700'}">
+                  ${icon}
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-sm leading-snug line-clamp-1">${item.nome}</div>
+                  <div class="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
+                    <span>${item.bairro}</span>
+                    <span>•</span>
+                    <span class="text-indigo-700 font-bold">${item.dist} km sede</span>
+                  </div>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${tierBadge}">${item.tier.split(' ')[0]} ${item.tier.split(' ')[1]}</span>
+                <div class="text-[10px] font-bold text-amber-600 mt-0.5">${item.score} pts</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+              <div>
+                <span class="eyebrow block">Mobilidade Atual</span>
+                <span class="font-bold text-[11px] text-slate-800 line-clamp-1">${item.mob_forn}</span>
+                <span class="text-[9px] font-bold text-red-600">Vuln: ${item.mob_vuln}</span>
+              </div>
+              <div>
+                <span class="eyebrow block">Potencial Receita</span>
+                <span class="font-bold text-emerald-700 text-[11px]">${item.mob_rec.split('(')[0]}</span>
+                <span class="text-[10px] text-slate-500 block">${item.corridas.split(' ')[0]} corr/mês</span>
+              </div>
+              <div class="col-span-2 pt-1 border-t border-slate-200/60">
+                <span class="eyebrow block">Dor / Gargalo:</span>
+                <span class="text-[11px] text-rose-700 italic line-clamp-2">"${item.mob_dor}"</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 pt-1 border-t border-slate-100">
+              <button onclick="openCorpModal('${item.id}')" class="flex-1 btn bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 text-xs rounded-lg shadow-sm flex items-center justify-center gap-1">
+                <i class="ph-bold ph-files text-sm"></i>
+                <span>Dossiê 360°</span>
+              </button>
+              ${item.dec_linkedin ? `
+                <a href="${item.dec_linkedin}" target="_blank" onclick="event.stopPropagation()" class="btn bg-[#0a66c2] hover:bg-[#004182] text-white font-bold px-2.5 py-2 text-xs rounded-lg shadow-sm" title="LinkedIn">
+                  <i class="ph-bold ph-linkedin-logo text-sm"></i>
+                </a>
+              ` : ''}
+              ${item.dec_google ? `
+                <a href="${item.dec_google}" target="_blank" onclick="event.stopPropagation()" class="btn bg-slate-800 hover:bg-slate-700 text-white font-bold px-2.5 py-2 text-xs rounded-lg shadow-sm" title="Google Dork">
+                  <i class="ph-bold ph-google-logo text-sm"></i>
+                </a>
+              ` : ''}
+              <button onclick="locateCorpOnMap(${item.lat}, ${item.lon}, '${item.id}')" class="btn bg-sky-600 hover:bg-sky-500 text-white font-bold px-2.5 py-2 text-xs rounded-lg shadow-sm" title="Ver no Mapa">
+                <i class="ph-bold ph-map-pin text-sm"></i>
+              </button>
+            </div>
+          `;
+          cardsWrapper.appendChild(card);
+        }
 
         html += `
           <tr class="hover:bg-purple-50/40 transition cursor-pointer group" onclick="openCorpModal('${item.id}')">
@@ -3654,10 +4569,12 @@ __LINHAS_ABERTOS__
 
       // Show Modal
       document.getElementById('corp-dossier-modal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
     }
 
     function closeCorpModal() {
       document.getElementById('corp-dossier-modal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
       currentCorpModalId = null;
     }
 
@@ -3763,6 +4680,444 @@ __LINHAS_ABERTOS__
       const a = document.createElement("a");
       a.href = url;
       a.download = `clientes_corporativos_b2b_export_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // =========================================================================
+    // MÓDULO 5: COOPERATIVAS DE TÁXI DO ESTADO DE SÃO PAULO (JS NATIVO)
+    // =========================================================================
+    let filteredCoops = [...COOPS_DATA];
+    let coopCurrentPage = 1;
+    const coopPageSize = 24;
+    let coopViewMode = (window.innerWidth < 768) ? 'cards' : 'table';
+    let currentCoopModalId = null;
+    let isCooperativasVisible = true;
+    let cooperativasMarkersLayer = null;
+
+    function setCoopViewMode(mode) {
+      coopViewMode = mode;
+      const cardsBtn = document.getElementById('coop-view-cards-btn');
+      const tableBtn = document.getElementById('coop-view-table-btn');
+      if (mode === 'cards') {
+        if (cardsBtn) { cardsBtn.className = "px-2.5 py-1 text-xs font-bold rounded-md bg-white text-slate-900 shadow-xs flex items-center gap-1"; }
+        if (tableBtn) { tableBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md text-slate-500 hover:text-slate-800 flex items-center gap-1"; }
+      } else {
+        if (cardsBtn) { cardsBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md text-slate-500 hover:text-slate-800 flex items-center gap-1"; }
+        if (tableBtn) { tableBtn.className = "px-2.5 py-1 text-xs font-bold rounded-md bg-white text-slate-900 shadow-xs flex items-center gap-1"; }
+      }
+      renderCoopTable();
+    }
+
+    function toggleCooperativasLayer() {
+      isCooperativasVisible = !isCooperativasVisible;
+      const btn = document.getElementById('btn-toggle-cooperativas');
+      if (isCooperativasVisible) {
+        if (cooperativasMarkersLayer) leafletMapInstance.addLayer(cooperativasMarkersLayer);
+        if (btn) btn.className = "btn bg-amber-600 hover:bg-amber-500 text-white";
+      } else {
+        if (cooperativasMarkersLayer) leafletMapInstance.removeLayer(cooperativasMarkersLayer);
+        if (btn) btn.className = "btn bg-slate-300 hover:bg-slate-400 text-slate-700";
+      }
+    }
+
+    function getCoopMarkerColor(c) {
+      if (c.cnpj.startsWith('47.136.430') || c.pos.includes('Nossa Sede')) return '#f59e0b';
+      if (c.muni === 'SAO PAULO') return '#ef4444';
+      if (c.reg.includes('RMSP') || c.reg.includes('ABC') || c.reg.includes('Oeste')) return '#3b82f6';
+      return '#10b981';
+    }
+
+    function renderCooperativasMarkers(coops) {
+      if (!cooperativasMarkersLayer) return;
+      cooperativasMarkersLayer.clearLayers();
+
+      coops.forEach(c => {
+        if (!c.lat || !c.lon) return;
+        const isChame = c.cnpj.startsWith('47.136.430') || c.pos.includes('Nossa Sede');
+        const color = getCoopMarkerColor(c);
+
+        const circle = L.circleMarker([c.lat, c.lon], {
+          radius: isChame ? 10 : 6,
+          fillColor: color,
+          color: isChame ? '#ffffff' : color,
+          weight: isChame ? 3 : 1.5,
+          opacity: 1,
+          fillOpacity: 0.9
+        });
+
+        circle.bindPopup(`
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; min-width:210px; padding:2px;">
+            <div style="font-size:10px; font-weight:800; color:#d97706; text-transform:uppercase;">${c.reg}</div>
+            <div style="font-size:13px; font-weight:700; color:#0f172a; margin-top:2px;">${c.nome || c.razao}</div>
+            <div style="font-size:11px; color:#475569;">${c.muni} &bull; ${c.dist} km sede Vital Brasil</div>
+            <div style="font-size:11px; margin-top:4px; font-weight:600; color:#1e293b;">${c.pos}</div>
+            ${c.tel ? `<div style="font-size:11px; color:#059669; margin-top:3px;">📞 ${c.tel}</div>` : ''}
+            <div style="margin-top:6px; display:flex; gap:4px;">
+              <button onclick="openCoopModal('${c.id}')" style="flex:1; background:#0f172a; color:#fff; border:none; padding:4px 6px; border-radius:4px; font-size:10px; font-weight:bold; cursor:pointer;">Ver Dossiê</button>
+              <a href="https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lon}" target="_blank" style="background:#2563eb; color:#fff; padding:4px 6px; border-radius:4px; font-size:10px; font-weight:bold; text-decoration:none;">Rota Maps ↗</a>
+            </div>
+          </div>
+        `);
+
+        cooperativasMarkersLayer.addLayer(circle);
+      });
+    }
+
+    function renderCooperativasList(coops) {
+      const listContainer = document.getElementById('route-points-list');
+      if (!listContainer) return;
+      listContainer.innerHTML = '';
+      document.getElementById('route-panel-count').innerText = `${coops.length} cooperativas`;
+
+      coops.forEach(c => {
+        const isChame = c.cnpj.startsWith('47.136.430') || c.pos.includes('Nossa Sede');
+        const color = getCoopMarkerColor(c);
+
+        const card = document.createElement('div');
+        card.className = "p-2.5 rounded-lg border border-slate-200 hover:border-amber-400 bg-slate-50/60 hover:bg-amber-50/40 transition cursor-pointer text-[11px]";
+        card.onclick = () => {
+          if (leafletMapInstance) {
+            leafletMapInstance.setView([c.lat, c.lon], 16);
+            if (cooperativasMarkersLayer) {
+              cooperativasMarkersLayer.eachLayer(layer => {
+                if (layer.getLatLng && Math.abs(layer.getLatLng().lat - c.lat) < 0.0001 && Math.abs(layer.getLatLng().lng - c.lon) < 0.0001) {
+                  layer.openPopup();
+                }
+              });
+            }
+          }
+        };
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-1 mb-1">
+            <span class="font-bold text-slate-900 leading-tight">${c.nome || c.razao}</span>
+            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0" style="background:${color}20; color:${color}; border:1px solid ${color}40">${c.reg}</span>
+          </div>
+          <div class="text-slate-600">${c.muni} &bull; ${c.dist} km sede</div>
+          <div class="text-[10px] text-slate-500 font-medium mt-0.5">${c.pos}</div>
+          ${c.tel ? `<div class="text-[10px] text-emerald-700 font-bold mt-1">📞 ${c.tel}</div>` : ''}
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    function applyCoopFilters() {
+      const q = (document.getElementById('coop-filter-search')?.value || '').toLowerCase().trim();
+      const reg = document.getElementById('coop-filter-regiao')?.value || 'ALL';
+      const st = document.getElementById('coop-filter-status')?.value || 'ATIVA';
+
+      filteredCoops = COOPS_DATA.filter(c => {
+        if (st === 'ATIVA' && c.st !== 'Ativa') return false;
+
+        if (reg === 'CAPITAL' && c.muni !== 'SAO PAULO') return false;
+        if (reg === 'RMSP' && (!c.reg.includes('RMSP') && !c.reg.includes('ABC') && !c.reg.includes('Oeste'))) return false;
+        if (reg === 'LITORAL' && (!c.reg.includes('Litoral') && !c.reg.includes('Baixada'))) return false;
+        if (reg === 'INTERIOR' && (c.muni === 'SAO PAULO' || c.reg.includes('RMSP') || c.reg.includes('Litoral'))) return false;
+
+        if (q) {
+          const match = c.nome.toLowerCase().includes(q) ||
+                        c.razao.toLowerCase().includes(q) ||
+                        c.muni.toLowerCase().includes(q) ||
+                        c.bairro.toLowerCase().includes(q) ||
+                        c.cnpj.includes(q);
+          if (!match) return false;
+        }
+
+        return true;
+      });
+
+      coopCurrentPage = 1;
+      const countEl = document.getElementById('coop-results-count');
+      if (countEl) countEl.innerText = `Exibindo ${filteredCoops.length} cooperativas`;
+
+      renderCoopTable();
+    }
+
+    function renderCoopTable() {
+      const tbody = document.getElementById('coop-table-body');
+      const cardsWrapper = document.getElementById('coop-cards-wrapper');
+      const tableWrapper = document.getElementById('coop-table-wrapper');
+      if (!tbody && !cardsWrapper) return;
+
+      if (tbody) tbody.innerHTML = '';
+      if (cardsWrapper) cardsWrapper.innerHTML = '';
+
+      if (coopViewMode === 'cards') {
+        if (cardsWrapper) cardsWrapper.classList.remove('hidden');
+        if (tableWrapper) tableWrapper.classList.add('hidden');
+      } else {
+        if (cardsWrapper) cardsWrapper.classList.add('hidden');
+        if (tableWrapper) tableWrapper.classList.remove('hidden');
+      }
+
+      const total = filteredCoops.length;
+      const start = (coopCurrentPage - 1) * coopPageSize;
+      const pageData = filteredCoops.slice(start, start + coopPageSize);
+
+      if (pageData.length === 0) {
+        if (tbody) {
+          tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">Nenhuma cooperativa encontrada com os filtros selecionados.</td></tr>`;
+        }
+        if (cardsWrapper) {
+          cardsWrapper.innerHTML = `<div class="col-span-full py-8 text-center text-slate-500 bg-slate-50 rounded-xl border border-dashed border-slate-200">Nenhuma cooperativa encontrada com os filtros selecionados.</div>`;
+        }
+        renderCoopPagination(0);
+        return;
+      }
+
+      pageData.forEach(c => {
+        const isChame = c.cnpj.startsWith('47.136.430') || c.pos.includes('Nossa Sede');
+        const color = getCoopMarkerColor(c);
+        const stBadge = c.st === 'Ativa' ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-slate-100 text-slate-600 border-slate-200';
+
+        // MODO CARDS (Mobile / Grid)
+        if (cardsWrapper) {
+          const card = document.createElement('div');
+          card.className = `p-3.5 rounded-xl border ${isChame ? 'border-amber-400 bg-amber-50/40 ring-2 ring-amber-400/20' : 'border-slate-200 bg-white'} shadow-xs space-y-2.5 transition hover:shadow-md cursor-pointer`;
+          card.onclick = (e) => {
+            if (!e.target.closest('button') && !e.target.closest('a')) {
+              openCoopModal(c.id);
+            }
+          };
+
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-start gap-2.5 min-w-0 flex-1">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-base shrink-0 ${isChame ? 'bg-amber-500 text-slate-950' : 'bg-slate-100 text-slate-700'}">
+                  🚕
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-900 text-sm leading-snug line-clamp-1">${c.nome || c.razao}</div>
+                  <div class="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
+                    <span>${c.muni}</span>
+                    <span>&bull;</span>
+                    <span class="text-amber-700 font-bold">${c.dist} km sede</span>
+                  </div>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${stBadge} shrink-0">${c.st}</span>
+            </div>
+
+            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-100 space-y-1 text-xs">
+              <div class="flex justify-between items-center text-[11px]">
+                <span class="eyebrow">CNPJ:</span>
+                <span class="font-mono text-slate-700">${c.cnpj}</span>
+              </div>
+              <div class="text-[11px]">
+                <span class="eyebrow block">Posicionamento:</span>
+                <span class="font-bold text-slate-800 line-clamp-1">${c.pos}</span>
+              </div>
+              ${c.tel ? `
+                <div class="text-[11px] text-emerald-700 font-bold flex items-center gap-1 pt-1 border-t border-slate-200/60">
+                  <i class="ph-bold ph-phone"></i>
+                  <span>${c.tel}</span>
+                </div>
+              ` : ''}
+            </div>
+
+            <div class="flex items-center gap-1.5 pt-1 border-t border-slate-100">
+              <button onclick="openCoopModal('${c.id}')" class="flex-1 btn bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-1.5 text-xs rounded-lg shadow-sm">
+                <i class="ph-bold ph-identification-card"></i>
+                <span>Dossiê 360°</span>
+              </button>
+              ${c.tel ? `
+                <a href="tel:${c.tel.replace(/\\D/g, '')}" onclick="event.stopPropagation()" class="btn bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1.5 text-xs rounded-lg" title="Ligar">
+                  <i class="ph-bold ph-phone"></i>
+                </a>
+              ` : ''}
+              <button onclick="locateCoopOnMap(${c.lat}, ${c.lon}, '${c.id}')" class="btn bg-sky-600 hover:bg-sky-500 text-white font-bold px-2.5 py-1.5 text-xs rounded-lg" title="Ver no Mapa">
+                <i class="ph-bold ph-map-pin"></i>
+              </button>
+            </div>
+          `;
+          cardsWrapper.appendChild(card);
+        }
+
+        // MODO TABELA (Desktop)
+        if (tbody) {
+          const tr = document.createElement('tr');
+          tr.className = `hover:bg-amber-50/40 transition cursor-pointer ${isChame ? 'bg-amber-50/30' : ''}`;
+          tr.onclick = (e) => {
+            if (!e.target.closest('button') && !e.target.closest('a')) {
+              openCoopModal(c.id);
+            }
+          };
+
+          tr.innerHTML = `
+            <td class="py-2.5 px-3">
+              <div class="font-bold text-slate-900">${c.nome || c.razao}</div>
+              <div class="text-[11px] text-slate-500 font-mono">${c.cnpj}</div>
+            </td>
+            <td class="py-2.5 px-3">
+              <div class="font-semibold text-slate-800">${c.muni}</div>
+              <div class="text-[11px] text-slate-500">${c.reg} &bull; ${c.bairro || '—'}</div>
+            </td>
+            <td class="py-2.5 px-3 text-center">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${stBadge}">${c.st}</span>
+            </td>
+            <td class="py-2.5 px-3 text-right">
+              <span class="font-bold text-amber-700">${c.dist} km</span>
+            </td>
+            <td class="py-2.5 px-3">
+              <div class="text-xs text-slate-800 font-medium">${c.tel || '—'}</div>
+              <div class="text-[10px] text-slate-500 truncate max-w-[180px]">${c.email || '—'}</div>
+            </td>
+            <td class="py-2.5 px-3">
+              <span class="text-xs font-semibold text-slate-700">${c.pos}</span>
+            </td>
+            <td class="py-2.5 px-3 text-center">
+              <div class="flex items-center justify-center gap-1">
+                <button onclick="openCoopModal('${c.id}')" class="btn bg-slate-800 hover:bg-slate-700 text-white font-bold px-2 py-1 text-xs rounded" title="Dossiê">
+                  <i class="ph-bold ph-files"></i>
+                </button>
+                <button onclick="locateCoopOnMap(${c.lat}, ${c.lon}, '${c.id}')" class="btn bg-sky-600 hover:bg-sky-500 text-white font-bold px-2 py-1 text-xs rounded" title="Mapa">
+                  <i class="ph-bold ph-map-pin"></i>
+                </button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        }
+      });
+
+      renderCoopPagination(total);
+    }
+
+    function renderCoopPagination(total) {
+      const container = document.getElementById('coop-pagination');
+      if (!container) return;
+
+      const totalPages = Math.ceil(total / coopPageSize) || 1;
+      const start = (coopCurrentPage - 1) * coopPageSize + 1;
+      const end = Math.min(coopCurrentPage * coopPageSize, total);
+
+      container.innerHTML = `
+        <div class="text-slate-500">
+          Mostrando <strong>${total > 0 ? start : 0}</strong> a <strong>${end}</strong> de <strong>${total}</strong> cooperativas (Página ${coopCurrentPage} de ${totalPages})
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button onclick="changeCoopPage(1)" ${coopCurrentPage === 1 ? 'disabled' : ''} class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-700 disabled:opacity-40 font-bold hover:bg-slate-100">«</button>
+          <button onclick="changeCoopPage(${coopCurrentPage - 1})" ${coopCurrentPage === 1 ? 'disabled' : ''} class="px-2.5 py-1 rounded bg-white border border-slate-200 text-slate-700 disabled:opacity-40 font-bold hover:bg-slate-100">Anterior</button>
+          <button onclick="changeCoopPage(${coopCurrentPage + 1})" ${coopCurrentPage >= totalPages ? 'disabled' : ''} class="px-2.5 py-1 rounded bg-white border border-slate-200 text-slate-700 disabled:opacity-40 font-bold hover:bg-slate-100">Próxima</button>
+          <button onclick="changeCoopPage(${totalPages})" ${coopCurrentPage >= totalPages ? 'disabled' : ''} class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-700 disabled:opacity-40 font-bold hover:bg-slate-100">»</button>
+        </div>
+      `;
+    }
+
+    function changeCoopPage(page) {
+      const totalPages = Math.ceil(filteredCoops.length / coopPageSize) || 1;
+      if (page < 1 || page > totalPages) return;
+      coopCurrentPage = page;
+      renderCoopTable();
+      const el = document.getElementById('tab-content-coops');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function openCoopModal(id) {
+      const c = COOPS_DATA.find(x => x.id === id);
+      if (!c) return;
+      currentCoopModalId = id;
+
+      document.getElementById('coop-modal-nome').innerText = c.nome || c.razao;
+      document.getElementById('coop-modal-razao').innerText = c.razao;
+      document.getElementById('coop-modal-st-badge').innerText = c.st;
+      document.getElementById('coop-modal-st-badge').className = `px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider ${c.st === 'Ativa' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-500/20 text-slate-300 border border-slate-500/30'}`;
+      document.getElementById('coop-modal-reg-badge').innerText = c.reg;
+
+      document.getElementById('coop-modal-cnpj').innerText = c.cnpj || '—';
+      document.getElementById('coop-modal-muni').innerText = `${c.muni} / ${c.uf}`;
+      document.getElementById('coop-modal-end').innerText = c.end || '—';
+      document.getElementById('coop-modal-cep').innerText = `CEP: ${c.cep || '—'} &bull; Bairro: ${c.bairro || '—'}`;
+
+      document.getElementById('coop-modal-dist').innerText = `${c.dist} km da Sede Vital Brasil`;
+      document.getElementById('coop-modal-tipo').innerText = c.tipo || 'Rádio-Táxi / Frotas';
+      document.getElementById('coop-modal-pos').innerText = c.pos || '—';
+
+      document.getElementById('coop-modal-tel').innerText = c.tel || 'Não informado';
+      document.getElementById('coop-modal-email').innerText = c.email || 'Não informado';
+
+      const lnkMaps = document.getElementById('coop-modal-link-maps');
+      if (lnkMaps) {
+        lnkMaps.href = `https://www.google.com/maps/dir/?api=1&origin=${CHAME_LAT},${CHAME_LON}&destination=${c.lat},${c.lon}`;
+      }
+
+      const lnkTel = document.getElementById('coop-modal-link-tel');
+      const telTxt = document.getElementById('coop-modal-tel-txt');
+      if (c.tel) {
+        lnkTel.href = `tel:${c.tel.replace(/\\D/g, '')}`;
+        telTxt.innerText = `Ligar (${c.tel})`;
+        lnkTel.classList.remove('hidden');
+      } else {
+        lnkTel.classList.add('hidden');
+      }
+
+      const lnkEmail = document.getElementById('coop-modal-link-email');
+      if (c.email) {
+        lnkEmail.href = `mailto:${c.email}`;
+        lnkEmail.classList.remove('hidden');
+      } else {
+        lnkEmail.classList.add('hidden');
+      }
+
+      document.getElementById('coop-modal-footer-id').innerText = `ID: ${c.id}`;
+      document.getElementById('coop-dossier-modal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeCoopModal() {
+      document.getElementById('coop-dossier-modal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+      currentCoopModalId = null;
+    }
+
+    function locateCurrentCoopOnMap() {
+      if (!currentCoopModalId) return;
+      const c = COOPS_DATA.find(x => x.id === currentCoopModalId);
+      if (!c) return;
+      closeCoopModal();
+      locateCoopOnMap(c.lat, c.lon, c.id);
+    }
+
+    function locateCoopOnMap(lat, lon, id) {
+      switchMainTab('map');
+      setTimeout(() => {
+        if (!leafletMapInstance) return;
+        leafletMapInstance.setView([lat, lon], 16);
+        if (cooperativasMarkersLayer) {
+          cooperativasMarkersLayer.eachLayer(layer => {
+            if (layer.getLatLng && Math.abs(layer.getLatLng().lat - lat) < 0.0001 && Math.abs(layer.getLatLng().lng - lon) < 0.0001) {
+              layer.openPopup();
+            }
+          });
+        }
+      }, 300);
+    }
+
+    function exportCoopCSV() {
+      if (!filteredCoops || filteredCoops.length === 0) {
+        alert("Nenhuma cooperativa filtrada para exportar.");
+        return;
+      }
+
+      let csv = "\\uFEFF";
+      const headers = ["id", "cnpj", "razao", "nome", "muni", "uf", "reg", "bairro", "end", "cep", "dist", "st", "tel", "email", "tipo", "pos"];
+      csv += headers.join(";") + "\\n";
+
+      filteredCoops.forEach(r => {
+        const row = headers.map(h => {
+          let val = r[h] !== null && r[h] !== undefined ? String(r[h]) : "";
+          val = val.replace(/"/g, '""');
+          return `"${val}"`;
+        });
+        csv += row.join(";") + "\\n";
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `cooperativas_taxi_sp_export_${new Date().toISOString().slice(0,10)}.csv`;
       a.click();
       URL.revokeObjectURL(url);
     }
@@ -3988,6 +5343,7 @@ __LINHAS_ABERTOS__
     final_html = final_html.replace('__HOSPITAIS_PLACEHOLDER__', json_hospitais)
     final_html = final_html.replace('__EMPRESAS_PLACEHOLDER__', json_empresas)
     final_html = final_html.replace('__ABERTOS_PLACEHOLDER__', json_abertos)
+    final_html = final_html.replace('__COOPERATIVAS_PLACEHOLDER__', json_coops)
     final_html = final_html.replace('__KPIS_ABERTOS__', kpis_html)
     final_html = final_html.replace('__LINHAS_ABERTOS__', linhas_abertos)
 
