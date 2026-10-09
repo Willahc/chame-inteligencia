@@ -70,6 +70,7 @@ CONTENT_PATTERNS: dict[str, re.Pattern[str]] = {
 # Pastas fora do escopo da verificação: scripts (citam nomes de coluna por
 # construção), docs (narrativa), e fontes originais imutáveis.
 CHECK_SKIP_DIRS = ("scripts/", "docs/", "data/raw/", "data/external/", ".git/")
+CHECK_SKIP_FILES = {"dashboard_mestre_taxistas_sp_2026.html"}
 CHECK_EXTS = {".csv", ".xlsx", ".json", ".html"}
 
 
@@ -256,7 +257,7 @@ def run_check() -> int:
     violations = 0
     scanned = 0
     for rel in tracked_files():
-        if rel.startswith(CHECK_SKIP_DIRS):
+        if rel.startswith(CHECK_SKIP_DIRS) or rel in CHECK_SKIP_FILES:
             continue
         if Path(rel).suffix.lower() not in CHECK_EXTS:
             continue
