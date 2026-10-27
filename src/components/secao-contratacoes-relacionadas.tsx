@@ -118,7 +118,7 @@ export function SecaoContratacoesRelacionadas({
       <div className="mt-4 flex items-start gap-3 rounded-xl border border-blue-200 bg-blue-50/70 p-4 text-xs leading-relaxed text-blue-900">
         <AlertCircle className="mt-0.5 size-4 shrink-0 text-blue-600" aria-hidden="true" />
         <p>
-          <strong>Aviso de Governança:</strong> Sinal público observado; <strong>não representa cliente da Chame Táxi ou oportunidade comercial garantida</strong>. O vínculo foi estabelecido exclusivamente por igualdade exata de CNPJ oficial (mantenedora ou estabelecimento), sem vinculação por similaridade de nome ou inferência não verificada.
+          <strong>Aviso de Governança:</strong> Sinal público observado; <strong>não representa cliente ativo ou oportunidade comercial garantida no WiNS Hub Táxi</strong>. O vínculo foi estabelecido exclusivamente por igualdade exata de CNPJ oficial (mantenedora ou estabelecimento), sem vinculação por similaridade de nome ou inferência não verificada.
         </p>
       </div>
 

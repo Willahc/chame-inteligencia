@@ -13,12 +13,12 @@ import {
  * identidade enviada pelo navegador como evidência de auditoria.
  */
 export function obterOperadorLocal(): string {
-  return process.env.CHAME_USUARIO_OPERADOR?.trim() || "operador-local-nao-autenticado";
+  return process.env.WINS_HUB_TAXI_USUARIO_OPERADOR?.trim() || "operador-local-nao-autenticado";
 }
 
 export function obterPerfilOperadorLocal(): PerfilOperador {
-  const perfil = process.env.CHAME_PERFIL_OPERADOR?.trim();
-  return perfilOperadorValido(perfil) && Boolean(process.env.CHAME_USUARIO_OPERADOR?.trim())
+  const perfil = process.env.WINS_HUB_TAXI_PERFIL_OPERADOR?.trim();
+  return perfilOperadorValido(perfil) && Boolean(process.env.WINS_HUB_TAXI_USUARIO_OPERADOR?.trim())
     ? perfil
     : "CONSULTA";
 }

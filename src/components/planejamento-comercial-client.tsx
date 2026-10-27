@@ -195,7 +195,7 @@ export function PlanejamentoComercialClient({
     "Apresentar soluções integradas de transporte corporativo para o corpo clínico e administrativo."
   );
   const [novaMensagem, setNovaMensagem] = useState(
-    "Olá,\n\nIdentificamos que sua instituição possui alta demanda de mobilidade e logística médica. Gostaríamos de agendar uma breve conversa para apresentar nossa proposta corporativa com faturamento quinzenal e gestão em tempo real.\n\nAtenciosamente,\nEquipe Comercial Chame Táxi"
+    "Olá,\n\nIdentificamos que sua instituição possui alta demanda de mobilidade e logística médica. Gostaríamos de agendar uma breve conversa para apresentar nossa proposta corporativa com faturamento quinzenal e gestão em tempo real.\n\nAtenciosamente,\nEquipe Comercial WiNS Hub Táxi"
   );
   const [novoCriadoPor, setNovoCriadoPor] = useState("analista-comercial");
   const [novaJustificativa, setNovaJustificativa] = useState(

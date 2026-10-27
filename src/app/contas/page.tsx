@@ -28,7 +28,7 @@ export default async function ContasPage() {
     <div className="w-full px-3 py-5 sm:px-6 lg:px-8 lg:py-8 2xl:px-10">
       <CabecalhoPagina
         titulo="Contas Comerciais"
-        descricao="Radar de contas B2B prioritárias para prospecção corporativa da Chame Táxi. Consolidação auditável de redes, hospitais e contatos profissionais públicos."
+        descricao="Radar de contas B2B prioritárias para prospecção de mobilidade corporativa no WiNS Hub Táxi. Consolidação auditável de redes, hospitais e contatos profissionais públicos."
         acao={
           <div className="flex flex-wrap items-center gap-2 text-xs font-bold sm:text-sm">
             <span className="rounded-xl bg-[var(--azul-profundo)] px-3.5 py-2 text-white">

@@ -73,7 +73,7 @@ describe("Gate 8 — Automação Comercial Controlada", () => {
       contatoProfissionalId: contatoDemo.id,
       tipoAcao: "APRESENTACAO_INSTITUCIONAL",
       canal: "EMAIL",
-      objetivo: "Apresentar portfólio corporativo da Chame Táxi",
+      objetivo: "Apresentar portfólio corporativo do WiNS Hub Táxi",
       mensagemRascunho: "Olá, gostaríamos de apresentar nossos serviços corporativos de mobilidade.",
       criadoPor: "analista.comercial",
       justificativaInicial: "Instituição com alta prioridade para mobilidade.",

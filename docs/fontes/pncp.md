@@ -6,7 +6,7 @@
   - `https://pncp.gov.br/`
   - `https://pncp.gov.br/api/consulta/`
   - Swagger/OpenAPI: `https://pncp.gov.br/api/consulta/v3/api-docs`
-- **Finalidade no Chame Inteligência:** Identificar contratações públicas de serviços de mobilidade corporativa, transporte de passageiros, táxi, locação de frotas com motorista, transporte sanitário e remoção de pacientes no setor hospitalar e de saúde do Estado de São Paulo.
+- **Finalidade no WiNS Hub Táxi:** Identificar contratações públicas de serviços de mobilidade corporativa, transporte de passageiros, táxi, locação de frotas com motorista, transporte sanitário e remoção de pacientes no setor hospitalar e de saúde do Estado de São Paulo.
 
 ## 2. Artefatos Locais e Hashes
 - `data/raw/pncp/consultas_pncp_sinais_contratacao.json`

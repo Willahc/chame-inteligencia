@@ -1,13 +1,13 @@
 # Consolidação da Entidade Conta Comercial
 
 Data: 06/09/2026  
-Status: Homologado no MVP Comercial da Chame Táxi
+Status: Homologado no MVP Comercial do WiNS Hub Táxi
 
 ---
 
 ## 1. Contexto e Motivação
 
-O radar de inteligência da Chame Táxi originou-se a partir de estabelecimentos individuais cadastrados no CNES (8.212 instituições reais). No entanto, para a operação diária de vendas B2B, a abordagem não ocorre por CNES isolado, mas por **Conta Comercial** (empresa mantenedora, rede hospitalar ou grupo econômico).
+O radar de inteligência do WiNS Hub Táxi originou-se a partir de estabelecimentos individuais cadastrados no CNES (8.212 instituições reais). No entanto, para a operação diária de vendas B2B, a abordagem não ocorre por CNES isolado, mas por **Conta Comercial** (empresa mantenedora, rede hospitalar ou grupo econômico).
 
 A consolidação de contas unifica múltiplos estabelecimentos sob uma única conta de decisão, mantendo rastreabilidade total até cada alvará, unidade e evidência.
 

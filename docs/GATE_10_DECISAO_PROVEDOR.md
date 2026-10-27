@@ -2,7 +2,7 @@
 
 > **Status:** DECISÃO ARQUITETURAL HOMOLOGADA  
 > **Data:** 07 de setembro de 2026  
-> **Repositório:** `chame-inteligencia`  
+> **Repositório:** `wins-hub-taxi` (diretório histórico `chame-inteligencia`)  
 > **Categoria Selecionada:** E-mail Corporativo B2B (Provedor Transacional com Sandbox Dedicado)  
 > **Provedor Escolhido:** **Mailtrap Email Sandbox API** (Ambiente Estrito de Teste em *Virtual Sink*)
 

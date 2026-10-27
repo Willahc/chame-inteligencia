@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, type Prisma } from "@prisma/client";
 import {
   calcularIndiceComercial,
 } from "../src/domain/indice-comercial/calcular-indice-comercial";
@@ -11,6 +11,22 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("Iniciando consolidação de contas comerciais...");
 
+  // 0. Carregar sinais multi-fonte para coberturaDados e operacao24h
+  const norm = (s?: string | null) =>
+    (s ?? "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toUpperCase()
+      .trim();
+  const nomesEnriquecidos = new Set<string>();
+  const cnpjsTerceiros = await prisma.enriquecimentoCNPJTerceiro.findMany({
+    select: { razaoSocial: true, nomeFantasia: true },
+  });
+  for (const e of cnpjsTerceiros) {
+    if (e.razaoSocial) nomesEnriquecidos.add(norm(e.razaoSocial));
+    if (e.nomeFantasia) nomesEnriquecidos.add(norm(e.nomeFantasia));
+  }
+
   // 1. Grupos reais
   const grupos = await prisma.grupoEconomico.findMany({
     where: { NOT: { tipoDado: "DEMONSTRACAO" } },
@@ -20,6 +36,8 @@ async function main() {
           tipoEstabelecimento: true,
           unidades: { include: { endereco: true } },
           segmentacao: true,
+          sinaisContratacaoPublica: { select: { id: true } },
+          contatosProfissionais: { where: { ativo: true }, select: { id: true } },
         },
       },
       contatos: {
@@ -40,6 +58,8 @@ async function main() {
 
   let criadas = 0;
   let atualizadas = 0;
+
+  const ops: Prisma.PrismaPromise<unknown>[] = [];
 
   for (const grupo of grupos) {
     const contaId = `conta-${grupo.id}`;
@@ -67,6 +87,19 @@ async function main() {
       ),
     ];
 
+    const bairrosUnicos = [
+      ...new Set(
+        todasUnidades
+          .map((u) => u.endereco?.bairro?.trim().toUpperCase())
+          .filter((b): b is string => Boolean(b) && b !== "NÃO INFORMADO"),
+      ),
+    ];
+
+    const dispersaoPolos = Math.max(
+      cidadesUnicas.length,
+      todasUnidades.length > 1 ? bairrosUnicos.length : 1,
+    );
+
     let segmentoPredominante: string | null = null;
     if (grupo.instituicoes.some((i) => i.segmentacao?.segmento === "NUCLEO_HOSPITALAR")) {
       segmentoPredominante = "NUCLEO_HOSPITALAR";
@@ -78,6 +111,45 @@ async function main() {
       grupo.instituicoes.some((i) => i.segmentacao?.segmento === "BAIXA_PRIORIDADE_INICIAL")
     ) {
       segmentoPredominante = "BAIXA_PRIORIDADE_INICIAL";
+    }
+
+    const coberturas = grupo.instituicoes.map((inst) => {
+      let cob = 70; // Base CNES (identificação, endereço e classificação)
+      if (nomesEnriquecidos.has(norm(inst.nome)) || nomesEnriquecidos.has(norm(inst.nomeOriginal))) cob += 15;
+      if (inst.sinaisContratacaoPublica.length > 0) cob += 10;
+      if (inst.contatosProfissionais.length > 0 || grupo.contatos.length > 0) cob += 10;
+      if (inst.naturezaGestao && inst.naturezaGestao !== "Não informado") cob += 5;
+      return Math.min(100, cob);
+    });
+    const coberturaDados = coberturas.length
+      ? Math.round(coberturas.reduce((a, b) => a + b, 0) / coberturas.length)
+      : 100;
+
+    for (let idx = 0; idx < grupo.instituicoes.length; idx++) {
+      const inst = grupo.instituicoes[idx];
+      const nome = inst.nome.toLowerCase();
+      const tipo = inst.tipoEstabelecimento.nome.toLowerCase();
+      const instOp24h =
+        inst.operacao24h ||
+        tipo === "hospital geral" ||
+        tipo === "pronto atendimento" ||
+        nome.includes("hospital") ||
+        nome.includes("pronto socorro") ||
+        nome.includes("pronto atendimento") ||
+        nome.includes("24h") ||
+        nome.includes("emergencia") ||
+        nome.includes("urgencia");
+      const instCob = coberturas[idx] ?? coberturaDados;
+      if (inst.operacao24h !== instOp24h || inst.coberturaDados !== instCob) {
+        ops.push(
+          prisma.instituicao.update({
+            where: { id: inst.id },
+            data: { operacao24h: instOp24h, coberturaDados: instCob },
+          }),
+        );
+      }
+      inst.operacao24h = instOp24h;
+      inst.coberturaDados = instCob;
     }
 
     const operacao24h = grupo.instituicoes.some(
@@ -95,11 +167,6 @@ async function main() {
       );
     });
 
-    const coberturas = grupo.instituicoes.map((i) => i.coberturaDados);
-    const coberturaDados = coberturas.length
-      ? Math.round(coberturas.reduce((a, b) => a + b, 0) / coberturas.length)
-      : 100;
-
     const situacaoCadastral =
       grupo.instituicoes.find((i) => i.situacaoCadastral)?.situacaoCadastral ?? null;
 
@@ -112,7 +179,7 @@ async function main() {
       natureza: grupo.natureza,
       operacao24h,
       urgenciaEmergencia,
-      quantidadeCidades: cidadesUnicas.length,
+      quantidadeCidades: dispersaoPolos,
       quantidadeContatosAtivos,
       tipoVinculo: grupo.tipoVinculo,
       confiancaVinculo: grupo.nivelConfianca,
@@ -164,18 +231,22 @@ async function main() {
     };
 
     if (resultadoExistenteMap.has(contaId)) {
-      await prisma.contaComercial.update({
-        where: { id: contaId },
-        data: dataPayload,
-      });
+      ops.push(
+        prisma.contaComercial.update({
+          where: { id: contaId },
+          data: dataPayload,
+        }),
+      );
       atualizadas++;
     } else {
-      await prisma.contaComercial.create({
-        data: {
-          id: contaId,
-          ...dataPayload,
-        },
-      });
+      ops.push(
+        prisma.contaComercial.create({
+          data: {
+            id: contaId,
+            ...dataPayload,
+          },
+        }),
+      );
       criadas++;
     }
   }
@@ -256,20 +327,30 @@ async function main() {
     };
 
     if (resultadoExistenteMap.has(contaId)) {
-      await prisma.contaComercial.update({
-        where: { id: contaId },
-        data: dataPayload,
-      });
+      ops.push(
+        prisma.contaComercial.update({
+          where: { id: contaId },
+          data: dataPayload,
+        }),
+      );
       atualizadas++;
     } else {
-      await prisma.contaComercial.create({
-        data: {
-          id: contaId,
-          ...dataPayload,
-        },
-      });
+      ops.push(
+        prisma.contaComercial.create({
+          data: {
+            id: contaId,
+            ...dataPayload,
+          },
+        }),
+      );
       criadas++;
     }
+  }
+
+  console.log(`Persistindo ${ops.length} operações em lotes transacionais...`);
+  const BATCH_SIZE = 500;
+  for (let i = 0; i < ops.length; i += BATCH_SIZE) {
+    await prisma.$transaction(ops.slice(i, i + BATCH_SIZE));
   }
 
   console.log(

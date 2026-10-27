@@ -1,14 +1,14 @@
 # Relatório de Integração Visual de Todas as Fontes Oficiais e Auxiliares
 
 Data de referência: 06/09/2026  
-Projeto: Chame Inteligência  
+Projeto: WiNS Hub Táxi  
 Diretório: `C:\Users\kbadmin\Documents\Projetos\Chame Táxi\chame-inteligencia`
 
 ---
 
 ## 1. Sumário Executivo
 
-Este documento consolida a integração completa, visual e estruturada de todos os conjuntos de dados já baixados e preservados em `data/raw/` no projeto **Chame Inteligência**, sem realização de novos downloads ou scraping externo.
+Este documento consolida a integração completa, visual e estruturada de todos os conjuntos de dados já baixados e preservados em `data/raw/` no projeto **WiNS Hub Táxi**, sem realização de novos downloads ou scraping externo.
 
 A integração preservou estritamente:
 - **8.212** instituições canônicas `FATO_OFICIAL` (origem CNES/DataSUS);

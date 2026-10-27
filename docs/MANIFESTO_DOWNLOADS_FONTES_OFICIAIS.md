@@ -1,4 +1,4 @@
-# Manifesto de Downloads de Fontes Oficiais — Chame Inteligência
+# Manifesto de Downloads de Fontes Oficiais — WiNS Hub Táxi
 
 **Data da Auditoria e Consolidação:** 06/09/2026  
 **Status do Repositório:** Concluído e Auditado  

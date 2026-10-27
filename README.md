@@ -1,12 +1,12 @@
-# Chame Inteligência
+# WiNS Hub Táxi
 
-Aplicação local demonstrativa para apoiar a prospecção comercial da Chame Táxi, começando pelo **Radar de Potenciais Clientes do Setor de Saúde**.
+Aplicação independente de inteligência territorial e comercial para o setor de mobilidade e táxi corporativo, começando pelo **Radar de Potenciais Clientes do Setor de Saúde**.
 
-> **Aviso de governança:** todos os dados atuais são fictícios e estão marcados como `DEMONSTRACAO`. Nenhuma instituição, evidência, fonte ou endereço representa uma operação real.
+> **Aviso de governança:** a plataforma separa estritamente registros públicos auditáveis (`FATO_OFICIAL`) de registros fictícios (`DEMONSTRACAO`).
 
 ## Objetivo e problema de negócio
 
-A Chame busca captar mais clientes corporativos, com preferência inicial pelo setor de saúde e hospitalar. A ferramenta organiza sinais públicos, evidencia por que uma conta pode merecer atenção e recomenda um próximo passo verificável. Ela não substitui sistemas atuais, não faz contato automático e não usa inteligência artificial externa neste Gate.
+O **WiNS Hub Táxi** apoia a prospecção e análise de clientes corporativos de mobilidade B2B, com foco inicial no setor de saúde e hospitalar. A ferramenta organiza sinais públicos, evidencia por que uma conta pode merecer atenção e recomenda um próximo passo verificável. Ela opera de forma independente, não faz contato automático sem revisão humana e mantém rastreabilidade integral de evidências.
 
 ## Funcionalidades do Gate 1
 

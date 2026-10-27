@@ -4,7 +4,7 @@ import { CoberturaClient } from "@/components/cobertura-client";
 import { obterMetricasCoberturaFontes } from "@/lib/cobertura";
 
 export const metadata: Metadata = {
-  title: "Cobertura de Dados e Fontes | Chame Inteligência",
+  title: "Cobertura de Dados e Fontes | WiNS Hub Táxi",
   description: "Auditoria e monitoramento de cobertura territorial, cadastral e de compras públicas por fonte de dados.",
 };
 

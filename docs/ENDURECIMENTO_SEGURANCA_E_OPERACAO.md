@@ -6,7 +6,7 @@ Status: **ENDURECIMENTO — REPROVADO** até que a auditoria visual seja conclu�
 
 ## Alterações realizadas
 
-- A identidade usada por ações sensíveis é obtida exclusivamente no servidor por `CHAME_USUARIO_OPERADOR`.
+- A identidade usada por ações sensíveis é obtida exclusivamente no servidor por `WINS_HUB_TAXI_USUARIO_OPERADOR`.
 - Sem identidade configurada, o registro usa `operador-local-nao-autenticado` e o perfil efetivo é `CONSULTA`.
 - As ações de revisão, planejamento, aprovação, simulação e administração de integrações exigem permissão no servidor.
 - A integração de e-mail de homologação opera somente como `MOCK_LOCAL_HOMOLOGACAO`; a implementação não possui `fetch` nem autorização de rede recebida do navegador.

@@ -14,13 +14,25 @@ import type {
 import { prisma } from "./prisma";
 import { obterModoDados, tipoDadoDoModo } from "@/domain/modo-dados";
 import { ROTULOS_ACOES_COMERCIAIS } from "@/domain/acao-comercial/recomendar-acao";
+import {
+  mesclarContasComerciaisUnificadas,
+  mesclarRadarUnificado,
+  obterContaComercialDePolo5km,
+  obterInstituicaoPorSlugDePolo5km,
+  obterOrganizacaoDePolo5km,
+  salvarAbordagemPolo5km,
+} from "./clientes-corporativos-unificados";
 
 export const incluirInstituicao = {
   grupoEconomico: {
     include: {
       _count: { select: { instituicoes: true } },
       contaComercial: true,
-      contatos: { include: { fonte: true }, where: { ativo: true } },
+      contatos: {
+        include: { fonte: true },
+        where: { ativo: true },
+        orderBy: [{ indiceQualidade: "desc" as const }, { nome: "asc" as const }],
+      },
     },
   },
   tipoEstabelecimento: true,
@@ -33,11 +45,33 @@ export const incluirInstituicao = {
   indice: { include: { componentes: { include: { evidencias: { include: { fonte: true } } }, orderBy: { peso: "desc" as const } } } },
   acoesComerciais: { orderBy: { prioridade: "asc" as const } },
   segmentacao: true,
-  contatosProfissionais: { include: { fonte: true }, where: { ativo: true }, orderBy: { nome: "asc" as const } },
+  contatosProfissionais: {
+    include: { fonte: true },
+    where: { ativo: true },
+    orderBy: [{ indiceQualidade: "desc" as const }, { nome: "asc" as const }],
+  },
   sinaisContratacaoPublica: { include: { fonte: true }, orderBy: { dataPublicacao: "desc" as const } },
 } satisfies Prisma.InstituicaoInclude;
 
 export type InstituicaoCompleta = Prisma.InstituicaoGetPayload<{ include: typeof incluirInstituicao }>;
+
+export type ParametrosPaginacaoInstituicoes = {
+  pagina?: number;
+  tamanhoPagina?: number;
+  busca?: string;
+  faixa?: FaixaPrioridade;
+  segmento?: string;
+  apenas24h?: boolean;
+  modo?: ReturnType<typeof obterModoDados>;
+};
+
+export type ResultadoPaginadoInstituicoes = {
+  itens: InstituicaoCompleta[];
+  total: number;
+  pagina: number;
+  tamanhoPagina: number;
+  totalPaginas: number;
+};
 
 export async function listarInstituicoes(modo = obterModoDados()): Promise<InstituicaoCompleta[]> {
   return prisma.instituicao.findMany({
@@ -47,6 +81,50 @@ export async function listarInstituicoes(modo = obterModoDados()): Promise<Insti
   });
 }
 
+export async function listarInstituicoesPaginadas(
+  params: ParametrosPaginacaoInstituicoes = {},
+): Promise<ResultadoPaginadoInstituicoes> {
+  const modo = params.modo ?? obterModoDados();
+  const pagina = Math.max(1, params.pagina ?? 1);
+  const tamanhoPagina = Math.min(200, Math.max(1, params.tamanhoPagina ?? 50));
+  const busca = params.busca?.trim();
+
+  const where: Prisma.InstituicaoWhereInput = {
+    tipoDado: tipoDadoDoModo(modo),
+    ...(params.apenas24h ? { operacao24h: true } : {}),
+    ...(params.faixa ? { indice: { faixa: params.faixa } } : {}),
+    ...(params.segmento ? { segmentacao: { segmento: params.segmento as never } } : {}),
+    ...(busca
+      ? {
+          OR: [
+            { nome: { contains: busca } },
+            { cnes: { contains: busca } },
+            { grupoEconomico: { nome: { contains: busca } } },
+          ],
+        }
+      : {}),
+  };
+
+  const [total, itens] = await Promise.all([
+    prisma.instituicao.count({ where }),
+    prisma.instituicao.findMany({
+      where,
+      include: incluirInstituicao,
+      orderBy: { indice: { total: "desc" } },
+      skip: (pagina - 1) * tamanhoPagina,
+      take: tamanhoPagina,
+    }),
+  ]);
+
+  return {
+    itens,
+    total,
+    pagina,
+    tamanhoPagina,
+    totalPaginas: Math.max(1, Math.ceil(total / tamanhoPagina)),
+  };
+}
+
 /**
  * Limite de dados do assistente: o resultado nunca inclui contatos
  * profissionais, embora a consulta canônica seja reutilizada para preservar
@@ -54,12 +132,31 @@ export async function listarInstituicoes(modo = obterModoDados()): Promise<Insti
  */
 export async function listarInstituicoesParaAssistente(
   modo = obterModoDados(),
+  limite = 250,
 ): Promise<InstituicaoAssistente[]> {
-  return (await listarInstituicoes(modo)).map(mapearParaAssistente);
+  const itens = await prisma.instituicao.findMany({
+    where: { tipoDado: tipoDadoDoModo(modo) },
+    include: incluirInstituicao,
+    orderBy: { indice: { total: "desc" } },
+    take: limite,
+  });
+  return itens.map(mapearParaAssistente);
 }
 
 export async function obterInstituicaoPorSlug(slug: string, modo = obterModoDados()): Promise<InstituicaoCompleta | null> {
+  if (modo === "MODO_REAL" && slug.startsWith("polo-5km-")) {
+    return obterInstituicaoPorSlugDePolo5km(slug);
+  }
   return prisma.instituicao.findFirst({ where: { slug, tipoDado: tipoDadoDoModo(modo) }, include: incluirInstituicao });
+}
+
+export async function listarRadarUnificado(modo = obterModoDados()): Promise<InstituicaoRadar[]> {
+  const completas = await listarInstituicoes(modo);
+  const radarBase = completas.map(mapearParaRadar);
+  if (modo === "MODO_DEMONSTRACAO") {
+    return radarBase;
+  }
+  return mesclarRadarUnificado(radarBase);
 }
 
 export function mapearEvidencia(item: InstituicaoCompleta["evidencias"][number]): EvidenciaDominio {
@@ -195,18 +292,38 @@ export type OrganizacaoCompleta = Prisma.GrupoEconomicoGetPayload<{
 }>;
 
 export async function listarOrganizacoes(modo = obterModoDados()): Promise<OrganizacaoCompleta[]> {
-  return prisma.grupoEconomico.findMany({
+  const orgs = await prisma.grupoEconomico.findMany({
     where: modo === "MODO_DEMONSTRACAO" ? { tipoDado: "DEMONSTRACAO" } : { NOT: { tipoDado: "DEMONSTRACAO" } },
-    include: { instituicoes: { include: incluirOrganizacao, orderBy: { nome: "asc" as const } }, contatos: { include: { fonte: true }, where: { ativo: true }, orderBy: { nome: "asc" as const } } },
+    include: {
+      instituicoes: { include: incluirOrganizacao, orderBy: { nome: "asc" as const } },
+      contatos: {
+        include: { fonte: true },
+        where: { ativo: true },
+        orderBy: [{ indiceQualidade: "desc" as const }, { nome: "asc" as const }],
+      },
+    },
     orderBy: { nome: "asc" as const },
   });
+  return orgs.map((o) => ({ ...o, contatos: o.contatos.slice(0, 1) }));
 }
 
 export async function obterOrganizacao(id: string, modo = obterModoDados()): Promise<OrganizacaoCompleta | null> {
-  return prisma.grupoEconomico.findFirst({
+  if (modo === "MODO_REAL" && id.startsWith("grupo-polo-")) {
+    return obterOrganizacaoDePolo5km(id);
+  }
+  const org = await prisma.grupoEconomico.findFirst({
     where: { id, ...(modo === "MODO_DEMONSTRACAO" ? { tipoDado: "DEMONSTRACAO" } : { NOT: { tipoDado: "DEMONSTRACAO" } }) },
-    include: { instituicoes: { include: incluirOrganizacao, orderBy: { nome: "asc" as const } }, contatos: { include: { fonte: true }, where: { ativo: true }, orderBy: { nome: "asc" as const } } },
+    include: {
+      instituicoes: { include: incluirOrganizacao, orderBy: { nome: "asc" as const } },
+      contatos: {
+        include: { fonte: true },
+        where: { ativo: true },
+        orderBy: [{ indiceQualidade: "desc" as const }, { nome: "asc" as const }],
+      },
+    },
   });
+  if (!org) return null;
+  return { ...org, contatos: org.contatos.slice(0, 1) };
 }
 
 export const incluirContaComercial = {
@@ -225,7 +342,7 @@ export const incluirContaComercial = {
       contatos: {
         include: { fonte: true },
         where: { ativo: true },
-        orderBy: { nome: "asc" as const },
+        orderBy: [{ indiceQualidade: "desc" as const }, { nome: "asc" as const }],
       },
     },
   },
@@ -254,6 +371,7 @@ const selecionarResumoConta = {
   quantidadeHospitais: true,
   quantidadeContatos: true,
   cidades: true,
+  cnpjPrincipal: true,
   tipoVinculo: true,
   confiancaOrganizacional: true,
   coberturaDados: true,
@@ -274,29 +392,96 @@ const selecionarResumoConta = {
   },
 } satisfies Prisma.ContaComercialSelect;
 
+export type ContatoUnicoGrupoResumo = {
+  id: string;
+  nome: string;
+  cargo: string | null;
+  emailCorporativo: string | null;
+  telefoneProfissional: string | null;
+};
+
 export type ContaComercialResumo = Prisma.ContaComercialGetPayload<{
   select: typeof selecionarResumoConta;
-}>;
+}> & {
+  contatoPrincipal?: ContatoUnicoGrupoResumo | null;
+};
 
 export async function listarContasComerciais(modo = obterModoDados()): Promise<ContaComercialResumo[]> {
-  return prisma.contaComercial.findMany({
-    where: modo === "MODO_DEMONSTRACAO" ? { tipoDado: "DEMONSTRACAO" } : { NOT: { tipoDado: "DEMONSTRACAO" } },
-    select: selecionarResumoConta,
-    orderBy: [
-      { indicePrioridadeComercial: "desc" },
-      { quantidadeUnidades: "desc" },
-    ],
+  const [contasBaseRaw, contatosAtivos] = await Promise.all([
+    prisma.contaComercial.findMany({
+      where: modo === "MODO_DEMONSTRACAO" ? { tipoDado: "DEMONSTRACAO" } : { NOT: { tipoDado: "DEMONSTRACAO" } },
+      select: selecionarResumoConta,
+      orderBy: [
+        { indicePrioridadeComercial: "desc" },
+        { quantidadeUnidades: "desc" },
+      ],
+    }),
+    prisma.contatoProfissional.findMany({
+      where: {
+        ativo: true,
+        ...(modo === "MODO_DEMONSTRACAO" ? { tipoDado: "DEMONSTRACAO" } : { NOT: { tipoDado: "DEMONSTRACAO" } }),
+      },
+      orderBy: [{ indiceQualidade: "desc" }, { nome: "asc" }],
+      select: {
+        id: true,
+        grupoEconomicoId: true,
+        nome: true,
+        cargo: true,
+        emailCorporativo: true,
+        telefoneProfissional: true,
+      },
+    }),
+  ]);
+
+  const mapaContatoUnicoPorGrupo = new Map<string, ContatoUnicoGrupoResumo>();
+  for (const ct of contatosAtivos) {
+    if (ct.grupoEconomicoId && !mapaContatoUnicoPorGrupo.has(ct.grupoEconomicoId)) {
+      mapaContatoUnicoPorGrupo.set(ct.grupoEconomicoId, {
+        id: ct.id,
+        nome: ct.nome,
+        cargo: ct.cargo,
+        emailCorporativo: ct.emailCorporativo,
+        telefoneProfissional: ct.telefoneProfissional,
+      });
+    }
+  }
+
+  const contasBase: ContaComercialResumo[] = contasBaseRaw.map((c) => {
+    const contatoPrincipal = c.grupoEconomicoId ? (mapaContatoUnicoPorGrupo.get(c.grupoEconomicoId) ?? null) : null;
+    return {
+      ...c,
+      quantidadeContatos: contatoPrincipal ? 1 : Math.min(1, c.quantidadeContatos),
+      contatoPrincipal,
+    };
   });
+  if (modo === "MODO_DEMONSTRACAO") {
+    return contasBase;
+  }
+  return mesclarContasComerciaisUnificadas(contasBase);
 }
 
 export async function obterContaComercial(id: string, modo = obterModoDados()): Promise<ContaComercialCompleta | null> {
-  return prisma.contaComercial.findFirst({
+  if (modo === "MODO_REAL" && id.startsWith("conta-polo-")) {
+    return obterContaComercialDePolo5km(id);
+  }
+  const conta = await prisma.contaComercial.findFirst({
     where: {
       id,
       ...(modo === "MODO_DEMONSTRACAO" ? { tipoDado: "DEMONSTRACAO" } : { NOT: { tipoDado: "DEMONSTRACAO" } }),
     },
     include: incluirContaComercial,
   });
+  if (!conta) return null;
+  return {
+    ...conta,
+    quantidadeContatos: Math.min(1, conta.quantidadeContatos),
+    grupoEconomico: conta.grupoEconomico
+      ? {
+          ...conta.grupoEconomico,
+          contatos: conta.grupoEconomico.contatos.slice(0, 1),
+        }
+      : null,
+  };
 }
 
 export async function registrarResultadoAbordagem(dados: {
@@ -308,6 +493,9 @@ export async function registrarResultadoAbordagem(dados: {
   fonteOuEvidencia?: string;
   tipoDado?: TipoDado;
 }) {
+  if (dados.contaComercialId.startsWith("conta-polo-")) {
+    return salvarAbordagemPolo5km(dados);
+  }
   const conta = await prisma.contaComercial.findUnique({ where: { id: dados.contaComercialId } });
   if (!conta) throw new Error("Conta comercial não encontrada.");
 

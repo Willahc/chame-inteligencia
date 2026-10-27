@@ -4,7 +4,7 @@ import { CandidatoCnesCNPJ } from "../src/domain/receita/tipos";
 
 async function main() {
   console.log("================================================================================");
-  console.log("CHAME INTELIGÊNCIA — TESTE DE IDEMPOTÊNCIA DO IMPORTADOR DA RECEITA FEDERAL");
+  console.log("WINS HUB TÁXI — TESTE DE IDEMPOTÊNCIA DO IMPORTADOR DA RECEITA FEDERAL");
   console.log(`Data: ${new Date().toISOString()}`);
   console.log("================================================================================\n");
 

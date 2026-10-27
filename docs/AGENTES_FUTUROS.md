@@ -7,7 +7,7 @@ O Gate 1 não integra inteligência artificial. A arquitetura admite futuramente
 - classificação de chamados;
 - detecção de risco de cliente;
 - análise de solicitações;
-- apoio às ferramentas atuais da Chame.
+- apoio às ferramentas operacionais do WiNS Hub Táxi.
 
 ## Limite de autoridade
 

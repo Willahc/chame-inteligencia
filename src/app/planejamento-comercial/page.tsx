@@ -15,7 +15,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Planejamento Comercial | Chame Inteligência",
+  title: "Planejamento Comercial | WiNS Hub Táxi",
   description:
     "Preparação, simulação sandbox e aprovação humana de abordagens comerciais B2B.",
 };

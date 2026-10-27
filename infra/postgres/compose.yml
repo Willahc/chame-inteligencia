@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: wins-hub-taxi-postgres-postgis
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-wins_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wins_dev_secret_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-wins_hub_taxi_dev}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      # Exposição estritamente local (localhost) na porta 5433 para prevenir conflitos
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - wins_hub_taxi_postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-wins_user} -d ${POSTGRES_DB:-wins_hub_taxi_dev}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  wins_hub_taxi_postgres_data:
+    name: wins_hub_taxi_postgres_data

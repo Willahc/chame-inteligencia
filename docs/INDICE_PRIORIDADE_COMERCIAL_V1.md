@@ -1,7 +1,7 @@
 # Índice de Prioridade Comercial — Versão 1.0.0
 
 Data: 06/09/2026  
-Status: Vigente no MVP Comercial da Chame Táxi  
+Status: Vigente no MVP Comercial do WiNS Hub Táxi  
 Escopo: Classificação determinística de contas hospitalares e corporativas de saúde
 
 ---

@@ -193,12 +193,12 @@ export function IntegracoesClient({
   // Parâmetros específicos
   const [crmEstagio, setCrmEstagio] = useState<"PROSPECCAO" | "QUALIFICACAO" | "CONTATO_INICIAL">("PROSPECCAO");
   const [crmValor, setCrmValor] = useState<string>("15000");
-  const [emailAssunto, setEmailAssunto] = useState<string>("Apresentação Corporativa - Chame Táxi B2B");
+  const [emailAssunto, setEmailAssunto] = useState<string>("Apresentação Corporativa - WiNS Hub Táxi B2B");
   const [emailCorpo, setEmailCorpo] = useState<string>(
     "Prezada equipe de gestão, gostaríamos de apresentar nossa solução corporativa de transporte hospitalar com faturamento centralizado."
   );
   const [wppMensagem, setWppMensagem] = useState<string>(
-    "Olá! Apresentamos o portal corporativo Chame Táxi para gestão de mobilidade e faturamento B2B."
+    "Olá! Apresentamos o WiNS Hub Táxi para gestão de mobilidade e faturamento B2B."
   );
   const [discadorCampanha, setDiscadorCampanha] = useState<"SDR_HUMANO" | "PESQUISA_QUALIFICACAO">("SDR_HUMANO");
   const [discadorRoteiro, setDiscadorRoteiro] = useState<string>(

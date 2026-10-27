@@ -9,8 +9,10 @@ import {
   Database,
   Gauge,
   Landmark,
+  MapPinned,
   Network,
   Radar,
+  Radio,
   Scale,
   UserCheck,
 } from "lucide-react";
@@ -18,14 +20,16 @@ import "./globals.css";
 import { obterModoDados } from "@/domain/modo-dados";
 
 export const metadata: Metadata = {
-  title: "Chame Inteligência",
-  description: "Radar de potenciais clientes do setor de saúde com dados rastreáveis.",
+  title: "WiNS Hub Táxi",
+  description: "Hub independente de inteligência comercial, ecossistema de táxis e radar de potenciais clientes do setor de saúde com dados rastreáveis.",
 };
 
 export const dynamic = "force-dynamic";
 
 const navegacao = [
   { href: "/", rotulo: "Visão Geral", icone: Gauge },
+  { href: "/ecossistema-taxi", rotulo: "Ecossistema Táxi & GIS", icone: MapPinned },
+  { href: "/cooperativas-taxi", rotulo: "Cooperativas de Táxi (SaaS)", icone: Radio },
   { href: "/contas", rotulo: "Contas Comerciais", icone: Briefcase },
   { href: "/planejamento-comercial", rotulo: "Planejamento Comercial", icone: CalendarClock },
   { href: "/integracoes", rotulo: "Integrações", icone: Cpu },
@@ -50,7 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 <Building2 size={21} aria-hidden="true" />
               </div>
               <div>
-                <p className="text-sm font-bold tracking-wide">CHAME INTELIGÊNCIA</p>
+                <p className="text-sm font-bold tracking-wide">WiNS Hub Táxi</p>
                 <p className="text-xs text-slate-300">Radar do setor de saúde</p>
               </div>
             </div>
@@ -69,7 +73,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 <Building2 size={23} aria-hidden="true" />
               </div>
               <div>
-                <p className="text-sm font-bold tracking-[0.08em]">CHAME INTELIGÊNCIA</p>
+                <p className="text-sm font-bold tracking-[0.08em]">WiNS Hub Táxi</p>
                 <p className="mt-0.5 text-xs text-slate-400">Radar do setor de saúde</p>
               </div>
             </div>

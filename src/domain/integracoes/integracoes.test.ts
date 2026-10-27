@@ -227,7 +227,7 @@ describe("Gate 9 — Arquitetura de Integrações Externas", () => {
         contatoProfissionalId: contatoDemo.id,
         tipoAcao: "APRESENTACAO_INSTITUCIONAL",
         canal: "EMAIL",
-        objetivo: "Apresentar Chame Táxi",
+        objetivo: "Apresentar WiNS Hub Táxi",
         mensagemRascunho: "Rascunho ainda em formulação.",
         status: "RASCUNHO",
         criadoPor: "analista.teste",
@@ -301,7 +301,7 @@ describe("Gate 9 — Arquitetura de Integrações Externas", () => {
       finalidadeComercial: "Apresentação corporativa de mobilidade",
       confirmacaoHumana: true,
       dadosEspecificos: {
-        assunto: "Apresentação Chame Táxi B2B",
+        assunto: "Apresentação WiNS Hub Táxi B2B",
         corpoMensagem: "Texto de apresentação corporativa.",
         senhaInsegura: "123456",
         bearerToken: "xyz-token-secreto",
@@ -351,7 +351,7 @@ describe("Gate 9 — Arquitetura de Integrações Externas", () => {
       confirmacaoHumana: true,
       dadosEspecificos: {
         assunto: "Apresentação Institucional",
-        corpoMensagem: "Prezados, segue apresentação institucional dos serviços corporativos Chame Táxi.",
+        corpoMensagem: "Prezados, segue apresentação institucional dos serviços corporativos WiNS Hub Táxi.",
       },
     });
     eventosCriadosIds.push(emailRes.evento.id);

@@ -29,6 +29,7 @@ export const rotuloTipo: Record<TipoDado, string> = {
 };
 
 export const rotuloSegmento: Record<string, string> = {
+  POLO_CORPORATIVO_B2B_5KM: "Polo Corporativo B2B (5 km)",
   NUCLEO_HOSPITALAR: "Núcleo Hospitalar",
   SAUDE_CORPORATIVA_EXPANDIDA: "Saúde Corporativa",
   BAIXA_PRIORIDADE_INICIAL: "Baixa Prioridade",
@@ -50,6 +51,7 @@ export const rotuloStatusRevisao: Record<string, string> = {
 
 export function ClasseSegmento({ segmento }: { segmento: string }) {
   const classe = {
+    POLO_CORPORATIVO_B2B_5KM: "border-violet-200 bg-violet-50 text-violet-800",
     NUCLEO_HOSPITALAR: "border-emerald-200 bg-emerald-50 text-emerald-800",
     SAUDE_CORPORATIVA_EXPANDIDA: "border-cyan-200 bg-cyan-50 text-cyan-800",
     BAIXA_PRIORIDADE_INICIAL: "border-amber-200 bg-amber-50 text-amber-800",

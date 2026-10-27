@@ -100,7 +100,7 @@ Os sinais de contratação pública foram integrados a todas as camadas da aplic
 ### 6.1. Detalhe da Instituição (`/instituicoes/[slug]`)
 - Exibição do componente `<SecaoContratacoesRelacionadas />` com editais vinculados estritamente por CNPJ exato.
 - Banner de governança obrigatório:
-  > *"Aviso de Governança: Sinal público observado; não representa contrato confirmado, cliente da Chame Táxi ou oportunidade garantida. O vínculo foi estabelecido exclusivamente por igualdade exata de CNPJ oficial."*
+  > *"Aviso de Governança: Sinal público observado; não representa contrato confirmado, cliente ativo no WiNS Hub Táxi ou oportunidade garantida. O vínculo foi estabelecido exclusivamente por igualdade exata de CNPJ oficial."*
 - Exibição de objeto, órgão, data, modalidade, valor estimado formatado, distintivo de mobilidade e link oficial para o portal PNCP.
 
 ### 6.2. Detalhe da Organização (`/organizacoes/[id]`)

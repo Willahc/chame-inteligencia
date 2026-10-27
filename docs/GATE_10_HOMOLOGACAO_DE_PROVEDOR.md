@@ -4,13 +4,13 @@
 > **Data de Homologação:** 07 de setembro de 2026<br />
 > **Provedor Homologado:** Mailtrap Email Sandbox API (E-mail Corporativo B2B)<br />
 > **Ambiente Autorizado:** `HOMOLOGACAO` (Sandbox Controlado)<br />
-> **Repositório:** `chame-inteligencia`
+> **Repositório:** `wins-hub-taxi` (diretório histórico `chame-inteligencia`)
 
 ---
 
 ## 1. Sumário Executivo e Escopo Estrito
 
-O **Gate 10 — Homologação Controlada de um Provedor** foi executado e validado com sucesso seguindo rigorosamente as diretrizes canônicas do projeto `Chame Inteligência` e as regras estabelecidas em `AGENTS.md`.
+O **Gate 10 — Homologação Controlada de um Provedor** foi executado e validado com sucesso seguindo rigorosamente as diretrizes canônicas do projeto `WiNS Hub Táxi` e as regras estabelecidas em `AGENTS.md`.
 
 ### Delimitação Absoluta de Escopo:
 1. **Ambiente Exclusivo de Sandbox:** O sistema opera exclusivamente em ambiente `HOMOLOGACAO` ou `SIMULACAO`. O ambiente `PRODUCAO` permanece terminantemente bloqueado por código e testes automatizados. Não existem botões ou fluxos de produção.

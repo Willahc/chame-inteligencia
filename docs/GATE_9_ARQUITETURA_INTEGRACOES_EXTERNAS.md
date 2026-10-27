@@ -25,7 +25,7 @@ O foco deste Gate é exclusivamente estrutural:
 - **WhatsApp:** Proibido. Nenhuma integração com WhatsApp Cloud API, Evolution API, Z-API, Baileys ou webhooks remotos.
 - **Discador Telefônico:** Proibido. Nenhuma conexão com troncos SIP, PABX Asterisk, Twilio, Zenvia ou discadores automáticos.
 - **LinkedIn:** Proibido. Nenhum scraping autenticado, automação de mensagens ou chamadas à API da Microsoft/LinkedIn.
-- **Sistemas Internos Chame:** Proibido. Nenhuma substituição de sistemas atuais sem escopo formal aprovado.
+- **Sistemas Internos de Terceiros:** Proibido. Nenhuma substituição de sistemas atuais sem escopo formal aprovado.
 - **Receita Federal:** Proibido. O Gate da Receita Federal permanece pendente e fora de escopo.
 - **Estados `ENVIADA` ou `REALIZADA`:** Terminantemente proibidos e inexistentes nos modelos e enums.
 

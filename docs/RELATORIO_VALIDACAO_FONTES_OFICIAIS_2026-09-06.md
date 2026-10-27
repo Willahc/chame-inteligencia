@@ -2,7 +2,7 @@
 
 ## Escopo
 
-Esta validação confere os arquivos oficiais baixados para apoiar os próximos Gates do Chame Inteligência. Os arquivos brutos permanecem preservados em `data/raw/`, sem substituição do lote canônico e sem ingestão automática de dados novos no banco de produção.
+Esta validação confere os arquivos oficiais baixados para apoiar os próximos Gates do WiNS Hub Táxi. Os arquivos brutos permanecem preservados em `data/raw/`, sem substituição do lote canônico e sem ingestão automática de dados novos no banco de produção.
 
 ## CNES
 

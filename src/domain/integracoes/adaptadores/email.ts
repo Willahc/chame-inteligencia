@@ -153,7 +153,7 @@ export class AdaptadorEmailSimulador implements AdaptadorIntegracao<PayloadEmail
         destinatario: payload.destinatarioEmail,
         assunto: payload.assunto,
         servidorSimulado: "smtp.sandbox.local",
-        messageIdSimulado: `<sim-${transacaoId}@chame.sandbox.local>`,
+        messageIdSimulado: `<sim-${transacaoId}@wins-hub-taxi.sandbox.local>`,
       },
       chamadaExternaRealizada: false,
       tempoRespostaMs,

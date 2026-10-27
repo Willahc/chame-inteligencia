@@ -3,7 +3,7 @@
 ## 1. Identificação da Fonte
 - **Órgão:** Ministério da Saúde / Secretaria de Atenção Especializada à Saúde (SAES)
 - **Portal Oficial:** `https://dadosabertos.saude.gov.br/` e repositório S3 CKAN Saúde: `https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/CNES/`
-- **Finalidade no Chame Inteligência:** Base primária de estabelecimentos de saúde, tipos de estabelecimentos, leitos, atendimento 24h, gestão (pública/privada), localização física e CNPJ mantenedor.
+- **Finalidade no WiNS Hub Táxi:** Base primária de estabelecimentos de saúde, tipos de estabelecimentos, leitos, atendimento 24h, gestão (pública/privada), localização física e CNPJ mantenedor.
 
 ## 2. Artefatos Locais e Hashes
 - **Lote Canônico Ativo (Base do Banco Canônico):**

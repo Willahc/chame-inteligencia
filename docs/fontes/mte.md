@@ -5,7 +5,7 @@
 - **Servidores Oficiais:**
   - `http://pdet.mte.gov.br/`
   - `ftp://ftp.mtps.gov.br/pdet/`
-- **Finalidade no Chame Inteligência:** Fornecer definições metodológicas, agrupamento setorial de atividades econômicas e estruturas de dados de estabelecimentos para futuro cálculo de volume de colaboradores e estimativa de demanda de mobilidade corporativa.
+- **Finalidade no WiNS Hub Táxi:** Fornecer definições metodológicas, agrupamento setorial de atividades econômicas e estruturas de dados de estabelecimentos para futuro cálculo de volume de colaboradores e estimativa de demanda de mobilidade corporativa.
 
 ## 2. Artefatos Locais e Hashes
 - `data/raw/mte/NOTA_TECNICA_microdados.pdf`

@@ -22,6 +22,28 @@ export function classificacaoTipo(r: RegistroCNESNormalizado): string | null {
   return null;
 }
 
+export function inferirOperacao24h(r: RegistroCNESNormalizado, tipo?: string | null): boolean {
+  const texto = `${r.turno} ${r.nomeOriginal} ${r.tipoEstabelecimentoOriginal}`
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase();
+  if (
+    texto.includes("24H") ||
+    texto.includes("24 HORAS") ||
+    texto.includes("CONTINUO") ||
+    texto.includes("ININTERRUPTO") ||
+    texto.includes("PRONTO SOCORRO") ||
+    texto.includes("PRONTO ATENDIMENTO") ||
+    texto.includes("EMERGENCIA") ||
+    texto.includes("URGENCIA") ||
+    texto.includes("UPA ")
+  ) {
+    return true;
+  }
+  const t = tipo ?? classificacaoTipo(r);
+  return t === "Hospital Geral" || t === "Pronto Atendimento";
+}
+
 export function validarRegistro(r: RegistroCNESNormalizado) {
   const erros: string[] = [];
   if (!r.cnes) erros.push("CNES ausente");

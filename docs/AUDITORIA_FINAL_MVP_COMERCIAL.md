@@ -1,7 +1,9 @@
-﻿# Auditoria Final e Entrega do MVP Comercial — Chame Inteligência
+# Auditoria Final e Entrega do MVP Comercial — WiNS Hub Táxi
+
+> **Nota Histórica:** Documento de auditoria de entrega do MVP comercial originalmente gerado sob o codinome histórico do projeto e atualizado para a denominação independente **WiNS Hub Táxi** (`wins-hub-taxi`).
 
 **Data da Auditoria:** 07 de setembro de 2026  
-**Sistema:** Chame Inteligência — Plataforma de Inteligência Comercial e Prospecção B2B de Mobilidade Corporativa  
+**Sistema:** WiNS Hub Táxi — Plataforma Independente de Inteligência Comercial e Prospecção B2B de Mobilidade Corporativa  
 **Escopo:** Auditoria final rigorosa de conformidade, resolução definitiva da divergência PNCP, auditoria do índice comercial, validação visual/responsiva das telas e entrega do MVP Comercial sem abertura de novos Gates.  
 **Diretrizes Canônicas:** `AGENTS.md` e regras absolutas de governança.
 
@@ -56,7 +58,7 @@ A divergência documentada entre os 4 vínculos institucionais exatos e o númer
      - **Secretaria da Fazenda e Planejamento de SP (CNPJ `63.025.530/0001-04`):** responde por **649 contratos confirmados**.
      - **Secretaria Municipal de Saúde de SP (CNPJ `60.448.040/0001-22`):** responde por **6 contratos confirmados** e atua como mantenedora de 4 unidades.
      - **Prefeituras e Órgãos Municipais diversos:** respondem pelos demais processos.
-   - De acordo com as regras canônicas de governança do Chame Inteligência, um CNPJ mantenedor que administra dezenas ou centenas de estabelecimentos é **cadastralmente ambíguo em nível de unidade individual**. Vincular um contrato geral da Secretaria de Saúde a um único hospital arbitrário configuraria **falsa atribuição factual**.
+   - De acordo com as regras canônicas de governança do WiNS Hub Táxi, um CNPJ mantenedor que administra dezenas ou centenas de estabelecimentos é **cadastralmente ambíguo em nível de unidade individual**. Vincular um contrato geral da Secretaria de Saúde a um único hospital arbitrário configuraria **falsa atribuição factual**.
    - Por essa razão, os importadores oficiais (`importador-pncp.ts` e `importador-contratos-pncp.ts`) atribuíram rigorosamente `metodoVinculo: "SEM_VINCULO"` e `instituicaoId: null` a esses 2.014 registros, preservando a integridade canônica.
 
 ### 3.2. Verificações Específicas Realizadas
@@ -193,7 +195,7 @@ A conformidade do código e dos dados foi validada por meio de execução automa
 
 ## 9. Conclusão da Entrega e Próximos Passos
 
-O **MVP Comercial do Chame Inteligência** está auditado, testado, estável e pronto para homologação e uso pela equipe comercial.
+O **MVP Comercial do WiNS Hub Táxi** está auditado, testado, estável e pronto para homologação e uso pela equipe comercial.
 
 Recomenda-se para o commit final:
 ```bash

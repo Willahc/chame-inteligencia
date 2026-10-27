@@ -6,7 +6,7 @@
   - `https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/cnpj`
   - `https://dados.gov.br/dados/conjuntos-dados/cadastro-nacional-da-pessoa-juridica---cnpj`
   - `https://dadosabertos.rfb.gov.br/CNPJ/`
-- **Finalidade no Chame Inteligência:** Resolução cadastral de matriz/filial, razão social canônica, CNAE fiscal primário/secundário, situação cadastral e data de início de atividade para enriquecimento oficial dos 322 CNPJs prioritários do Núcleo Hospitalar.
+- **Finalidade no WiNS Hub Táxi:** Resolução cadastral de matriz/filial, razão social canônica, CNAE fiscal primário/secundário, situação cadastral e data de início de atividade para enriquecimento oficial dos 322 CNPJs prioritários do Núcleo Hospitalar.
 
 ## 2. Artefatos Locais e Hashes
 - `data/raw/receita/cnpj-metadados.pdf`

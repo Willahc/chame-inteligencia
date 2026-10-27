@@ -1,5 +1,5 @@
 {
-  "name": "chame-inteligencia",
+  "name": "wins-hub-taxi",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -31,13 +31,16 @@
     "cnpj:terceiro": "tsx scripts/importar-cnpj-terceiro.ts",
     "ans:importar": "tsx scripts/importar-ans-local.ts",
     "ibge:importar": "tsx scripts/importar-ibge-local.ts",
-    "mte:importar": "tsx scripts/importar-mte-local.ts"
+    "mte:importar": "tsx scripts/importar-mte-local.ts",
+    "postgres:up": "docker compose -f infra/postgres/compose.yml up -d",
+    "postgres:down": "docker compose -f infra/postgres/compose.yml down",
+    "postgres:status": "docker compose -f infra/postgres/compose.yml ps"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "6.12.0",
+    "@prisma/client": "^6.12.0",
     "lucide-react": "^1.41.0",
     "next": "16.3.4",
     "react": "19.2.8",

@@ -6,7 +6,7 @@
   - `https://servicodados.ibge.gov.br/api/v1/localidades/`
   - `https://servicodados.ibge.gov.br/api/v2/cnae/`
   - `https://concla.ibge.gov.br/`
-- **Finalidade no Chame Inteligência:**
+- **Finalidade no WiNS Hub Táxi:**
   - Padronização oficial de códigos de municípios e UFs para geolocalização e cruzamento com CNES, Receita e PNCP.
   - Classificação Nacional de Atividades Econômicas (CNAE 2.0) para estruturar a taxonomia de atividades hospitalares e de transporte.
 

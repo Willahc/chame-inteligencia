@@ -3,7 +3,7 @@ import { listarSinaisContratacao } from "@/lib/pncp";
 import { ContratacoesPublicasClient } from "@/components/contratacoes-publicas-client";
 
 export const metadata: Metadata = {
-  title: "Sinais de Contratação Pública | Chame Inteligência",
+  title: "Sinais de Contratação Pública | WiNS Hub Táxi",
   description: "Monitoramento de editais e dispensas de licitação de saúde e mobilidade via Portal Nacional de Contratações Públicas (PNCP).",
 };
 

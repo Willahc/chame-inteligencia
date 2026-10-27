@@ -47,7 +47,7 @@ async function testarEndpoint(nome: string, url: string, metodo: string = "GET")
 
 async function main() {
   console.log("================================================================================");
-  console.log("CHAME INTELIGÊNCIA — DIAGNÓSTICO DE CONECTIVIDADE E CANDIDATOS RECEITA FEDERAL");
+  console.log("WINS HUB TÁXI — DIAGNÓSTICO DE CONECTIVIDADE E CANDIDATOS RECEITA FEDERAL");
   console.log(`Data e hora: ${new Date().toISOString()}`);
   console.log("================================================================================\n");
 

@@ -14,6 +14,7 @@ import {
   ClasseFaixa,
   ClasseNatureza,
   ClasseResultadoAbordagem,
+  ClasseSegmento,
   ClasseVinculo,
   rotuloConfianca,
   rotuloStatusRevisao,
@@ -23,6 +24,7 @@ import type { ContaComercialResumo } from "@/lib/dados";
 export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
   const [texto, setTexto] = useState("");
   const [faixa, setFaixa] = useState("");
+  const [segmentoFiltro, setSegmentoFiltro] = useState("");
   const [natureza, setNatureza] = useState("");
   const [vinculo, setVinculo] = useState("");
   const [confianca, setConfianca] = useState("");
@@ -44,7 +46,13 @@ export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
         cidadesArray = conta.cidades ? [conta.cidades] : [];
       }
 
-      const totalContatos = conta.quantidadeContatos;
+      const totalContatos = Math.min(1, conta.quantidadeContatos);
+      const contatoUnico = conta.contatoPrincipal ?? null;
+      const cnpjCru = conta.cnpjPrincipal ?? "";
+      const cnpjFormatado =
+        /^\d{14}$/.test(cnpjCru)
+          ? cnpjCru.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5")
+          : cnpjCru || null;
       const possuiHospital = conta.quantidadeHospitais > 0;
       const segmento =
         conta.grupoEconomico?.instituicoes?.find(
@@ -57,6 +65,9 @@ export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
       return {
         id: conta.id,
         nome: conta.nome,
+        cnpjPrincipal: cnpjCru,
+        cnpjFormatado,
+        contatoUnico,
         tipoDado: conta.tipoDado,
         tipoVinculo: conta.tipoVinculo,
         confiancaOrganizacional: conta.confiancaOrganizacional,
@@ -94,10 +105,14 @@ export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
     return resumos
       .filter((c) => {
         if (!textoNorm) return true;
-        const alvo = `${c.nome} ${c.cidades.join(" ")}`.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        const alvo = `${c.nome} ${c.cnpjPrincipal} ${c.cnpjFormatado ?? ""} ${c.contatoUnico?.nome ?? ""} ${c.contatoUnico?.emailCorporativo ?? ""} ${c.cidades.join(" ")}`
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase();
         return alvo.includes(textoNorm);
       })
       .filter((c) => !faixa || c.faixaPrioridadeComercial === faixa)
+      .filter((c) => !segmentoFiltro || c.segmento === segmentoFiltro)
       .filter((c) => !natureza || c.natureza === natureza)
       .filter((c) => !vinculo || c.tipoVinculo === vinculo)
       .filter((c) => !confianca || c.confiancaOrganizacional === confianca)
@@ -137,6 +152,7 @@ export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
     textoNorm,
     cidadeNorm,
     faixa,
+    segmentoFiltro,
     natureza,
     vinculo,
     confianca,
@@ -154,6 +170,7 @@ export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
   function limparFiltros() {
     setTexto("");
     setFaixa("");
+    setSegmentoFiltro("");
     setNatureza("");
     setVinculo("");
     setConfianca("");
@@ -172,7 +189,7 @@ export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
         <div className="flex items-center justify-between gap-4 border-b border-[var(--borda)] pb-3">
           <div className="flex items-center gap-2 text-sm font-bold text-[var(--azul-profundo)]">
             <Filter size={18} className="text-[var(--azul)]" />
-            <span>Filtros do Radar Comercial</span>
+            <span>Filtros do Radar Comercial Unificado</span>
           </div>
           <button
             className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold text-[var(--azul)] hover:bg-slate-100"
@@ -187,13 +204,13 @@ export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-6">
           <label className="sm:col-span-2">
             <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-[var(--texto-suave)]">
-              Buscar Conta
+              Buscar Conta / Empresa
             </span>
             <div className="relative">
               <Search className="absolute left-3 top-2.5 text-slate-400" size={17} />
               <input
                 className="min-h-10 w-full rounded-xl border border-[var(--borda)] bg-white pl-9 pr-3 text-sm"
-                placeholder="Nome da organização, rede ou mantenedora"
+                placeholder="Empresa corporativa, hospital, rede ou mantenedora"
                 value={texto}
                 onChange={(e) => {
                   setTexto(e.target.value);
@@ -201,6 +218,26 @@ export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
                 }}
               />
             </div>
+          </label>
+
+          <label>
+            <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-[var(--texto-suave)]">
+              Segmento / Origem B2B
+            </span>
+            <select
+              className="min-h-10 w-full rounded-xl border border-[var(--borda)] bg-white px-3 text-sm"
+              value={segmentoFiltro}
+              onChange={(e) => {
+                setSegmentoFiltro(e.target.value);
+                setPagina(1);
+              }}
+            >
+              <option value="">Todos (Saúde + Empresas)</option>
+              <option value="POLO_CORPORATIVO_B2B_5KM">Polos Corporativos B2B (5 km)</option>
+              <option value="NUCLEO_HOSPITALAR">Núcleo Hospitalar</option>
+              <option value="SAUDE_CORPORATIVA_EXPANDIDA">Saúde Corporativa Expandida</option>
+              <option value="BAIXA_PRIORIDADE_INICIAL">Baixa Prioridade Inicial</option>
+            </select>
           </label>
 
           <label>
@@ -268,11 +305,11 @@ export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
 
           <label>
             <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-[var(--texto-suave)]">
-              Cidade / Município
+              Cidade / Bairro
             </span>
             <input
               className="min-h-10 w-full rounded-xl border border-[var(--borda)] bg-white px-3 text-sm"
-              placeholder="Filtrar por cidade"
+              placeholder="Filtrar por cidade ou bairro"
               value={cidadeFiltro}
               onChange={(e) => {
                 setCidadeFiltro(e.target.value);
@@ -420,14 +457,14 @@ export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
               <table className="w-full min-w-[1200px] border-collapse text-left text-sm">
                 <thead className="bg-slate-50 text-[var(--texto-suave)]">
                   <tr>
-                    <th className="px-4 py-3.5 pl-6 font-semibold">Conta Comercial</th>
+                    <th className="px-4 py-3.5 pl-6 font-semibold">Grupo / Conta (1 CNPJ Único)</th>
                     <th className="px-3 py-3.5 text-center font-semibold">Unid.</th>
                     <th className="px-3 py-3.5 text-center font-semibold">Hosp.</th>
-                    <th className="px-4 py-3.5 font-semibold">Cidades</th>
+                    <th className="px-4 py-3.5 font-semibold">Cidades / Bairro</th>
                     <th className="px-3 py-3.5 font-semibold">Natureza</th>
                     <th className="px-3 py-3.5 text-center font-semibold">Índice</th>
                     <th className="px-3 py-3.5 font-semibold">Faixa</th>
-                    <th className="px-3 py-3.5 text-center font-semibold">Contatos</th>
+                    <th className="px-3 py-3.5 font-semibold">Contato Único do Grupo</th>
                     <th className="px-4 py-3.5 font-semibold">Ação Recomendada</th>
                     <th className="px-3 py-3.5 font-semibold">Status Abordagem</th>
                     <th className="px-3 py-3.5 pr-6 font-semibold">Revisão</th>
@@ -447,6 +484,12 @@ export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
                           {conta.nome}
                         </Link>
                         <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[var(--texto-suave)]">
+                          {conta.cnpjFormatado && (
+                            <span className="rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 font-mono text-[11px] font-bold text-slate-700">
+                              CNPJ {conta.cnpjFormatado}
+                            </span>
+                          )}
+                          <ClasseSegmento segmento={conta.segmento} />
                           <ClasseVinculo vinculo={conta.tipoVinculo} />
                           <span>Confiança {rotuloConfianca[conta.confiancaOrganizacional]}</span>
                           {conta.tipoDado === "DEMONSTRACAO" && (
@@ -486,14 +529,26 @@ export function ContasClient({ contas }: { contas: ContaComercialResumo[] }) {
                         <ClasseFaixa faixa={conta.faixaPrioridadeComercial} />
                       </td>
 
-                      <td className="px-3 py-4 text-center">
-                        {conta.totalContatos > 0 ? (
+                      <td className="max-w-52 px-3 py-4">
+                        {conta.contatoUnico ? (
+                          <div className="text-xs leading-4">
+                            <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-1.5 py-0.5 font-bold text-emerald-800">
+                              <Users size={12} /> 1 Contato Principal
+                            </span>
+                            <p className="mt-1 truncate font-semibold text-[var(--texto)]" title={conta.contatoUnico.nome}>
+                              {conta.contatoUnico.nome}
+                            </p>
+                            <p className="truncate text-[11px] text-[var(--texto-suave)]">
+                              {conta.contatoUnico.emailCorporativo || conta.contatoUnico.telefoneProfissional || conta.contatoUnico.cargo}
+                            </p>
+                          </div>
+                        ) : conta.totalContatos > 0 ? (
                           <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-800">
                             <Users size={13} />
-                            {conta.totalContatos}
+                            1 Contato
                           </span>
                         ) : (
-                          <span className="text-xs text-slate-400">0</span>
+                          <span className="text-xs text-slate-400">Sem contato</span>
                         )}
                       </td>
 

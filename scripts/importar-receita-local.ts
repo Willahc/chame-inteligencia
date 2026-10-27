@@ -19,7 +19,7 @@ async function main() {
   const persistir = args.includes("--persistir");
 
   console.log("================================================================================");
-  console.log("CHAME INTELIGÊNCIA — IMPORTADOR CONTROLADO DA RECEITA FEDERAL");
+  console.log("WINS HUB TÁXI — IMPORTADOR CONTROLADO DA RECEITA FEDERAL");
   console.log(`Data: ${new Date().toISOString()}`);
   console.log(`Modo de persistência: ${persistir ? "PERSISTÊNCIA AUDITADA" : "SIMULAÇÃO SEGURA (DRY-RUN)"}`);
   console.log("================================================================================\n");

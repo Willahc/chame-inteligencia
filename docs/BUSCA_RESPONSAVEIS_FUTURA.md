@@ -7,7 +7,7 @@ Status: Planejado para Gate Futuro (Desativado no MVP Comercial)
 
 ## 1. Objetivo do Recurso Futuro
 
-Permitir que a equipe comercial da Chame Táxi solicite pesquisa supervisionada de contatos profissionais públicos (área de Facilities, Compras, Suprimentos e Operações) para contas qualificadas que ainda não possuem interlocutores mapeados no radar.
+Permitir que a equipe comercial utilizando o WiNS Hub Táxi solicite pesquisa supervisionada de contatos profissionais públicos (área de Facilities, Compras, Suprimentos e Operações) para contas qualificadas que ainda não possuem interlocutores mapeados no radar.
 
 No MVP atual, a interface exibe o botão **"Buscar responsáveis (Planejado — Gate Futuro)"** em estado explicitamente desativado, acompanhado de sua especificação de fluxo e salvaguardas de governança.
 

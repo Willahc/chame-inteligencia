@@ -494,7 +494,7 @@ export async function gerarPreviaSimulacao(
         const payload: PayloadEmail = {
           ...base,
           destinatarioEmail: contato?.emailCorporativo || "contato@empresa.com.br",
-          assunto: typeof input.dadosEspecificos?.assunto === "string" ? input.dadosEspecificos.assunto : "Apresentação Corporativa - Chame Táxi B2B",
+          assunto: typeof input.dadosEspecificos?.assunto === "string" ? input.dadosEspecificos.assunto : "Apresentação Corporativa - WiNS Hub Táxi B2B",
           corpoMensagem: typeof input.dadosEspecificos?.corpoMensagem === "string" ? input.dadosEspecificos.corpoMensagem : (acao?.mensagemRascunho || "Mensagem de apresentação institucional."),
         };
         payloadSanitizado =
@@ -695,7 +695,7 @@ export async function executarSimulacaoControlada(
       const payload: PayloadEmail = {
         ...basePayload,
         destinatarioEmail: contato?.emailCorporativo || (input.dadosEspecificos?.destinatarioEmail as string) || "contato@empresa.com.br",
-        assunto: typeof input.dadosEspecificos?.assunto === "string" ? input.dadosEspecificos.assunto : "Apresentação Corporativa - Chame Táxi B2B",
+        assunto: typeof input.dadosEspecificos?.assunto === "string" ? input.dadosEspecificos.assunto : "Apresentação Corporativa - WiNS Hub Táxi B2B",
         corpoMensagem: typeof input.dadosEspecificos?.corpoMensagem === "string" ? input.dadosEspecificos.corpoMensagem : (acao?.mensagemRascunho || "Mensagem institucional simulada."),
       };
       if (integracao.ambiente === "HOMOLOGACAO") {

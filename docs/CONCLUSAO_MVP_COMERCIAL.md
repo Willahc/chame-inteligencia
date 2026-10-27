@@ -1,14 +1,16 @@
-# Conclusão do MVP Comercial — Chame Inteligência
+# Conclusão do MVP Comercial — WiNS Hub Táxi
+
+> **Nota Histórica:** Registro de conclusão do MVP comercial atualizado para a marca independente **WiNS Hub Táxi** (`wins-hub-taxi`).
 
 **Data:** 06 de setembro de 2026  
-**Sistema:** Chame Inteligência — Plataforma de Inteligência Comercial e Prospecção B2B de Mobilidade Corporativa  
+**Sistema:** WiNS Hub Táxi — Plataforma de Inteligência Comercial e Prospecção B2B de Mobilidade Corporativa  
 **Status da Entrega:** Concluído com Sucesso e Validado  
 
 ---
 
 ## 1. Sumário Executivo
 
-Este documento consolida a entrega final do **MVP Comercial do Chame Inteligência**, atendendo integralmente às diretrizes de negócio, rastreabilidade, governança de dados e privacidade estabelecidas em `AGENTS.md`.
+Este documento consolida a entrega final do **MVP Comercial do WiNS Hub Táxi**, atendendo integralmente às diretrizes de negócio, rastreabilidade, governança de dados e privacidade estabelecidas em `AGENTS.md`.
 
 O sistema foi estabilizado como uma ferramenta operacional de inteligência comercial que responde objetivamente:
 1. **Quais são as melhores contas e instituições para prospecção comercial prioritária.**
@@ -191,7 +193,7 @@ Todas as etapas do pipeline de qualidade e conformidade foram executadas e aprov
 
 ## 9. Conclusão e Próximos Passos Recomendados
 
-O MVP Comercial do **Chame Inteligência** atinge seu estado de maturidade com estabilidade e consistência técnica:
+O MVP Comercial do **WiNS Hub Táxi** atinge seu estado de maturidade com estabilidade e consistência técnica:
 - Todos os requisitos de exibição e cálculo de prioridades estão operacionais;
 - As oportunidades prioritárias estão identificadas com justificativas e ações táticas claras;
 - Os dados oficiais e públicos já integrados preservam integridade e respeito absoluto à privacidade;

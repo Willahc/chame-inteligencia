@@ -158,7 +158,7 @@ async function consultarBrasilApi(cnpj: string): Promise<{
     const res = await fetch(url, {
       method: "GET",
       headers: {
-        "User-Agent": "ChameInteligencia/0.1.0",
+        "User-Agent": "WiNSHubTaxi/0.1.0",
         Accept: "application/json",
       },
       signal: controller.signal,
@@ -301,7 +301,7 @@ async function main() {
   const concorrencia = argConcorrencia ? parseInt(argConcorrencia.split("=")[1], 10) : (modoPiloto ? 1 : 2);
 
   console.log("================================================================================");
-  console.log("CHAME INTELIGÊNCIA — ENRIQUECIMENTO DE CNPJ POR FONTE AUXILIAR (BRASILAPI)");
+  console.log("WINS HUB TÁXI — ENRIQUECIMENTO DE CNPJ POR FONTE AUXILIAR (BRASILAPI)");
   console.log(`Modo: ${modoPiloto ? "PILOTO (10 CNPJs)" : "LOTE COMPLETO"}`);
   console.log(`Concorrência: ${concorrencia} workers simultâneos`);
   console.log(`Intervalo base entre requisições: ${intervaloMs}ms`);

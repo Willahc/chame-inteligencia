@@ -373,7 +373,7 @@ export default async function DetalheContaPage({
           <AlertCircle className="mt-0.5 size-4 shrink-0 text-blue-600" aria-hidden="true" />
           <p>
             <strong>Evidência de Contexto:</strong> Sinal público observado via PNCP; <strong>não representa contrato confirmado</strong>,
-            oportunidade ganha, cliente ativo da Chame Táxi nem altera o Índice de Prioridade Comercial v1.0.0,
+            oportunidade ganha, cliente ativo no WiNS Hub Táxi nem altera o Índice de Prioridade Comercial v1.0.0,
             a faixa de prioridade ou a ação comercial recomendada. O vínculo decorre estritamente da correspondência exata de CNPJ oficial.
           </p>
         </div>

@@ -17,7 +17,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Integrações e Conectores Externos | Chame Inteligência",
+  title: "Integrações e Conectores Externos | WiNS Hub Táxi",
   description:
     "Arquitetura desacoplada de integrações, simuladores locais e travas de segurança humana.",
 };

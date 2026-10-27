@@ -3,7 +3,7 @@
 ## 1. Identificação da Fonte
 - **Órgão:** Agência Nacional de Saúde Suplementar (ANS) / Ministério da Saúde
 - **Portal Oficial:** `https://dadosabertos.ans.gov.br/FTP/PDA/`
-- **Finalidade no Chame Inteligência:**
+- **Finalidade no WiNS Hub Táxi:**
   - Mapear operadoras ativas de planos de saúde para segmentação comercial B2B.
   - Identificar solicitações de alteração de rede hospitalar (inclusão/exclusão de hospitais credenciados), gerando sinais preditivos de demanda de mobilidade.
 

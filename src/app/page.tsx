@@ -5,14 +5,16 @@ import { ClasseSegmento, rotuloFaixa, rotuloSegmento } from "@/components/rotulo
 import { TabelaOportunidadesVisaoGeral } from "@/components/tabela-oportunidades-visao-geral";
 import type { FaixaPrioridade } from "@/domain/tipos";
 import { obterModoDados } from "@/domain/modo-dados";
-import { listarInstituicoes, mapearParaRadar } from "@/lib/dados";
+import { listarInstituicoes, listarRadarUnificado } from "@/lib/dados";
+import { carregarResumoEcossistemaTaxiSP } from "@/lib/ecossistema-unificado";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const completas = await listarInstituicoes();
   const modo = obterModoDados();
-  const instituicoes = completas.map(mapearParaRadar);
+  const ecossistema = carregarResumoEcossistemaTaxiSP();
+  const instituicoes = await listarRadarUnificado(modo);
   const pendentes = completas.reduce((total, item) => total + item.evidencias.filter((evidencia) => evidencia.statusRevisao === "PENDENTE").length, 0);
   const indicadores = [
     { rotulo: "Instituições reais", valor: instituicoes.filter((item) => item.tipoDado === "FATO_OFICIAL").length, detalhe: "CNES / DATASUS", icone: Building2 },
@@ -45,6 +47,30 @@ export default async function Home() {
         descricao="Prioridades comerciais explicadas por sinais, evidências e critérios auditáveis."
         acao={<Link className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[var(--azul-profundo)] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[var(--azul)]" href="/radar">Abrir radar completo <ArrowRight size={17} aria-hidden="true" /></Link>}
       />
+
+      {ecossistema.disponivel ? (
+        <section className="mt-6 rounded-2xl border border-cyan-500/30 bg-gradient-to-r from-[#0c1d36] via-[#102a4c] to-[#0f3456] p-6 text-white shadow-lg">
+          <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-cyan-400/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-cyan-300">
+                Plataforma Unificada WiNS Hub Táxi
+              </span>
+              <h2 className="mt-2 text-xl font-bold">
+                Ecossistema 360º: Oferta de Taxistas DTP + Mapa Tático GIS (997 Pontos) + Demanda B2B (5 km)
+              </h2>
+              <p className="mt-1 text-sm text-slate-300">
+                Consulte os {ecossistema.taxistas.totalMapeados.toLocaleString("pt-BR")} taxistas mapeados nos 8 editais DTP/SP (com {ecossistema.taxistas.meiValidado1Para1.toLocaleString("pt-BR")} MEIs validados 1:1 e {ecossistema.taxistas.homonimosBloqueados} homônimos isolados), mapa interativo com {ecossistema.pontosTaxi.totalGeocodificados} pontos de táxi e {ecossistema.radar5kmButanta.totalProspectsRaio5km} polos corporativos/hospitais num raio de 5 km.
+              </p>
+            </div>
+            <Link
+              href="/ecossistema-taxi"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[var(--ciano)] px-5 py-3 text-sm font-bold text-[#0c1d36] shadow-md transition hover:brightness-110"
+            >
+              Abrir Ecossistema Táxi & GIS <ArrowRight size={17} aria-hidden="true" />
+            </Link>
+          </div>
+        </section>
+      ) : null}
 
       <section aria-labelledby="indicadores" className="mt-7">
         <h2 className="sr-only" id="indicadores">Indicadores principais</h2>

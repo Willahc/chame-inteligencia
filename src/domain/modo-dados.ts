@@ -4,7 +4,7 @@ export const MODO_DEMONSTRACAO: ModoDados = "MODO_DEMONSTRACAO";
 export const MODO_REAL: ModoDados = "MODO_REAL";
 
 /** O modo real é o padrão operacional; a demonstração é opt-in explícito. */
-export function obterModoDados(valor = process.env.CHAME_MODO_DADOS): ModoDados {
+export function obterModoDados(valor = process.env.WINS_HUB_TAXI_MODO_DADOS): ModoDados {
   return valor === MODO_DEMONSTRACAO ? MODO_DEMONSTRACAO : MODO_REAL;
 }
 

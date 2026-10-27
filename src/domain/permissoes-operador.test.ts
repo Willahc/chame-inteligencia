@@ -6,20 +6,20 @@ import {
   obterPerfilOperadorLocal,
 } from "@/lib/operador-local";
 
-const usuarioOriginal = process.env.CHAME_USUARIO_OPERADOR;
-const perfilOriginal = process.env.CHAME_PERFIL_OPERADOR;
+const usuarioOriginal = process.env.WINS_HUB_TAXI_USUARIO_OPERADOR;
+const perfilOriginal = process.env.WINS_HUB_TAXI_PERFIL_OPERADOR;
 
 afterEach(() => {
-  if (usuarioOriginal === undefined) delete process.env.CHAME_USUARIO_OPERADOR;
-  else process.env.CHAME_USUARIO_OPERADOR = usuarioOriginal;
-  if (perfilOriginal === undefined) delete process.env.CHAME_PERFIL_OPERADOR;
-  else process.env.CHAME_PERFIL_OPERADOR = perfilOriginal;
+  if (usuarioOriginal === undefined) delete process.env.WINS_HUB_TAXI_USUARIO_OPERADOR;
+  else process.env.WINS_HUB_TAXI_USUARIO_OPERADOR = usuarioOriginal;
+  if (perfilOriginal === undefined) delete process.env.WINS_HUB_TAXI_PERFIL_OPERADOR;
+  else process.env.WINS_HUB_TAXI_PERFIL_OPERADOR = perfilOriginal;
 });
 
 describe("Gate 12 — permissões do operador", () => {
   it("mantém usuário ausente e operador não autenticado em somente leitura", () => {
-    delete process.env.CHAME_USUARIO_OPERADOR;
-    process.env.CHAME_PERFIL_OPERADOR = "ADMINISTRADOR";
+    delete process.env.WINS_HUB_TAXI_USUARIO_OPERADOR;
+    process.env.WINS_HUB_TAXI_PERFIL_OPERADOR = "ADMINISTRADOR";
     expect(obterOperadorLocal()).toBe("operador-local-nao-autenticado");
     expect(obterPerfilOperadorLocal()).toBe("CONSULTA");
     expect(() => exigirPermissaoOperador("REVISAR_CONTATOS")).toThrow("não possui permissão");
@@ -35,14 +35,14 @@ describe("Gate 12 — permissões do operador", () => {
   });
 
   it("não permite que perfil sem usuário seja promovido pelo navegador", () => {
-    delete process.env.CHAME_USUARIO_OPERADOR;
-    process.env.CHAME_PERFIL_OPERADOR = "ADMINISTRADOR";
+    delete process.env.WINS_HUB_TAXI_USUARIO_OPERADOR;
+    process.env.WINS_HUB_TAXI_PERFIL_OPERADOR = "ADMINISTRADOR";
     expect(obterPerfilOperadorLocal()).toBe("CONSULTA");
   });
 
   it("usa apenas identidade configurada no servidor para ações sensíveis", () => {
-    process.env.CHAME_USUARIO_OPERADOR = "aprovador-local";
-    process.env.CHAME_PERFIL_OPERADOR = "APROVADOR";
+    process.env.WINS_HUB_TAXI_USUARIO_OPERADOR = "aprovador-local";
+    process.env.WINS_HUB_TAXI_PERFIL_OPERADOR = "APROVADOR";
     expect(exigirPermissaoOperador("APROVAR_ACOES")).toBe("aprovador-local");
   });
 });
